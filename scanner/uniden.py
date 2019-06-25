@@ -26,7 +26,7 @@ module_logger = logging.getLogger('uniden_api')
 def zero_to_head(t):
 
 	l=list(t)
-	if len(l)<>10: return tuple(l)
+	if len(l)!=10: return tuple(l)
 	l.insert(0,l[9])
 	l.pop(10)
 		
@@ -35,7 +35,7 @@ def zero_to_head(t):
 def zero_to_tail(t):
 
 	l=list(t)
-	if len(l)<>10: return tuple(l)
+	if len(l)!=10: return tuple(l)
 	l.insert(9,l[0])
 	l.pop(0)
 		
@@ -347,7 +347,7 @@ class UnidenScanner:
 		if mod not in mod_values:
 			raise ModulationError
 
-		if (len(bsc)<>16 or len(bsc.replace('0','').replace('1',''))):
+		if (len(bsc)!=16 or len(bsc.replace('0','').replace('1',''))):
 			raise BScreenError
 
 		cmd=",".join(['QSH',frq,rsv,mod,str(att),str(dly),rsv,str(code_srch),bsc,str(rep),
@@ -378,7 +378,7 @@ class UnidenScanner:
 		if mod not in mod_values:
 			raise ModulationError
 
-		if (len(bsc)<>16 or len(bsc.replace('0','').replace('1',''))):
+		if (len(bsc)!=16 or len(bsc.replace('0','').replace('1',''))):
 			raise BScreenError
 
 		cmd=",".join(['QSC',frq,rsv,mod,str(att),str(dly),rsv,str(code_srch),bsc,str(rep),
@@ -687,7 +687,7 @@ class UnidenScanner:
 
 		sys_index = self.system_index_head
 
-		while int(sys_index) <> -1:
+		while int(sys_index) != -1:
 
 			s=System(self,sys_index)
 			s.get_data()
@@ -779,7 +779,7 @@ class UnidenScanner:
 		for sys in systems:
 
 			try:
-                		sys_type = scanner_sys_type[sys['type']]
+				sys_type = scanner_sys_type[sys['type']]
 				protected = scanner_onoff[sys['protected']]
 
 			except KeyError:
@@ -859,15 +859,15 @@ class UnidenScanner:
 
 	def load_search_settings(self, fname):
 
-                """Load YAML formatted text to memory.
-                It is up to user to set data into scanner.
-                See sample YAML file in examples."""
+		"""Load YAML formatted text to memory.
+		It is up to user to set data into scanner.
+		See sample YAML file in examples."""
 
-                searches=yaml.load(file(fname, 'r'))
+		searches=yaml.load(file(fname, 'r'))
 
-                self.searches.load(**searches)
+		self.searches.load(**searches)
 
-                return 1
+		return 1
 
 	#TODO 2nd queue
 	def get_localtion_settings(self):pass
@@ -1020,7 +1020,7 @@ class Settings:
 				com = self.scanner.raw(com)
 				time.sleep(3)
 
-		except CommandError, e:
+		except CommandError as e:
 			self.logger.error('set_data(): %s' % str(e))
 			return 0
 
@@ -1074,7 +1074,7 @@ class Settings:
 			if scanner_option: scanner_option['g_att']=scanner_onoff[scanner_option['g_att']]
 			if scanner_option: scanner_option['p25_lpf']=scanner_onoff[scanner_option['p25_lpf']]
 
-		except KeyError, e:
+		except KeyError as e:
 			self.logger.error('load(): %s' % str(e))
 			return 0
 
@@ -1231,7 +1231,7 @@ class System:
 
 		grp_index = self.chn_grp_head
 
-		while int(grp_index) <> -1:
+		while int(grp_index) != -1:
 
 			if self.sys_type == 'CNV':
 				g=Group(self.scanner,grp_index,self.sys_type)
@@ -1244,7 +1244,7 @@ class System:
 				self.sites[grp_index]=s
 				grp_index=s.fwd_index
 
-		if self.sys_type <> 'CNV':
+		if self.sys_type != 'CNV':
 
 			cmd = ','.join(['TRN',self.sys_index])
 
@@ -1264,7 +1264,7 @@ class System:
 			
 			tgid_grp_index = self.tgid_grp_head
 
-			while int(tgid_grp_index) <> -1:
+			while int(tgid_grp_index) != -1:
 
 				g=Group(self.scanner,tgid_grp_index,self.sys_type)
 				g.get_data()
@@ -1308,7 +1308,7 @@ class System:
 
 		for g in self.groups.values(): g.set_data()
 
-		if self.sys_type <> 'CNV':
+		if self.sys_type != 'CNV':
 
 			rsv = ''
 			cmd = ','.join(['TRN',str(self.sys_index),str(self.id_search),
@@ -1365,7 +1365,7 @@ class System:
 		print ('Protect:\t\t\t%s') % human_onoff[self.protect]
 	
 
-		if self.sys_type <> 'CNV':
+		if self.sys_type != 'CNV':
 
 			print ('ID Search/Scan:\t\t\t%s') % self.id_search
 			print ('Motorola Status Bit:\t\t\t%s') % self.s_bit
@@ -1441,7 +1441,7 @@ class System:
 			'start_key':sk, 'tag':tag, 'agc_analog':agca, 'agc_digital':agcd, 'p25_waiting':pw,
 			'protected':pr, 'groups':groups, 'grp_lockout':ql}
 
-		if self.sys_type <> 'CNV':
+		if self.sys_type != 'CNV':
 			d1={'id_mode':ids, 'status':sb, 'end_code':ec, 'edacs_format':afs, 'alert':self.emg, 
 				'alert_lvl':level, 'grp_lockout':ql, 'fleet_map':self.fmap, 
 				'custom_fmap':self.ctm_fmap, 'id_format':mi, 'alert_color':self.emg_color, 
@@ -1490,7 +1490,7 @@ class System:
 			self.emg_pattern=scanner_altp[pattern]
 			self.pri_id_scan=scanner_onoff[priority]
 
-		except KeyError, e:
+		except KeyError as e:
 			self.logger.error('load(): keyerror %s' % str(e))
 			return 0
 
@@ -1599,7 +1599,7 @@ class System:
 		l=[]		
 
                 try:
-			while int(tgid) <> -1:
+			while int(tgid) != -1:
 				res = self.scanner.raw(cmd)
 				(gli,tgid) = res.split(',')
 				l.append(tgid)
@@ -1616,7 +1616,7 @@ class System:
 		l=[]		
 
                 try:
-			while int(tgid) <> -1:
+			while int(tgid) != -1:
 				res = self.scanner.raw(cmd)
 				(sli,tgid) = res.split(',')
 				l.append(tgid)
@@ -1734,7 +1734,7 @@ class Group:
 
 		chn_index = self.chn_head
 
-		while int(chn_index) <> -1:
+		while int(chn_index) != -1:
 
 			if self.sys_type == 'CNV':
 				c=Channel(self.scanner,chn_index)
@@ -1841,7 +1841,7 @@ class Group:
 			self.lout=scanner_lout[lockout]
 			self.gps_enable=scanner_onoff[gps]
 
-		except KeyError, e:
+		except KeyError as e:
 			self.logger.error('load(): keyerror %s' % str(e))
 			return 0
 
@@ -2023,7 +2023,7 @@ class Site:
 
 		chn_index = self.chn_head
 
-		while int(chn_index) <> -1:
+		while int(chn_index) != -1:
 			t=TrunkFrequency(self.scanner,chn_index)
 			t.get_data()
 			self.trunk_frqs[chn_index]=t
@@ -2418,7 +2418,7 @@ class Channel:
 			self.audio_type=scanner_audiot[audio_type]
 			self.alt_pattern=scanner_altp[pattern]
 
-		except KeyError, e:
+		except KeyError as e:
 			self.logger.error('load(): keyerror %s' % str(e))
 			return 0
 
@@ -3046,7 +3046,7 @@ class Search:
 		frqs=[]
 		frq=0
 
-		while int(frq) <> -1:
+		while int(frq) != -1:
 
 			try:
 				glf = self.scanner.raw('GLF')
@@ -3195,7 +3195,7 @@ class Search:
 			else: self.srch_close_call['p25waiting']=srch_close_call['p25waiting']
 			if 'repeater' not in srch_close_call: self.srch_close_call['repeater']=''
 			else: self.srch_close_call['repeater']=scanner_onoff[srch_close_call['repeater']]
-		except Exception, e:
+		except Exception as e:
 			self.logger.error('load(): srch_close_call error %s' % str(e))
 
 		self.logger.debug('load(): close_call dictionary '+str(close_call))
@@ -3224,7 +3224,7 @@ class Search:
 			else: self.close_call['pause']=close_call['pause']
 			if 'quick_key' not in close_call: self.close_call['quick_key']=''
 			else: self.close_call['quick_key']=close_call['quick_key']
-		except Exception, e:
+		except Exception as e:
 			self.logger.error('load(): close_call error %s' % str(e))
 
 		self.logger.debug('load(): band_scope_system dictionary '+str(band_scope_system))
@@ -3237,7 +3237,7 @@ class Search:
 			else: self.band_scope_system['span']=band_scope_system['span']
 			if 'step' not in band_scope_system: self.band_scope_system['step']=''
 			else: self.band_scope_system['step']=str(100*float(band_scope_system['step']))
-		except Exception, e:
+		except Exception as e:
 			self.logger.error('load(): band_scope_system error %s' % str(e))
 
 		for i in range(0,10):
@@ -3249,7 +3249,7 @@ class Search:
 
 					self.bcast_screen_band[i]={'limit_l':frq_to_scanner(bcast_screen_band[i]['limit_l']),
 								'limit_h':frq_to_scanner(bcast_screen_band[i]['limit_h'])}
-			except Exception, e:
+			except Exception as e:
 				self.logger.error('load(): bcast_screen_band error %s' % str(e))
 
 				self.logger.debug('load(): self.bcast_screen_band dictionary '+str(self.bcast_screen_band[i]))
@@ -3296,7 +3296,7 @@ class Search:
 					else: self.custom_search[i].update({'start_key':custom_search[i]['start_key']})
 					if 'step' not in custom_search[i]: self.custom_search[i].update({'step':''})
 					else: self.custom_search[i].update({'step':str(int(100*float(custom_search[i]['step'])))})
-			except Exception, e:
+			except Exception as e:
 				self.logger.error('load(): custom_search error %s' % str(e))
 
 				self.logger.debug('load(): self.custom_search dictionary '+str(self.custom_search[i]))
@@ -3324,7 +3324,7 @@ class Search:
 					self.cch_custom_search_mot_band_plan[i].update({'lower':tuple(mot_band_plan[i]['lower'])})
 					self.cch_custom_search_mot_band_plan[i].update({'upper':tuple(mot_band_plan[i]['upper'])})
 					self.cch_custom_search_mot_band_plan[i].update({'step':tuple(mot_band_plan[i]['step'])})
-			except Exception, e:
+			except Exception as e:
 				self.logger.error('load(): mot_band_plan %s' % str(e))
 
 
@@ -3361,7 +3361,7 @@ class Search:
                                         if 'start_key' not in service_search[i]: self.service_search[i].update({'start_key':''})
                                         else: self.service_search[i].update({'start_key':service_search[i]['start_key']})
 
-			except Exception, e:
+			except Exception as e:
 				self.logger.error('load(), service search %s' % str(e))
 				
 		self.logger.debug('load(): self.service_search dictionary '+str(self.service_search[i]))
