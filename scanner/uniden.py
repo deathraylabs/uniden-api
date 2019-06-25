@@ -119,11 +119,11 @@ class UnidenScanner:
         self.logger.debug('raw(): cmd %s' % cmd)
         self.serial.write(str.encode("".join([cmd,'\r'])))
 
-        res = (self.serial.readall()).strip('\r')
+        res = (self.serial.readall()).strip(b'\r')
         self.logger.debug('raw(): res %s' % res)
 
-        if res.count(',') == 1:
-            f2=res.split(',')[1]
+        if res.count(b',') == 1:
+            f2=res.split(b',')[1]
         else:
             f2=res
 
@@ -531,7 +531,7 @@ class UnidenScanner:
             self.logger.error('get_battery_voltage()')
             return 0
 
-        (bav,ad_value) = res.split(',')
+        (bav,ad_value) = res.split(b',')
 
         return 3.2*float(ad_value)*2/1023
 
@@ -548,7 +548,7 @@ class UnidenScanner:
             self.logger.error('get_window_voltage()')
             return 0
 
-        (win,ad_value,frq) = res.split(',')
+        (win,ad_value,frq) = res.split(b',')
 
         return (ad_value,frq)
 
@@ -601,7 +601,7 @@ class UnidenScanner:
             self.logger.error('get_free_memory_blocks()')
             return 0
 
-        (rmb,self.free_memory_blocks) = res.split(',')
+        (rmb,self.free_memory_blocks) = res.split(b',')
 
         return 1
 
@@ -620,7 +620,7 @@ class UnidenScanner:
             self.logger.error('get_used_memory_blocks()')
             return 0
 
-        (rmb,memory_used,sys,site,chn,loc) = res.split(',')
+        (rmb,memory_used,sys,site,chn,loc) = res.split(b',')
 
         self.used_memory_blocks={'memory used':memory_used,
                                  'systems':sys, 'sites':site, 'channels':chn,
@@ -648,7 +648,7 @@ class UnidenScanner:
                 self.logger.error('get_default_band_coverage()')
                 return 0
 
-            (dbc,step,mod) = res.split(',')
+            (dbc,step,mod) = res.split(b',')
 
             dfb.append({'step':step, 'mod':mod})
 
@@ -701,7 +701,7 @@ class UnidenScanner:
             self.logger.error('get_scan_settings(): failed to get quick system lockout list.')
             return 0
 
-        (qsl,p0,p1,p2,p3,p4,p5,p6,p7,p8,p9) = res.split(',')
+        (qsl,p0,p1,p2,p3,p4,p5,p6,p7,p8,p9) = res.split(b',')
 
         l=[tuple(p0),tuple(p1),tuple(p2),tuple(p3),
            tuple(p4),tuple(p5),tuple(p6),tuple(p7),
@@ -803,7 +803,7 @@ class UnidenScanner:
             self.logger.error('create_system(): %s' % cmd)
             return 0
 
-        (csy,sys_index) = res.split(',')
+        (csy,sys_index) = res.split(b',')
         if sys_index == -1: return 0
         s=System(self,sys_index)
         self.systems[sys_index]=s
@@ -950,30 +950,30 @@ class Settings:
             self.logger.error('get_data()')
             return 0
 
-        (blt,event,color,dimmer) = blt.split(',')
+        (blt,event,color,dimmer) = blt.split(b',')
         self.backlight = {'event':event, 'color':color,
                           'dimmer':dimmer}
-        (bsv,bat_save,charge_time) = bsv.split(',')
+        (bsv,bat_save,charge_time) = bsv.split(b',')
         self.battery_info = {'bat_save':bat_save,
                              'charge_time':charge_time}
-        (com,baudrate,csv) = com.split(',')
+        (com,baudrate,csv) = com.split(b',')
         self.com_port = {'baudrate':baudrate}
-        (kbp,level,lock,safe) = kbp.split(',')
+        (kbp,level,lock,safe) = kbp.split(b',')
         self.key_beep = {'level':level, 'lock':lock, 'safe':safe}
-        (oms,l1_char,l2_char,l3_char,l4_char) = oms.split(',')
+        (oms,l1_char,l2_char,l3_char,l4_char) = oms.split(b',')
         self.opening_message = [0, l1_char, l2_char, l3_char, l4_char]
-        (pri,pri_mode,max_chan,interval) = pri.split(',')
+        (pri,pri_mode,max_chan,interval) = pri.split(b',')
         self.priority_mode = {'pri_mode':pri_mode, 'max_chan':max_chan,
                               'interval':interval}
-        (agv,rsv1,rsv2,a_res,a_ref,a_gain,d_res,d_gain) = agv.split(',')
+        (agv,rsv1,rsv2,a_res,a_ref,a_gain,d_res,d_gain) = agv.split(b',')
         self.auto_gain_control={'a_res':a_res, 'a_ref':a_ref, 'a_gain':a_gain,
                                 'd_res':d_res, 'd_gain':d_gain}
-        (sct,n) = sct.split(',')
+        (sct,n) = sct.split(b',')
         self.system_count={'n':n}
-        (cnt,contrast) = cnt.split(',')
+        (cnt,contrast) = cnt.split(b',')
         self.lcd_contrast={'contrast':contrast}
         (scn,disp_mode,rsv1,ch_log,g_att,rsv2,p25_lpf,disp_uid,rsv3,rsv4,rsv5,
-         rsv6,rsv7,rsv8,rsv9,rsv10,rsv11,rsv12,rsv13,rsv14,rsv15,rsv16) = scn.split(',')
+         rsv6,rsv7,rsv8,rsv9,rsv10,rsv11,rsv12,rsv13,rsv14,rsv15,rsv16) = scn.split(b',')
         self.scanner_option={'disp_mode':disp_mode, 'ch_log':ch_log,
                              'g_att':g_att, 'p25_lpf':p25_lpf, 'disp_uid':disp_uid}
 
@@ -1227,7 +1227,7 @@ class System:
          self.dly,rsv1,rsv2,rsv3,rsv4,rsv5,self.rev_index,self.fwd_index,
          self.chn_grp_head,self.chn_grp_tail,self.seq_no,self.start_key,
          rsv6,rsv7,rsv8,rsv9,rsv10,self.number_tag,self.agc_analog,
-         self.agc_digital,self.p25waiting,self.protect,rsv11) = res.split(',')
+         self.agc_digital,self.p25waiting,self.protect,rsv11) = res.split(b',')
 
         grp_index = self.chn_grp_head
 
@@ -1260,7 +1260,7 @@ class System:
              rsv6,rsv7,rsv8,rsv9,rsv10,rsv11,rsv12,self.tgid_grp_head,
              self.tgid_grp_tail,self.id_lout_grp_head,self.id_lout_grp_tail,
              self.mot_id,self.emg_color,self.emg_pattern,self.p25nac,
-             self.pri_id_scan) = res.split(',')
+             self.pri_id_scan) = res.split(b',')
 
             tgid_grp_index = self.tgid_grp_head
 
@@ -1280,7 +1280,7 @@ class System:
             self.logger.error('get_data(): cmd %s' % cmd)
             return 0
 
-        (qgl,s) = res.split(',')
+        (qgl,s) = res.split(b',')
         self.quick_lockout=zero_to_head(tuple(s))
 
         self.get_lockout_tgids()
@@ -1525,7 +1525,7 @@ class System:
             self.logger.error('append_site(): cmd %s' % cmd)
             return 0
 
-        (ast,site_index) = res.split(',')
+        (ast,site_index) = res.split(b',')
         if site_index == -1: return 0
         s=Site(self.scanner,site_index)
         self.sites[site_index]=s
@@ -1565,7 +1565,7 @@ class System:
             self.logger.error('append_group(): cmd %s' % cmd)
             return 0
 
-        (ag,grp_index) = res.split(',')
+        (ag,grp_index) = res.split(b',')
         if grp_index == -1: return 0
         g=Group(self.scanner,grp_index,self.sys_type)
         self.groups[grp_index]=g
@@ -1601,7 +1601,7 @@ class System:
         try:
             while int(tgid) != -1:
                 res = self.scanner.raw(cmd)
-                (gli,tgid) = res.split(',')
+                (gli,tgid) = res.split(b',')
                 l.append(tgid)
 
         except CommandError:
@@ -1618,7 +1618,7 @@ class System:
         try:
             while int(tgid) != -1:
                 res = self.scanner.raw(cmd)
-                (sli,tgid) = res.split(',')
+                (sli,tgid) = res.split(b',')
                 l.append(tgid)
 
         except CommandError:
@@ -1730,7 +1730,7 @@ class Group:
         (gin,self.grp_type,self.name,self.quick_key,self.lout,
          self.rev_index,self.fwd_index,self.sys_index,self.chn_head,
          self.chn_tail,self.seq_no,self.latitude,self.longitude,
-         self.grp_range,self.gps_enable) = res.split(',')
+         self.grp_range,self.gps_enable) = res.split(b',')
 
         chn_index = self.chn_head
 
@@ -1874,7 +1874,7 @@ class Group:
             self.logger.error('append_channel(): %s' % cmd)
             return 0
 
-        (acc,chn_index) = res.split(',')
+        (acc,chn_index) = res.split(b',')
         if chn_index == -1: return 0
         c=Channel(self.scanner,chn_index)
         self.channels[chn_index]=c
@@ -1894,7 +1894,7 @@ class Group:
             self.logger.error('append_tgid(): %s' % cmd)
             return 0
 
-        (act,chn_index) = res.split(',')
+        (act,chn_index) = res.split(b',')
         if chn_index == -1: return 0
         t=TalkGroupID(self.scanner,chn_index)
         self.tgids[chn_index]=t
@@ -2019,7 +2019,7 @@ class Site:
          self.fwd_index,self.sys_index,self.chn_head,self.chn_tail,
          self.seq_no,self.start_key,self.latitude,self.longitude,
          self.sit_range,self.gps_enable,rsv4,self.mot_type,
-         self.edacs_type,self.p25waiting,rsv5) = res.split(',')
+         self.edacs_type,self.p25waiting,rsv5) = res.split(b',')
 
         chn_index = self.chn_head
 
@@ -2040,7 +2040,7 @@ class Site:
 
         (mcp,lower1,upper1,step1,offset1,lower2,upper2,step2,offset2,
          lower3,upper3,step3,offset3,lower4,upper4,step4,offset4,
-         lower5,upper5,step5,offset5,lower6,upper6,step6,offset6) = res.split(',')
+         lower5,upper5,step5,offset5,lower6,upper6,step6,offset6) = res.split(b',')
 
         self.motorola_custom_band_plan={'lower': (0,lower1,lower2,lower3,lower4,lower5,lower6),
                                         'upper': (0,upper1,upper2,upper3,upper4,upper5,upper6),
@@ -2058,7 +2058,7 @@ class Site:
 
         (abp,bf_0,sf_0,bf_1,sf_1,bf_2,sf_2,bf_3,sf_3,bf_4,sf_4,bf_5,sf_5,
          bf_6,sf_6,bf_7,sf_7,bf_8,sf_8,bf_9,sf_9,bf_A,sf_A,bf_B,sf_B,
-         bf_C,sf_C,bf_D,sf_D,bf_E,sf_E,bf_F,sf_F) = res.split(',')
+         bf_C,sf_C,bf_D,sf_D,bf_E,sf_E,bf_F,sf_F) = res.split(b',')
 
         self.p25_band_plan = {'base_freq': [bf_0,bf_1,bf_2,bf_3,bf_4,bf_5,
                                             bf_6,bf_7,bf_8,bf_9,bf_A,bf_B,bf_C,bf_D,bf_E,bf_F],
@@ -2140,7 +2140,7 @@ class Site:
             self.logger.error('append_trunk_frq(): %s' % cmd)
             return 0
 
-        (acc,chn_index) = res.split(',')
+        (acc,chn_index) = res.split(b',')
         if chn_index == -1: return 0
         t=TrunkFrequency(self.scanner,chn_index)
         self.trunk_frqs[chn_index]=t
@@ -2311,7 +2311,7 @@ class Channel:
          self.rev_index,self.fwd_index,self.sys_index,
          self.grp_index,rsv1,self.audio_type,self.p25nac,
          self.number_tag,self.alt_color,self.alt_pattern,
-         self.vol_offset) = res.split(',')
+         self.vol_offset) = res.split(b',')
 
         return 1
 
@@ -2476,7 +2476,7 @@ class TrunkFrequency():
 
         (tfq,self.frq,self.lcn,self.lout,self.rev_index,self.fwd_index,
          self.sys_index,self.grp_index,rsv1,self.number_tag,
-         self.vol_offset,rsv2) = res.split(',')
+         self.vol_offset,rsv2) = res.split(b',')
 
         return 1
 
@@ -2612,7 +2612,7 @@ class TalkGroupID():
         (tin,self.name,self.tgid,self.lout,self.pri,self.alt,self.altl,
          self.rev_index,self.fwd_index,self.sys_index,self.grp_index,
          rsv1,self.audio_type,self.number_tag,self.alt_color,
-         self.alt_pattern,self.vol_offset) = res.split(',')
+         self.alt_pattern,self.vol_offset) = res.split(b',')
 
         return 1
 
@@ -2877,25 +2877,25 @@ class Search:
             return 0
 
         (sco,rsv1,mod,att,dly,rsv2,code_srch,bsc,rep,rsv3,rsv4,
-         max_store,rsv5,agc_analog,agc_digital,p25waiting) = sco.split(',')
+         max_store,rsv5,agc_analog,agc_digital,p25waiting) = sco.split(b',')
         self.srch_close_call = {'modulation':mod, 'attenuate':att, 'delay':dly, 'code_srch':code_srch,
                                 'bscreen':bsc, 'repeater':rep, 'max_store':max_store, 'agc_analog':agc_analog,
                                 'agc_digital':agc_digital, 'p25waiting':p25waiting }
 
-        (shk,srch_key_1,srch_key_2,srch_key_3,rsv1,rsv2,rsv3) = shk.split(',')
+        (shk,srch_key_1,srch_key_2,srch_key_3,rsv1,rsv2,rsv3) = shk.split(b',')
         self.search_key = (0,srch_key_1,srch_key_2,srch_key_3)
 
         (clc,cc_mode,cc_override,rsv1,altb,altl,altp,cc_band,
-         lout,hld,quick_key,number_tag,alt_color,alt_pattern) = clc.split(',')
+         lout,hld,quick_key,number_tag,alt_color,alt_pattern) = clc.split(b',')
         self.close_call = {'mode':cc_mode, 'override':cc_override, 'beep':altb,
                            'level':altl, 'pause':altp, 'band':cc_band, 'lockout':lout,
                            'hold':hld, 'quick_key':quick_key, 'number_tag':number_tag,
                            'color':alt_color, 'pattern':alt_pattern}
 
-        (csg,n) = csg.split(',')
+        (csg,n) = csg.split(b',')
         self.custom_search_group = tuple(n)
 
-        (bsp,frq,stp,spn,max_hold) = bsp.split(',')
+        (bsp,frq,stp,spn,max_hold) = bsp.split(b',')
 
         self.band_scope_system = {'frequency':frq, 'step':stp, 'span':spn, 'max_hold':max_hold}
 
@@ -2914,13 +2914,13 @@ class Search:
                 self.logger.error('get_data(): %s' % cmd)
                 return 0
 
-            (bbs,limit_l,limit_h) = bbs.split(',')
+            (bbs,limit_l,limit_h) = bbs.split(b',')
             limits[index]={'limit_l':limit_l, 'limit_h':limit_h}
 
             (cbp,mot_type,lower1,upper1,step1,offset1,
              lower2,upper2,step2,offset2,lower3,upper3,step3,offset3,
              lower4,upper4,step4,offset4,lower5,upper5,step5,offset5,
-             lower6,upper6,step6,offset6) = cbp.split(',')
+             lower6,upper6,step6,offset6) = cbp.split(b',')
             band_plan[index]={'mot_type':mot_type,
                               'lower': (0,lower1,lower2,lower3,lower4,lower5,lower6),
                               'upper': (0,upper1,upper2,upper3,upper4,upper5,upper6),
@@ -2929,7 +2929,7 @@ class Search:
 
             (csp,name,limit_l,limit_h,stp,mod,att,dly,rsv1,hld,lout,cch,
              rsv2,rsv3,quick_key,start_key,rsv4,number_tag,agc_analog,
-             agc_digital,p25waiting) = csp.split(',')
+             agc_digital,p25waiting) = csp.split(b',')
             cust_srch[index]={'name':name, 'limit_l':limit_l, 'limit_h':limit_h,
                               'step':stp, 'modulation':mod, 'attenuation':att, 'delay':dly, 'hold':hld,
                               'lockout':lout, 'cch':cch, 'quick_key':quick_key,
@@ -2953,7 +2953,7 @@ class Search:
                 return 0
 
             (ssp,srch_index,dly,att,hld,lout,quick_key,start_key,rsv1,
-             number_tag,agc_analog,agc_digital,p25waiting) = ssp.split(',')
+             number_tag,agc_analog,agc_digital,p25waiting) = ssp.split(b',')
 
             self.service_search[index] = {'delay':dly, 'attenuation':att, 'hold':hld,
                                           'lockout':lout, 'quick_key':quick_key, 'start_key':start_key,
@@ -3055,7 +3055,7 @@ class Search:
                 self.logger.error('get_global_lockout_frqs()')
                 return 0
 
-            (glf,frq) = glf.split(',')
+            (glf,frq) = glf.split(b',')
             frqs.append(frq)
 
         self.global_lout_frqs = tuple(frqs)
