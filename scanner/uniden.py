@@ -3372,19 +3372,19 @@ class Search:
         else: self.custom_search_group=('','','','','','','','','','')
         if len(global_lout_frqs)>1: self.global_lout_frqs=tuple(global_lout_frqs)
 
-if __name__ == "__main__":
-
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-
-    s=UnidenScanner('/dev/cu.usbmodem1434401',57600)
-
-    s.get_system_settings()
-    #print s.dump_system_settings()
-
-    s.close()
+# if __name__ == "__main__":
+#
+#     logger = logging.getLogger()
+#     logger.setLevel(logging.DEBUG)
+#     ch = logging.StreamHandler()
+#     ch.setLevel(logging.DEBUG)
+#     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#     ch.setFormatter(formatter)
+#     logger.addHandler(ch)
+#
+#     s=UnidenScanner('/dev/cu.usbmodem1434401',57600)
+#
+#     s.get_system_settings()
+#     #print s.dump_system_settings()
+#
+#     s.close()
