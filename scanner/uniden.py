@@ -117,7 +117,7 @@ class UnidenScanner:
         f2='OK'
 
         self.logger.debug('raw(): cmd %s' % cmd)
-        self.serial.write("".join([cmd,'\r']))
+        self.serial.write(str.encode("".join([cmd,'\r'])))
 
         res = (self.serial.readall()).strip('\r')
         self.logger.debug('raw(): res %s' % res)
@@ -3382,9 +3382,9 @@ if __name__ == "__main__":
     ch.setFormatter(formatter)
     logger.addHandler(ch)
 
-    s=UnidenScanner("/dev/scanners/2110",57600)
+    s=UnidenScanner('/dev/cu.usbmodem1434401',57600)
 
-    #s.get_system_settings()
+    s.get_system_settings()
     #print s.dump_system_settings()
 
     s.close()
