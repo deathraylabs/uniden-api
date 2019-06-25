@@ -143,7 +143,7 @@ class UnidenScanner:
             self.logger.error('get_model()')
             return 0
 
-        (cmd,self.model)=res.split(",")
+        (cmd,self.model)=res.split(b",")
 
 
     def get_version(self):
@@ -157,7 +157,7 @@ class UnidenScanner:
             self.logger.error('get_version()')
             return 0
 
-        (cmd,self.version)=res.split(",")
+        (cmd,self.version)=res.split(b",")
 
     def get_rssi_power(self):
 
@@ -3384,7 +3384,7 @@ class Search:
 #
 #     s=UnidenScanner('/dev/cu.usbmodem1434401',57600)
 #
-#     s.get_system_settings()
+#     # s.get_system_settings()
 #     #print s.dump_system_settings()
 #
-#     s.close()
+#     # s.close()
