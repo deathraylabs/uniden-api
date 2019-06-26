@@ -217,6 +217,7 @@ class UnidenScanner:
 
         return dict
 
+    #todo: this is not the preferred method for polling scanner
     def get_current_status(self):
 
         """Returns current scanner status.
@@ -412,10 +413,11 @@ class UnidenScanner:
         return vol
 
     def set_volume(self, vol):
-
         """Set Volume Level Settings
 
-        LEVEL		Volume Level ( 0 - 15 )"""
+        LEVEL		Volume Level ( 0 - 15 )
+        :returns 1 if success, 0 if fail
+        """
 
         cmd=",".join(['VOL',str(vol)])
 
@@ -668,6 +670,7 @@ class UnidenScanner:
 
         return 1
 
+    #todo: this method puts scanner into remote entry keypad lock mode
     def get_scan_settings(self):
 
         """Enters program mode and gets scanner scan settings data recursively."""
@@ -682,8 +685,8 @@ class UnidenScanner:
             self.logger.error('get_scan_settings(): failed to get head/tail.')
             return 0
 
-        (sih,self.system_index_head) = sih.split(',')
-        (sit,self.system_index_tail) = sit.split(',')
+        (sih,self.system_index_head) = sih.split(b',')
+        (sit,self.system_index_tail) = sit.split(b',')
 
         sys_index = self.system_index_head
 
@@ -1344,52 +1347,52 @@ class System:
 
         """Shows system data. Not descending to groups and sites."""
 
-        print ('--------SYSTEM-------')
-        print ('System Index:\t\t\t%s') % self.sys_index
-        print ('System Type:\t\t\t%s') % self.sys_type
-        print ('Name:\t\t\t\t%s') % self.name
-        print ('Quick Key:\t\t\t%s') % self.quick_key
-        print ('System Hold Time:\t\t%s') % self.hld
-        print ('Lockout:\t\t\t%s') % self.lout
-        print ('Delay:\t\t\t\t%s s') % self.dly
-        print ('Reverse System Index:\t\t%s') % self.rev_index
-        print ('Forward System Index:\t\t%s') % self.fwd_index
-        print ('Group Index Head:\t\t%s') % self.chn_grp_head
-        print ('Group Index Tail:\t\t%s') % self.chn_grp_tail
-        print ('System Sequence Number:\t\t%s') % self.seq_no
-        print ('Startup Configuration Key:\t%s') % self.start_key
-        print ('Number tag:\t\t\t%s') % self.number_tag
-        print ('AGC Setting for Analog Audio:\t%s') % self.agc_analog
-        print ('AGC Setting for Digital Audio:\t%s') % self.agc_digital
-        print ('P25 Waiting time:\t\t%s') % self.p25waiting
-        print ('Protect:\t\t\t%s') % human_onoff[self.protect]
+        print('--------SYSTEM-------')
+        print('System Index:\t\t\t%s') % self.sys_index
+        print('System Type:\t\t\t%s') % self.sys_type
+        print('Name:\t\t\t\t%s') % self.name
+        print('Quick Key:\t\t\t%s') % self.quick_key
+        print('System Hold Time:\t\t%s') % self.hld
+        print('Lockout:\t\t\t%s') % self.lout
+        print('Delay:\t\t\t\t%s s') % self.dly
+        print('Reverse System Index:\t\t%s') % self.rev_index
+        print('Forward System Index:\t\t%s') % self.fwd_index
+        print('Group Index Head:\t\t%s') % self.chn_grp_head
+        print('Group Index Tail:\t\t%s') % self.chn_grp_tail
+        print('System Sequence Number:\t\t%s') % self.seq_no
+        print('Startup Configuration Key:\t%s') % self.start_key
+        print('Number tag:\t\t\t%s') % self.number_tag
+        print('AGC Setting for Analog Audio:\t%s') % self.agc_analog
+        print('AGC Setting for Digital Audio:\t%s') % self.agc_digital
+        print('P25 Waiting time:\t\t%s') % self.p25waiting
+        print('Protect:\t\t\t%s') % human_onoff[self.protect]
 
 
         if self.sys_type != 'CNV':
 
-            print ('ID Search/Scan:\t\t\t%s') % self.id_search
-            print ('Motorola Status Bit:\t\t\t%s') % self.s_bit
-            print ('Motorola End Code:\t\t\t%s') % self.end_code
-            print ('EDACS ID Format:\t\t\t%s') % self.afs
-            print ('Emergency Alert:\t\t\t%s') % self.emg
-            print ('Emergency Alert Level:\t\t\t%s') % self.emgl
-            print ('Fleet Map:\t\t\t%s') % self.fmap
-            print ('Custom Fleet Map Setting:\t\t%s') % self.ctm_fmap
-            print ('TGID Index Head:\t\t\t%s') % self.tgid_grp_head
-            print ('TGID Index Tail:\t\t\t%s') % self.tgid_grp_tail
-            print ('L/O TGID Group Index Head:\t\t%s') % self.id_lout_grp_head
-            print ('L/O TGID Group Index Tail:\t\t%s') % self.id_lout_grp_tail
-            print ('Motorola/P25 ID Format:\t\t\t%s') % self.mot_id
-            print ('Emergency Alert Light Color:\t\t%s') % self.emg_color
-            print ('Emergency Alert Light Pattern:\t\t%s') % self.emg_pattern
-            print ('P25 NAC Status:\t\t\t%s') % self.p25nac
-            print ('Priority ID Scan:\t\t\t%s') % self.pri_id_scan
+            print('ID Search/Scan:\t\t\t%s') % self.id_search
+            print('Motorola Status Bit:\t\t\t%s') % self.s_bit
+            print('Motorola End Code:\t\t\t%s') % self.end_code
+            print('EDACS ID Format:\t\t\t%s') % self.afs
+            print('Emergency Alert:\t\t\t%s') % self.emg
+            print('Emergency Alert Level:\t\t\t%s') % self.emgl
+            print('Fleet Map:\t\t\t%s') % self.fmap
+            print('Custom Fleet Map Setting:\t\t%s') % self.ctm_fmap
+            print('TGID Index Head:\t\t\t%s') % self.tgid_grp_head
+            print('TGID Index Tail:\t\t\t%s') % self.tgid_grp_tail
+            print('L/O TGID Group Index Head:\t\t%s') % self.id_lout_grp_head
+            print('L/O TGID Group Index Tail:\t\t%s') % self.id_lout_grp_tail
+            print('Motorola/P25 ID Format:\t\t\t%s') % self.mot_id
+            print('Emergency Alert Light Color:\t\t%s') % self.emg_color
+            print('Emergency Alert Light Pattern:\t\t%s') % self.emg_pattern
+            print('P25 NAC Status:\t\t\t%s') % self.p25nac
+            print('Priority ID Scan:\t\t\t%s') % self.pri_id_scan
 
     def show_brief(self):
 
         """Shows brief system data: name, type, groups and sites."""
 
-        print ('Index: %s\tName: %s\tType: %s\tLockout: %s') % (self.sys_index,self.name,self.sys_type,human_lout[self.lout])
+        print('Index: %s\tName: %s\tType: %s\tLockout: %s') % (self.sys_index,self.name,self.sys_type,human_lout[self.lout])
         for i in sorted(self.groups): self.groups[i].show_brief()
         for i in sorted(self.sites): self.sites[i].show_brief()
 
@@ -1775,27 +1778,27 @@ class Group:
 
         """Shows group data. Not descending to channels and tgids."""
 
-        print ('--------GROUP-------')
-        print ('Group Index:\t\t\t%s') % self.grp_index
-        print ('Group Type:\t\t\t%s') % self.grp_type
-        print ('Name:\t\t\t\t%s') % self.name
-        print ('Quick Key:\t\t\t%s') % self.quick_key
-        print ('Reverse Channel Index:\t\t%s') % self.rev_index
-        print ('Forward Channel Index:\t\t%s') % self.fwd_index
-        print ('System Index:\t\t\t%s') % self.sys_index
-        print ('Channel Index Head:\t\t%s') % self.chn_head
-        print ('Channel Index Tail:\t\t%s') % self.chn_tail
-        print ('Group Sequence Number:\t\t%s') % self.seq_no
-        print ('North or South Latitude:\t\%s') % self.latitude
-        print ('West or East Longitude:\t\t%s') % self.longitude
-        print ('Range:\t\t\t\t%s') % self.grp_range
-        print ('GPS Location detection:\t\t%s') % human_onoff[self.gps_enable]
+        print('--------GROUP-------')
+        print('Group Index:\t\t\t%s') % self.grp_index
+        print('Group Type:\t\t\t%s') % self.grp_type
+        print('Name:\t\t\t\t%s') % self.name
+        print('Quick Key:\t\t\t%s') % self.quick_key
+        print('Reverse Channel Index:\t\t%s') % self.rev_index
+        print('Forward Channel Index:\t\t%s') % self.fwd_index
+        print('System Index:\t\t\t%s') % self.sys_index
+        print('Channel Index Head:\t\t%s') % self.chn_head
+        print('Channel Index Tail:\t\t%s') % self.chn_tail
+        print('Group Sequence Number:\t\t%s') % self.seq_no
+        print('North or South Latitude:\t\%s') % self.latitude
+        print('West or East Longitude:\t\t%s') % self.longitude
+        print('Range:\t\t\t\t%s') % self.grp_range
+        print('GPS Location detection:\t\t%s') % human_onoff[self.gps_enable]
 
     def show_brief(self):
 
         """Shows brief group data: index, name, channels or tgids."""
 
-        print ('\tIndex: %s\tName: %s\tLockout: %s') % (self.grp_index,self.name,human_lout[self.lout])
+        print('\tIndex: %s\tName: %s\tLockout: %s') % (self.grp_index,self.name,human_lout[self.lout])
         for i in sorted(self.channels): self.channels[i].show_brief()
         for i in sorted(self.tgids): self.tgids[i].show_brief()
 
@@ -2095,35 +2098,35 @@ class Site:
 
         """Shows site data. Not descending to trunk frequency."""
 
-        print ('--------SITE-------')
-        print ('Site Index:\t\t\t%s') % self.sit_index
-        print ('Name:\t\t\t\t%s') % self.name
-        print ('Quick Key:\t\t\t%s') % self.quick_key
-        print ('Site Hold Time:\t\t\t%s') % self.hld
-        print ('Lockout:\t\t\t%s') % human_lout[self.lout]
-        print ('Modulation:\t\t\t%s') % self.mod
-        print ('Attenuation:\t\t\t%s') % human_onoff[self.att]
-        print ('Control Channel Only:\t\t%s') % self.c_ch
-        print ('Reverse Site Index:\t\t%s') % self.rev_index
-        print ('Forward Site Index:\t\t%s') % self.fwd_index
-        print ('System Index:\t\t\t%s') % self.sys_index
-        print ('Channel Index Head:\t\t%s') % self.chn_head
-        print ('Channel Index Tail:\t\t%s') % self.chn_tail
-        print ('Site Sequence Number:\t\t\t%s') % self.seq_no
-        print ('Start Key:\t\t\t%s') % self.start_key
-        print ('North or South Latitude:\t%s') % self.latitude
-        print ('West or East Longitude:\t\t%s') % self.longitude
-        print ('Range:\t\t\t\t%s') % self.sit_range
-        print ('GPS Location detection:\t\t%s') % human_onoff[self.gps_enable]
-        print ('Band type for MOT/EDACS:\t\t%s') % self.mot_type
-        print ('EDACS:\t\t\t\t%s') % self.edacs_type
-        print ('P25 Waiting time:\t\t\t%s') % self.p25waiting
+        print('--------SITE-------')
+        print('Site Index:\t\t\t%s') % self.sit_index
+        print('Name:\t\t\t\t%s') % self.name
+        print('Quick Key:\t\t\t%s') % self.quick_key
+        print('Site Hold Time:\t\t\t%s') % self.hld
+        print('Lockout:\t\t\t%s') % human_lout[self.lout]
+        print('Modulation:\t\t\t%s') % self.mod
+        print('Attenuation:\t\t\t%s') % human_onoff[self.att]
+        print('Control Channel Only:\t\t%s') % self.c_ch
+        print('Reverse Site Index:\t\t%s') % self.rev_index
+        print('Forward Site Index:\t\t%s') % self.fwd_index
+        print('System Index:\t\t\t%s') % self.sys_index
+        print('Channel Index Head:\t\t%s') % self.chn_head
+        print('Channel Index Tail:\t\t%s') % self.chn_tail
+        print('Site Sequence Number:\t\t\t%s') % self.seq_no
+        print('Start Key:\t\t\t%s') % self.start_key
+        print('North or South Latitude:\t%s') % self.latitude
+        print('West or East Longitude:\t\t%s') % self.longitude
+        print('Range:\t\t\t\t%s') % self.sit_range
+        print('GPS Location detection:\t\t%s') % human_onoff[self.gps_enable]
+        print('Band type for MOT/EDACS:\t\t%s') % self.mot_type
+        print('EDACS:\t\t\t\t%s') % self.edacs_type
+        print('P25 Waiting time:\t\t\t%s') % self.p25waiting
 
     def show_brief(self):
 
         """Shows brief site data: index, name and trunk frequencies."""
 
-        print ('\tIndex: %s\tName: %s\t Lockout: %s') % (self.sit_index,self.name,human_lout[self.lout])
+        print('\tIndex: %s\tName: %s\t Lockout: %s') % (self.sit_index,self.name,human_lout[self.lout])
         for i in sorted(self.trunk_frqs): self.trunk_frqs[i].show_brief()
 
 
@@ -2339,34 +2342,34 @@ class Channel:
 
         """Shows channel data."""
 
-        print ('--------CHANNEL-------')
-        print ('Channel Index:\t\t\t%s') % self.chn_index
-        print ('Name:\t\t\t\t%s') % self.name
-        print ('Channel Frequency:\t\t%s MHz') % frq_from_scanner(self.frq)
-        print ('Modulation:\t\t\t%s') % self.mod
-        print ('Attenuation:\t\t\t%s') % human_onoff[self.att]
-        print ('CTCSS/DCS Status:\t\t%s') % human_ctcss_dscs[self.dcs]
-        print ('CTCSS/DCS Tone Lockout:\t\t%s') % human_onoff[self.tlock]
-        print ('Lockout:\t\t\t%s') % human_lout[self.lout]
-        print ('Priority:\t\t\t%s') % human_onoff[self.pri]
-        print ('Alert Tone:\t\t\t%s') % human_alert_tones[self.alt]
-        print ('Alert Tone Level:\t\t%s') % human_alert_tlevels[self.altl]
-        print ('Reverse Channel Index:\t\t%s') % self.rev_index
-        print ('Forward Channel Index:\t\t%s') % self.fwd_index
-        print ('System Index:\t\t\t%s') % self.sys_index
-        print ('Group Index:\t\t\t%s') % self.grp_index
-        print ('Audio Type:\t\t\t%s') % human_audiot[self.audio_type]
-        print ('P25 NAC Status:\t\t\t%s') % self.p25nac
-        print ('Number tag:\t\t\t%s') % self.number_tag
-        print ('Alert Light color:\t\t%s') % self.alt_color
-        print ('Alert Light Pattern:\t\t%s') % human_altp[self.alt_pattern]
-        print ('Volume Offset:\t\t\t%s') % self.vol_offset
+        print('--------CHANNEL-------')
+        print('Channel Index:\t\t\t%s') % self.chn_index
+        print('Name:\t\t\t\t%s') % self.name
+        print('Channel Frequency:\t\t%s MHz') % frq_from_scanner(self.frq)
+        print('Modulation:\t\t\t%s') % self.mod
+        print('Attenuation:\t\t\t%s') % human_onoff[self.att]
+        print('CTCSS/DCS Status:\t\t%s') % human_ctcss_dscs[self.dcs]
+        print('CTCSS/DCS Tone Lockout:\t\t%s') % human_onoff[self.tlock]
+        print('Lockout:\t\t\t%s') % human_lout[self.lout]
+        print('Priority:\t\t\t%s') % human_onoff[self.pri]
+        print('Alert Tone:\t\t\t%s') % human_alert_tones[self.alt]
+        print('Alert Tone Level:\t\t%s') % human_alert_tlevels[self.altl]
+        print('Reverse Channel Index:\t\t%s') % self.rev_index
+        print('Forward Channel Index:\t\t%s') % self.fwd_index
+        print('System Index:\t\t\t%s') % self.sys_index
+        print('Group Index:\t\t\t%s') % self.grp_index
+        print('Audio Type:\t\t\t%s') % human_audiot[self.audio_type]
+        print('P25 NAC Status:\t\t\t%s') % self.p25nac
+        print('Number tag:\t\t\t%s') % self.number_tag
+        print('Alert Light color:\t\t%s') % self.alt_color
+        print('Alert Light Pattern:\t\t%s') % human_altp[self.alt_pattern]
+        print('Volume Offset:\t\t\t%s') % self.vol_offset
 
     def show_brief(self):
 
         """Shows brief channel data: index, name and frequency."""
 
-        print ('\t\tIndex: %s\tName: %s\tFrequency: %s\t Lockout: %s') % (self.chn_index,self.name,
+        print('\t\tIndex: %s\tName: %s\tFrequency: %s\t Lockout: %s') % (self.chn_index,self.name,
                                                                           frq_from_scanner(self.frq),human_lout[self.lout])
 
     def dump(self):
@@ -2501,23 +2504,23 @@ class TrunkFrequency():
 
         """Shows trunk frequency data."""
 
-        print ('--------TRUNK FREQ-------')
-        print ('Trunk Frequency Index:\t\t%s') % self.chn_index
-        print ('Trunk Frequency:\t\t%s MHz') % frq_from_scanner(self.frq)
-        print ('LCN:\t\t\t\t%s') % self.lcn
-        print ('Lockout:\t\t\t%s') % human_lout[self.lout]
-        print ('Reverse Frequency Index:\t%s') % self.rev_index
-        print ('Forward Frequency Index:\t%s') % self.fwd_index
-        print ('System Index:\t\t\t%s') % self.sys_index
-        print ('Site Index:\t\t\t%s') % self.grp_index
-        print ('Number tag:\t\t\t%s') % self.number_tag
-        print ('Volume Offset:\t\t\t%s') % self.vol_offset
+        print('--------TRUNK FREQ-------')
+        print('Trunk Frequency Index:\t\t%s') % self.chn_index
+        print('Trunk Frequency:\t\t%s MHz') % frq_from_scanner(self.frq)
+        print('LCN:\t\t\t\t%s') % self.lcn
+        print('Lockout:\t\t\t%s') % human_lout[self.lout]
+        print('Reverse Frequency Index:\t%s') % self.rev_index
+        print('Forward Frequency Index:\t%s') % self.fwd_index
+        print('System Index:\t\t\t%s') % self.sys_index
+        print('Site Index:\t\t\t%s') % self.grp_index
+        print('Number tag:\t\t\t%s') % self.number_tag
+        print('Volume Offset:\t\t\t%s') % self.vol_offset
 
     def show_brief(self):
 
         """Shows brief group data: index, frequency."""
 
-        print ('\t\tIndex: %s\tFrequency: %s') % (self.chn_index, frq_from_scanner(self.frq))
+        print('\t\tIndex: %s\tFrequency: %s') % (self.chn_index, frq_from_scanner(self.frq))
 
     def dump(self):
 
@@ -2639,29 +2642,29 @@ class TalkGroupID():
 
         """Shows TGID data."""
 
-        print ('--------TGID-------')
-        print ('TGID Index:\t\t\t%s') % self.chn_index
-        print ('Name:\t\t\t\t%s') % self.name
-        print ('TGID:\t\t\t\t%s') % self.tgid
-        print ('Lockout:\t\t\t%s') % human_lout[self.lout]
-        print ('Priority:\t\t\t%s') % human_onoff[self.pri]
-        print ('Alert Tone:\t\t\t%s') % human_alert_tones[self.alt]
-        print ('Alert Tone Level:\t\t%s') % human_alert_tlevels[self.altl]
-        print ('Reverse Channel Index:\t\t%s') % self.rev_index
-        print ('Forward Channel Index:\t\t%s') % self.fwd_index
-        print ('System Index:\t\t\t%s') % self.sys_index
-        print ('Group Index:\t\t\t%s') % self.grp_index
-        print ('Audio Type:\t\t\t%s') % self.audio_type
-        print ('Number tag:\t\t\t%s') % self.number_tag
-        print ('Alert Light color:\t\t%s') % self.alt_color
-        print ('Alert Light Pattern:\t\t%s') % human_altp[self.alt_pattern]
-        print ('Volume Offset:\t\t\t%s') % self.vol_offset
+        print('--------TGID-------')
+        print('TGID Index:\t\t\t%s') % self.chn_index
+        print('Name:\t\t\t\t%s') % self.name
+        print('TGID:\t\t\t\t%s') % self.tgid
+        print('Lockout:\t\t\t%s') % human_lout[self.lout]
+        print('Priority:\t\t\t%s') % human_onoff[self.pri]
+        print('Alert Tone:\t\t\t%s') % human_alert_tones[self.alt]
+        print('Alert Tone Level:\t\t%s') % human_alert_tlevels[self.altl]
+        print('Reverse Channel Index:\t\t%s') % self.rev_index
+        print('Forward Channel Index:\t\t%s') % self.fwd_index
+        print('System Index:\t\t\t%s') % self.sys_index
+        print('Group Index:\t\t\t%s') % self.grp_index
+        print('Audio Type:\t\t\t%s') % self.audio_type
+        print('Number tag:\t\t\t%s') % self.number_tag
+        print('Alert Light color:\t\t%s') % self.alt_color
+        print('Alert Light Pattern:\t\t%s') % human_altp[self.alt_pattern]
+        print('Volume Offset:\t\t\t%s') % self.vol_offset
 
     def show_brief(self):
 
         """Shows brief TGID data."""
 
-        print ('\t\tIndex: %s\tName: %s\tTGID: %s\tLockout:%s') % (self.chn_index,self.name,self.tgid,human_lout[self.lout])
+        print('\t\tIndex: %s\tName: %s\tTGID: %s\tLockout:%s') % (self.chn_index,self.name,self.tgid,human_lout[self.lout])
 
     def dump(self):
 
