@@ -2129,7 +2129,6 @@ class Site:
         print('\tIndex: %s\tName: %s\t Lockout: %s') % (self.sit_index,self.name,human_lout[self.lout])
         for i in sorted(self.trunk_frqs): self.trunk_frqs[i].show_brief()
 
-
     def append_trunk_frq(self):
 
         """Appends trunk frequency to site. Returns trunk frequency index."""
@@ -2171,7 +2170,7 @@ class Site:
 
         """Dumps group data to dictionary."""
 
-        cch='on'
+        cch = 'on'
         qk=self.quick_key
         lout=human_lout[self.lout]
         att=human_onoff[self.att]
@@ -2198,9 +2197,11 @@ class Site:
 
         return d
 
-    def load(self, name='NONAME', quick_key='.', hold='0', lockout='unlock', modulation='', attenuation='off',
-             start_key='.', latitude='00000000N', longitude='000000000W', range='0', gps='off', cch='on',
-             band_type='', edacs='', p25_waiting='', trunk_frqs=[], motorola_bp={}, p25_bp={}):
+    def load(self, name='NONAME', quick_key='.', hold='0', lockout='unlock',
+             modulation='', attenuation='off', start_key='.',
+             latitude='00000000N', longitude='000000000W', range='0',
+             gps='off', cch='on', band_type='', edacs='', p25_waiting='',
+             trunk_frqs=[], motorola_bp={}, p25_bp={}):
 
         """Loads dictionary to group class."""
 
