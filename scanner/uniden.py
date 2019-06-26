@@ -176,7 +176,7 @@ class UnidenScanner:
             self.logger.error('get_rssi_power()')
             return 0
 
-        (cmd,rssi,frq)=res.split(",")
+        (cmd,rssi,frq)=res.split(b",")
         dict={'rssi':rssi, 'frq':frq}
 
         return dict
@@ -208,7 +208,7 @@ class UnidenScanner:
             return 0
 
         (cmd,frq_tgid,mod,att,ctcss_dcs,name1,name2,name3,
-         sql,mut,sys_tag,chan_tag,p25nac)=res.split(",")
+         sql,mut,sys_tag,chan_tag,p25nac)=res.split(b",")
 
         dict={'frq_tgid':frq_tgid, 'mod':mod, 'att':att,
               'ctcss_dcs':ctcss_dcs, 'name1':name1, 'name2':name2,
@@ -240,7 +240,7 @@ class UnidenScanner:
             self.logger.error('get_current_status()')
             return 0
 
-        l=res.split(",")
+        l=res.split(b",")
         n=len(l[1])
 
         cm=l[2:n*2+1]
@@ -391,7 +391,7 @@ class UnidenScanner:
             self.logger.error('set_curfrq_reception_status(): %s' % cmd)
             return 0
 
-        (cmd,rssi,frq,sql) = res.split(",")
+        (cmd,rssi,frq,sql) = res.split(b",")
 
         return (rssi,frq,sql)
 
@@ -408,7 +408,7 @@ class UnidenScanner:
             self.logger.error('get_volume()')
             return 0
 
-        (cmd,vol) = res.split(",")
+        (cmd,vol) = res.split(b",")
         return vol
 
     def set_volume(self, vol):
@@ -441,7 +441,7 @@ class UnidenScanner:
             self.logger.error('get_squelch()')
             return 0
 
-        (cmd,sql) = res.split(",")
+        (cmd,sql) = res.split(b",")
 
         return sql
 
@@ -475,7 +475,7 @@ class UnidenScanner:
             self.logger.error('get_apco_data_settings()')
             return 0
 
-        (cmd,rsv1,rsv2,err_rate) = res.split(",")
+        (cmd,rsv1,rsv2,err_rate) = res.split(b",")
 
         return err_rate
 
