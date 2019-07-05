@@ -32,6 +32,7 @@ def zero_to_head(t):
 
     return tuple(l)
 
+
 def zero_to_tail(t):
 
     l=list(t)
@@ -40,6 +41,7 @@ def zero_to_tail(t):
     l.pop(0)
 
     return tuple(l)
+
 
 def frq_to_scanner(f):
 
@@ -52,6 +54,7 @@ def frq_to_scanner(f):
     module_logger.debug('frq_to_scanner(): l=%s,r=%s' % (l,r))
 
     return ''.join([l,r])
+
 
 def frq_from_scanner(f):
 
@@ -917,11 +920,15 @@ class UnidenScanner:
 
 class UnidenScannerError(Exception): pass
 
+
 class CommandError(UnidenScannerError): pass
+
 
 class ModulationError(UnidenScannerError): pass
 
+
 class BScreenError(UnidenScannerError): pass
+
 
 class Settings:
 
@@ -1130,6 +1137,7 @@ class Settings:
         if scanner_option: self.scanner_option=scanner_option
 
         return 1
+
 
 class System:
 
@@ -1706,6 +1714,7 @@ class System:
 
         return 1
 
+
 class Group:
 
     """Scanner Group class."""
@@ -1975,6 +1984,7 @@ class Group:
         self.tgids.pop(chn_index)
 
         return 1
+
 
 class Site:
 
@@ -2277,6 +2287,7 @@ class Site:
 
         return 1
 
+
 class Channel:
 
     """Scanner Channel class."""
@@ -2466,6 +2477,7 @@ class Channel:
 
         return 1
 
+
 class TrunkFrequency():
 
     """Scanner Trunk Frequency class."""
@@ -2589,6 +2601,7 @@ class TrunkFrequency():
             return 0
 
         return 1
+
 
 class TalkGroupID():
 
@@ -2747,6 +2760,7 @@ class TalkGroupID():
             return 0
 
         return 1
+
 
 class Search:
 
@@ -3413,6 +3427,7 @@ class Search:
         if len(custom_search_group) == 10: self.custom_search_group=tuple(custom_search_group)
         else: self.custom_search_group=('','','','','','','','','','')
         if len(global_lout_frqs)>1: self.global_lout_frqs=tuple(global_lout_frqs)
+
 
 # if __name__ == "__main__":
 #
