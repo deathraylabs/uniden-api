@@ -18,6 +18,7 @@ import yaml
 import time
 import serial
 import logging
+import import xmltodict
 from constants import *
 
 # create logger
@@ -222,42 +223,42 @@ class UnidenScanner:
         return dict
 
     #todo: this is not the preferred method for polling scanner
+    # def get_current_status(self):
+    #
+    #     """Returns current scanner status.
+    #     DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1) 0 means Small Font / 1 means Large Font.
+    #     Lx_CHAR		Linex Characters 16char (fixed length)
+    #     Lx_MODE		Linex Display Mode 16char
+    #     SQL 		Squelch Status (0:CLOSE / 1:OPEN)
+    #     MUT 		Mute Status (0:OFF / 1:ON)
+    #     BAT 		Battery Low Status (0:No Alert / 1:Alert)
+    #     WAT		Weather Alert Status (0:No Alert / 1: Alert / $$$: Alert SAME CODE)
+    #     SIG_LVL		Signal Level (0–5)
+    #     BK_COLOR	Backlight Color (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
+    #     BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )"""
+    #
+    #     dict={}
+    #
+    #     try:
+    #         res = self.raw('STS')
+    #
+    #     except CommandError:
+    #         self.logger.error('get_current_status()')
+    #         return 0
+    #
+    #     l=res.split(b",")
+    #     n=len(l[1])
+    #
+    #     cm=l[2:n*2+1]
+    #     while (len(cm)<17): cm.append('')
+    #
+    #     dict={'dsp_form':l[0], 'char': tuple(cm[0::2]), 'mode': tuple(cm[1::2]),
+    #           'sql':l[-9], 'mut':l[-8], 'bat':l[-7], 'wat':l[-6], 'rsv1':l[-5],
+    #           'rsv2':l[-4], 'sig_lvl':l[-3], 'bk_color':l[-2], 'bk_dimmer':l[-1]}
+    #
+    #     return dict
+
     def get_current_status(self):
-
-        """Returns current scanner status.
-        DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1) 0 means Small Font / 1 means Large Font.
-        Lx_CHAR		Linex Characters 16char (fixed length)
-        Lx_MODE		Linex Display Mode 16char
-        SQL 		Squelch Status (0:CLOSE / 1:OPEN)
-        MUT 		Mute Status (0:OFF / 1:ON)
-        BAT 		Battery Low Status (0:No Alert / 1:Alert)
-        WAT		Weather Alert Status (0:No Alert / 1: Alert / $$$: Alert SAME CODE)
-        SIG_LVL		Signal Level (0–5)
-        BK_COLOR	Backlight Color (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
-        BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )"""
-
-        dict={}
-
-        try:
-            res = self.raw('STS')
-
-        except CommandError:
-            self.logger.error('get_current_status()')
-            return 0
-
-        l=res.split(b",")
-        n=len(l[1])
-
-        cm=l[2:n*2+1]
-        while (len(cm)<17): cm.append('')
-
-        dict={'dsp_form':l[0], 'char': tuple(cm[0::2]), 'mode': tuple(cm[1::2]),
-              'sql':l[-9], 'mut':l[-8], 'bat':l[-7], 'wat':l[-6], 'rsv1':l[-5],
-              'rsv2':l[-4], 'sig_lvl':l[-3], 'bk_color':l[-2], 'bk_dimmer':l[-1]}
-
-        return dict
-
-    def get_scanner_information(self):
 
         """Returns current scanner status.
         DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1) 0 means Small Font / 1 means Large Font.
