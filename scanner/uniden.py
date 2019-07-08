@@ -18,7 +18,7 @@ import yaml
 import time
 import serial
 import logging
-import import xmltodict
+import xmltodict
 from constants import *
 
 # create logger
@@ -272,28 +272,19 @@ class UnidenScanner:
         BK_COLOR	Backlight Color (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
         BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )"""
 
-        dict={}
-
         try:
-            res = self.raw('GSI')
+            # get xml data from scanner, convert to unicode
+            # exclude the prefix data 'GSI,<XML>,\r'
+            res = s.raw('GSI').decode()[11:]
 
         except CommandError:
             self.logger.error('get_scanner_information()')
             return 0
 
-        print(res)
+        # generate ordered dict containing scanner information
+        dict = xmltodict.parse(res)
 
-        # l=res.split(b",")
-        # n=len(l[1])
-        #
-        # cm=l[2:n*2+1]
-        # while (len(cm)<17): cm.append('')
-        #
-        # dict={'dsp_form':l[0], 'char': tuple(cm[0::2]), 'mode': tuple(cm[1::2]),
-        #       'sql':l[-9], 'mut':l[-8], 'bat':l[-7], 'wat':l[-6], 'rsv1':l[-5],
-        #       'rsv2':l[-4], 'sig_lvl':l[-3], 'bk_color':l[-2], 'bk_dimmer':l[-1]}
-        #
-        # return dict
+        return dict
 
     def push_key(self, mode, key):
 
@@ -3430,8 +3421,32 @@ class Search:
         if len(global_lout_frqs)>1: self.global_lout_frqs=tuple(global_lout_frqs)
 
 
-# if __name__ == "__main__":
-#
+# this code will be executed if this file is run directly
+# if this api is imported into another script, it will be ignored
+if __name__ == "__main__":
+
+    import xml.etree.ElementTree as ET
+    # alternative way to deal with xml output
+    import xmltodict
+    from pprint import *
+
+    s = UnidenScanner('/dev/cu.usbmodem1434401', 57600)
+
+
+    def runn(s, cmd='GSI'):
+        # get xml data from scanner, convert to unicode
+        # exclude the prefix data 'GSI,<XML>,\r'
+        xmldat = s.raw(cmd).decode()[11:]
+
+        # get xml data into dict form
+        parsed_xml = xmltodict.parse(xmldat)
+
+        # scanner_state = {}
+
+        pprint(parsed_xml)
+
+        return parsed_xml
+
 #     logger = logging.getLogger()
 #     logger.setLevel(logging.DEBUG)
 #     ch = logging.StreamHandler()
