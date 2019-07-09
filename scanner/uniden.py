@@ -56,6 +56,7 @@ def zero_to_tail(t):
     return tuple(l)
 
 
+# noinspection PyPep8
 def frq_to_scanner(f):
     module_logger.debug('frq_to_scanner(): f=%s' % f)
     if f == '' or f == 0:
@@ -134,7 +135,7 @@ class UnidenScanner:
 
         """Wrapper for raw scanner command"""
 
-        f2 = 'OK'
+        # f2 = 'OK'
 
         self.logger.debug('raw(): cmd %s' % cmd)
         self.serial.write(str.encode("".join([cmd, '\r'])))
@@ -142,6 +143,7 @@ class UnidenScanner:
         res = (self.serial.readall()).strip(b'\r')
         self.logger.debug('raw(): res %s' % res)
 
+        # todo: I don't quite understand this section of code
         if res.count(b',') == 1:
             f2 = res.split(b',')[1]
         else:
@@ -202,7 +204,8 @@ class UnidenScanner:
     def get_reception_status(self):
 
         """Get reception status.
-        The Scanner returns GLG,,,,,,,,,[\r] until it detects a frequency or a TGID.
+        The Scanner returns GLG,,,,,,,,,[\r] until it detects a frequency
+            or a TGID.
         FRQ/TGID	Frequency or TGID
         MOD		Modulation (AM/FM/NFM/WFM/FMB)
         ATT		Attenuation (0:OFF / 1:ON)
@@ -216,8 +219,6 @@ class UnidenScanner:
         CHAN_TAG	Current channel number tag (0-999/NONE)
         P25NAC		P25 NAC Status ( 0-FFF: 0-FFF / NONE: Nac None)"""
 
-        dict = {}
-
         try:
             res = self.raw('GLG')
 
@@ -228,26 +229,37 @@ class UnidenScanner:
         (cmd, frq_tgid, mod, att, ctcss_dcs, name1, name2, name3,
          sql, mut, sys_tag, chan_tag, p25nac) = res.split(b",")
 
-        dict = {'frq_tgid': frq_tgid, 'mod': mod, 'att': att,
-                'ctcss_dcs': ctcss_dcs, 'name1': name1, 'name2': name2,
-                'name3': name3, 'sql': sql, 'mute': mut, 'sys_tag': sys_tag,
-                'chan_tag': chan_tag, 'p25nac': p25nac}
+        reception_status = {'frq_tgid': frq_tgid,
+                            'mod': mod,
+                            'att': att,
+                            'ctcss_dcs': ctcss_dcs,
+                            'name1': name1,
+                            'name2': name2,
+                            'name3': name3,
+                            'sql': sql,
+                            'mute': mut,
+                            'sys_tag': sys_tag,
+                            'chan_tag': chan_tag,
+                            'p25nac': p25nac}
 
-        return dict
+        return reception_status
 
     # todo: this is not the preferred method for polling scanner
     # def get_current_status(self):
     #
     #     """Returns current scanner status.
-    #     DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1) 0 means Small Font / 1 means Large Font.
+    #     DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1)
+    #               0 means Small Font / 1 means Large Font.
     #     Lx_CHAR		Linex Characters 16char (fixed length)
     #     Lx_MODE		Linex Display Mode 16char
     #     SQL 		Squelch Status (0:CLOSE / 1:OPEN)
     #     MUT 		Mute Status (0:OFF / 1:ON)
     #     BAT 		Battery Low Status (0:No Alert / 1:Alert)
-    #     WAT		Weather Alert Status (0:No Alert / 1: Alert / $$$: Alert SAME CODE)
+    #     WAT		Weather Alert Status
+    #               (0:No Alert / 1: Alert / $$$: Alert SAME CODE)
     #     SIG_LVL		Signal Level (0–5)
-    #     BK_COLOR	Backlight Color (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
+    #     BK_COLOR	Backlight Color
+    #               (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
     #     BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )"""
     #
     #     dict={}
@@ -265,9 +277,18 @@ class UnidenScanner:
     #     cm=l[2:n*2+1]
     #     while (len(cm)<17): cm.append('')
     #
-    #     dict={'dsp_form':l[0], 'char': tuple(cm[0::2]), 'mode': tuple(cm[1::2]),
-    #           'sql':l[-9], 'mut':l[-8], 'bat':l[-7], 'wat':l[-6], 'rsv1':l[-5],
-    #           'rsv2':l[-4], 'sig_lvl':l[-3], 'bk_color':l[-2], 'bk_dimmer':l[-1]}
+    # dict={'dsp_form':l[0],
+    #       'char': tuple(cm[0::2]),
+    #       'mode': tuple(cm[1::2]),
+    #       'sql':l[-9],
+    #       'mut':l[-8],
+    #       'bat':l[-7],
+    #       'wat':l[-6],
+    #       'rsv1':l[-5],
+    #       'rsv2':l[-4],
+    #       'sig_lvl':l[-3],
+    #       'bk_color':l[-2],
+    #       'bk_dimmer':l[-1]}
     #
     #     return dict
 
@@ -363,10 +384,11 @@ class UnidenScanner:
                               rep=0, agc_analog=0, agc_digital=0,
                               p25waiting=200):
 
-        """This command is invalid when the scanner is in Menu Mode, during Direct Entry operation,
-        during Quick Save operation.
+        """This command is invalid when the scanner is in Menu Mode,
+        during Direct Entry operation, or during Quick Save operation.
         FUNCTION
-        UASD specifies arbitrary frequency and changes to Quick Search Hold (VFO) mode.
+        UASD specifies arbitrary frequency and changes to
+                Quick Search Hold (VFO) mode.
         Parameter, such as STP, changes the contents of Srch/CloCall option.
         Note: Even when only [FRQ] parameter is set, this command will work.
 
@@ -409,8 +431,8 @@ class UnidenScanner:
              rsv, str(agc_analog), str(agc_digital), str(p25waiting)])
 
         try:
-            res = self.raw(cmd)
-
+            self.raw(cmd)
+            # res = self.raw(cmd)
         except CommandError:
             self.logger.error('set_quick_search_hold(): %s' % cmd)
             return 0
@@ -433,7 +455,7 @@ class UnidenScanner:
         if mod not in mod_values:
             raise ModulationError
 
-        if (len(bsc) != 16 or len(bsc.replace('0', '').replace('1', ''))):
+        if len(bsc) != 16 or len(bsc.replace('0', '').replace('1', '')):
             raise BScreenError
 
         cmd = ",".join(
@@ -450,7 +472,7 @@ class UnidenScanner:
 
         (cmd, rssi, frq, sql) = res.split(b",")
 
-        return (rssi, frq, sql)
+        return rssi, frq, sql
 
     def get_volume(self):
 
@@ -478,7 +500,7 @@ class UnidenScanner:
         cmd = ",".join(['VOL', str(vol)])
 
         try:
-            res = self.raw(cmd)
+            self.raw(cmd)
 
         except CommandError:
             self.logger.error('set_volume(): cmd %s' % cmd)
@@ -512,7 +534,7 @@ class UnidenScanner:
         cmd = ",".join(['SQL', str(sql)])
 
         try:
-            res = self.raw(cmd)
+            self.raw(cmd)
 
         except CommandError:
             self.logger.error('set_squelch(): cmd %s' % cmd)
@@ -528,7 +550,6 @@ class UnidenScanner:
 
         try:
             res = self.raw('P25')
-
         except CommandError:
             self.logger.error('get_apco_data_settings()')
             return 0
@@ -547,7 +568,7 @@ class UnidenScanner:
         cmd = ",".join(['P25', rsv, rsv, str(p25)])
 
         try:
-            res = self.raw(cmd)
+            self.raw(cmd)
 
         except CommandError:
             self.logger.error('set_apco_data_settings(): %s' % cmd)
@@ -557,10 +578,13 @@ class UnidenScanner:
 
     def jump_number_tag(self, sys_tag='NONE', chan_tag='NONE'):
 
-        """When both [SYS_TAG] and [CHAN_TAG] are set as blank, scanner returns error.
-        When [SYS_TAG] is set as blank, [CHAN_TAG] is set with a number tag, scanner jump to
+        """When both [SYS_TAG] and [CHAN_TAG] are set as blank,
+        scanner returns error.
+        When [SYS_TAG] is set as blank, [CHAN_TAG] is set with a number tag,
+        scanner jump to
         the channel number tag in current system.
-        When [SYS_TAG] is set with a number tag, [CHAN_TAG] is set as blank, scanner jump to
+        When [SYS_TAG] is set with a number tag, [CHAN_TAG] is set as blank,
+        scanner jump to
         the first channel of the system number tag.
 
         SYS_TAG		System Number Tag (0-999/NONE)
@@ -569,7 +593,7 @@ class UnidenScanner:
         cmd = ",".join(['JNT', str(sys_tag), str(chan_tag)])
 
         try:
-            res = self.raw(cmd)
+            self.raw(cmd)
 
         except CommandError:
             self.logger.error('jump_number_tag(): %s' % cmd)
@@ -597,7 +621,8 @@ class UnidenScanner:
 
         """A/D Value (0-255)
         Returns current window voltage and its frequency.
-        The order of the frequency digits is from 1 GHz digit to 100 Hz digit."""
+        The order of the frequency digits is from 1 GHz digit to 100 Hz digit.
+        """
 
         try:
             res = self.raw('WIN')
@@ -608,19 +633,20 @@ class UnidenScanner:
 
         (win, ad_value, frq) = res.split(b',')
 
-        return (ad_value, frq)
+        return ad_value, frq
 
     def enter_program_mode(self):
 
-        """This command is invalid when the scanner is in Menu Mode, during Direct Entry operation,
-        during Quick Save operation.
+        """This command is invalid when the scanner is in Menu Mode,
+        during Direct Entry operation, or during Quick Save operation.
 
         The scanner goes to Program Mode.
-        The scanner displays "Remote Mode" on first line and "Keypad Lock" on second line in
+        The scanner displays "Remote Mode" on first line and
+        "Keypad Lock" on second line in
         Program Mode."""
 
         try:
-            res = self.raw('PRG')
+            self.raw('PRG')
 
         except CommandError:
             self.logger.error('enter_program_mode()')
@@ -1211,6 +1237,7 @@ class System:
         self.agc_digital = '0'
         self.p25waiting = '200'
         self.protect = '0'
+        self.protected = None
 
         self.id_search = '0'
         self.s_bit = '0'
