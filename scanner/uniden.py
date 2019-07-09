@@ -3515,9 +3515,17 @@ def save_state_to_db(state, db_path='uniden.sqlite'):
 
     return True
 
+# todo: code that checks if scanning or receiving
 
 def traverse_state(state, prefix=''):
+    """Run through the OrderedDict generated from XML scanner output and
+    reorganize to better suit DB
+    """
+
     for k, v in state.items():
+        # I'm not a fan of the leading @ symbol
+        k = k.lstrip('@')
+
         if isinstance(v, dict):
             print('\n-------INCEPTED!--------\n')
             k_prefix = k + '-'
