@@ -3519,12 +3519,13 @@ def save_state_to_db(state, db_path='uniden.sqlite'):
 def traverse_state(state, prefix=''):
     for k, v in state.items():
         if isinstance(v, dict):
-            print('INCEPTED!')
+            print('\n-------INCEPTED!--------\n')
             k_prefix = k + '-'
             traverse_state(v, k_prefix)
         else:
-            print(prefix + k)
-            print(v, type(v) is 'collections.OrderedDict')
+            new_k = prefix + k
+            print(new_k)
+            print(v, '\n')
 
     return None
 
