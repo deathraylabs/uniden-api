@@ -5,14 +5,21 @@
 # Uniden Scanner Python API
 # Copyright (C) 2014-2015 Anton Komarov
 #
-# This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License 
-# as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+# This program is free software;
+# you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation;
+# either version 2 of the License, or (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
-# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
 #
-# You should have received a copy of the GNU General Public License along with this program; 
-# if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+# You should have received a copy of the GNU General Public License
+# along with this program;
+# if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 import yaml
 import time
@@ -2420,15 +2427,15 @@ class Channel:
 
         """Dumps group data to dictionary."""
 
-        frq=frq_from_scanner(self.frq)
-        dcs=human_ctcss_dcs[self.dcs]
-        tlock=human_lout[self.tlock]
-        lout=human_lout[self.lout]
-        pri=human_onoff[self.pri]
-        att=human_onoff[self.att]
-        if self.audio_type!='': audiot=human_audiot[self.audio_type]
+        frq = frq_from_scanner(self.frq)
+        dcs = human_ctcss_dcs[self.dcs]
+        tlock = human_lout[self.tlock]
+        lout = human_lout[self.lout]
+        pri = human_onoff[self.pri]
+        att = human_onoff[self.att]
+        if self.audio_type!='': audiot = human_audiot[self.audio_type]
         else: audiot=''
-        altp=human_altp[self.alt_pattern]
+        altp = human_altp[self.alt_pattern]
         vol=self.vol_offset
         level=human_alert_tlevels[self.altl]
         tone=human_alert_tones[self.alt]
@@ -2440,12 +2447,14 @@ class Channel:
 
         return d
 
-    def load(self, name='NONAME', frequency='0', modulation='AM', dcs='all', tone_lockout='unlock',
-             lockout='unlock', priority='off', attenuate='off', alert_tone='off',
-             alert_level='auto', audio_type='all', p25nac='', tag='NONE', alert_color='off',
+    def load(self, name='NONAME', frequency='0', modulation='AM',
+             dcs='all', tone_lockout='unlock', lockout='unlock',
+             priority='off', attenuate='off', alert_tone='off',
+             alert_level='auto', audio_type='all', p25nac='',
+             tag='NONE', alert_color='off',
              pattern='on', vol_offset='0'):
 
-        """Loads dictionary to group class."""
+        # Loads dictionary to group class.
 
         self.name=name
         self.frq=frq_to_scanner(frequency)
@@ -3461,7 +3470,7 @@ class Search:
         self.logger.debug('load(): self.service_search dictionary '+str(self.service_search[i]))
 
         if len(search_key) == 4: self.search_key=tuple(search_key)
-        else: self.search_key=('','','','')
+        else: self.search_key=('', '', '', '')
         if len(custom_search_group) == 10: self.custom_search_group=tuple(custom_search_group)
         else: self.custom_search_group=('','','','','','','','','','')
         if len(global_lout_frqs)>1: self.global_lout_frqs=tuple(global_lout_frqs)
