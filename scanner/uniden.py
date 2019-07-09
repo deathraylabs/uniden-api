@@ -26,18 +26,20 @@ import time
 import serial
 import logging
 import xmltodict
+# noinspection PyUnresolvedReferences
 from constants import *
-from pprint import *  # not super important
+# from pprint import *  # not super important
 import sqlite3
-import types
 
 # create logger
 module_logger = logging.getLogger('uniden_api')
 
 
+# noinspection PyPep8
 def zero_to_head(t):
     l = list(t)
-    if len(l) != 10: return tuple(l)
+    if len(l) != 10:
+        return tuple(l)
     l.insert(0, l[9])
     l.pop(10)
 
@@ -74,6 +76,9 @@ def frq_from_scanner(f):
 
 
 class UnidenScanner:
+    """Initiates communication with the scanner and provides a series of
+    methods to get and set specific settings."""
+
     err_list = ('NG', 'ORER', 'FER', 'ERR', '')
 
     def __init__(self, port, speed="115200"):
@@ -93,6 +98,7 @@ class UnidenScanner:
         self.systems = {}
         self.searches = Search(self)
         self.free_memory_block = None
+        self.free_memory_blocks = None
         self.used_memory_block = {}
         self.default_band_coverage = ()
 
@@ -266,13 +272,15 @@ class UnidenScanner:
     def get_current_status(self):
 
         """Returns current scanner status.
-        DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1) 0 means Small Font / 1 means Large Font.
+        DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1)
+                    0 means Small Font / 1 means Large Font.
         Lx_CHAR		Linex Characters 16char (fixed length)
         Lx_MODE		Linex Display Mode 16char
         SQL 		Squelch Status (0:CLOSE / 1:OPEN)
         MUT 		Mute Status (0:OFF / 1:ON)
         BAT 		Battery Low Status (0:No Alert / 1:Alert)
-        WAT		Weather Alert Status (0:No Alert / 1: Alert / $$$: Alert SAME CODE)
+        WAT		    Weather Alert Status (0:No Alert / 1: Alert / $$$: Alert
+                    SAME CODE)
         SIG_LVL		Signal Level (0–5)
         BK_COLOR	Backlight Color (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
         BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )"""
