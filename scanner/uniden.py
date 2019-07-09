@@ -3383,33 +3383,77 @@ class Search:
         for i in indexes:
             try:
                 if i not in service_search:
-                    self.service_search[i]={'agc_analog':'','agc_digital':'','attenuation':'',
-                                            'delay':'','hold':'','lockout':'','number_tag':'',
-                                            'p25waiting':'','quick_key':'','start_key':''}
+                    self.service_search[i]={'agc_analog':'',
+                                            'agc_digital':'',
+                                            'attenuation':'',
+                                            'delay':'',
+                                            'hold':'',
+                                            'lockout':'',
+                                            'number_tag':'',
+                                            'p25waiting':'',
+                                            'quick_key':'',
+                                            'start_key':''
+                                            }
                 else:
-                    self.logger.debug('load(): service_search dictionary '+str(service_search))
+                    self.logger.debug(
+                        'load(): service_search dictionary ' +
+                        str(service_search))
 
                     self.service_search[i]={}
-                    if 'agc_analog' not in service_search[i]: self.service_search[i].update({'agc_analog':''})
-                    else: self.service_search[i].update({'agc_analog':scanner_onoff[service_search[i]['agc_analog']]})
-                    if 'agc_digital' not in service_search[i]: self.service_search[i].update({'agc_digital':''})
-                    else: self.service_search[i].update({'agc_digital':scanner_onoff[service_search[i]['agc_digital']]})
-                    if 'attenuation' not in service_search[i]: self.service_search[i].update({'attenuation':''})
-                    else: self.service_search[i].update({'attenuation':scanner_onoff[service_search[i]['attenuation']]})
-                    if 'delay' not in service_search[i]: self.service_search[i].update({'delay':''})
-                    else: self.service_search[i].update({'delay':service_search[i]['delay']})
-                    if 'hold' not in service_search[i]: self.service_search[i].update({'hold':''})
-                    else: self.service_search[i].update({'hold':service_search[i]['hold']})
-                    if 'lockout' not in service_search[i]: self.service_search[i].update({'lockout':''})
-                    else: self.service_search[i].update({'lockout':scanner_lout[service_search[i]['lockout']]})
-                    if 'number_tag' not in service_search[i]: self.service_search[i].update({'number_tag':''})
-                    else: self.service_search[i].update({'number_tag':service_search[i]['number_tag']})
-                    if 'p25waiting' not in service_search[i]: self.service_search[i].update({'p25waiting':''})
-                    else: self.service_search[i].update({'p25waiting':service_search[i]['p25waiting']})
-                    if 'quick_key' not in service_search[i]: self.service_search[i].update({'quick_key':''})
-                    else: self.service_search[i].update({'quick_key':service_search[i]['quick_key']})
-                    if 'start_key' not in service_search[i]: self.service_search[i].update({'start_key':''})
-                    else: self.service_search[i].update({'start_key':service_search[i]['start_key']})
+                    if 'agc_analog' not in service_search[i]:
+                        self.service_search[i].update({'agc_analog':''})
+                    else:
+                        self.service_search[i].update(
+                            {'agc_analog': scanner_onoff[service_search[i][
+                                'agc_analog']]})
+                    if 'agc_digital' not in service_search[i]:
+                        self.service_search[i].update({'agc_digital':''})
+                    else:
+                        self.service_search[i].update(
+                            {'agc_digital': scanner_onoff[service_search[i][
+                                'agc_digital']]})
+                    if 'attenuation' not in service_search[i]:
+                        self.service_search[i].update({'attenuation':''})
+                    else:
+                        self.service_search[i].update(
+                            {'attenuation': scanner_onoff[service_search[i][
+                                'attenuation']]})
+                    if 'delay' not in service_search[i]:
+                        self.service_search[i].update({'delay':''})
+                    else:
+                        self.service_search[i].update(
+                            {'delay':service_search[i]['delay']})
+                    if 'hold' not in service_search[i]:
+                        self.service_search[i].update({'hold':''})
+                    else:
+                        self.service_search[i].update(
+                            {'hold':service_search[i]['hold']})
+                    if 'lockout' not in service_search[i]:
+                        self.service_search[i].update({'lockout':''})
+                    else:
+                        self.service_search[i].update(
+                            {'lockout': scanner_lout[service_search[i][
+                                'lockout']]})
+                    if 'number_tag' not in service_search[i]:
+                        self.service_search[i].update({'number_tag':''})
+                    else:
+                        self.service_search[i].update(
+                            {'number_tag':service_search[i]['number_tag']})
+                    if 'p25waiting' not in service_search[i]:
+                        self.service_search[i].update({'p25waiting':''})
+                    else:
+                        self.service_search[i].update(
+                            {'p25waiting': service_search[i]['p25waiting']})
+                    if 'quick_key' not in service_search[i]:
+                        self.service_search[i].update({'quick_key': ''})
+                    else:
+                        self.service_search[i].update(
+                            {'quick_key':service_search[i]['quick_key']})
+                    if 'start_key' not in service_search[i]:
+                        self.service_search[i].update({'start_key':''})
+                    else:
+                        self.service_search[i].update(
+                            {'start_key':service_search[i]['start_key']})
 
             except Exception as e:
                 self.logger.error('load(), service search %s' % str(e))
@@ -3421,6 +3465,7 @@ class Search:
         if len(custom_search_group) == 10: self.custom_search_group=tuple(custom_search_group)
         else: self.custom_search_group=('','','','','','','','','','')
         if len(global_lout_frqs)>1: self.global_lout_frqs=tuple(global_lout_frqs)
+
 
 # todo: clean up this testing function
 def runcmd(s, cmd='GSI'):
