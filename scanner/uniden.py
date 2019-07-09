@@ -3508,8 +3508,23 @@ def save_state_to_db(state, db_path='uniden.sqlite'):
     except sqlite3.OperationalError:
         print('Already exists, suckass!')
 
+    # The scanner info screen lets you know that the scanner is "scanning"
+    if statestate['ScannerInfo']['ViewDescription'] is None:
+        print("I got data, pa!")
+
     return True
 
+
+def traverse_state(state):
+    for k, v in state.items():
+        if type(v) is 'collections.OrderedDict':
+            print('INCEPTED!')
+            traverse_state(v)
+        else:
+            print(k)
+            print(v, type(v) is 'collections.OrderedDict')
+
+    return None
 
 # this code will be executed if this file is run directly
 # if this api is imported into another script, it will be ignored
@@ -3518,7 +3533,7 @@ if __name__ == "__main__":
     s = UnidenScanner('/dev/cu.usbmodem1434401')
 
     scanstate = runcmd(s)
-    save_state_to_db(scanstate)
+    # save_state_to_db(scanstate)
 
 #     logger = logging.getLogger()
 #     logger.setLevel(logging.DEBUG)
