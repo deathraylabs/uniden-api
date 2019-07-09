@@ -29,6 +29,7 @@ import xmltodict
 from constants import *
 from pprint import *   # not super important
 import sqlite3
+import types
 
 
 # create logger
@@ -3509,19 +3510,20 @@ def save_state_to_db(state, db_path='uniden.sqlite'):
         print('Already exists, suckass!')
 
     # The scanner info screen lets you know that the scanner is "scanning"
-    if statestate['ScannerInfo']['ViewDescription'] is None:
+    if state['ScannerInfo']['ViewDescription'] is None:
         print("I got data, pa!")
 
     return True
 
 
-def traverse_state(state):
+def traverse_state(state, prefix=''):
     for k, v in state.items():
-        if type(v) is 'collections.OrderedDict':
+        if isinstance(v, dict):
             print('INCEPTED!')
-            traverse_state(v)
+            k_prefix = k + '-'
+            traverse_state(v, k_prefix)
         else:
-            print(k)
+            print(prefix + k)
             print(v, type(v) is 'collections.OrderedDict')
 
     return None
@@ -3533,6 +3535,8 @@ if __name__ == "__main__":
     s = UnidenScanner('/dev/cu.usbmodem1434401')
 
     scanstate = runcmd(s)
+    traverse_state(scanstate)
+
     # save_state_to_db(scanstate)
 
 #     logger = logging.getLogger()
