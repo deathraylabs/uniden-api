@@ -28,6 +28,7 @@ import logging
 import xmltodict
 from constants import *
 from pprint import *   # not super important
+import sqlite3
 
 
 # create logger
@@ -3476,33 +3477,55 @@ class Search:
         if len(global_lout_frqs)>1: self.global_lout_frqs=tuple(global_lout_frqs)
 
 
-# todo: clean up this testing function
-def runcmd(s, cmd='GSI'):
+# todo: function should eventually save to object state variables
+def runcmd(scanner, cmd='GSI'):
     # get xml data from scanner, convert to unicode
     # exclude the prefix data 'GSI,<XML>,\r'
-    xmldat = s.raw(cmd).decode()[11:]
+    xmldat = scanner.raw(cmd).decode()[11:]
 
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)
 
     # scanner_state = {}
 
-    pprint(parsed_xml)
+    # pprint(parsed_xml)
 
     return parsed_xml
+
+
+def save_state_to_db(state, db_path='uniden.sqlite'):
+    """Function opens connection to database and stores current scanner
+    state.
+    """
+
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # cur.execute('DROP TABLE IF EXISTS Counts')
+
+    try:
+        cur.execute('CREATE TABLE Counts (org TEXT, count INTEGER)')
+    except sqlite3.OperationalError:
+        print('Already exists, suckass!')
+
+    return True
 
 
 # this code will be executed if this file is run directly
 # if this api is imported into another script, it will be ignored
 if __name__ == "__main__":
 
-    s = UnidenScanner('/dev/cu.usbmodem1434401', 115200)
+    s = UnidenScanner('/dev/cu.usbmodem1434401')
+
+    scanstate = runcmd(s)
+    save_state_to_db(scanstate)
 
 #     logger = logging.getLogger()
 #     logger.setLevel(logging.DEBUG)
 #     ch = logging.StreamHandler()
 #     ch.setLevel(logging.DEBUG)
-#     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#     formatter = logging.Formatter('%(asctime)s - %(name)s - '
+#                                   '%(levelname)s - %(message)s')
 #     ch.setFormatter(formatter)
 #     logger.addHandler(ch)
 #
