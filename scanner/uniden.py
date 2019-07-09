@@ -48,7 +48,8 @@ def zero_to_head(t):
 
 def zero_to_tail(t):
     l = list(t)
-    if len(l) != 10: return tuple(l)
+    if len(l) != 10:
+        return tuple(l)
     l.insert(9, l[0])
     l.pop(0)
 
@@ -57,7 +58,8 @@ def zero_to_tail(t):
 
 def frq_to_scanner(f):
     module_logger.debug('frq_to_scanner(): f=%s' % f)
-    if f == '' or f == 0: return f
+    if f == '' or f == 0:
+        return f
 
     l, r = str(f).split('.')
     l = l.rjust(4, '0')
@@ -100,6 +102,7 @@ class UnidenScanner:
         self.free_memory_block = None
         self.free_memory_blocks = None
         self.used_memory_block = {}
+        self.used_memory_blocks = {}
         self.default_band_coverage = ()
 
         self.open(port, speed)
@@ -109,8 +112,8 @@ class UnidenScanner:
     # self.get_version()
 
     def open(self, port, speed):
-
-        """Open scanner method, accepts port and speed, timeout is set for 100ms"""
+        """Open scanner method, accepts port and speed,
+        timeout is set for 100ms"""
 
         try:
             self.serial = serial.Serial(port, speed, timeout=0.1)
@@ -180,10 +183,9 @@ class UnidenScanner:
         """Returns current RSSI level and its frequency.
         The order of the frequency digits is from 1 GHz digit to 100 Hz digit.
 
-        RSSI		RSSI A/D Value (0-1023)
-        FRQ		The order of the frequency digits is from 1 GHz digit to 100 Hz digit."""
-
-        dict = {}
+        RSSI	RSSI A/D Value (0-1023)
+        FRQ		The order of the frequency digits is from 1 GHz digit to
+                100 Hz digit."""
 
         try:
             res = self.raw('PWR')
@@ -193,9 +195,9 @@ class UnidenScanner:
             return 0
 
         (cmd, rssi, frq) = res.split(b",")
-        dict = {'rssi': rssi, 'frq': frq}
+        rssi_level = {'rssi': rssi, 'frq': frq}
 
-        return dict
+        return rssi_level
 
     def get_reception_status(self):
 
@@ -282,7 +284,8 @@ class UnidenScanner:
         WAT		    Weather Alert Status (0:No Alert / 1: Alert / $$$: Alert
                     SAME CODE)
         SIG_LVL		Signal Level (0–5)
-        BK_COLOR	Backlight Color (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
+        BK_COLOR	Backlight Color
+                    (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
         BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )"""
 
         try:
@@ -295,9 +298,9 @@ class UnidenScanner:
             return 0
 
         # generate ordered dict containing scanner information
-        dict = xmltodict.parse(res)
+        scanner_xml = xmltodict.parse(res)
 
-        return dict
+        return scanner_xml
 
     def push_key(self, mode, key):
 
@@ -371,7 +374,8 @@ class UnidenScanner:
         MOD		Modulation (AUTO/AM/FM/NFM/WFM/FMB)
         ATT		Attenuation (0:OFF / 1:ON)
         DLY		Delay Time (-10,-5,-2,0,1,2,5,10,30)
-        CODE_SRCH	CTCSS/DCS/P25 NAC Search (0:OFF / 1: CTCSS/DCS / 2: P25 NAC Search)
+        CODE_SRCH	CTCSS/DCS/P25 NAC Search
+                    (0:OFF / 1: CTCSS/DCS / 2: P25 NAC Search)
         BSC		Broadcast Screen (16digit: ########・・#)
         (each # is 0 or 1)                         ||||||||・・+- Band10
         0 means OFF				   ||||||||       :
@@ -396,7 +400,7 @@ class UnidenScanner:
         if mod not in mod_values:
             raise ModulationError
 
-        if (len(bsc) != 16 or len(bsc.replace('0', '').replace('1', ''))):
+        if len(bsc) != 16 or len(bsc.replace('0', '').replace('1', '')):
             raise BScreenError
 
         cmd = ",".join(
