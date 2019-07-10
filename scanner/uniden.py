@@ -46,6 +46,7 @@ def zero_to_head(t):
     return tuple(l)
 
 
+# noinspection PyPep8
 def zero_to_tail(t):
     l = list(t)
     if len(l) != 10:
@@ -70,6 +71,7 @@ def frq_to_scanner(f):
     return ''.join([l, r])
 
 
+# noinspection PyPep8
 def frq_from_scanner(f):
     f = str(float(f) / 10000)
     l, r = f.split('.')
@@ -79,8 +81,8 @@ def frq_from_scanner(f):
 
 
 class UnidenScanner:
-    """Initiates communication with the scanner and provides a series of
-    methods to get and set specific settings."""
+    """Initiates communication with the scanner when an instance is created and
+    provides a series of methods to get and set scanner settings."""
 
     err_list = ('NG', 'ORER', 'FER', 'ERR', '')
 
@@ -132,11 +134,11 @@ class UnidenScanner:
         self.close()
 
     def raw(self, cmd):
-
         """Wrapper for raw scanner command"""
 
         # f2 = 'OK'
 
+        # todo: learn how to use logger module
         self.logger.debug('raw(): cmd %s' % cmd)
         self.serial.write(str.encode("".join([cmd, '\r'])))
 
@@ -3857,7 +3859,7 @@ def traverse_state(state, prefix=''):
 
         # start over if value is a dict, we want terminal branches
         if isinstance(v, dict):
-            print('\n-------INCEPTED!--------\n')
+            # print('\n-------INCEPTED!--------\n')
 
             # this ensures hierarchy is preserved
             k_prefix = k + '-'
@@ -3867,8 +3869,8 @@ def traverse_state(state, prefix=''):
             # make sure any prefix passed is added to the current key
             new_k = prefix + k
 
-            print(new_k)
-            print(v, '\n')
+            # print(new_k)
+            # print(v, '\n')
 
     return None
 
@@ -3876,24 +3878,24 @@ def traverse_state(state, prefix=''):
 # this code will be executed if this file is run directly
 # if this api is imported into another script, it will be ignored
 if __name__ == "__main__":
+
+    # save_state_to_db(scanstate)
+
+    # start logging the session
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - '
+                                  '%(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+#
     s = UnidenScanner('/dev/cu.usbmodem1434401')
 
     scanstate = runcmd(s)
     traverse_state(scanstate)
 
-    # save_state_to_db(scanstate)
-
-#     logger = logging.getLogger()
-#     logger.setLevel(logging.DEBUG)
-#     ch = logging.StreamHandler()
-#     ch.setLevel(logging.DEBUG)
-#     formatter = logging.Formatter('%(asctime)s - %(name)s - '
-#                                   '%(levelname)s - %(message)s')
-#     ch.setFormatter(formatter)
-#     logger.addHandler(ch)
-#
-#     s=UnidenScanner('/dev/cu.usbmodem1434401',57600)
-#
 #     # s.get_system_settings()
 #     #print s.dump_system_settings()
 #
