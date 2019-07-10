@@ -153,8 +153,12 @@ class UnidenScanner:
 
         # decode byte string to native UTF-8 string
         res = self.serial.readall().decode()
-        # we don't need the return character in scanner output
+
+        # todo: why did the original programmer strip final '\r'?
         res = res.strip('\r')
+
+        # the \r character is causing me problems, so lets replace with \n
+        res = res.replace('\r', '\n')
 
         self.logger.debug('raw(): res %s' % res)
 
