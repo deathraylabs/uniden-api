@@ -170,8 +170,13 @@ class UnidenScanner:
             return res
 
     def get_model(self):
+        """Get scanner model information, saving to internal state as well as
+        returning the value.
 
-        """Returns Model Information."""
+        Returns:
+            self.model (str): model number
+
+        """
 
         try:
             res = self.raw('MDL')
@@ -180,7 +185,10 @@ class UnidenScanner:
             self.logger.error('get_model()')
             return 0
 
-        (cmd, self.model) = res.split(b",")
+        # not sure why I'd need the returned command but I'll leave it
+        (cmd, self.model) = res.split(',')
+
+        return self.model
 
     def get_version(self):
 
@@ -3907,7 +3915,7 @@ if __name__ == "__main__":
     s = UnidenScanner('/dev/cu.usbmodem1434401')
 
     scanstate = runcmd(s)
-    traverse_state(scanstate)
+    # traverse_state(scanstate)
 
 #     # s.get_system_settings()
 #     #print s.dump_system_settings()
