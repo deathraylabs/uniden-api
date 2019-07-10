@@ -134,20 +134,33 @@ class UnidenScanner:
         self.close()
 
     def raw(self, cmd):
-        """Wrapper for raw scanner command"""
+        """Accepts scanner commands as UTF-8 strings and handles all the
+        encoding and decoding required to communicate with the scanner.
+        Scanner response is returned as UTF-8 string.
 
-        # f2 = 'OK'
+        Args:
+            cmd (str): Scanner command as UTF-8 string (see scanner
+            documentation). Actual command will be converted to byte string
+            before being sent to scanner.
 
-        # todo: learn how to use logger module
+        Returns:
+            res (str): Scanner response as UTF-8 string.
+
+        """
+
         self.logger.debug('raw(): cmd %s' % cmd)
         self.serial.write(str.encode("".join([cmd, '\r'])))
 
-        res = (self.serial.readall()).strip(b'\r')
+        # decode byte string to native UTF-8 string
+        res = self.serial.readall().decode()
+        # we don't need the return character in scanner output
+        res = res.strip('\r')
+
         self.logger.debug('raw(): res %s' % res)
 
-        # todo: I don't quite understand this section of code
-        if res.count(b',') == 1:
-            f2 = res.split(b',')[1]
+        # check to see if scanner throws error
+        if res.count(',') == 1:
+            f2 = res.split(',')[1]
         else:
             f2 = res
 
@@ -3814,7 +3827,7 @@ class Search:
 def runcmd(scanner, cmd='GSI'):
     # get xml data from scanner, convert to unicode
     # exclude the prefix data 'GSI,<XML>,\r'
-    xmldat = scanner.raw(cmd).decode()[11:]
+    xmldat = scanner.raw(cmd)[11:]
 
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)
