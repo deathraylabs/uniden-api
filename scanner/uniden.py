@@ -1237,7 +1237,7 @@ class Settings:
 
         return 1
 
-
+# todo: this doesn't work with SDS-100
 class System:
     """Scanner System class."""
 
@@ -1293,50 +1293,50 @@ class System:
         self.srch_lout_tgids = ()
 
     def get_data(self):
-
         """Get System Information.
-        When the system protect bit is ON, except [SYS_TYPE], [NAME], [REV_INDEX],
-        [FWD_INDEX], [CHN_GRP_HEAD], [CHN_GRP_TAIL], other parameters will be send as a
+        When the system protect bit is ON, except [SYS_TYPE], [NAME],
+        [REV_INDEX],[FWD_INDEX], [CHN_GRP_HEAD], [CHN_GRP_TAIL],
+        other parameters will be send as a
         reserve parameter in the Radio -> Controller command.
 
         INDEX		System Index
         SYS_TYPE	System Type
-                CNV CONVENTIONAL
-                MOT MOTOROLA TYPE
-                EDC EDACS Narrow / Wide
-                EDS EDACS SCAT
-                LTR LTR
-                P25S P25 STANDARD
-                P25F P25 One Frequency TRUNK
+                CNV     CONVENTIONAL
+                MOT     MOTOROLA TYPE
+                EDC     EDACS Narrow / Wide
+                EDS     EDACS SCAT
+                LTR     LTR
+                P25S    P25 STANDARD
+                P25F    P25 One Frequency TRUNK
         NAME		Name (max.16char)
         QUICK_KEY	Quick Key (0-99/.(dot) means none)
-        HLD		System Hold Time (0-255)
-        LOUT		Lockout (0:Unlocked / 1:Lockout)
-        DLY		Delay Time (-10,-5,-2,0,1,2,5,10,30)
+        HLD	        System Hold Time (0-255)
+        LOUT        Lockout (0:Unlocked / 1:Lockout)
+        DLY		    Delay Time (-10,-5,-2,0,1,2,5,10,30)
         REV_INDEX	Reverse System Index of the Scan Setting
         FWD_INDEX	Forward System Index of the Scan Setting
-        CHN_GRP_HEAD	Channel Group Index Head of the conventional system or Site Index
-                Head of the Trunked System
-        CHN_GRP_TAIL	Channel Group Index Tail of the conventional system or Site
-                Index Tail of the Trunked System
+        CHN_GRP_HEAD	Channel Group Index Head of the conventional system or
+                        Site Index Head of the Trunked System
+        CHN_GRP_TAIL	Channel Group Index Tail of the conventional system
+                        or Site Index Tail of the Trunked System
         SEQ_NO 		System Sequence Number (1 - 500)
         START_KEY 	Startup Configuration Key (0-9/.(dot) means none)
         NUMBER_TAG 	Number tag (0-999 / NONE)
         AGC_ANALOG 	AGC Setting for Analog Audio (0:OFF / 1:ON)
-        AGC_DIGITAL 	AGC Setting for Digital Audio (0:OFF / 1:ON)
+        AGC_DIGITAL AGC Setting for Digital Audio (0:OFF / 1:ON)
         P25WAITING 	P25 Waiting time (0,100,200, .... , 900,1000)
         PROTECT 	Protect bit Status (0:OFF / 1:ON)
 
         Get Trunked System Information.
 
-        ID_SEARCH		ID Search/Scan (0:ID Scan mode / 1: Search Mode)
-        S_BIT			Motorola Status Bit (0:Ignore, 1:Yes)
-        END_CODE		Motorola End Code (0:Ignore, 1:Analog, 2:Analog and Digital)
+        ID_SEARCH	ID Search/Scan (0:ID Scan mode / 1: Search Mode)
+        S_BIT		Motorola Status Bit (0:Ignore, 1:Yes)
+        END_CODE	Motorola End Code (0:Ignore, 1:Analog, 2:Analog and Digital)
         AFS			EDACS ID Format(0:Decimal / 1:AFS)
         EMG			Emergency Alert (0:Ignore / 1-9:Alert)
-        EMGL			Emergency Alert Level (0:OFF / 1 - 15)
-        FMAP			Fleet Map (0-16, 0-15:Preset, 16:Custom)
-        CTM_FMAP		Custom Fleet Map Setting (######## : # is 0-E)
+        EMGL		Emergency Alert Level (0:OFF / 1 - 15)
+        FMAP		Fleet Map (0-16, 0-15:Preset, 16:Custom)
+        CTM_FMAP	Custom Fleet Map Setting (######## : # is 0-E)
                     # means Size Code of each BLOCK (from 0 to 7)
                     0 : Size Code 0 5 : Size Code 5 A : Size Code 10
                     1 : Size Code 1 6 : Size Code 6 B : Size Code 11
@@ -1348,7 +1348,8 @@ class System:
         ID_LOUT_GRP_HEAD	L/O TGID Group Index Head of the System
         ID_LOUT_GRP_TAIL	L/O TGID Group Index Tail of the System
         MOT_ID			Motorola/P25 ID Format (0:Decimal / 1:HEX )
-        EMG_COLOR		Emergency Alert Light color (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
+        EMG_COLOR		Emergency Alert Light color
+                        (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
         EMG_PATTERN		Emergency Alert Light Pattern(0:ON / 1:SLow / 2:Fast)
         P25NAC			P25 NAC Status ( 0-FFF: 0-FFF / SRCH: Nac Search)
         PRI_ID_SCAN		Priority ID Scan ( 0:OFF / 1: ON)
@@ -1865,9 +1866,9 @@ class Group:
         """Get Group Information.
         In set command, only "," parameters are not changed.
         The set command is aborted if any format error is detected.
-        When the system protect bit is ON, except [NAME], [REV_INDEX], [FWD_INDEX],
-        [SYS_INDEX], [CHN_HEAD], [CHN_TAIL], other parameters will be send as a reserve
-        parameter in the Radio -> Controller command.
+        When the system protect bit is ON, except [NAME], [REV_INDEX],
+        [FWD_INDEX], [SYS_INDEX], [CHN_HEAD], [CHN_TAIL], other parameters
+        will be send as a reserve parameter in the Radio -> Controller command.
 
         GRP_INDEX		Group Index
         GRP_TYPE		Group Type (C: Channel Group / T: TGID Group)
@@ -2455,10 +2456,11 @@ class Channel:
 
         """Get Channel Information.
         In set command, only "," parameters are not changed.
-                The set command is aborted if any format error is detected.
-                When the system protect bit is ON, except [NAME], [REV_INDEX], [FWD_INDEX],
-                [SYS_INDEX], [CHN_HEAD], [CHN_TAIL], other parameters will be send as a reserve
-                parameter in the Radio -> Controller command.
+        The set command is aborted if any format error is detected.
+        When the system protect bit is ON, except [NAME], [REV_INDEX],
+        [FWD_INDEX], [SYS_INDEX], [CHN_HEAD], [CHN_TAIL],
+        other parameters will be send as a reserve parameter in the
+        Radio -> Controller command.
 
         INDEX			Channel Index
         NAME			Name (max.16char)
