@@ -1,25 +1,24 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-#
-#
-# Uniden Scanner Python API
-# Copyright (C) 2014-2015 Anton Komarov
-#
-# This program is free software;
-# you can redistribute it and/or modify it under the terms of the
-# GNU General Public License as published by the Free Software Foundation;
-# either version 2 of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY;
-# without even the implied warranty of MERCHANTABILITY
-# or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program;
-# if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+"""# -*- coding: utf-8 -*-
+
+Uniden Scanner Python API
+Copyright (C) 2014-2015 Anton Komarov
+
+This program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License
+along with this program;
+if not, write to the Free Software Foundation, Inc.,
+59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+"""
 
 import yaml
 import time
@@ -92,8 +91,7 @@ class UnidenScanner:
 
         self.logger = logging.getLogger("uniden_api.UnidenScanner")
         self.logger.info(
-            "initialiazing with port=%(port)s and " 
-            "speed=%(speed)s" % locals()
+            "initialiazing with port=%(port)s and speed=%(speed)s" % locals()
         )
 
         self.serial = None
@@ -1057,8 +1055,8 @@ class UnidenScanner:
         return 1
 
     def get_search_settings(self):
-
-        """Enters program mode and gets scanner search settings data recursively."""
+        """Enters program mode and gets scanner search settings data
+        recursively."""
 
         if not self.isProgramMode:
             self.enter_program_mode()
@@ -1070,8 +1068,8 @@ class UnidenScanner:
         return 1
 
     def set_search_settings(self):
-
-        """Enters program mode and gets scanner search settings data recursively."""
+        """Enters program mode and gets scanner search settings data
+        recursively."""
 
         if not self.isProgramMode:
             self.enter_program_mode()
@@ -1083,13 +1081,11 @@ class UnidenScanner:
         return 1
 
     def dump_search_settings(self):
-
         """Returns YAML formatted text of scanner settings."""
 
         return yaml.dump(self.searches.dump())
 
     def load_search_settings(self, fname):
-
         """Load YAML formatted text to memory.
         It is up to user to set data into scanner.
         See sample YAML file in examples."""
