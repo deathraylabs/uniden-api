@@ -28,6 +28,7 @@ import xmltodict
 
 from constants import *
 from collections import OrderedDict
+from datetime import datetime
 
 # from pprint import *  # not super important
 import sqlite3
@@ -4852,6 +4853,8 @@ def runcmd(scanner, cmd="GSI"):
 
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)
+    # add the current time to dict
+    parsed_xml["date-code"] = datetime.now().isoformat()
 
     return parsed_xml
 
@@ -4902,15 +4905,13 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     state.
     """
 
+    # todo: verify this is a good way to determine if scanner is recording
     try:
-        fresh_data = state["ScannerInfo-ViewDescription"] is None
-    except KeyError:
+        state["ScannerInfo-ViewDescription"] is None
+    except Error as e:
         print("no fresh data available")
+        print(e)
         return False
-
-    # check to see if fresh data is available
-    # if state["ScannerInfo-ViewDescription"] is not None:
-    #     return False
 
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
@@ -4927,12 +4928,14 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     print("I got data, pa!")
 
     # list of data we should update
-    items = list(state.items())
+    # items = tuple(state.items())
+    # print(items)
 
     try:
-        cur.executemany('INSERT INTO scan_hits VALUES ("?", ?)', items)
-    except sqlite3.OperationalError:
+        cur.execute("INSERT INTO scan_hits VALUES (?, ?)", items)
+    except sqlite3.OperationalError as err:
         print("some database thing went wrong")
+        print(err)
 
     conn.commit()
     conn.close()
@@ -4962,7 +4965,7 @@ if __name__ == "__main__":
     scanstate = runcmd(s)
     # flattened scanner state
     f_state = traverse_state(scanstate)
-    # save_state_to_db(f_state)
+    save_state_to_db(f_state)
 
 #     # s.get_system_settings()
 #     #print s.dump_system_settings()
