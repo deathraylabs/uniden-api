@@ -4941,24 +4941,80 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
         print(err)
 
     # todo: test this snippet to see if it works:
-    for item in state.items():
-        k, v = item
-        # k = '"' + k + '"'
+    state_values = state.values()
 
-        try:
-            # fmt: off
-            cur.execute(
-                """
-                UPDATE scan_hits
-                SET ? = ?
-                WHERE
-                    date_code = ?;
-            """,
-                (k, v, date_code,))
-            # fmt: on
-        except sqlite3.OperationalError as err:
-            print("some database thing went wrong")
-            print(err)
+    try:
+        # fmt: off
+        cur.execute("""
+            UPDATE scan_hits
+            SET
+                ScannerInfo_Mode = ?,
+                ScannerInfo_V_Screen = ?,
+                MonitorList_Name = ?,
+                MonitorList_Index = ?,
+                MonitorList_ListType = ?,
+                MonitorList_Q_Key = ?,
+                MonitorList_N_Tag = ?,
+                MonitorList_DB_Counter = ?,
+                System_Name = ?,
+                System_Index = ?,
+                System_Avoid = ?,
+                System_SystemType = ?,
+                System_Q_Key = ?,
+                System_N_Tag = ?,
+                System_Hold = ?,
+                Department_Name = ?,
+                Department_Index = ?,
+                Department_Avoid = ?,
+                Department_Q_Key = ?,
+                Department_Hold = ?,
+                TGID_Name = ?,
+                TGID_Index = ?,
+                TGID_Avoid = ?,
+                TGID_TGID = ?,
+                TGID_SetSlot = ?,
+                TGID_RecSlot = ?,
+                TGID_N_Tag = ?,
+                TGID_Hold = ?,
+                TGID_SvcType = ?,
+                TGID_P_Ch = ?,
+                TGID_LVL = ?,
+                UnitID_Name = ?,
+                UnitID_U_Id = ?,
+                Site_Name = ?,
+                Site_Index = ?,
+                Site_Avoid = ?,
+                Site_Q_Key = ?,
+                Site_Hold = ?,
+                Site_Mod = ?,
+                SiteFrequency_Freq = ?,
+                SiteFrequency_IFX = ?,
+                SiteFrequency_SAS = ?,
+                SiteFrequency_SAD = ?,
+                DualWatch_PRI = ?,
+                DualWatch_CC = ?,
+                DualWatch_WX = ?,
+                Property_F = ?,
+                Property_VOL = ?,
+                Property_SQL = ?,
+                Property_Sig = ?,
+                Property_Att = ?,
+                Property_Rec = ?,
+                Property_KeyLock = ?,
+                Property_P25Status = ?,
+                Property_Mute = ?,
+                Property_Backlight = ?,
+                Property_A_Led = ?,
+                Property_Dir = ?,
+                Property_Rssi = ?,
+                ScannerInfo_ViewDescription = ?
+            WHERE
+                date_code = ?;
+        """, (state_values, date_code,))
+        # fmt: on
+    except sqlite3.OperationalError as err:
+        print("some database thing went wrong")
+        print(err)
 
     conn.commit()
     conn.close()
