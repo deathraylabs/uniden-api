@@ -4957,7 +4957,7 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
 
     try:
         # fmt: off
-        cur.execute("""
+        cur.executemany("""
             UPDATE scan_hits
             SET
                 "ScannerInfo:Mode" = ?,
