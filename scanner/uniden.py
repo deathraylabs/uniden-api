@@ -26,8 +26,8 @@ import serial
 import logging
 import xmltodict
 
-# noinspection PyUnresolvedReferences
 from constants import *
+from collections import OrderedDict
 
 # from pprint import *  # not super important
 import sqlite3
@@ -4872,9 +4872,20 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     return True
 
 
-def traverse_state(state, prefix=""):
+def traverse_state(state, prefix="", f_state=OrderedDict()):
     """Run through the OrderedDict generated from XML scanner output and
     reorganize to better suit DB.
+
+    Args:
+        state (OrderedDict):  Original scanner state represented as a nested
+            set of OrderedDicts
+        prefix (str):  prefix labels the original xml parent of the current
+            xml tag that is being parsed.
+        f_state (OrderedDict):  New, formatted scanner state
+
+    Returns:
+        New, flattened OrderedDict representation of the scanner state.
+
     """
 
     for k, v in state.items():
@@ -4888,7 +4899,8 @@ def traverse_state(state, prefix=""):
             # this ensures hierarchy is preserved
             k_prefix = k + "-"
 
-            traverse_state(v, k_prefix)
+            # pass f_state back in order to populate recursively
+            traverse_state(v, k_prefix, f_state)
         else:
             # make sure any prefix passed is added to the current key
             new_k = prefix + k
@@ -4896,7 +4908,9 @@ def traverse_state(state, prefix=""):
             # print(new_k)
             # print(v, '\n')
 
-    return None
+            f_state[new_k] = v
+
+    return f_state
 
 
 # this code will be executed if this file is run directly
@@ -4919,7 +4933,8 @@ if __name__ == "__main__":
     s = UnidenScanner("/dev/cu.usbmodem1434401")
 
     scanstate = runcmd(s)
-    # traverse_state(scanstate)
+    # flattened scanner state
+    f_state = traverse_state(scanstate)
 
 #     # s.get_system_settings()
 #     #print s.dump_system_settings()

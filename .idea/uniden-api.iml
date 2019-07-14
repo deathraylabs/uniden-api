@@ -5,7 +5,11 @@
     <orderEntry type="jdk" jdkName="Python 3.7 (uniden_scanner)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="PackageRequirementsSettings">
+    <option name="requirementsPath" value="" />
+  </component>
   <component name="PyDocumentationSettings">
+    <option name="myDocStringFormat" value="Google" />
     <option name="renderExternalDocumentation" value="true" />
   </component>
   <component name="TestRunnerService">
