@@ -4861,7 +4861,7 @@ def runcmd(scanner, cmd="GSI"):
 
 def traverse_state(state, prefix="", f_state=OrderedDict()):
     """Run through the OrderedDict generated from XML scanner output and
-    reorganize to better suit DB.
+       reorganize to better suit DB.
 
     Args:
         state (OrderedDict):  Original scanner state represented as a nested
@@ -4876,11 +4876,15 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
     """
 
     for k, v in state.items():
-        # I'm not a fan of the leading @ symbol
-        k = k.lstrip("@")
+
+        # @ character denotes end of branch
+        if k[0] == "@":
+            # k = k.lstrip("@")  # I don't like the @ symbol
+            new_k = prefix + k
+            f_state[new_k] = v
 
         # start over if value is a dict, we want terminal branches
-        if isinstance(v, dict):
+        else:
             # print('\n-------INCEPTED!--------\n')
 
             # this ensures hierarchy is preserved
@@ -4888,14 +4892,6 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
 
             # pass f_state back in order to populate recursively
             traverse_state(v, k_prefix, f_state)
-        else:
-            # make sure any prefix passed is added to the current key
-            new_k = prefix + k
-
-            # print(new_k)
-            # print(v, '\n')
-
-            f_state[new_k] = v
 
     return f_state
 
