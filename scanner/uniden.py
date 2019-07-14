@@ -4884,7 +4884,7 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
             # print('\n-------INCEPTED!--------\n')
 
             # this ensures hierarchy is preserved
-            k_prefix = k + "_"
+            k_prefix = k + ":"
 
             # pass f_state back in order to populate recursively
             traverse_state(v, k_prefix, f_state)
@@ -5044,7 +5044,10 @@ if __name__ == "__main__":
     scanstate = runcmd(s)
     # flattened scanner state
     f_state = traverse_state(scanstate)
-    save_state_to_db(f_state)
+    # save_state_to_db(f_state)
+
+    for key in f_state.keys():
+        print(f"    {key} = ?,")
 
 #     # s.get_system_settings()
 #     #print s.dump_system_settings()
