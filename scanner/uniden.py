@@ -4846,15 +4846,14 @@ def runcmd(scanner, cmd="GSI"):
     Returns:
         Returns the scanner output in XML format
     """
-
     # get xml data from scanner, convert to unicode
     # exclude the prefix data 'GSI,<XML>,\r'
     xmldat = scanner.raw(cmd)[11:]
 
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)
-    # add the current time to dict
-    parsed_xml["date_code"] = datetime.now().isoformat()
+    # add the current time to dict using @ symbol as flag
+    parsed_xml["@date_code"] = datetime.now().isoformat()
 
     return parsed_xml
 
@@ -4877,12 +4876,11 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
 
     for k, v in state.items():
 
-        # @ character denotes end of branch
-        if k[0] == "@":
-            # k = k.lstrip("@")  # I don't like the @ symbol
+        # @ character or none denotes end point of branch
+        if k[0] == "@" or v is None:
+            k = k.lstrip("@")  # I don't like the @ symbol
             new_k = prefix + k
             f_state[new_k] = v
-
         # start over if value is a dict, we want terminal branches
         else:
             # print('\n-------INCEPTED!--------\n')
@@ -5042,8 +5040,8 @@ if __name__ == "__main__":
     f_state = traverse_state(scanstate)
     # save_state_to_db(f_state)
 
-    for key in f_state.keys():
-        print(f"    {key} = ?,")
+    for k, v in f_state.items():
+        print(f"    {k} = {v},")
 
 #     # s.get_system_settings()
 #     #print s.dump_system_settings()
