@@ -4852,6 +4852,7 @@ def runcmd(scanner, cmd="GSI"):
 
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)
+
     # add the current time to dict using @ symbol as flag
     parsed_xml["@date_code"] = datetime.now().isoformat()
 
@@ -4886,7 +4887,9 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
                 print(f"{e}: field not in database")
         # I want categories with no data to end with colon
         elif v is None:
+
             new_k = k + ":"
+
             try:
                 f_state[new_k] = v
             except KeyError as e:
@@ -4894,8 +4897,6 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
 
         # start over if value is a dict, we want terminal branches
         else:
-            # print('\n-------INCEPTED!--------\n')
-
             # this ensures hierarchy is preserved
             k_prefix = k + ":"
 
@@ -4905,14 +4906,19 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
     return f_state
 
 
-def save_state_to_db(state, db_path="uniden.sqlite"):
+def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
     """Function opens connection to database and stores current scanner
     state.
+
+    Args:
+        formatted_state (OrderedDict): scanner state that matches the field
+            order and naming strategy used in database.
+        db_path (str): path to SQLite database
     """
 
     # todo: verify this is a good way to determine if scanner is recording
     try:
-        state["ScannerInfo_ViewDescription"] is None
+        formatted_state["ScannerInfo_ViewDescription"] is None
     except KeyError as e:
         print("no fresh data available")
         print(e)
@@ -4936,7 +4942,7 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     # items = tuple(state.items())
     # print(items)
 
-    date_code = state.pop("date_code")
+    date_code = formatted_state.pop("date_code")
 
     try:
         cur.execute('INSERT INTO scan_hits ("date_code") VALUES (?)', (date_code,))
@@ -4946,7 +4952,7 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
         print(err)
 
     # todo: test this snippet to see if it works:
-    state_values = state.values()
+    state_values = formatted_state.values()
 
     try:
         # fmt: off
