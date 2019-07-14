@@ -4886,14 +4886,16 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
             except KeyError as e:
                 print(f"{e}: field not in database")
         # I want categories with no data to end with colon
+        # todo: do I actually need these categories with no data?
         elif v is None:
 
             new_k = k + ":"
 
-            try:
-                f_state[new_k] = v
-            except KeyError as e:
-                print(f"{e}: field not in database")
+            # I don't think I want to save these values
+            # try:
+            #     f_state[new_k] = v
+            # except KeyError as e:
+            #     print(f"{e}: field not in database")
 
         # start over if value is a dict, we want terminal branches
         else:
