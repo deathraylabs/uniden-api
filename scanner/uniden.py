@@ -4907,16 +4907,24 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
 
     # cur.execute('DROP TABLE IF EXISTS Counts')
 
-    try:
-        cur.execute("CREATE TABLE Counts (org TEXT, count INTEGER)")
-    except sqlite3.OperationalError:
-        # todo: replace print with logging
-        print("Already exists, suckass!")
+    # try:
+    #     cur.execute("CREATE TABLE Counts (org TEXT, count INTEGER)")
+    # except sqlite3.OperationalError:
+    #     print("Already exists, suckass!")
 
     # The scanner info screen lets you know that the scanner is "scanning"
     if state["ScannerInfo-ViewDescription"] is None:
+        # data is waiting to be logged
         # todo: replace print with logging
         print("I got data, pa!")
+
+        # todo: I don't know the correct SQL statement to populate
+        # for item in state.items():
+        #     try:
+        #         cur.execute("INSERT INTO scan_hits ("?", ?)", (item[0],
+        #                                                        item[1],))
+        #     except sqlite3.OperationalError:
+        #         print("some database thing went wrong")
 
     conn.close()
 
