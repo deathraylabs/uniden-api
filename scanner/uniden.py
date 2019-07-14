@@ -4836,6 +4836,16 @@ class Search:
 
 # todo: function should eventually save to object state variables
 def runcmd(scanner, cmd="GSI"):
+    """Function gets current state from scanner for further processing.
+
+    Args:
+        scanner (UnidenScanner): Scanner connection object
+        cmd (str): command to pass to scanner
+
+    Returns:
+        Returns the scanner output in XML format
+    """
+
     # get xml data from scanner, convert to unicode
     # exclude the prefix data 'GSI,<XML>,\r'
     xmldat = scanner.raw(cmd)[11:]
@@ -4843,33 +4853,7 @@ def runcmd(scanner, cmd="GSI"):
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)
 
-    # scanner_state = {}
-
-    # pprint(parsed_xml)
-
     return parsed_xml
-
-
-def save_state_to_db(state, db_path="uniden.sqlite"):
-    """Function opens connection to database and stores current scanner
-    state.
-    """
-
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-
-    # cur.execute('DROP TABLE IF EXISTS Counts')
-
-    try:
-        cur.execute("CREATE TABLE Counts (org TEXT, count INTEGER)")
-    except sqlite3.OperationalError:
-        print("Already exists, suckass!")
-
-    # The scanner info screen lets you know that the scanner is "scanning"
-    if state["ScannerInfo"]["ViewDescription"] is None:
-        print("I got data, pa!")
-
-    return True
 
 
 def traverse_state(state, prefix="", f_state=OrderedDict()):
@@ -4911,6 +4895,32 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
             f_state[new_k] = v
 
     return f_state
+
+
+def save_state_to_db(state, db_path="uniden.sqlite"):
+    """Function opens connection to database and stores current scanner
+    state.
+    """
+
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # cur.execute('DROP TABLE IF EXISTS Counts')
+
+    try:
+        cur.execute("CREATE TABLE Counts (org TEXT, count INTEGER)")
+    except sqlite3.OperationalError:
+        # todo: replace print with logging
+        print("Already exists, suckass!")
+
+    # The scanner info screen lets you know that the scanner is "scanning"
+    if state["ScannerInfo-ViewDescription"] is None:
+        # todo: replace print with logging
+        print("I got data, pa!")
+
+    conn.close()
+
+    return True
 
 
 # this code will be executed if this file is run directly
