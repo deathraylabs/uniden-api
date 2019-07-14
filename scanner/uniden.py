@@ -4858,7 +4858,7 @@ def runcmd(scanner, cmd="GSI"):
     return parsed_xml
 
 
-def traverse_state(state, prefix="", f_state=OrderedDict()):
+def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
     """Run through the OrderedDict generated from XML scanner output and
        reorganize to better suit DB.
 
@@ -4880,11 +4880,18 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
         if k[0] == "@":
             k = k.lstrip("@")  # I don't like the @ symbol
             new_k = prefix + k
-            f_state[new_k] = v
+            try:
+                f_state[new_k] = v
+            except KeyError as e:
+                print(f"{e}: field not in database")
         # I want categories with no data to end with colon
         elif v is None:
             new_k = k + ":"
-            f_state[new_k] = v
+            try:
+                f_state[new_k] = v
+            except KeyError as e:
+                print(f"{e}: field not in database")
+
         # start over if value is a dict, we want terminal branches
         else:
             # print('\n-------INCEPTED!--------\n')
@@ -5044,8 +5051,8 @@ if __name__ == "__main__":
     f_state = traverse_state(scanstate)
     # save_state_to_db(f_state)
 
-    for k, v in f_state.items():
-        print(f"    {k} = {v},")
+    # for k, v in f_state.items():
+    #     print(f"    {k} = {v},")
 
 #     # s.get_system_settings()
 #     #print s.dump_system_settings()

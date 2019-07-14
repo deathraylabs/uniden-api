@@ -500,7 +500,8 @@ scanner_ch_logs = {"off": "0", "on": "1", "extend": "2"}
 human_ch_logs = {"0": "off", "1": "on", "2": "extend"}
 
 # list of parameters the scanner outputs when running GSI command
-gsi_output = OrderedDict(
+# this must match the order and number in database
+GSI_OUTPUT = OrderedDict(
     [
         ("date_code", None),
         ("ScannerInfo:Mode", None),
