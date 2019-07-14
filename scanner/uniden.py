@@ -4883,7 +4883,7 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
             f_state[new_k] = v
         # I want categories with no data to end with colon
         elif v is None:
-            new_k = prefix + k + ":"
+            new_k = k + ":"
             f_state[new_k] = v
         # start over if value is a dict, we want terminal branches
         else:
