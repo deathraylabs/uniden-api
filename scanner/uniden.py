@@ -4854,7 +4854,7 @@ def runcmd(scanner, cmd="GSI"):
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)
     # add the current time to dict
-    parsed_xml["date-code"] = datetime.now().isoformat()
+    parsed_xml["date_code"] = datetime.now().isoformat()
 
     return parsed_xml
 
@@ -4884,7 +4884,7 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
             # print('\n-------INCEPTED!--------\n')
 
             # this ensures hierarchy is preserved
-            k_prefix = k + "-"
+            k_prefix = k + "_"
 
             # pass f_state back in order to populate recursively
             traverse_state(v, k_prefix, f_state)
@@ -4907,7 +4907,7 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
 
     # todo: verify this is a good way to determine if scanner is recording
     try:
-        state["ScannerInfo-ViewDescription"] is None
+        state["ScannerInfo_ViewDescription"] is None
     except KeyError as e:
         print("no fresh data available")
         print(e)
@@ -4931,13 +4931,34 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     # items = tuple(state.items())
     # print(items)
 
-    date_code = state["date-code"]
+    date_code = state.pop("date_code")
 
     try:
-        cur.execute('INSERT INTO scan_hits ("date-code") VALUES (?)', (date_code,))
+        cur.execute('INSERT INTO scan_hits ("date_code") VALUES (?)', (date_code,))
+        conn.commit()
     except sqlite3.OperationalError as err:
         print("some database thing went wrong")
         print(err)
+
+    # todo: test this snippet to see if it works:
+    for item in state.items():
+        k, v = item
+        # k = '"' + k + '"'
+
+        try:
+            # fmt: off
+            cur.execute(
+                """
+                UPDATE scan_hits
+                SET ? = ?
+                WHERE
+                    date_code = ?;
+            """,
+                (k, v, date_code,))
+            # fmt: on
+        except sqlite3.OperationalError as err:
+            print("some database thing went wrong")
+            print(err)
 
     conn.commit()
     conn.close()
