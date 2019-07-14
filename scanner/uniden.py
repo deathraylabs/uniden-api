@@ -4908,7 +4908,7 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     # todo: verify this is a good way to determine if scanner is recording
     try:
         state["ScannerInfo-ViewDescription"] is None
-    except Error as e:
+    except KeyError as e:
         print("no fresh data available")
         print(e)
         return False
@@ -4931,8 +4931,10 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     # items = tuple(state.items())
     # print(items)
 
+    date_code = state["date-code"]
+
     try:
-        cur.execute("INSERT INTO scan_hits VALUES (?, ?)", items)
+        cur.execute('INSERT INTO scan_hits ("date-code") VALUES (?)', (date_code,))
     except sqlite3.OperationalError as err:
         print("some database thing went wrong")
         print(err)
