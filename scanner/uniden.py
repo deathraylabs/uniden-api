@@ -4848,7 +4848,14 @@ def runcmd(scanner, cmd="GSI"):
     """
     # get xml data from scanner, convert to unicode
     # exclude the prefix data 'GSI,<XML>,\r'
-    xmldat = scanner.raw(cmd)[11:]
+    logger = logging.getLogger("uniden_api.runcmd")
+
+    # send actual command to scanner
+    xmldat = scanner.raw(cmd)
+    logger.info(f"Bytes returned : {len(xmldat)}")
+
+    # cut off the extraneous xml prefix information
+    xmldat = xmldat[11:]
 
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)
@@ -4872,7 +4879,6 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
 
         Returns:
             New, flattened OrderedDict representation of the scanner state.
-
     """
 
     for k, v in state.items():
