@@ -4918,7 +4918,7 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
 
     # todo: verify this is a good way to determine if scanner is recording
     try:
-        formatted_state["ScannerInfo_ViewDescription"] is None
+        formatted_state["ViewDescription:"] is None
     except KeyError as e:
         print("no fresh data available")
         print(e)
@@ -5056,7 +5056,7 @@ if __name__ == "__main__":
     scanstate = runcmd(s)
     # flattened scanner state
     f_state = traverse_state(scanstate)
-    # save_state_to_db(f_state)
+    save_state_to_db(f_state)
 
     # for k, v in f_state.items():
     #     print(f"    {k} = {v},")
