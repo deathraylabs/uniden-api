@@ -4877,9 +4877,13 @@ def traverse_state(state, prefix="", f_state=OrderedDict()):
     for k, v in state.items():
 
         # @ character or none denotes end point of branch
-        if k[0] == "@" or v is None:
+        if k[0] == "@":
             k = k.lstrip("@")  # I don't like the @ symbol
             new_k = prefix + k
+            f_state[new_k] = v
+        # I want categories with no data to end with colon
+        elif v is None:
+            new_k = prefix + k + ":"
             f_state[new_k] = v
         # start over if value is a dict, we want terminal branches
         else:
