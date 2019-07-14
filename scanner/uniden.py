@@ -4894,14 +4894,7 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
         # I want categories with no data to end with colon
         # todo: do I actually need these categories with no data?
         elif v is None:
-
             new_k = k + ":"
-
-            # I don't think I want to save these values
-            # try:
-            #     f_state[new_k] = v
-            # except KeyError as e:
-            #     print(f"{e}: field not in database")
 
         # start over if value is a dict, we want terminal branches
         else:
@@ -4923,28 +4916,20 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
             order and naming strategy used in database.
         db_path (str): path to SQLite database
     """
+    logger = logging.getLogger("uniden_api.save_state_to_db")
 
-    # todo: verify this is a good way to determine if scanner is recording
+    # if overwrite text is present, the unit is scanning or in another state
     try:
-        formatted_state["ViewDescription:"] is None
+        over_text = formatted_state["OverWrite:Text"]
+        logger.debug(over_text)
+
+        return over_text
+
     except KeyError as e:
-        print("no fresh data available")
-        print(e)
-        return False
+        logger.debug(f"No overwrite text.\n" "{e}")
 
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-
-    # cur.execute('DROP TABLE IF EXISTS Counts')
-
-    # try:
-    #     cur.execute("CREATE TABLE Counts (org TEXT, count INTEGER)")
-    # except sqlite3.OperationalError:
-    #     print("Already exists, suckass!")
-
-    # data is waiting to be logged
-    # todo: replace print with logging
-    print("I got data, pa!")
 
     # list of data we should update
     # items = tuple(state.items())
@@ -4957,7 +4942,7 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
 
     # add the date_code back to end of list so it matches SQL statement order
     field_data.append(date_code)
-    print(f"The field data length is: {len(field_data)}")
+    logger.debug(f"The field data length is: {len(field_data)}")
 
     try:
         cur.execute('INSERT INTO scan_hits ("date_code") VALUES (?)', (date_code,))
