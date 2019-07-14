@@ -4946,6 +4946,9 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
 
     # scanner data in same order as database fields
     field_data = list(formatted_state.values())
+
+    # add the date_code back to end of list so it matches SQL statement order
+    field_data.append(date_code)
     print(f"The field data length is: {len(field_data)}")
 
     try:
@@ -5022,7 +5025,7 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
                 "ViewDescription:" = ?
             WHERE
                 date_code = ?;
-        """, (field_data, date_code,))
+        """, (field_data))
         # fmt: on
     except sqlite3.OperationalError as err:
         print("some database thing went wrong")
