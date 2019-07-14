@@ -4902,9 +4902,15 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     state.
     """
 
-    # check to see if fresh data is available
-    if state["ScannerInfo-ViewDescription"] is not None:
+    try:
+        fresh_data = state["ScannerInfo-ViewDescription"] is None
+    except KeyError:
+        print("no fresh data available")
         return False
+
+    # check to see if fresh data is available
+    # if state["ScannerInfo-ViewDescription"] is not None:
+    #     return False
 
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
@@ -4923,13 +4929,12 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     # list of data we should update
     items = list(state.items())
 
-    # todo: I don't know the correct SQL statement to populate
-    for item in state.items():
-        try:
-            cur.executemany('INSERT INTO scan_hits VALUES ("?", ?)', items)
-        except sqlite3.OperationalError:
-            print("some database thing went wrong")
+    try:
+        cur.executemany('INSERT INTO scan_hits VALUES ("?", ?)', items)
+    except sqlite3.OperationalError:
+        print("some database thing went wrong")
 
+    conn.commit()
     conn.close()
 
     return True
@@ -4957,6 +4962,7 @@ if __name__ == "__main__":
     scanstate = runcmd(s)
     # flattened scanner state
     f_state = traverse_state(scanstate)
+    # save_state_to_db(f_state)
 
 #     # s.get_system_settings()
 #     #print s.dump_system_settings()
