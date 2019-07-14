@@ -4902,6 +4902,10 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     state.
     """
 
+    # check to see if fresh data is available
+    if state["ScannerInfo-ViewDescription"] is not None:
+        return False
+
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
@@ -4912,19 +4916,19 @@ def save_state_to_db(state, db_path="uniden.sqlite"):
     # except sqlite3.OperationalError:
     #     print("Already exists, suckass!")
 
-    # The scanner info screen lets you know that the scanner is "scanning"
-    if state["ScannerInfo-ViewDescription"] is None:
-        # data is waiting to be logged
-        # todo: replace print with logging
-        print("I got data, pa!")
+    # data is waiting to be logged
+    # todo: replace print with logging
+    print("I got data, pa!")
 
-        # todo: I don't know the correct SQL statement to populate
-        # for item in state.items():
-        #     try:
-        #         cur.execute("INSERT INTO scan_hits ("?", ?)", (item[0],
-        #                                                        item[1],))
-        #     except sqlite3.OperationalError:
-        #         print("some database thing went wrong")
+    # list of data we should update
+    items = list(state.items())
+
+    # todo: I don't know the correct SQL statement to populate
+    for item in state.items():
+        try:
+            cur.executemany('INSERT INTO scan_hits VALUES ("?", ?)', items)
+        except sqlite3.OperationalError:
+            print("some database thing went wrong")
 
     conn.close()
 
