@@ -4960,10 +4960,10 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
 
     try:
         # fmt: off
-        cur.executemany("""
+        cur.execute("""
             UPDATE scan_hits
             SET
-                "ScannerInfo:Mode" = ?,
+                ("ScannerInfo:Mode" = ?,
                 "ScannerInfo:V_Screen" = ?,
                 "MonitorList:Name" = ?,
                 "MonitorList:Index" = ?,
@@ -5022,10 +5022,10 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
                 "Property:A_Led" = ?,
                 "Property:Dir" = ?,
                 "Property:Rssi" = ?,
-                "ViewDescription:" = ?
+                "ViewDescription:" = ?)
             WHERE
                 date_code = ?;
-        """, (field_data))
+        """, field_data)
         # fmt: on
     except sqlite3.OperationalError as err:
         print("some database thing went wrong")
