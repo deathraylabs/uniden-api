@@ -4860,18 +4860,18 @@ def runcmd(scanner, cmd="GSI"):
 
 
 def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
-    """Run through the OrderedDict generated from XML scanner output and
-       reorganize to better suit DB.
+    """ Run through the OrderedDict generated from XML scanner output and
+        reorganize to better suit DB.
 
-    Args:
-        state (OrderedDict):  Original scanner state represented as a nested
-            set of OrderedDicts
-        prefix (str):  prefix labels the original xml parent of the current
-            xml tag that is being parsed.
-        f_state (OrderedDict):  New, formatted scanner state
+        Args:
+            state (OrderedDict):  Original scanner state represented as a nested
+                set of OrderedDicts
+            prefix (str):  prefix labels the original xml parent of the current
+                xml tag that is being parsed.
+            f_state (OrderedDict):  New, formatted scanner state
 
-    Returns:
-        New, flattened OrderedDict representation of the scanner state.
+        Returns:
+            New, flattened OrderedDict representation of the scanner state.
 
     """
 
