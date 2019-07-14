@@ -4924,6 +4924,10 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
         print(e)
         return False
 
+    # scanner data in same order as database fields
+    field_data = list(formatted_state.values())
+    print(f"The field data length is: {len(field_data)}")
+
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
@@ -4951,77 +4955,74 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
         print("some database thing went wrong")
         print(err)
 
-    # todo: test this snippet to see if it works:
-    state_values = formatted_state.values()
-
     try:
         # fmt: off
         cur.execute("""
             UPDATE scan_hits
             SET
-                ScannerInfo_Mode = ?,
-                ScannerInfo_V_Screen = ?,
-                MonitorList_Name = ?,
-                MonitorList_Index = ?,
-                MonitorList_ListType = ?,
-                MonitorList_Q_Key = ?,
-                MonitorList_N_Tag = ?,
-                MonitorList_DB_Counter = ?,
-                System_Name = ?,
-                System_Index = ?,
-                System_Avoid = ?,
-                System_SystemType = ?,
-                System_Q_Key = ?,
-                System_N_Tag = ?,
-                System_Hold = ?,
-                Department_Name = ?,
-                Department_Index = ?,
-                Department_Avoid = ?,
-                Department_Q_Key = ?,
-                Department_Hold = ?,
-                TGID_Name = ?,
-                TGID_Index = ?,
-                TGID_Avoid = ?,
-                TGID_TGID = ?,
-                TGID_SetSlot = ?,
-                TGID_RecSlot = ?,
-                TGID_N_Tag = ?,
-                TGID_Hold = ?,
-                TGID_SvcType = ?,
-                TGID_P_Ch = ?,
-                TGID_LVL = ?,
-                UnitID_Name = ?,
-                UnitID_U_Id = ?,
-                Site_Name = ?,
-                Site_Index = ?,
-                Site_Avoid = ?,
-                Site_Q_Key = ?,
-                Site_Hold = ?,
-                Site_Mod = ?,
-                SiteFrequency_Freq = ?,
-                SiteFrequency_IFX = ?,
-                SiteFrequency_SAS = ?,
-                SiteFrequency_SAD = ?,
-                DualWatch_PRI = ?,
-                DualWatch_CC = ?,
-                DualWatch_WX = ?,
-                Property_F = ?,
-                Property_VOL = ?,
-                Property_SQL = ?,
-                Property_Sig = ?,
-                Property_Att = ?,
-                Property_Rec = ?,
-                Property_KeyLock = ?,
-                Property_P25Status = ?,
-                Property_Mute = ?,
-                Property_Backlight = ?,
-                Property_A_Led = ?,
-                Property_Dir = ?,
-                Property_Rssi = ?,
-                ScannerInfo_ViewDescription = ?
+                "ScannerInfo:Mode" = ?,
+                "ScannerInfo:V_Screen" = ?,
+                "MonitorList:Name" = ?,
+                "MonitorList:Index" = ?,
+                "MonitorList:ListType" = ?,
+                "MonitorList:Q_Key" = ?,
+                "MonitorList:N_Tag" = ?,
+                "MonitorList:DB_Counter" = ?,
+                "System:Name" = ?,
+                "System:Index" = ?,
+                "System:Avoid" = ?,
+                "System:SystemType" = ?,
+                "System:Q_Key" = ?,
+                "System:N_Tag" = ?,
+                "System:Hold" = ?,
+                "Department:Name" = ?,
+                "Department:Index" = ?,
+                "Department:Avoid" = ?,
+                "Department:Q_Key" = ?,
+                "Department:Hold" = ?,
+                "TGID:Name" = ?,
+                "TGID:Index" = ?,
+                "TGID:Avoid" = ?,
+                "TGID:TGID" = ?,
+                "TGID:SetSlot" = ?,
+                "TGID:RecSlot" = ?,
+                "TGID:N_Tag" = ?,
+                "TGID:Hold" = ?,
+                "TGID:SvcType" = ?,
+                "TGID:P_Ch" = ?,
+                "TGID:LVL" = ?,
+                "UnitID:Name" = ?,
+                "UnitID:U_Id" = ?,
+                "Site:Name" = ?,
+                "Site:Index" = ?,
+                "Site:Avoid" = ?,
+                "Site:Q_Key" = ?,
+                "Site:Hold" = ?,
+                "Site:Mod" = ?,
+                "SiteFrequency:Freq" = ?,
+                "SiteFrequency:IFX" = ?,
+                "SiteFrequency:SAS" = ?,
+                "SiteFrequency:SAD" = ?,
+                "DualWatch:PRI" = ?,
+                "DualWatch:CC" = ?,
+                "DualWatch:WX" = ?,
+                "Property:F" = ?,
+                "Property:VOL" = ?,
+                "Property:SQL" = ?,
+                "Property:Sig" = ?,
+                "Property:Att" = ?,
+                "Property:Rec" = ?,
+                "Property:KeyLock" = ?,
+                "Property:P25Status" = ?,
+                "Property:Mute" = ?,
+                "Property:Backlight" = ?,
+                "Property:A_Led" = ?,
+                "Property:Dir" = ?,
+                "Property:Rssi" = ?,
+                "ViewDescription:" = ?
             WHERE
                 date_code = ?;
-        """, (state_values, date_code,))
+        """, (field_data, date_code,))
         # fmt: on
     except sqlite3.OperationalError as err:
         print("some database thing went wrong")
