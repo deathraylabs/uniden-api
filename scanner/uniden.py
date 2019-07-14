@@ -4924,10 +4924,6 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
         print(e)
         return False
 
-    # scanner data in same order as database fields
-    field_data = list(formatted_state.values())
-    print(f"The field data length is: {len(field_data)}")
-
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
@@ -4947,6 +4943,10 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
     # print(items)
 
     date_code = formatted_state.pop("date_code")
+
+    # scanner data in same order as database fields
+    field_data = list(formatted_state.values())
+    print(f"The field data length is: {len(field_data)}")
 
     try:
         cur.execute('INSERT INTO scan_hits ("date_code") VALUES (?)', (date_code,))
