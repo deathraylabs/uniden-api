@@ -4926,14 +4926,10 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
         return over_text
 
     except KeyError as e:
-        logger.debug(f"No overwrite text.\n" "{e}")
+        logger.debug(f"No overwrite text.\n{e}")
 
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-
-    # list of data we should update
-    # items = tuple(state.items())
-    # print(items)
 
     date_code = formatted_state.pop("date_code")
 
