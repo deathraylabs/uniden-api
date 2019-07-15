@@ -23,6 +23,9 @@ if not, write to the Free Software Foundation, Inc.,
 import yaml
 import time
 import serial
+import io
+
+# import os
 import logging
 import xmltodict
 
@@ -122,7 +125,9 @@ class UnidenScanner:
         timeout is set for 100ms"""
 
         try:
-            self.serial = serial.Serial(port, speed, timeout=0.1)
+            # timeout originally set to 0.1
+            # timeout set to 0 is non-blocking
+            self.serial = serial.Serial(port, speed, timeout=5.0)
 
         except serial.SerialException:
             self.logger.error("Error opening serial port %s!" % port)
