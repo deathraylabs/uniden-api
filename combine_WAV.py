@@ -15,6 +15,8 @@ from pathlib import Path
 # import sys
 import os
 import subprocess as sb
+import pyperclip as cb
+import re
 
 
 def files_with_matched_tags(working_dir, tags):
@@ -23,8 +25,9 @@ def files_with_matched_tags(working_dir, tags):
 
     Args:
         working_dir (str): directory containing tagged files, spaces do not
-            need to be escaped.
-        tags (str): one or more finder tags you want to match against
+            need to be escaped, file name will be stripped.
+        tags (str): string containing one or more comma-separated finder
+            tags you wish to match against
 
     Returns:
         list: list of absolute paths to files that match the specified finder
@@ -36,6 +39,9 @@ def files_with_matched_tags(working_dir, tags):
     # The tag command can be found at https://github.com/jdberry/tag
     # tagCmd is location of tag executable on computer
     tagCmd = "/usr/local/bin/tag"
+
+    # strip the file name to ensure we're working with directory only
+    working_dir = os.path.dirname(working_dir)
 
     # change the current working directory to the location of audio files
     os.chdir(working_dir)
@@ -59,7 +65,7 @@ def files_with_matched_tags(working_dir, tags):
     return paths_to_tagged_files
 
 
-def merge_tagged_wav_files(wav_file_paths, output_path="test_file.wav"):
+def merge_tagged_wav_files(wav_file_paths, output_path="merged.wav"):
     """ Simple function to combine multiple wav files into a single file.
 
     Args:
@@ -77,6 +83,15 @@ def merge_tagged_wav_files(wav_file_paths, output_path="test_file.wav"):
     # container for wav files we wish to be merged
     combined_sounds = AudioSegment.empty()
 
+    # don't overwrite existing files
+    # todo: this really needs to be a recursive function instead of this
+    if os.path.exists(output_path):
+        m = re.search(r"(.+_)(\d+)(\.wav)", output_path)
+        try:
+            output_path = m.group(1) + str(int(m.group(2)) + 1) + m.group(3)
+        except AttributeError:
+            output_path = output_path.replace(".wav", "_1.wav")
+
     if wav_file_paths is None:
         print("No files contained specified tags.")
         return False
@@ -90,13 +105,26 @@ def merge_tagged_wav_files(wav_file_paths, output_path="test_file.wav"):
 
 
 if __name__ == "__main__":
+
+    help_statement = """
+        **********************
+        Copy path to directory
+        Then hit "Enter"
+        ----------------------
+    """
+
+    input(help_statement)
+
+    # get contents of clipboard
+    clipboard = cb.paste()
+
     # path to directory that contains the audio of interest
-    wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/"
+    # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
 
     # matching tag
-    tag = "red"
+    tag = "Blue"
 
-    matched_files = files_with_matched_tags(wav_dir_path, tag)
+    matched_files = files_with_matched_tags(clipboard, tag)
     output = merge_tagged_wav_files(matched_files)
 
     # todo: reset the tag to something else after it's merged
