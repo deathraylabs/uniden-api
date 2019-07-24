@@ -92,7 +92,7 @@ def merge_tagged_wav_files(wav_file_paths, output_path="merged.wav"):
         return False
 
     for file in wav_file_paths:
-        combined_sounds = AudioSegment.from_wav(str(file)) + combined_sounds
+        combined_sounds = combined_sounds + AudioSegment.from_wav(str(file))
 
     combined_sounds.export(output_path, format="wav")
 
