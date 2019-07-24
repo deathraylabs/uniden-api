@@ -52,6 +52,7 @@ def files_with_matched_tags(working_dir, tags):
     tag_string = tag_string.decode()  # decode bytestring back to utf-8
     tag_string = tag_string.strip()  # strip off last newline character
     tagged_files = list(tag_string.split("\n"))
+    tagged_files.sort()  # ensure files are in ascending order
 
     # takes the list of file names and creates a list of absolute paths
     paths_to_tagged_files = [os.path.join(working_dir, path) for path in tagged_files]
