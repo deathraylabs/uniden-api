@@ -91,7 +91,7 @@ def merge_tagged_wav_files(wav_file_paths, output_path="merged.wav"):
         return False
 
     for file in wav_file_paths:
-        combined_sounds += AudioSegment.from_wav(str(file))
+        combined_sounds = AudioSegment.from_wav(str(file)) + combined_sounds
 
     combined_sounds.export(output_path, format="wav")
 
@@ -116,9 +116,10 @@ if __name__ == "__main__":
     # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
 
     # matching tag
-    tag = "Blue"
+    tag = "Orange"
+    output_file_name = "code pit.wav"
 
     matched_files = files_with_matched_tags(clipboard, tag)
-    output = merge_tagged_wav_files(matched_files)
+    output = merge_tagged_wav_files(matched_files, output_path=output_file_name)
 
     # todo: reset the tag to something else after it's merged
