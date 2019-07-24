@@ -1,11 +1,5 @@
 """
-Merge two or more WAV files together, specifically from Uniden SDS-100 scanner.
-
-Usage: 
-    combine_WAV.py FolderName
-
-dir    : directory containing audio files and marker tag
-
+Utility functions for use with Uniden SDS-100 and uniden-api code.
 """
 
 from pydub import AudioSegment
