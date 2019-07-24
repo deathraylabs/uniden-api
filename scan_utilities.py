@@ -88,12 +88,12 @@ def merge_tagged_wav_files(wav_file_paths, output_path="merged.wav"):
 
     # don't overwrite existing files
     # todo: this really needs to be a recursive function instead of this
-    if output_path.exists():
-        m = re.search(r"(.+_)(\d+)(\.wav)", output_path)
-        try:
-            output_path = m.group(1) + str(int(m.group(2)) + 1) + m.group(3)
-        except AttributeError:
-            output_path = output_path.replace(".wav", "_1.wav")
+    # if output_path.exists():
+    #     m = re.search(r"(.+_)(\d+)(\.wav)", str(output_path))
+    #     try:
+    #         output_path = m.group(1) + str(int(m.group(2)) + 1) + m.group(3)
+    #     except AttributeError:
+    #         output_path = output_path.replace(".wav", "_1.wav")
 
     for file in wav_file_paths:
         combined_sounds = combined_sounds + AudioSegment.from_wav(str(file))
