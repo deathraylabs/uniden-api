@@ -65,7 +65,7 @@ def files_with_matched_tags(working_dir, tags):
     os.chdir(working_dir)
 
     # capture_output=True ensures we capture byte string of the resultant stdout
-    tag_string = sb.run([tagCmd, "--match", tags], capture_output=True).stdout
+    tag_string = sb.run([str(tagCmd), "--match", tags], capture_output=True).stdout
 
     # check for case of no matching tags
     if tag_string == b"":
@@ -84,7 +84,7 @@ def files_with_matched_tags(working_dir, tags):
     return paths_to_tagged_files
 
 
-def merge_tagged_wav_files(wav_file_paths, merged_wav_name="merged_{:03d}.wav"):
+def merge_tagged_wav_files(wav_file_paths, merged_wav_name=r"merged_{:03d}.wav"):
     """ Simple function to combine multiple wav files into a single file.
 
     Args:
@@ -113,7 +113,7 @@ def merge_tagged_wav_files(wav_file_paths, merged_wav_name="merged_{:03d}.wav"):
     for file in wav_file_paths:
         combined_sounds = combined_sounds + AudioSegment.from_wav(str(file))
 
-    combined_sounds.export(merged_wav_name, format="wav")
+    combined_sounds.export(merged_wav_path, format="wav")
 
     return merged_wav_path
 
@@ -140,6 +140,6 @@ if __name__ == "__main__":
     output_file_name = "code pit.wav"
 
     matched_files = files_with_matched_tags(clipboard, tag)
-    output = merge_tagged_wav_files(matched_files, merged_wav_name=output_file_name)
+    output = merge_tagged_wav_files(matched_files)
 
     # todo: reset the tag to something else after it's merged
