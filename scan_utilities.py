@@ -13,6 +13,30 @@ import pyperclip as cb
 import re
 
 
+def unique_path(directory, name_pattern):
+    """Create a new and unique file name.
+
+    Args:
+        directory (Path): pathlib object representing containing directory
+        name_pattern (str): str.format pattern of desired file name
+
+    Returns:
+        Path: unique pathlib object based on naming scheme
+
+    Example:
+        Create a unique path object using str.format patterns like this::
+
+            path = unique_path(pathlib.Path.cwd(), "test{:03d}.txt")
+
+    """
+    counter = 0
+    while True:
+        counter += 1
+        path = directory / name_pattern.format(counter)
+        if not path.exists():
+            return path
+
+
 def files_with_matched_tags(working_dir, tags):
     """Function generates a list of files with matching extended
     attribute tags in the finder.
