@@ -49,7 +49,7 @@ def files_with_matched_tags(working_dir, tags):
 
     Returns:
         list: list of Path objects for files that match the specified finder
-            tags
+              tags
         None: returned if no files match specified finder tag
 
     """
@@ -84,16 +84,13 @@ def files_with_matched_tags(working_dir, tags):
     return paths_to_tagged_files
 
 
-def merge_tagged_wav_files(wav_file_paths, output_path="merged.wav"):
+def merge_tagged_wav_files(wav_file_paths, merged_wav_name="merged_{:03d}.wav"):
     """ Simple function to combine multiple wav files into a single file.
 
     Args:
         wav_file_paths (list): list of Path objects for wav files you wish to
             combine
-        output_path (str): optional file name and path.
-            - individual file names will be saved into CWD
-            - specify full path name to save in a specific directory
-            - existing files of the same name will be overwritten
+        merged_wav_name (str): optional file name and format string.
 
     Returns:
         False (bool): if no wave files are passed to the function
@@ -108,23 +105,17 @@ def merge_tagged_wav_files(wav_file_paths, output_path="merged.wav"):
     combined_sounds = AudioSegment.empty()
 
     # create our Path object
-    output_path = Path(output_path)
+    # merged_wav_name = Path(merged_wav_name)
 
     # don't overwrite existing files
-    # todo: this really needs to be a recursive function instead of this
-    # if output_path.exists():
-    #     m = re.search(r"(.+_)(\d+)(\.wav)", str(output_path))
-    #     try:
-    #         output_path = m.group(1) + str(int(m.group(2)) + 1) + m.group(3)
-    #     except AttributeError:
-    #         output_path = output_path.replace(".wav", "_1.wav")
+    merged_wav_path = unique_path(Path.cwd(), merged_wav_name)
 
     for file in wav_file_paths:
         combined_sounds = combined_sounds + AudioSegment.from_wav(str(file))
 
-    combined_sounds.export(output_path, format="wav")
+    combined_sounds.export(merged_wav_name, format="wav")
 
-    return output_path
+    return merged_wav_path
 
 
 if __name__ == "__main__":
@@ -149,6 +140,6 @@ if __name__ == "__main__":
     output_file_name = "code pit.wav"
 
     matched_files = files_with_matched_tags(clipboard, tag)
-    output = merge_tagged_wav_files(matched_files, output_path=output_file_name)
+    output = merge_tagged_wav_files(matched_files, merged_wav_name=output_file_name)
 
     # todo: reset the tag to something else after it's merged
