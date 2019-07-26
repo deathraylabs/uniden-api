@@ -65,10 +65,54 @@ def get_incidents(data_source="all"):
     return headings, data_list
 
 
-def lists_to_db():
-    """Save list of lists to SQLite database"""
-    pass
+def lists_to_db(list_of_data):
+    """Save list of lists to SQLite database.
+
+    Args:
+        list_of_data (list):
+
+    Notes:
+        Presumes the database already exists and tables are setup.
+
+        SQL used to create table:
+            DROP TABLE IF EXISTS "incidents";
+
+            CREATE TABLE "incidents" (
+                "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+                "Agency"	TEXT,
+                "Address"	TEXT,
+                "Cross Street"	TEXT,
+                "Key Map"	TEXT,
+                "Call Time(Opened)"	TEXT,
+                "Incident Type"	TEXT,
+                "Combined Response"	TEXT,
+                UNIQUE ("Address", "Cross Street", "Call Time(Opened)",
+                "Incident Type")
+            );
+
+    """
+    conn = sqlite3.connect("incidents.sqlite")
+    cur = conn.cursor()
+
+    headings = list_of_data.pop(0)
+
+    for data in list_of_data:
+        cur.execute(
+            """
+        INSERT OR IGNORE INTO incidents ("Agency", "Address",
+            "Cross Street",
+            "Key Map",
+            "Call Time(Opened)",
+            "Incident Type",
+            "Combined Response") VALUES ( ?, ?, ?, ?, ?, ?, ?)""",
+            (data[0], data[1], data[2], data[3], data[4], data[5], data[6]),
+        )
+
+    conn.commit()
+
+    return True
 
 
 if __name__ == "__main__":
     incident_data = get_incidents()
+    lists_to_db(incident_data[1])
