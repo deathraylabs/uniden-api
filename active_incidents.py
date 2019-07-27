@@ -3,6 +3,7 @@ within a set radius of location and returns the details of any events that
 fall within the radius.
 
 Notes:
+    - source data is updated every 5 minutes
     - [ ] may wish to also search twitter using data from site
 """
 
@@ -50,7 +51,7 @@ def get_incidents(data_source="all"):
     for heading in headings_html.select("th"):
         headings.append(heading.getText())
 
-    num_columns = len(headings)
+    # num_columns = len(headings)
 
     # container for rows of data
     data_list = []
