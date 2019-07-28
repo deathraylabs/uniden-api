@@ -183,7 +183,7 @@ def get_wav_meta(directory):
     return raw_string, scan_frame
 
 
-def get_bytes(start, length, directory):
+def get_string_at_offset(start, length, directory):
     """Grab data from start offset to ending offset
 
     Args:
@@ -203,14 +203,24 @@ def get_bytes(start, length, directory):
     # seek to starting byte (seek(0) is actually byte 8 of file)
     meta_chunk.seek(start - 8)
 
-    try:
-        chunk_string = meta_chunk.read(length).decode()
-    except UnicodeDecodeError:
-        print("shittle sticks")
+    chunk_string = meta_chunk.read(length)
+    chunk_string = chunk_string.replace(b"\x00", b"")
+
+    decoded_string = ""
+    for byte in chunk_string:
+
+        try:
+            decoded_string += byte.decode()
+        except UnicodeDecodeError:
+            print("shittle sticks")
+            decoded_string += "»"
+
+    # replace null character with nothing
+    # chunk_string = chunk_string.replace("\x00", "")
 
     f.close()
 
-    return chunk_string
+    return decoded_string
 
 
 if __name__ == "__main__":
@@ -222,10 +232,11 @@ if __name__ == "__main__":
         ----------------------
     """
 
-    input(help_statement)
+    # input(help_statement)
 
     # get contents of clipboard
-    clipboard = cb.paste()
+    # clipboard = cb.paste()
+    clipboard = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-09_22-26-02.wav"
 
     # path to directory that contains the audio of interest
     # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
@@ -246,9 +257,18 @@ if __name__ == "__main__":
 
     start, length = WAV_METADATA["transmission_end"]
 
-    # scanstring = get_bytes(start, length, audio_path)
+    # scanstring = get_string_at_offset(start, length, audio_path)
     # print(scanstring)
 
-    for file in matched_files:
-        scanstring = get_bytes(start, length, file)
-        print(scanstring)
+    for item in WAV_METADATA.items():
+        if item[1] is None:
+            continue
+        name = item[0]
+        start = item[1][0]
+        length = item[1][1]
+
+        print(name)
+
+        for file in matched_files:
+            scanstring = get_string_at_offset(start, length, file)
+            print(scanstring)
