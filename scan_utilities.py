@@ -141,12 +141,16 @@ def get_wav_meta(directory):
         print(f"the current byte is: {current_byte}")
 
         try:
-            raw_string += meta_chunk.read(8).decode().replace("\x00", "")
+            chunk_string = meta_chunk.read(8).decode()
         except UnicodeDecodeError:
             print("just hit a weird 8 byte chunk")
+            current_byte = meta_chunk.tell()
+            continue
+
+        raw_string += chunk_string
 
         current_byte = meta_chunk.tell()
-        print(f"The ending byte was: {current_byte}")
+        # print(f"The ending byte was: {current_byte}")
 
     f.close()
 
