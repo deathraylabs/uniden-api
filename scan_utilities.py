@@ -119,6 +119,40 @@ def merge_tagged_wav_files(wav_file_paths, merged_wav_name=r"merged_{:03d}.wav")
     return merged_wav_path
 
 
+def get_wav_meta(directory):
+    """Read the scanner generated metadata at the start of the file
+
+    Args:
+        directory (str): location of wav file
+
+    """
+
+    f_path = Path(directory)
+    f = open(f_path, "rb")
+
+    # chunk will allow us to parse the byte data in the wav file
+    meta_chunk = chunk.Chunk(f)
+
+    # variable to keep track of location in byte stream
+    current_byte = 0
+    raw_string = ""
+
+    while current_byte < 2663:
+        print(f"the current byte is: {current_byte}")
+
+        try:
+            raw_string += meta_chunk.read(8).decode().replace("\x00", "")
+        except UnicodeDecodeError:
+            print("just hit a weird 8 byte chunk")
+
+        current_byte = meta_chunk.tell()
+        print(f"The ending byte was: {current_byte}")
+
+    f.close()
+
+    return raw_string
+
+
 if __name__ == "__main__":
 
     help_statement = """
@@ -128,19 +162,23 @@ if __name__ == "__main__":
         ----------------------
     """
 
-    input(help_statement)
-
-    # get contents of clipboard
-    clipboard = cb.paste()
-
-    # path to directory that contains the audio of interest
-    # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
-
-    # matching tag
-    tag = "Orange"
-    output_file_name = "code pit.wav"
-
-    matched_files = files_with_matched_tags(clipboard, tag)
-    output = merge_tagged_wav_files(matched_files)
+    # input(help_statement)
+    #
+    # # get contents of clipboard
+    # clipboard = cb.paste()
+    #
+    # # path to directory that contains the audio of interest
+    # # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
+    #
+    # # matching tag
+    # tag = "Orange"
+    # output_file_name = "code pit.wav"
+    #
+    # matched_files = files_with_matched_tags(clipboard, tag)
+    # output = merge_tagged_wav_files(matched_files)
 
     # todo: reset the tag to something else after it's merged
+
+    audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
+
+    metadata = get_wav_meta(audio_path)
