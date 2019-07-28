@@ -135,16 +135,17 @@ def get_wav_meta(directory):
 
     # variable to keep track of location in byte stream
     current_byte = 0
-    raw_string = ""
+    raw_string = r""
 
     while current_byte < 2663:
         print(f"the current byte is: {current_byte}")
 
         try:
-            chunk_string = meta_chunk.read(8).decode()
+            chunk_string = meta_chunk.read(1).decode()
         except UnicodeDecodeError:
-            print("just hit a weird 8 byte chunk")
+            print("just hit a weird byte chunk")
             current_byte = meta_chunk.tell()
+            raw_string += f"\n-=-=-=-= byte {current_byte} =-=-=-=-=-\n"
             continue
 
         raw_string += chunk_string
@@ -186,3 +187,4 @@ if __name__ == "__main__":
     audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
     metadata = get_wav_meta(audio_path)
+    metalist = re.split(r"\x00+", metadata)
