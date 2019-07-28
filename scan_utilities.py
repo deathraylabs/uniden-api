@@ -137,7 +137,8 @@ def get_wav_meta(directory):
 
     # variable to keep track of location in byte stream
     current_byte = 0
-    raw_string = r""
+    raw_string = "\x00"
+    row_dict = {"offset": 0, "data": ""}
 
     while current_byte < 2663:
         print(f"the current byte is: {current_byte}")
@@ -148,23 +149,34 @@ def get_wav_meta(directory):
             print("just hit a weird byte chunk")
             current_byte = meta_chunk.tell() + 8  # first 8 don't count
             # raw_string += f"\n-=-=-=-= byte {current_byte} =-=-=-=-=-\n"
+            raw_string += "\x00"
             continue
 
-        # skip null bytes or first character
-        if chunk_string == "\x00" or raw_string == r"":
-            # raw_string += chunk_string
+        # skip null bytes before first character
+        if chunk_string == "\x00" and row_dict["data"] == "":
+            raw_string += chunk_string
             continue
+        # save data to frame once we hit the next null character
+        elif chunk_string == "\x00" and row_dict["data"] != "":
+            print(row_dict)
+            # populate the pandas dataframe
+            scan_frame = scan_frame.append(row_dict, ignore_index=True)
+            # reset the data in dict
+            row_dict["data"] = ""
         elif raw_string[-1] == "\x00" and chunk_string != "\x00":
             raw_string += f"[{current_byte}]" + chunk_string
+            row_dict["offset"] = current_byte
+            row_dict["data"] = row_dict["data"] + chunk_string
         else:
             raw_string += chunk_string
+            row_dict["data"] = row_dict["data"] + chunk_string
 
         current_byte = meta_chunk.tell() + 8
         # print(f"The ending byte was: {current_byte}")
 
     f.close()
 
-    return raw_string
+    return raw_string, scan_frame
 
 
 if __name__ == "__main__":
