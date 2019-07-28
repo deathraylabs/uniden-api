@@ -208,4 +208,4 @@ if __name__ == "__main__":
     audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
     metadata = get_wav_meta(audio_path)
-    metalist = re.split(r"(?:\x00+)", metadata)
+    metalist = re.split(r"(?:\x00+)", metadata[0])
