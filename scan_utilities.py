@@ -141,17 +141,20 @@ def get_wav_meta(directory):
     row_dict = {"offset": 0, "data": ""}
 
     while current_byte < 2663:
-        print(f"the current byte is: {current_byte}")
+        # print(f"the current byte is: {current_byte}")
 
         try:
             chunk_string = meta_chunk.read(1).decode()
         except UnicodeDecodeError:
             print("just hit a weird byte chunk")
-            current_byte = meta_chunk.tell() + 8  # first 8 don't count
+            # current_byte = meta_chunk.tell() + 8  # first 8 don't count
             # raw_string += f"\n-=-=-=-= byte {current_byte} =-=-=-=-=-\n"
-            raw_string += "\x00"
+            raw_string += f"[~{current_byte}]\n"
             continue
+        finally:
+            current_byte = meta_chunk.tell() + 8  # first 8 don't count
 
+        # todo: the offset is not being recorded correctly in dataframe
         # skip null bytes before first character
         if chunk_string == "\x00" and row_dict["data"] == "":
             raw_string += chunk_string
@@ -208,4 +211,4 @@ if __name__ == "__main__":
     audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
     metadata = get_wav_meta(audio_path)
-    metalist = re.split(r"(?:\x00+)", metadata[0])
+    metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
