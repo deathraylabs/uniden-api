@@ -146,7 +146,7 @@ def get_wav_meta(directory):
         try:
             chunk_string = meta_chunk.read(1).decode()
         except UnicodeDecodeError:
-            print("just hit a weird byte chunk")
+            print(f"just hit a weird byte chunk at {current_byte}")
             # current_byte = meta_chunk.tell() + 8  # first 8 don't count
             # raw_string += f"\n-=-=-=-= byte {current_byte} =-=-=-=-=-\n"
             raw_string += f"[~{current_byte}]\n"
@@ -180,6 +180,10 @@ def get_wav_meta(directory):
     f.close()
 
     return raw_string, scan_frame
+
+
+def get_bytes(start, end):
+    """Grab data from start offset to ending offset"""
 
 
 if __name__ == "__main__":
