@@ -12,6 +12,7 @@ import subprocess as sb
 import pyperclip as cb
 import re
 import chunk
+import pandas as pd
 
 
 def unique_path(directory, name_pattern):
@@ -126,6 +127,7 @@ def get_wav_meta(directory):
         directory (str): location of wav file
 
     """
+    scan_frame = pd.DataFrame(columns=["offset", "data"])
 
     f_path = Path(directory)
     f = open(f_path, "rb")
@@ -144,13 +146,19 @@ def get_wav_meta(directory):
             chunk_string = meta_chunk.read(1).decode()
         except UnicodeDecodeError:
             print("just hit a weird byte chunk")
-            current_byte = meta_chunk.tell()
+            current_byte = meta_chunk.tell() + 8  # first 8 don't count
             raw_string += f"\n-=-=-=-= byte {current_byte} =-=-=-=-=-\n"
             continue
 
-        raw_string += chunk_string
+        # for debugging include the current byte prefix
+        if chunk_string == "\x00" or raw_string == r"":
+            raw_string += chunk_string
+        elif raw_string[-1] == "\x00" and chunk_string != "\x00":
+            raw_string += f"[{current_byte}]" + chunk_string
+        else:
+            raw_string += chunk_string
 
-        current_byte = meta_chunk.tell()
+        current_byte = meta_chunk.tell() + 8
         # print(f"The ending byte was: {current_byte}")
 
     f.close()
