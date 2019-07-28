@@ -182,8 +182,21 @@ def get_wav_meta(directory):
     return raw_string, scan_frame
 
 
-def get_bytes(start, end):
+def get_bytes(start, end, directory):
     """Grab data from start offset to ending offset"""
+    f_path = Path(directory)
+    f = open(f_path, "rb")
+
+    # chunk will allow us to parse the byte data in the wav file
+    meta_chunk = chunk.Chunk(f)
+
+    try:
+        chunk_string = meta_chunk.read(1).decode()
+    except UnicodeDecodeError:
+
+    f.close()
+
+    return chunk_string
 
 
 if __name__ == "__main__":
