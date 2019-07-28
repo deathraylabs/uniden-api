@@ -11,6 +11,7 @@ import os
 import subprocess as sb
 import pyperclip as cb
 import re
+import chunk
 
 
 def unique_path(directory, name_pattern):
