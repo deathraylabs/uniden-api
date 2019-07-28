@@ -4,7 +4,7 @@ Utility functions for use with Uniden SDS-100 and uniden-api code.
 
 from pydub import AudioSegment
 from pathlib import Path
-from scanner.constants import GSI_OUTPUT
+from scanner.constants import WAV_METADATA
 
 # import shutil
 # import sys
@@ -189,6 +189,10 @@ def get_bytes(start, length, directory):
     Args:
         start (int): starting offset byte from start of file (as you see
             using hex editor.
+        length (int): number of bytes of data to retreive
+
+    Returns:
+        (str): UTF-8 decoded string from bytes
     """
     f_path = Path(directory)
     f = open(f_path, "rb")
@@ -218,19 +222,19 @@ if __name__ == "__main__":
         ----------------------
     """
 
-    # input(help_statement)
-    #
-    # # get contents of clipboard
-    # clipboard = cb.paste()
-    #
-    # # path to directory that contains the audio of interest
-    # # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
-    #
-    # # matching tag
-    # tag = "Orange"
-    # output_file_name = "code pit.wav"
-    #
-    # matched_files = files_with_matched_tags(clipboard, tag)
+    input(help_statement)
+
+    # get contents of clipboard
+    clipboard = cb.paste()
+
+    # path to directory that contains the audio of interest
+    # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
+
+    # matching tag
+    tag = "Orange"
+    output_file_name = "code pit.wav"
+
+    matched_files = files_with_matched_tags(clipboard, tag)
     # output = merge_tagged_wav_files(matched_files)
 
     # todo: reset the tag to something else after it's merged
@@ -240,7 +244,11 @@ if __name__ == "__main__":
     # metadata = get_wav_meta(audio_path)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
-    start, length = GSI_OUTPUT["date_code"]
+    start, length = WAV_METADATA["transmission_end"]
 
-    scanstring = get_bytes(start, length, audio_path)
-    print(scanstring)
+    # scanstring = get_bytes(start, length, audio_path)
+    # print(scanstring)
+
+    for file in matched_files:
+        scanstring = get_bytes(start, length, file)
+        print(scanstring)
