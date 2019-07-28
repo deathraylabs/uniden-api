@@ -4,6 +4,7 @@ Utility functions for use with Uniden SDS-100 and uniden-api code.
 
 from pydub import AudioSegment
 from pathlib import Path
+from scanner.constants import GSI_OUTPUT
 
 # import shutil
 # import sys
@@ -183,15 +184,20 @@ def get_wav_meta(directory):
 
 
 def get_bytes(start, length, directory):
-    """Grab data from start offset to ending offset"""
+    """Grab data from start offset to ending offset
+
+    Args:
+        start (int): starting offset byte from start of file (as you see
+            using hex editor.
+    """
     f_path = Path(directory)
     f = open(f_path, "rb")
 
     # chunk will allow us to parse the byte data in the wav file
     meta_chunk = chunk.Chunk(f)
 
-    # seek to starting byte
-    meta_chunk.seek(start)
+    # seek to starting byte (seek(0) is actually byte 8 of file)
+    meta_chunk.seek(start - 8)
 
     try:
         chunk_string = meta_chunk.read(length).decode()
@@ -234,5 +240,7 @@ if __name__ == "__main__":
     # metadata = get_wav_meta(audio_path)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
-    scanstring = get_bytes(0, 8, audio_path)
+    start, length = GSI_OUTPUT["date_code"]
+
+    scanstring = get_bytes(start, length, audio_path)
     print(scanstring)

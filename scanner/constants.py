@@ -503,7 +503,7 @@ human_ch_logs = {"0": "off", "1": "on", "2": "extend"}
 # this must match the order and number in database
 GSI_OUTPUT = OrderedDict(
     [
-        ("date_code", None),
+        ("date_code", (376, 14)),
         ("ScannerInfo:Mode", None),
         ("ScannerInfo:V_Screen", None),
         ("MonitorList:Name", None),
