@@ -182,7 +182,7 @@ def get_wav_meta(directory):
     return raw_string, scan_frame
 
 
-def get_bytes(start, end, directory):
+def get_bytes(start, length, directory):
     """Grab data from start offset to ending offset"""
     f_path = Path(directory)
     f = open(f_path, "rb")
@@ -190,9 +190,13 @@ def get_bytes(start, end, directory):
     # chunk will allow us to parse the byte data in the wav file
     meta_chunk = chunk.Chunk(f)
 
+    # seek to starting byte
+    meta_chunk.seek(start)
+
     try:
-        chunk_string = meta_chunk.read(1).decode()
+        chunk_string = meta_chunk.read(length).decode()
     except UnicodeDecodeError:
+        print("shittle sticks")
 
     f.close()
 
@@ -227,5 +231,8 @@ if __name__ == "__main__":
 
     audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
-    metadata = get_wav_meta(audio_path)
-    metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
+    # metadata = get_wav_meta(audio_path)
+    # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
+
+    scanstring = get_bytes(0, 8, audio_path)
+    print(scanstring)
