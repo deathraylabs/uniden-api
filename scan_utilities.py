@@ -153,7 +153,7 @@ def get_wav_meta(directory):
     chunk_dict["WAVELIST"] = chunk_length
 
     # temporary loop logic for testing
-    for dummy in range(3):
+    while meta_chunk.tell() < 572:
         # get chunk name and chunk length
         chunk_name = meta_chunk.read(4)  # this also sets new absolute seek
         # position
