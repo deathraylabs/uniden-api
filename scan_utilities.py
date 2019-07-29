@@ -198,7 +198,7 @@ def get_string_at_offset(start, length, directory):
     f = open(f_path, "rb")
 
     # chunk will allow us to parse the byte data in the wav file
-    meta_chunk = chunk.Chunk(f)
+    meta_chunk = chunk.Chunk(f, bigendian=False)
 
     # seek ignores first 8 bytes of file that hex editor sees.
     seek_start_position = start - 8
