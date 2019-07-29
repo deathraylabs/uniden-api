@@ -200,20 +200,28 @@ def get_string_at_offset(start, length, directory):
     # chunk will allow us to parse the byte data in the wav file
     meta_chunk = chunk.Chunk(f)
 
-    # seek to starting byte (seek(0) is actually byte 8 of file)
-    meta_chunk.seek(start - 8)
+    # seek ignores first 8 bytes of file that hex editor sees.
+    seek_start_position = start - 8
 
-    chunk_string = meta_chunk.read(length)
-    chunk_string = chunk_string.replace(b"\x00", b"")
+    # seek to starting byte (seek(0) is actually byte 8 of file)
+    meta_chunk.seek(seek_start_position)
 
     decoded_string = ""
-    for byte in chunk_string:
+
+    # read byte by byte to avoid non-ascii characters
+    while length > 0:
+        chunk_string = meta_chunk.read(1)
+        chunk_string = chunk_string.replace(b"\x00", b"")
+
+        current_pos = meta_chunk.tell()
 
         try:
-            decoded_string += byte.decode()
+            decoded_string += chunk_string.decode()
         except UnicodeDecodeError:
-            print("shittle sticks")
+            print(f"shittle sticks at {current_pos} hex: {chunk_string}")
             decoded_string += "»"
+        finally:
+            length -= 1
 
     # replace null character with nothing
     # chunk_string = chunk_string.replace("\x00", "")
@@ -242,10 +250,11 @@ if __name__ == "__main__":
     # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
 
     # matching tag
-    tag = "Orange"
-    output_file_name = "code pit.wav"
+    # tag = "Orange"
+    # output_file_name = "code pit.wav"
 
-    matched_files = files_with_matched_tags(clipboard, tag)
+    # matched_files = files_with_matched_tags(clipboard, tag)
+
     # output = merge_tagged_wav_files(matched_files)
 
     # todo: reset the tag to something else after it's merged
@@ -255,20 +264,21 @@ if __name__ == "__main__":
     # metadata = get_wav_meta(audio_path)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
-    start, length = WAV_METADATA["transmission_end"]
+    start, length = WAV_METADATA["dump"]
+    scanstring = get_string_at_offset(start, length, clipboard)
 
     # scanstring = get_string_at_offset(start, length, audio_path)
     # print(scanstring)
 
-    for item in WAV_METADATA.items():
-        if item[1] is None:
-            continue
-        name = item[0]
-        start = item[1][0]
-        length = item[1][1]
-
-        print(name)
-
-        for file in matched_files:
-            scanstring = get_string_at_offset(start, length, file)
-            print(scanstring)
+    # for item in WAV_METADATA.items():
+    #     if item[1] is None:
+    #         continue
+    #     name = item[0]
+    #     start = item[1][0]
+    #     length = item[1][1]
+    #
+    #     print(name)
+    #
+    #     for file in matched_files:
+    #         scanstring = get_string_at_offset(start, length, file)
+    #         print(scanstring)
