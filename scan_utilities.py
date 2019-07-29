@@ -211,7 +211,14 @@ def get_string_at_offset(start, length, directory):
     # read byte by byte to avoid non-ascii characters
     while length > 0:
         chunk_string = meta_chunk.read(1)
-        chunk_string = chunk_string.replace(b"\x00", b"")
+        # weird character codes that show up in the string, converted so I
+        # can read them in the string output as utf8 text
+        chunk_string = chunk_string.replace(b"\x00", b"|")
+        chunk_string = chunk_string.replace(b"\x01", b"\\x01")
+        chunk_string = chunk_string.replace(b"\x02", b"\\x02")
+        chunk_string = chunk_string.replace(b"\x03", b"\\x03")
+        chunk_string = chunk_string.replace(b"\x04", b"\\x04")
+        chunk_string = chunk_string.replace(b"\x08", b"\\x08")
 
         current_pos = meta_chunk.tell()
 
@@ -219,7 +226,8 @@ def get_string_at_offset(start, length, directory):
             decoded_string += chunk_string.decode()
         except UnicodeDecodeError:
             print(f"shittle sticks at {current_pos} hex: {chunk_string}")
-            decoded_string += "»"
+            # label undecodable spots with position and raw hex
+            decoded_string += f"«{current_pos} {chunk_string}»"
         finally:
             length -= 1
 
