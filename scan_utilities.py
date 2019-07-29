@@ -193,12 +193,19 @@ def get_string_at_offset(start, length, directory):
 
     Returns:
         (str): UTF-8 decoded string from bytes
+
+    Notes:
+        Here's what I've figured out so far:
+
+        the first 8 bytes tell you the chunk name, then the following 4 bytes
+        is a little endian hex representation of the chunk size in bytes.
+
     """
     f_path = Path(directory)
     f = open(f_path, "rb")
 
     # chunk will allow us to parse the byte data in the wav file
-    meta_chunk = chunk.Chunk(f, bigendian=False)
+    meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=True)
 
     # seek ignores first 8 bytes of file that hex editor sees.
     seek_start_position = start - 8
