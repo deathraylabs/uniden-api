@@ -213,12 +213,12 @@ def get_string_at_offset(start, length, directory):
         chunk_string = meta_chunk.read(1)
         # weird character codes that show up in the string, converted so I
         # can read them in the string output as utf8 text
-        chunk_string = chunk_string.replace(b"\x00", b"|")
-        chunk_string = chunk_string.replace(b"\x01", b"\\x01")
-        chunk_string = chunk_string.replace(b"\x02", b"\\x02")
-        chunk_string = chunk_string.replace(b"\x03", b"\\x03")
-        chunk_string = chunk_string.replace(b"\x04", b"\\x04")
-        chunk_string = chunk_string.replace(b"\x08", b"\\x08")
+        chunk_string = chunk_string.replace(b"\x00", b"|")  # NUL
+        chunk_string = chunk_string.replace(b"\x01", b"\\x01")  # SOH
+        chunk_string = chunk_string.replace(b"\x02", b"\\x02")  # STX
+        chunk_string = chunk_string.replace(b"\x03", b"\\x03")  # ETX
+        chunk_string = chunk_string.replace(b"\x04", b"\\x04")  # EOT
+        chunk_string = chunk_string.replace(b"\x08", b"\\x08")  # BS
 
         current_pos = meta_chunk.tell()
 
