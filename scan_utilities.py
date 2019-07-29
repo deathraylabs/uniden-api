@@ -142,30 +142,41 @@ def get_wav_meta(directory):
     # chunk will allow us to parse the byte data in the wav file
     meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=True)
 
+    try:
+        meta_chunk.read(8) == "WAVELIST"
+    except AssertionError:
+        print("oh crap!")
+
+    chunk_length = meta_chunk.read(4)
+    chunk_length = int.from_bytes(chunk_length, byteorder="little")
+
+    chunk_dict["WAVELIST"] = chunk_length
+
     # temporary loop logic for testing
-    for dummy in [1, 2]:
+    for dummy in range(3):
         # get chunk name and chunk length
-        chunk_name = meta_chunk.read(8)  # this also sets new absolute seek position
+        chunk_name = meta_chunk.read(4)  # this also sets new absolute seek
+        # position
         # decode chunk name to UTF-8
         chunk_name = chunk_name.decode()
+
+        # the very first chunk is the "INFO"
+        if chunk_name == "INFO":
+            continue
 
         # next 4 bytes are little endian order hex number, not ASCII code
         chunk_length = meta_chunk.read(4)
         chunk_length = int.from_bytes(chunk_length, byteorder="little")
-
-        # the very first chunk is the "WAVELIST"
-        if chunk_name == "WAVELIST":
-            # add to chunk dictionary
-            chunk_dict[chunk_name] = chunk_length
-            continue
 
         # get the data in the next `chunk_length` bytes
         chunk_string = meta_chunk.read(chunk_length)
         chunk_string = chunk_string.decode()
         chunk_string = chunk_string.replace("\x00", "»")
 
-    # debugging text
-    print(f"name: {chunk_name}\nlength: {chunk_length}\nstring:\n{chunk_string}")
+        # debugging text
+        print(f"name: {chunk_name}\nlength: {chunk_length}")
+        print(f"string:\n{chunk_string}")
+        print(meta_chunk.tell())
 
     # variable to keep track of location in byte stream
     # current_byte = 0
