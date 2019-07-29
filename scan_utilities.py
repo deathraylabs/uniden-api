@@ -128,59 +128,86 @@ def get_wav_meta(directory):
         directory (str): location of wav file
 
     """
-    scan_frame = pd.DataFrame(columns=["offset", "data"])
+    # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
     f_path = Path(directory)
     f = open(f_path, "rb")
 
+    # initializing chunk data variables
+    chunk_name = ""
+    chunk_length = 0
+    chunk_string = ""
+
     # chunk will allow us to parse the byte data in the wav file
-    meta_chunk = chunk.Chunk(f)
+    meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=True)
+
+    # get chunk name and chunk length
+    chunk_name = meta_chunk.read(8)  # this also sets new abs seek position
+    # decode chunk name to UTF-8
+    chunk_name = chunk_name.decode()
+
+    # next 4 bytes are little endian order hex number, not ASCII code
+    chunk_length = meta_chunk.read(4)
+    chunk_length = int.from_bytes(chunk_length, byteorder="little")
+
+    # get the data in the next `chunk_length` bytes
+    chunk_string = meta_chunk.read(chunk_length)
+    chunk_string = chunk_string.decode()
+
+    # debugging text
+    print(
+        f"""
+        name: {chunk_name} 
+        length: {chunk_length}
+        string:\n{chunk_string}"""
+    )
 
     # variable to keep track of location in byte stream
     current_byte = 0
     raw_string = "\x00"
     row_dict = {"offset": 0, "data": ""}
 
-    while current_byte < 2663:
-        # print(f"the current byte is: {current_byte}")
-
-        try:
-            chunk_string = meta_chunk.read(1).decode()
-        except UnicodeDecodeError:
-            print(f"just hit a weird byte chunk at {current_byte}")
-            # current_byte = meta_chunk.tell() + 8  # first 8 don't count
-            # raw_string += f"\n-=-=-=-= byte {current_byte} =-=-=-=-=-\n"
-            raw_string += f"[~{current_byte}]\n"
-            continue
-        finally:
-            current_byte = meta_chunk.tell() + 8  # first 8 don't count
-
-        # todo: the offset is not being recorded correctly in dataframe
-        # skip null bytes before first character
-        if chunk_string == "\x00" and row_dict["data"] == "":
-            raw_string += chunk_string
-            continue
-        # save data to frame once we hit the next null character
-        elif chunk_string == "\x00" and row_dict["data"] != "":
-            print(row_dict)
-            # populate the pandas dataframe
-            scan_frame = scan_frame.append(row_dict, ignore_index=True)
-            # reset the data in dict
-            row_dict["data"] = ""
-        elif raw_string[-1] == "\x00" and chunk_string != "\x00":
-            raw_string += f"[{current_byte}]" + chunk_string
-            row_dict["offset"] = current_byte
-            row_dict["data"] = row_dict["data"] + chunk_string
-        else:
-            raw_string += chunk_string
-            row_dict["data"] = row_dict["data"] + chunk_string
-
-        current_byte = meta_chunk.tell() + 8
-        # print(f"The ending byte was: {current_byte}")
+    # while current_byte < 2663:
+    #     # print(f"the current byte is: {current_byte}")
+    #
+    #     try:
+    #         chunk_string = meta_chunk.read(1).decode()
+    #     except UnicodeDecodeError:
+    #         print(f"just hit a weird byte chunk at {current_byte}")
+    #         # current_byte = meta_chunk.tell() + 8  # first 8 don't count
+    #         # raw_string += f"\n-=-=-=-= byte {current_byte} =-=-=-=-=-\n"
+    #         raw_string += f"[~{current_byte}]\n"
+    #         continue
+    #     finally:
+    #         current_byte = meta_chunk.tell() + 8  # first 8 don't count
+    #
+    #     # todo: the offset is not being recorded correctly in dataframe
+    #     # skip null bytes before first character
+    #     if chunk_string == "\x00" and row_dict["data"] == "":
+    #         raw_string += chunk_string
+    #         continue
+    #     # save data to frame once we hit the next null character
+    #     elif chunk_string == "\x00" and row_dict["data"] != "":
+    #         print(row_dict)
+    #         # populate the pandas dataframe
+    #         scan_frame = scan_frame.append(row_dict, ignore_index=True)
+    #         # reset the data in dict
+    #         row_dict["data"] = ""
+    #     elif raw_string[-1] == "\x00" and chunk_string != "\x00":
+    #         raw_string += f"[{current_byte}]" + chunk_string
+    #         row_dict["offset"] = current_byte
+    #         row_dict["data"] = row_dict["data"] + chunk_string
+    #     else:
+    #         raw_string += chunk_string
+    #         row_dict["data"] = row_dict["data"] + chunk_string
+    #
+    #     current_byte = meta_chunk.tell() + 8
+    #     # print(f"The ending byte was: {current_byte}")
 
     f.close()
 
-    return raw_string, scan_frame
+    # return raw_string, scan_frame
+    return raw_string
 
 
 def get_string_at_offset(start, length, directory):
@@ -196,6 +223,10 @@ def get_string_at_offset(start, length, directory):
 
     Notes:
         Here's what I've figured out so far:
+
+        Apparently the WAV header is in little endian byte order. I don't
+        know if it is algined every 2 bytes, which is one of the default
+        arguments in the `chunk` module.
 
         the first 8 bytes tell you the chunk name, then the following 4 bytes
         is a little endian hex representation of the chunk size in bytes.
@@ -274,13 +305,13 @@ if __name__ == "__main__":
 
     # todo: reset the tag to something else after it's merged
 
-    audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
+    # audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
-    # metadata = get_wav_meta(audio_path)
+    metadata = get_wav_meta(clipboard)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
-    start, length = WAV_METADATA["dump"]
-    scanstring = get_string_at_offset(start, length, clipboard)
+    # start, length = WAV_METADATA["dump"]
+    # scanstring = get_string_at_offset(start, length, clipboard)
 
     # scanstring = get_string_at_offset(start, length, audio_path)
     # print(scanstring)
