@@ -163,9 +163,9 @@ def get_wav_meta(directory):
     )
 
     # variable to keep track of location in byte stream
-    current_byte = 0
-    raw_string = "\x00"
-    row_dict = {"offset": 0, "data": ""}
+    # current_byte = 0
+    # raw_string = "\x00"
+    # row_dict = {"offset": 0, "data": ""}
 
     # while current_byte < 2663:
     #     # print(f"the current byte is: {current_byte}")
@@ -207,7 +207,7 @@ def get_wav_meta(directory):
     f.close()
 
     # return raw_string, scan_frame
-    return raw_string
+    return True
 
 
 def get_string_at_offset(start, length, directory):
