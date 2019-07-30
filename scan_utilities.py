@@ -177,16 +177,16 @@ def get_wav_meta(directory):
             # I don't understand code starting after byte 1180 or so
             chunk_string = meta_chunk.read(512)  # approx where utf8 ends
             chunk_string = chunk_string.rstrip(b"\x00")
-            chunk_string = chunk_string.replace(b"\x00", b"\n")
+            # chunk_string = chunk_string.replace(b"\x00", b"\n")
+            chunk_string = chunk_string.decode()
+            chunk_string = chunk_string.split("\x00")
+        # IKEY is not UTF8, not sure what it is
+        elif chunk_name == "IKEY":
+            chunk_string = meta_chunk.read(chunk_length)
         else:
             # get the data in the next `chunk_length` bytes
             chunk_string = meta_chunk.read(chunk_length)
             chunk_string = chunk_string.rstrip(b"\x00")
-
-        # IKEY is not UTF8, not sure what it is
-        if chunk_name == "IKEY":
-            print(chunk_string)
-        else:
             chunk_string = chunk_string.decode()
             chunk_string = chunk_string.replace("\x00", "»")
 
