@@ -136,8 +136,13 @@ def get_wav_meta(directory):
     f_path = Path(directory)
     f = open(f_path, "rb")
 
+    # The file name is the transmission start time, reformatting to match the
+    # transmission and time found in the WAV header.
+    transmission_start = f_path.stem.replace("-", "")
+    transmission_start = transmission_start.replace("_", "")
+
     # initializing chunk data variables
-    chunk_dict = {}
+    chunk_dict["transmission_start"] = transmission_start
 
     # chunk will allow us to parse the byte data in the wav file
     meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=True)
@@ -326,7 +331,7 @@ if __name__ == "__main__":
 
     # get contents of clipboard
     # clipboard = cb.paste()
-    clipboard = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-09_22-26-02.wav"
+    clipboard = "/Users/peej/Desktop/1019-07-17_14-49-46/2019-07-17_14-49-47.wav"
 
     # path to directory that contains the audio of interest
     # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
@@ -346,21 +351,5 @@ if __name__ == "__main__":
     metadata = get_wav_meta(clipboard)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
-    # start, length = WAV_METADATA["dump"]
-    # scanstring = get_string_at_offset(start, length, clipboard)
-
     # scanstring = get_string_at_offset(start, length, audio_path)
     # print(scanstring)
-
-    # for item in WAV_METADATA.items():
-    #     if item[1] is None:
-    #         continue
-    #     name = item[0]
-    #     start = item[1][0]
-    #     length = item[1][1]
-    #
-    #     print(name)
-    #
-    #     for file in matched_files:
-    #         scanstring = get_string_at_offset(start, length, file)
-    #         print(scanstring)

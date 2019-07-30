@@ -567,25 +567,27 @@ GSI_OUTPUT = OrderedDict(
     ]
 )
 
+# human readable metadata names and their corresponding tag/location in WAV
+# header metadata
 WAV_METADATA = OrderedDict(
     [
-        ("transmission_end", (376, 14)),
+        ("transmission_end", "ICRD"),
         ("ScannerInfo:Mode", None),
         ("ScannerInfo:V_Screen", None),
-        ("MonitorList:Name", (504, 64)),
+        ("MonitorList:Name", "ISBJ"),
         ("MonitorList:Index", None),
         ("MonitorList:ListType", None),
         ("MonitorList:Q_Key", None),
         ("MonitorList:N_Tag", None),
         ("MonitorList:DB_Counter", None),
-        ("System:Name", (32, 64)),
+        ("System:Name", "IART"),
         ("System:Index", None),
         ("System:Avoid", None),
         ("System:SystemType", None),
         ("System:Q_Key", None),
         ("System:N_Tag", None),
         ("System:Hold", None),
-        ("Department:Name", (104, 64)),
+        ("Department:Name", "IGNR"),
         ("Department:Index", None),
         ("Department:Avoid", None),
         ("Department:Q_Key", None),
@@ -602,7 +604,7 @@ WAV_METADATA = OrderedDict(
         ("TGID:P_Ch", None),
         ("TGID:LVL", None),
         ("UnitID:Name", None),
-        ("UnitID:U_Id", None),
+        ("UnitID:U_Id", "ITCH"),
         ("Site:Name", None),
         ("Site:Index", None),
         ("Site:Avoid", None),
