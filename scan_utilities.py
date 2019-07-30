@@ -153,7 +153,7 @@ def get_wav_meta(directory):
     chunk_dict["WAVELIST"] = chunk_length
 
     # temporary loop logic for testing
-    while meta_chunk.tell() < 572:
+    while meta_chunk.tell() < 925:
         # get chunk name and chunk length
         chunk_name = meta_chunk.read(4)  # this also sets new absolute seek
         # position
@@ -162,21 +162,34 @@ def get_wav_meta(directory):
 
         # the very first chunk is the "INFO"
         if chunk_name == "INFO":
+            # INFO is zero length, IART begins right after it.
             continue
+        elif chunk_name == "unid":
+            # unid is 2048 bytes long but only first 328 bytes are utf8
+            # I don't understand code starting after byte 1180 or so
+            meta_chunk.seek(4, whence=1)  # move ahead 4 bytes rel to current
+            chunk_string = meta_chunk.read(512)  # approx where utf8 ends
+            chunk_string = chunk_string.rstrip(b"\x00")
+            chunk_string = chunk_string.replace(b"\x00", b"\n")
+        else:
+            # next 4 bytes are little endian order hex number, not ASCII code
+            chunk_length = meta_chunk.read(4)
+            chunk_length = int.from_bytes(chunk_length, byteorder="little")
 
-        # next 4 bytes are little endian order hex number, not ASCII code
-        chunk_length = meta_chunk.read(4)
-        chunk_length = int.from_bytes(chunk_length, byteorder="little")
+            # get the data in the next `chunk_length` bytes
+            chunk_string = meta_chunk.read(chunk_length)
+            chunk_string = chunk_string.rstrip(b"\x00")
 
-        # get the data in the next `chunk_length` bytes
-        chunk_string = meta_chunk.read(chunk_length)
-        chunk_string = chunk_string.decode()
-        chunk_string = chunk_string.replace("\x00", "»")
+        if chunk_name == "IKEY":
+            print(chunk_string)
+        else:
+            chunk_string = chunk_string.decode()
+            chunk_string = chunk_string.replace("\x00", "»")
 
         # debugging text
         print(f"name: {chunk_name}\nlength: {chunk_length}")
         print(f"string:\n{chunk_string}")
-        print(meta_chunk.tell())
+        print(f"ending byte no: {meta_chunk.tell()}\n")
 
     # variable to keep track of location in byte stream
     # current_byte = 0
