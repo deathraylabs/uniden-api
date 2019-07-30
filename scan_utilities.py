@@ -142,7 +142,7 @@ def get_wav_meta(directory):
     transmission_start = transmission_start.replace("_", "")
 
     # initializing chunk data variables
-    chunk_dict["transmission_start"] = transmission_start
+    chunk_dict = {"transmission_start": transmission_start}
 
     # chunk will allow us to parse the byte data in the wav file
     meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=True)
