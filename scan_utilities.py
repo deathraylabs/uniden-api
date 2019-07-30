@@ -164,22 +164,24 @@ def get_wav_meta(directory):
         if chunk_name == "INFO":
             # INFO is zero length, IART begins right after it.
             continue
-        elif chunk_name == "unid":
+
+        # next 4 bytes are little endian order hex number, not ASCII code
+        chunk_length = meta_chunk.read(4)
+        chunk_length = int.from_bytes(chunk_length, byteorder="little")
+
+        # "unid" is probably "uniden" data, and needs to be treated differently
+        if chunk_name == "unid":
             # unid is 2048 bytes long but only first 328 bytes are utf8
             # I don't understand code starting after byte 1180 or so
-            meta_chunk.seek(4, whence=1)  # move ahead 4 bytes rel to current
             chunk_string = meta_chunk.read(512)  # approx where utf8 ends
             chunk_string = chunk_string.rstrip(b"\x00")
             chunk_string = chunk_string.replace(b"\x00", b"\n")
         else:
-            # next 4 bytes are little endian order hex number, not ASCII code
-            chunk_length = meta_chunk.read(4)
-            chunk_length = int.from_bytes(chunk_length, byteorder="little")
-
             # get the data in the next `chunk_length` bytes
             chunk_string = meta_chunk.read(chunk_length)
             chunk_string = chunk_string.rstrip(b"\x00")
 
+        # IKEY is not UTF8, not sure what it is
         if chunk_name == "IKEY":
             print(chunk_string)
         else:
