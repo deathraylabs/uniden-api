@@ -127,6 +127,9 @@ def get_wav_meta(directory):
     Args:
         directory (str): location of wav file
 
+    Returns:
+        (dict): RIFF tag name: string or bytes representing tag data
+
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
@@ -134,29 +137,28 @@ def get_wav_meta(directory):
     f = open(f_path, "rb")
 
     # initializing chunk data variables
-    chunk_name = ""
-    chunk_length = 0
-    chunk_string = ""
     chunk_dict = {}
 
     # chunk will allow us to parse the byte data in the wav file
     meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=True)
 
+    # the first line of text should be "WAVELIST"
     try:
         meta_chunk.read(8) == "WAVELIST"
     except AssertionError:
         print("oh crap!")
 
+    # this tells us the overall size of the header in bytes
     chunk_length = meta_chunk.read(4)
     chunk_length = int.from_bytes(chunk_length, byteorder="little")
 
     chunk_dict["WAVELIST"] = chunk_length
 
-    # temporary loop logic for testing
+    # The byte offset here is just approximate
+    # todo: use a better conditional for while loop
     while meta_chunk.tell() < 925:
         # get chunk name and chunk length
-        chunk_name = meta_chunk.read(4)  # this also sets new absolute seek
-        # position
+        chunk_name = meta_chunk.read(4)  # this also sets new absolute seek pos
         # decode chunk name to UTF-8
         chunk_name = chunk_name.decode()
 
@@ -187,6 +189,9 @@ def get_wav_meta(directory):
         else:
             chunk_string = chunk_string.decode()
             chunk_string = chunk_string.replace("\x00", "»")
+
+        # save data to dict
+        chunk_dict[chunk_name] = chunk_string
 
         # debugging text
         print(f"name: {chunk_name}\nlength: {chunk_length}")
@@ -238,7 +243,7 @@ def get_wav_meta(directory):
     f.close()
 
     # return raw_string, scan_frame
-    return True
+    return chunk_dict
 
 
 def get_string_at_offset(start, length, directory):
