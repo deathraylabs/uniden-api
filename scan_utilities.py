@@ -4,7 +4,7 @@ Utility functions for use with Uniden SDS-100 and uniden-api code.
 
 from pydub import AudioSegment
 from pathlib import Path
-from scanner.constants import WAV_METADATA
+from scanner.constants import WAV_METADATA, UNID_STATIC_OFFSETS
 
 # import shutil
 # import sys
@@ -180,11 +180,40 @@ def get_wav_meta(directory):
         if chunk_name == "unid":
             # unid is 2048 bytes long but only first 328 bytes are utf8
             # I don't understand code starting after byte 1180 or so
-            chunk_string = meta_chunk.read(512)  # approx where utf8 ends
-            chunk_string = chunk_string.rstrip(b"\x00")
+            chunk_string = meta_chunk.read(chunk_length)
+
+            # byte offset where data representation changes from position to
+            # byte order.
+            partition = UNID_STATIC_OFFSETS["Byte:Ordered"][0]
+
+            delimited_string = chunk_string[:partition]
+            delimited_string = delimited_string.rstrip(b"\x00")
             # chunk_string = chunk_string.replace(b"\x00", b"\n")
-            chunk_string = chunk_string.decode()
-            chunk_string = chunk_string.split("\x00")
+            delimited_string = delimited_string.decode()
+            delimited_list = delimited_string.split("\x00")
+
+            # need to save to dict because second half requires it's own save
+            chunk_dict["unid:Delimited"] = delimited_list
+
+            # ordered byte string
+            ordered_bytes = chunk_string[partition:]
+
+            tag_offset = UNID_STATIC_OFFSETS["UnitID:UID"][0]
+            tag_length = UNID_STATIC_OFFSETS["UnitID:UID"][1]
+
+            # the tag position was determined relative to the start of the
+            # unid chunk, but we only have part of that chunk now.
+            tag_start = tag_offset - partition
+            tag_end = tag_start + tag_length
+
+            chunk_dict["UnitID:UID"] = ordered_bytes[tag_start:tag_end].decode()
+
+            # # second half is byte ordered
+            # chunk_dict["unid:byteOrdered"] = meta_chunk.read(1456)
+
+            # skip that last step.
+            continue
+
         # IKEY is not UTF8, not sure what it is
         elif chunk_name == "IKEY":
             chunk_string = meta_chunk.read(chunk_length)
@@ -331,7 +360,7 @@ if __name__ == "__main__":
 
     # get contents of clipboard
     # clipboard = cb.paste()
-    clipboard = "/Users/peej/Desktop/1019-07-17_14-49-46/2019-07-17_14-49-47.wav"
+    clipboard = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-09_22-44-16.wav"
 
     # path to directory that contains the audio of interest
     # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"

@@ -592,7 +592,6 @@ WAV_METADATA = OrderedDict(
         ("Department:Avoid", None),
         ("Department:Q_Key", None),
         ("Department:Hold", None),
-        ("TGID:Name", (176, 64)),
         ("TGID:Index", None),
         ("TGID:Avoid", None),
         ("TGID:TGID", None),
@@ -605,7 +604,6 @@ WAV_METADATA = OrderedDict(
         ("TGID:LVL", None),
         ("UnitID:Name", None),
         ("UnitID:U_Id", "ITCH"),
-        ("Site:Name", None),
         ("Site:Index", None),
         ("Site:Avoid", None),
         ("Site:Q_Key", None),
@@ -636,3 +634,33 @@ WAV_METADATA = OrderedDict(
         ("dump2", (786, 62)),
     ]
 )
+
+# uniden proprietary metadata that is 0x00 delimited. «list index» specifies
+# the order corresponding to each property value.
+# ("name", «list index»)
+UNID_METADATA = OrderedDict(
+    [
+        ("FavoriteList:Name", 0),
+        ("FavoriteList:File", 1),
+        ("System:Name", 16),
+        ("Department:Name", 31),
+        ("Department:Lat", 33),
+        ("Department:Lon", 34),
+        ("Department:Radius", 35),
+        ("Department:Shape", 36),
+        ("Channel:Name", 39),
+        ("Channel:TGID", 41),
+        ("Site:Name", 54),
+        ("Site:Lat", 56),
+        ("Site:Lon", 57),
+    ]
+)
+
+# These are values located at static positions in header.
+# {name, (offset:start, length)}
+UNID_STATIC_OFFSETS = {
+    "Byte:Ordered": (591, 1456),
+    "UnitID:UID": (707, 11),
+    "TGID:1": (607, 10),
+    "TGID:2": (824, 10),
+}
