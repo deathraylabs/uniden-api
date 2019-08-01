@@ -309,11 +309,8 @@ def group_audio_by_department(directory="~/Downloads/uniden audio/"):
     audio recordings into new directories based on department name.
     """
 
-    # folder that the user_rec folders were transferred to
-    uniden_folder = directory
-
     # Path object for the root of our folder tree
-    basepath = Path(uniden_folder)
+    basepath = Path(directory).expanduser()
 
     # todo: change logic to use pathlib instead of shutil
     for folder in basepath.iterdir():
