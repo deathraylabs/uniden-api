@@ -6,8 +6,6 @@ from pydub import AudioSegment
 from pathlib import Path
 from scanner.constants import WAV_METADATA, UNID_STATIC_OFFSETS
 
-# import shutil
-# import sys
 import os
 import subprocess as sb
 import pyperclip as cb
@@ -106,9 +104,6 @@ def merge_tagged_wav_files(wav_file_paths, merged_wav_name=r"merged_{:03d}.wav")
 
     # container for wav files we wish to be merged
     combined_sounds = AudioSegment.empty()
-
-    # create our Path object
-    # merged_wav_name = Path(merged_wav_name)
 
     # don't overwrite existing files
     merged_wav_path = unique_path(Path.cwd(), merged_wav_name)
@@ -231,48 +226,6 @@ def get_wav_meta(directory):
         print(f"name: {chunk_name}\nlength: {chunk_length}")
         print(f"string:\n{chunk_string}")
         print(f"ending byte no: {meta_chunk.tell()}\n")
-
-    # variable to keep track of location in byte stream
-    # current_byte = 0
-    # raw_string = "\x00"
-    # row_dict = {"offset": 0, "data": ""}
-
-    # while current_byte < 2663:
-    #     # print(f"the current byte is: {current_byte}")
-    #
-    #     try:
-    #         chunk_string = meta_chunk.read(1).decode()
-    #     except UnicodeDecodeError:
-    #         print(f"just hit a weird byte chunk at {current_byte}")
-    #         # current_byte = meta_chunk.tell() + 8  # first 8 don't count
-    #         # raw_string += f"\n-=-=-=-= byte {current_byte} =-=-=-=-=-\n"
-    #         raw_string += f"[~{current_byte}]\n"
-    #         continue
-    #     finally:
-    #         current_byte = meta_chunk.tell() + 8  # first 8 don't count
-    #
-    #     # todo: the offset is not being recorded correctly in dataframe
-    #     # skip null bytes before first character
-    #     if chunk_string == "\x00" and row_dict["data"] == "":
-    #         raw_string += chunk_string
-    #         continue
-    #     # save data to frame once we hit the next null character
-    #     elif chunk_string == "\x00" and row_dict["data"] != "":
-    #         print(row_dict)
-    #         # populate the pandas dataframe
-    #         scan_frame = scan_frame.append(row_dict, ignore_index=True)
-    #         # reset the data in dict
-    #         row_dict["data"] = ""
-    #     elif raw_string[-1] == "\x00" and chunk_string != "\x00":
-    #         raw_string += f"[{current_byte}]" + chunk_string
-    #         row_dict["offset"] = current_byte
-    #         row_dict["data"] = row_dict["data"] + chunk_string
-    #     else:
-    #         raw_string += chunk_string
-    #         row_dict["data"] = row_dict["data"] + chunk_string
-    #
-    #     current_byte = meta_chunk.tell() + 8
-    #     # print(f"The ending byte was: {current_byte}")
 
     f.close()
 
