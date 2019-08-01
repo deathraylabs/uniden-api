@@ -8,10 +8,12 @@ from scanner.constants import WAV_METADATA, UNID_STATIC_OFFSETS
 
 import os
 import subprocess as sb
-import pyperclip as cb
-import re
+
+# import pyperclip as cb
+# import re
 import chunk
-import pandas as pd
+
+# import pandas as pd
 
 
 def unique_path(directory, name_pattern):

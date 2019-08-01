@@ -92,7 +92,7 @@ def lists_to_db(list_of_data):
             );
 
     """
-    conn = sqlite3.connect("incidents.sqlite")
+    conn = sqlite3.connect("databases/incidents.sqlite")
     cur = conn.cursor()
 
     headings = list_of_data.pop(0)
@@ -100,12 +100,12 @@ def lists_to_db(list_of_data):
     for data in list_of_data:
         cur.execute(
             """
-        INSERT OR IGNORE INTO incidents ("Agency", "Address",
-            "Cross Street",
-            "Key Map",
-            "Call Time(Opened)",
-            "Incident Type",
-            "Combined Response") VALUES ( ?, ?, ?, ?, ?, ?, ?)""",
+            INSERT OR IGNORE INTO incidents ("Agency", "Address",
+                "Cross Street",
+                "Key Map",
+                "Call Time(Opened)",
+                "Incident Type",
+                "Combined Response") VALUES ( ?, ?, ?, ?, ?, ?, ?)""",
             (data[0], data[1], data[2], data[3], data[4], data[5], data[6]),
         )
 
