@@ -183,30 +183,47 @@ def get_wav_meta(directory):
         if chunk_name == "unid":
             # unid is 2048 bytes long but only first 328 bytes are utf8
             # I don't understand code starting after byte 1180 or so
-            chunk_string = meta_chunk.read(chunk_length)
+            # chunk_string = meta_chunk.read(chunk_length)
 
             # byte offset where data representation changes from position to
             # byte order.
-            partition = UNID_STATIC_OFFSETS["Byte:Ordered"][0]
+            # partition_byte = UNID_STATIC_OFFSETS["Byte:Ordered"][0]
 
-            delimited_string = chunk_string[:partition]
-            delimited_string = delimited_string.rstrip(b"\x00")
+            # absolute starting byte position of current chunk
+            start_byte = meta_chunk.tell()
+
+            # variable to contain decoded string
+            delimited_string = ""
+
+            # record all UTF-8 bytes and stop at the first non-UTF-8 byte
+            while meta_chunk.tell() - start_byte <= chunk_length:
+                try:
+                    chunk_character = meta_chunk.read(1).decode()
+                # hop out of the loop once you hit a non-utf8 character
+                except UnicodeDecodeError as e:
+                    print(e)
+                    break
+
+                delimited_string += chunk_character
+
+            # delimited_string = chunk_string[:partition_byte]
+            delimited_string = delimited_string.rstrip("\x00")
             # chunk_string = chunk_string.replace(b"\x00", b"\n")
-            delimited_string = delimited_string.decode()
+            # delimited_string = delimited_string.decode()
             delimited_list = delimited_string.split("\x00")
 
             # need to save to dict because second half requires it's own save
             chunk_dict["unid:Delimited"] = delimited_list
 
             # ordered byte string
-            ordered_bytes = chunk_string[partition:]
+            ordered_bytes = chunk_string[partition_byte:]
 
             tag_offset = UNID_STATIC_OFFSETS["UnitID:UID"][0]
             tag_length = UNID_STATIC_OFFSETS["UnitID:UID"][1]
 
             # the tag position was determined relative to the start of the
             # unid chunk, but we only have part of that chunk now.
-            tag_start = tag_offset - partition
+            tag_start = tag_offset - partition_byte
             tag_end = tag_start + tag_length
 
             chunk_dict["UnitID:UID"] = ordered_bytes[tag_start:tag_end].decode()
