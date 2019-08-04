@@ -7,6 +7,7 @@ from pathlib import Path
 import os
 import subprocess as sb
 import shutil
+import pyperclip as cb
 
 from tinytag import TinyTag
 import chunk
@@ -363,20 +364,20 @@ if __name__ == "__main__":
         ----------------------
     """
 
-    # input(help_statement)
+    input(help_statement)
 
     # get contents of clipboard
     # clipboard = cb.paste()
-    clipboard = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-09_22-44-16.wav"
+    clipboard = "/Users/peej/Downloads/uniden audio/Ch. 76-4 Harris County Mutual Aid 2 (HFD Ch. CA6)/2019-08-01_12-52-03.wav"
 
     # path to directory that contains the audio of interest
     # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
 
     # matching tag
-    # tag = "Orange"
-    # output_file_name = "code pit.wav"
+    tag = "life_flight"
+    output_file_name = "merged.wav"
 
-    # matched_files = files_with_matched_tags(clipboard, tag)
+    matched_files = files_with_matched_tags(clipboard, tag)
 
     # output = merge_tagged_wav_files(matched_files)
 
