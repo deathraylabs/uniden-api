@@ -177,6 +177,9 @@ def get_wav_meta(directory):
         chunk_length = int.from_bytes(chunk_length, byteorder="little")
 
         # "unid" is probably "uniden" data, and needs to be treated differently
+        # The logic used on this if statement is not generally applicable and
+        # I've run into an error. I think I need to read byte by byte in order
+        # to avoid the error.
         if chunk_name == "unid":
             # unid is 2048 bytes long but only first 328 bytes are utf8
             # I don't understand code starting after byte 1180 or so
