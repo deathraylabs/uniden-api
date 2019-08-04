@@ -572,14 +572,15 @@ GSI_OUTPUT = OrderedDict(
 WAV_METADATA = OrderedDict(
     [
         ("transmission_end", "ICRD"),
+        ("ICRD", "transmission_end"),
         ("ScannerInfo:Mode", None),
         ("ScannerInfo:V_Screen", None),
-        ("FavoriteList:Name", "ISBJ"),
-        ("FavoriteList:Index", None),
-        ("FavoriteList:ListType", None),
-        ("FavoriteList:Q_Key", None),
-        ("FavoriteList:N_Tag", None),
-        ("FavoriteList:DB_Counter", None),
+        ("FavoritesList:Name", "ISBJ"),
+        ("FavoritesList:Index", None),
+        ("FavoritesList:ListType", None),
+        ("FavoritesList:Q_Key", None),
+        ("FavoritesList:N_Tag", None),
+        ("FavoritesList:DB_Counter", None),
         ("System:Name", "IART"),
         ("System:Index", None),
         ("System:Avoid", None),
@@ -641,8 +642,8 @@ WAV_METADATA = OrderedDict(
 # ("name", «list index»)
 UNID_METADATA = OrderedDict(
     [
-        ("FavoriteList:Name", 0),
-        ("FavoriteList:File", 1),
+        ("FavoritesList:Name", 0),
+        ("FavoritesList:File", 1),
         ("System:Name", 16),
         ("Department:Name", 31),
         ("Department:Lat", 33),

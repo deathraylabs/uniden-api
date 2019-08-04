@@ -207,17 +207,14 @@ def get_wav_meta(directory):
 
                 delimited_string += chunk_character
 
-            # delimited_string = chunk_string[:partition_byte]
             delimited_string = delimited_string.rstrip("\x00")
-            # chunk_string = chunk_string.replace(b"\x00", b"\n")
-            # delimited_string = delimited_string.decode()
             delimited_list = delimited_string.split("\x00")
+
+            # need to save to dict because second half requires it's own save
+            chunk_dict["unid:Delimited"] = delimited_list
 
             # ------- I don't believe I need the information below ---------#
 
-            # # need to save to dict because second half requires it's own save
-            # chunk_dict["unid:Delimited"] = delimited_list
-            #
             # tag_offset = UNID_STATIC_OFFSETS["UnitID:UID"][0]
             # tag_length = UNID_STATIC_OFFSETS["UnitID:UID"][1]
             #
