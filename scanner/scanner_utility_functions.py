@@ -13,7 +13,7 @@ from tinytag import TinyTag
 import chunk
 
 from pydub import AudioSegment
-from scanner.constants import WAV_METADATA, UNID_STATIC_OFFSETS
+from scanner.constants import *
 
 
 # import pandas as pd
@@ -209,6 +209,9 @@ def get_wav_meta(directory):
 
             delimited_string = delimited_string.rstrip("\x00")
             delimited_list = delimited_string.split("\x00")
+
+            for key in UNID_METADATA.keys():
+                chunk_dict[key] = delimited_list[UNID_METADATA[key]]
 
             # need to save to dict because second half requires it's own save
             chunk_dict["unid:Delimited"] = delimited_list
@@ -411,7 +414,9 @@ if __name__ == "__main__":
 
     # audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
-    metadata = get_wav_meta(clipboard)
+    for file in matched_files:
+        metadata = get_wav_meta(file)
+        print(metadata)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
     # scanstring = get_string_at_offset(start, length, audio_path)
