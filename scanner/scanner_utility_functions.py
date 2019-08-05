@@ -188,30 +188,39 @@ def get_wav_meta(directory):
             # absolute starting byte position of current chunk
             start_byte = meta_chunk.tell()
 
+            delimited_bytes = b""
             # variable to contain decoded string
             delimited_string = ""
 
             # record all UTF-8 bytes and stop at the first non-UTF-8 byte
             while meta_chunk.tell() - start_byte <= chunk_length:
+                chunk_byte = meta_chunk.read(1)
                 try:
-                    chunk_character = meta_chunk.read(1).decode()
+                    chunk_character = chunk_byte.decode()
+                    chunk_byte.
                 # hop out of the loop once you hit a non-utf8 character
                 except UnicodeDecodeError as e:
-                    print(e)
                     pos_in_chunk = meta_chunk.tell() - start_byte
-                    print(
-                        f"position in chunk: {pos_in_chunk}\nabsolute "
-                        f"position: {meta_chunk.tell()}"
-                    )
+                    # print(
+                    #     f"{e}"
+                    #     f"position in chunk: {pos_in_chunk}\nabsolute "
+                    #     f"position: {meta_chunk.tell()}"
+                    # )
                     break
 
+                delimited_bytes += chunk_byte
                 delimited_string += chunk_character
+
+            # debugging
+            print(delimited_bytes)
 
             delimited_string = delimited_string.rstrip("\x00")
             delimited_list = delimited_string.split("\x00")
 
             for key in UNID_METADATA.keys():
                 chunk_dict[key] = delimited_list[UNID_METADATA[key]]
+                # add note that we grabbed data
+                delimited_list[UNID_METADATA[key]] += "***got data***"
 
             # need to save to dict because second half requires it's own save
             chunk_dict["unid:Delimited"] = delimited_list
@@ -253,13 +262,19 @@ def get_wav_meta(directory):
             chunk_string = chunk_string.decode()
             chunk_string = chunk_string.replace("\x00", "»")
 
+        # try to get the actual descriptive name from the chunk name
+        try:
+            chunk_key = WAV_METADATA[chunk_name]
+        except KeyError:
+            chunk_key = chunk_name
+
         # save data to dict
-        chunk_dict[chunk_name] = chunk_string
+        chunk_dict[chunk_key] = chunk_string
 
         # debugging text
-        print(f"name: {chunk_name}\nlength: {chunk_length}")
-        print(f"string:\n{chunk_string}")
-        print(f"ending byte no: {meta_chunk.tell()}\n")
+        # print(f"name: {chunk_name}\nlength: {chunk_length}")
+        # print(f"string:\n{chunk_string}")
+        # print(f"ending byte no: {meta_chunk.tell()}\n")
 
     f.close()
 
@@ -348,9 +363,9 @@ def group_audio_by_department(directory="~/Downloads/uniden audio/"):
             # the .glob ensures that we only get audio files, no hidden files
             for file in folder.glob("*.wav"):
                 # create tinytag object that contains metadata
-                tag = TinyTag.get(file)
+                ttag = TinyTag.get(file)
                 # get the department name, which is stored under title
-                department = tag.title
+                department = ttag.title
                 # forward slashes are not allowed in path names,
                 # this will convert them to space instead
                 try:
@@ -384,6 +399,31 @@ def group_audio_by_department(directory="~/Downloads/uniden audio/"):
     return
 
 
+def convert_dir_name(directory):
+    """Utility function to convert hexadecimal encoded directory string into
+    standard decimal format.
+
+    Args:
+        directory (str): 4 byte hex number directory name
+
+    Returns:
+        str: yyyy-MM-DD_hh_mm_ss
+    """
+    directory_name = int(directory, 16)
+
+    year = ((directory_name >> 25) & int('7f', 16)) + 1980
+    month = (directory_name >> 21) & int('f', 16)
+    day = (directory_name >> 16) & int('1f', 16)
+    hour = (directory_name >> 11) & int('1f', 16)
+    minute = (directory_name >> 5) & int('3f', 16)
+    second = (directory_name >> 1) & int('3f', 16)
+
+    # yyyy-MM-DD_hh_mm_ss format
+    converted_name = f"{year:04d}-{month:02d}-{day:02d}_" \
+                     f"{hour:02d}-{minute:02d}-{second:02d}"
+
+    return converted_name
+
 if __name__ == "__main__":
 
     help_statement = """
@@ -393,17 +433,17 @@ if __name__ == "__main__":
         ----------------------
     """
 
-    input(help_statement)
+    # input(help_statement)
 
     # get contents of clipboard
     # clipboard = cb.paste()
-    clipboard = "/Users/peej/Downloads/uniden audio/Ch. 76-4 Harris County Mutual Aid 2 (HFD Ch. CA6)/2019-08-01_12-52-03.wav"
+    clipboard = "/Users/peej/Desktop/trial audio/2019-07-17_15-04-13.wav"
 
     # path to directory that contains the audio of interest
     # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
 
     # matching tag
-    tag = "life_flight"
+    tag = "Red"
     output_file_name = "merged.wav"
 
     matched_files = files_with_matched_tags(clipboard, tag)
@@ -416,7 +456,7 @@ if __name__ == "__main__":
 
     for file in matched_files:
         metadata = get_wav_meta(file)
-        print(metadata)
+        # print(metadata)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
     # scanstring = get_string_at_offset(start, length, audio_path)
