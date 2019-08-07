@@ -9,6 +9,7 @@ import subprocess as sb
 import shutil
 import pyperclip as cb
 
+from collections import OrderedDict
 from tinytag import TinyTag
 import chunk
 
@@ -197,7 +198,7 @@ def get_wav_meta(directory):
                 chunk_byte = meta_chunk.read(1)
                 try:
                     chunk_character = chunk_byte.decode()
-                    chunk_byte.
+                    # chunk_byte.
                 # hop out of the loop once you hit a non-utf8 character
                 except UnicodeDecodeError as e:
                     pos_in_chunk = meta_chunk.tell() - start_byte
@@ -399,6 +400,7 @@ def group_audio_by_department(directory="~/Downloads/uniden audio/"):
     return
 
 
+# todo: add test functions
 def convert_dir_name(directory):
     """Utility function to convert hexadecimal encoded directory string into
     standard decimal format.
@@ -411,18 +413,20 @@ def convert_dir_name(directory):
     """
     directory_name = int(directory, 16)
 
-    year = ((directory_name >> 25) & int('7f', 16)) + 1980
-    month = (directory_name >> 21) & int('f', 16)
-    day = (directory_name >> 16) & int('1f', 16)
-    hour = (directory_name >> 11) & int('1f', 16)
-    minute = (directory_name >> 5) & int('3f', 16)
-    second = (directory_name >> 1) & int('3f', 16)
+    year = ((directory_name >> 25) & int("7f", 16)) + 1980
+    month = (directory_name >> 21) & int("f", 16)
+    day = (directory_name >> 16) & int("1f", 16)
+    hour = (directory_name >> 11) & int("1f", 16)
+    minute = (directory_name >> 5) & int("3f", 16)
+    second = (directory_name >> 1) & int("3f", 16)
 
     # yyyy-MM-DD_hh_mm_ss format
-    converted_name = f"{year:04d}-{month:02d}-{day:02d}_" \
-                     f"{hour:02d}-{minute:02d}-{second:02d}"
+    converted_name = (
+        f"{year:04d}-{month:02d}-{day:02d}_" f"{hour:02d}-{minute:02d}-{second:02d}"
+    )
 
     return converted_name
+
 
 if __name__ == "__main__":
 
@@ -433,30 +437,30 @@ if __name__ == "__main__":
         ----------------------
     """
 
-    # input(help_statement)
+    input(help_statement)
 
     # get contents of clipboard
-    # clipboard = cb.paste()
-    clipboard = "/Users/peej/Desktop/trial audio/2019-07-17_15-04-13.wav"
+    clipboard = cb.paste()
+    # clipboard = "/Users/peej/Desktop/trial audio/2019-07-17_15-04-13.wav"
 
     # path to directory that contains the audio of interest
     # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
 
     # matching tag
-    tag = "Red"
+    tag = "Orange"
     output_file_name = "merged.wav"
 
     matched_files = files_with_matched_tags(clipboard, tag)
 
-    # output = merge_tagged_wav_files(matched_files)
+    output = merge_tagged_wav_files(matched_files)
 
     # todo: reset the tag to something else after it's merged
 
     # audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
-    for file in matched_files:
-        metadata = get_wav_meta(file)
-        # print(metadata)
+    # for file in matched_files:
+    #     metadata = get_wav_meta(file)
+    # print(metadata)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
     # scanstring = get_string_at_offset(start, length, audio_path)
