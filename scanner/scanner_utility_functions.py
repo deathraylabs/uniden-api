@@ -130,6 +130,10 @@ def get_wav_meta(directory):
     Returns:
         (dict): RIFF tag name: string or bytes representing tag data
 
+    Notes:
+        It looks like the scanner is only saving the first 64 bytes of data
+        from any given formatting category, then space, then another 64 bytes.
+
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
@@ -301,15 +305,16 @@ def get_wav_meta(directory):
             # absolute starting byte position of current chunk
             start_byte = meta_chunk.tell()
 
-            delimited_bytes = b""
+            delimited_lines_bytes = []
             # variable to contain decoded string
-            delimited_string = ""
+            delimited_lines = []
 
             # record all UTF-8 bytes and stop at the first non-UTF-8 byte
             while meta_chunk.tell() - start_byte <= chunk_length:
-                chunk_byte = meta_chunk.read(1)
+                # scanner records 64 bytes of format, then adds null separator
+                chunk_line_bytes = meta_chunk.read(65)
                 try:
-                    chunk_character = chunk_byte.decode()
+                    chunk_line = chunk_line_bytes.decode()
                     # chunk_byte.
                 # hop out of the loop once you hit a non-utf8 character
                 except UnicodeDecodeError as e:
@@ -321,33 +326,36 @@ def get_wav_meta(directory):
                     # )
                     break
 
-                delimited_bytes += chunk_byte
-                delimited_string += chunk_character
+                chunk_line = chunk_line.rstrip("\x00")
+                chunk_line = chunk_line.replace("\x00", "\t")
+
+                delimited_lines_bytes.append(chunk_line_bytes)
+                delimited_lines.append(chunk_line)
 
             # debugging
-            print(delimited_bytes)
+            print(delimited_lines_bytes)
 
-            delimited_string = delimited_string.rstrip("\x00")
-            # delimited_string = delimited_string.replace("\x00", "\t")
-            delimited_lines = delimited_string.split("\n")
+            # delimited_lines = delimited_lines.rstrip("\x00")
+            # delimited_lines = delimited_lines.replace("\x00", "\t")
+            # delimited_lines = delimited_lines.split("\n")
 
             # todo: need to store each line of data into approp dict
             # each newline represents differently formatted data
-            for line in delimited_lines.copy():
-                line = line.replace("\x00", "\t")
-                line = line.split("\t")
-
-                print(line)
-
-                delimited_lines.append(line)
-                delimited_lines.pop(0)
+            # for line in delimited_lines.copy():
+            #     line = line.replace("\x00", "\t")
+            #     line = line.split("\t")
+            #
+            #     print(line)
+            #
+            #     delimited_lines.append(line)
+            #     delimited_lines.pop(0)
 
             # extract information from each of the lists. First line is trunk
             first_line = zip(UNID_META_FIRST_LINE, delimited_lines[0])
             wav_trunk_data = dict(first_line)
 
             # todo: delete this line when no longer needed
-            delimited_list = delimited_string.split("\x00")
+            delimited_list = delimited_lines.split("\x00")
 
             # first technique to store data into dict
             for key in UNID_METADATA.keys():
