@@ -134,6 +134,117 @@ def get_wav_meta(directory):
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
+    # trunk metadata format (from favorites list format spec)
+    wav_trunk_data = OrderedDict(
+        [
+            ("Trunk", ""),
+            ("MyId", ""),
+            ("ParentId", ""),
+            ("Name Tag", ""),
+            ("Avoid", ""),
+            ("Reserve", ""),
+            ("System Type", ""),
+            ("ID Search", ""),
+            ("Alert Tone", ""),
+            ("Alert Volume", ""),
+            ("Status Bit", ""),
+            ("Reserve(NAC)", ""),
+            ("Quick Key", ""),
+            ("Number tag", ""),
+            ("Site Hold Time", ""),
+            ("Analog AGC", ""),
+            ("Digital AGC", ""),
+            ("End Code", ""),
+            ("Priority ID Scan", ""),
+            ("Alert Color", ""),
+            ("Alert Pattern", ""),
+            ("TGID Format", ""),
+        ]
+    )
+
+    # probably not necessary for wav files
+    wav_unitid_data = OrderedDict(
+        [
+            ("UnitIds", ""),
+            ("Reserve", ""),
+            ("Reserve", ""),
+            ("Name Tag", ""),
+            ("Unit ID", ""),
+            ("Alert Tone", ""),
+            ("Alert Volue", ""),
+            ("Alert Color", ""),
+            ("Alert Pattern", ""),
+        ]
+    )
+
+    # site information recorded by scanner
+    wav_site_data = OrderedDict(
+        [
+            ("Site", ""),
+            ("MyId", ""),
+            ("ParentId", ""),
+            ("Name Tag", ""),
+            ("Avoid", ""),
+            ("Latitude", ""),
+            ("Longitude", ""),
+            ("Range", ""),
+            ("Modulation", ""),
+            ("Mot Band Type", ""),
+            ("Edacs Band Type", ""),
+            ("Location Type", ""),
+            ("Attenuator", ""),
+            ("Digital Waiting Time", ""),
+            ("Digital Threshold Mode", ""),
+            ("Digital Threshold Level", ""),
+            ("Quick Key", ""),
+            ("NAC", ""),
+        ]
+    )
+
+    # department data format
+    wav_department_data = OrderedDict(
+        [
+            ("TGID", ""),
+            ("MyId", ""),
+            ("ParentId", ""),
+            ("Name Tag", ""),
+            ("Avoid", ""),
+            ("TGID", ""),
+            ("Audio Type", ""),
+            ("FuncTagId", ""),
+            ("Delay", ""),
+            ("Volume Offset", ""),
+            ("Alert Tone", ""),
+            ("Alert Volume", ""),
+            ("Alert Color", ""),
+            ("Alert Pattern", ""),
+            ("Number tag", ""),
+            ("Priority Channel", ""),
+            ("TDMA Slot", ""),
+        ]
+    )
+
+    # conventional data
+    wav_conventional_data = OrderedDict(
+        [
+            ("Conventional", ""),
+            ("MyId", ""),
+            ("ParentId", ""),
+            ("Name Tag", ""),
+            ("Avoid", ""),
+            ("Reserve", ""),
+            ("System Type", ""),
+            ("Quick Key", ""),
+            ("Number tag", ""),
+            ("System Hold Time", ""),
+            ("Analog AGC", ""),
+            ("Digital AGC", ""),
+            ("Digital Waiting Time", ""),
+            ("Digital Threshold Mode", ""),
+            ("Digital Threshold Level", ""),
+        ]
+    )
+
     f_path = Path(directory)
     f = open(f_path, "rb")
 
