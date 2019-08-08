@@ -327,6 +327,17 @@ def get_wav_meta(directory):
             print(delimited_bytes)
 
             delimited_string = delimited_string.rstrip("\x00")
+            # delimited_string = delimited_string.replace("\x00", "\t")
+            delimited_lines = delimited_string.split("\n")
+
+            # todo: need to store each line of data into approp dict
+            # each newline represents differently formatted data
+            for line in delimited_lines.copy():
+                line = line.replace("\x00", "\t")
+                line = line.split("\t")
+                delimited_lines.append(line)
+                delimited_lines.pop(0)
+
             delimited_list = delimited_string.split("\x00")
 
             for key in UNID_METADATA.keys():
@@ -370,7 +381,9 @@ def get_wav_meta(directory):
         else:
             # get the data in the next `chunk_length` bytes
             chunk_string = meta_chunk.read(chunk_length)
+
             chunk_string = chunk_string.rstrip(b"\x00")
+
             chunk_string = chunk_string.decode()
 
             # the file spec uses tab separated values but the datastream
