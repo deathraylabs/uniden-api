@@ -137,6 +137,7 @@ def get_wav_meta(directory):
     wav_trunk_data = OrderedDict(
         [
             ("Trunk", ""),
+            ("Favorites_Lists", ""),
             ("MyId", ""),
             ("ParentId", ""),
             ("Name Tag", ""),
@@ -312,7 +313,7 @@ def get_wav_meta(directory):
                     # chunk_byte.
                 # hop out of the loop once you hit a non-utf8 character
                 except UnicodeDecodeError as e:
-                    pos_in_chunk = meta_chunk.tell() - start_byte
+                    # pos_in_chunk = meta_chunk.tell() - start_byte
                     # print(
                     #     f"{e}"
                     #     f"position in chunk: {pos_in_chunk}\nabsolute "
@@ -335,11 +336,20 @@ def get_wav_meta(directory):
             for line in delimited_lines.copy():
                 line = line.replace("\x00", "\t")
                 line = line.split("\t")
+
+                print(line)
+
                 delimited_lines.append(line)
                 delimited_lines.pop(0)
 
+            # extract information from each of the lists. First line is trunk
+            first_line = zip(UNID_META_FIRST_LINE, delimited_lines[0])
+            wav_trunk_data = dict(first_line)
+
+            # todo: delete this line when no longer needed
             delimited_list = delimited_string.split("\x00")
 
+            # first technique to store data into dict
             for key in UNID_METADATA.keys():
                 chunk_dict[key] = delimited_list[UNID_METADATA[key]]
                 # add note that we grabbed data

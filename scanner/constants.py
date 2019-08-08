@@ -676,3 +676,12 @@ UNID_STATIC_OFFSETS = {
     "TGID:1": (607, 10),
     "TGID:2": (824, 10),
 }
+
+UNID_META_FIRST_LINE = [
+    "Trunk",
+    "Favorites List",
+    "Monitor",
+    "Download",
+    "Quick Key",
+    "Number Tag",
+]
