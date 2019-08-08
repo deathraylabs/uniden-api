@@ -16,7 +16,6 @@ import chunk
 from pydub import AudioSegment
 from scanner.constants import *
 
-
 # import pandas as pd
 
 
@@ -267,6 +266,7 @@ def get_wav_meta(directory):
 
     # this tells us the overall size of the header in bytes
     chunk_length = meta_chunk.read(4)
+    # converts byte data to an integer we can work with
     chunk_length = int.from_bytes(chunk_length, byteorder="little")
 
     chunk_dict["WAVELIST"] = chunk_length
@@ -372,7 +372,10 @@ def get_wav_meta(directory):
             chunk_string = meta_chunk.read(chunk_length)
             chunk_string = chunk_string.rstrip(b"\x00")
             chunk_string = chunk_string.decode()
-            chunk_string = chunk_string.replace("\x00", "»")
+
+            # the file spec uses tab separated values but the datastream
+            # from scanner seems to just use null bytes
+            chunk_string = chunk_string.replace("\x00", "\t")
 
         # try to get the actual descriptive name from the chunk name
         try:
@@ -548,7 +551,7 @@ if __name__ == "__main__":
         ----------------------
     """
 
-    input(help_statement)
+    # input(help_statement)
 
     # get contents of clipboard
     clipboard = cb.paste()
@@ -561,9 +564,9 @@ if __name__ == "__main__":
     tag = "Orange"
     output_file_name = "merged.wav"
 
-    matched_files = files_with_matched_tags(clipboard, tag)
-
-    output = merge_tagged_wav_files(matched_files)
+    # matched_files = files_with_matched_tags(clipboard, tag)
+    #
+    # output = merge_tagged_wav_files(matched_files)
 
     # todo: reset the tag to something else after it's merged
 
