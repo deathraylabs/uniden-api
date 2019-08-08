@@ -678,10 +678,10 @@ UNID_STATIC_OFFSETS = {
 }
 
 # Only the first 64 bytes of this data are recorded
-UNID_META_FIRST_LINE = [
+UNID_FAVORITES_DATA = [
     "FavoritesList:Name",  # favorites list name
     "FavoritesList:Filename",
-    "FavoritesList:Monitor",
+    "FavoritesList:LocationControl",
     "FavoritesList:Monitor",
     "FavoritesList:QuickKey",
     "FavoritesList:NumberTag",
@@ -703,4 +703,30 @@ UNID_SYSTEM_DATA = [
     "System:NumberTag",
     "System:SiteHoldTime",
     # remaining items unlikely to be recorded
+]
+
+UNID_DEPARTMENT_DATA = [
+    "Department:Name",
+    "Department:Avoid",
+    "Department:Latitude",
+    "Department:Longitude",
+    "Department:Range",
+    "Department:LocationType",
+    "Department:QuickKey",
+]
+
+UNID_CHANNEL_DATA = [
+    "Channel:Name",
+    "Channel:Avoid",
+    "Channel:TGID",
+    "Channel:AudioType",
+    "Channel:FuncTagID",
+    "Channel:Delay",
+    "Channel:VolOffset",
+    "Channel:AlertTone",
+    "Channel:AlertVol",
+    "Channel:AlertColor",
+    "Channel:AlertPattern",
+    "Channel:NumberTag",
+    "Channel:PriorityChannel",
 ]

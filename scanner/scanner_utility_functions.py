@@ -305,13 +305,26 @@ def get_wav_meta(directory):
                 delimited_lines.append(chunk_line)
 
             # todo: need to store each line of data into approp dict
+            data_heading_sources = (
+                UNID_FAVORITES_DATA,
+                UNID_SYSTEM_DATA,
+                UNID_DEPARTMENT_DATA,
+                UNID_CHANNEL_DATA,
+            )
+
+            # storage for unid data
+            unid_list = []
+
+            # creates a list of all the items from unid header
+            for index, line in enumerate(data_heading_sources):
+                unid_list += list(zip(line, delimited_lines[index]))
 
             # extract information from each of the lists. First line is trunk
-            first_line = zip(UNID_META_FIRST_LINE, delimited_lines[0])
-            wav_trunk_data = dict(first_line)
+            # first_line = zip(UNID_META_FIRST_LINE, delimited_lines[0])
+            # wav_trunk_data = dict(first_line)
 
             # need to save to dict because second half requires it's own save
-            chunk_dict["unid:Delimited"] = delimited_list
+            chunk_dict["unid:Delimited"] = unid_list
 
             # ------- I don't believe I need the information below ---------#
 
