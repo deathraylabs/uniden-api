@@ -677,25 +677,30 @@ UNID_STATIC_OFFSETS = {
     "TGID:2": (824, 10),
 }
 
+# Only the first 64 bytes of this data are recorded
 UNID_META_FIRST_LINE = [
-    "Trunk",
-    "Favorites List",
-    "Monitor",
-    "Download",
-    "Quick Key",
-    "Number Tag",
-    "Reserve",
-    "System Name",
-    "Avoid",
-    "System Type",
-    "ID:Search",
-    "Emergency Alert Light",
-    "Status Bit",
-    "System Quick Key",
-    "System Number Tag",
-    "Hold Time",
-    "Priority ID Scan",
-    "End Code",
-    "NXDN TGID Format",
-    "Digital Waiting Time",
+    "FavoritesList:Name",  # favorites list name
+    "FavoritesList:Filename",
+    "FavoritesList:Monitor",
+    "FavoritesList:Monitor",
+    "FavoritesList:QuickKey",
+    "FavoritesList:NumberTag",
+    # remaining items are QKey states and not needed
+]
+
+# Only the first 64 bytes of this data are recorded
+UNID_SYSTEM_DATA = [
+    "System:Name",
+    "System:Avoid",
+    "System:Reserve",
+    "System:Type",
+    "System:IDSearch",
+    "System:AlertTone",
+    "System:AlertVolume",
+    "System:StatusBit",
+    "System:Reserve(NAC)",
+    "System:QuickKey",
+    "System:NumberTag",
+    "System:SiteHoldTime",
+    # remaining items unlikely to be recorded
 ]

@@ -137,35 +137,6 @@ def get_wav_meta(directory):
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
-    # trunk metadata format (from favorites list format spec)
-    wav_trunk_data = OrderedDict(
-        [
-            ("Trunk", ""),
-            ("Favorites_Lists", ""),
-            ("MyId", ""),
-            ("ParentId", ""),
-            ("Name Tag", ""),
-            ("Avoid", ""),
-            ("Reserve", ""),
-            ("System Type", ""),
-            ("ID Search", ""),
-            ("Alert Tone", ""),
-            ("Alert Volume", ""),
-            ("Status Bit", ""),
-            ("Reserve(NAC)", ""),
-            ("Quick Key", ""),
-            ("Number tag", ""),
-            ("Site Hold Time", ""),
-            ("Analog AGC", ""),
-            ("Digital AGC", ""),
-            ("End Code", ""),
-            ("Priority ID Scan", ""),
-            ("Alert Color", ""),
-            ("Alert Pattern", ""),
-            ("TGID Format", ""),
-        ]
-    )
-
     # probably not necessary for wav files
     wav_unitid_data = OrderedDict(
         [
@@ -328,40 +299,16 @@ def get_wav_meta(directory):
 
                 chunk_line = chunk_line.rstrip("\x00")
                 chunk_line = chunk_line.replace("\x00", "\t")
+                chunk_line = chunk_line.split("\t")
 
                 delimited_lines_bytes.append(chunk_line_bytes)
                 delimited_lines.append(chunk_line)
 
-            # debugging
-            print(delimited_lines_bytes)
-
-            # delimited_lines = delimited_lines.rstrip("\x00")
-            # delimited_lines = delimited_lines.replace("\x00", "\t")
-            # delimited_lines = delimited_lines.split("\n")
-
             # todo: need to store each line of data into approp dict
-            # each newline represents differently formatted data
-            # for line in delimited_lines.copy():
-            #     line = line.replace("\x00", "\t")
-            #     line = line.split("\t")
-            #
-            #     print(line)
-            #
-            #     delimited_lines.append(line)
-            #     delimited_lines.pop(0)
 
             # extract information from each of the lists. First line is trunk
             first_line = zip(UNID_META_FIRST_LINE, delimited_lines[0])
             wav_trunk_data = dict(first_line)
-
-            # todo: delete this line when no longer needed
-            delimited_list = delimited_lines.split("\x00")
-
-            # first technique to store data into dict
-            for key in UNID_METADATA.keys():
-                chunk_dict[key] = delimited_list[UNID_METADATA[key]]
-                # add note that we grabbed data
-                delimited_list[UNID_METADATA[key]] += "***got data***"
 
             # need to save to dict because second half requires it's own save
             chunk_dict["unid:Delimited"] = delimited_list
