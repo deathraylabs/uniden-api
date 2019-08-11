@@ -239,31 +239,6 @@ def get_wav_meta(directory):
             # need to save to dict because second half requires it's own save
             chunk_dict["unid:Delimited"] = unid_list
 
-            # ------- I don't believe I need the information below ---------#
-
-            # tag_offset = UNID_STATIC_OFFSETS["UnitID:UID"][0]
-            # tag_length = UNID_STATIC_OFFSETS["UnitID:UID"][1]
-            #
-            # # the tag position was determined relative to the start of the
-            # # unid chunk
-            # tag_start = tag_offset + start_byte
-            # # tag_end = tag_offset + tag_length
-            #
-            # # reset the read head start of tag
-            # meta_chunk.seek(tag_start, whence=0)
-            # tag_bytestring = meta_chunk.read(tag_length)
-            # try:
-            #     tag_string = tag_bytestring.decode()
-            # except UnicodeDecodeError as e:
-            #     print(e)
-            #     tag_string = None
-            #
-            # chunk_dict["UnitID:UID"] = tag_string
-
-            # # second half is byte ordered
-            # chunk_dict["unid:byteOrdered"] = meta_chunk.read(1456)
-
-            # skip that last step.
             continue
 
         # IKEY is not UTF8, not sure what it is
