@@ -137,89 +137,6 @@ def get_wav_meta(directory):
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
-    # probably not necessary for wav files
-    wav_unitid_data = OrderedDict(
-        [
-            ("UnitIds", ""),
-            ("Reserve", ""),
-            ("Reserve", ""),
-            ("Name Tag", ""),
-            ("Unit ID", ""),
-            ("Alert Tone", ""),
-            ("Alert Volue", ""),
-            ("Alert Color", ""),
-            ("Alert Pattern", ""),
-        ]
-    )
-
-    # site information recorded by scanner
-    wav_site_data = OrderedDict(
-        [
-            ("Site", ""),
-            ("MyId", ""),
-            ("ParentId", ""),
-            ("Name Tag", ""),
-            ("Avoid", ""),
-            ("Latitude", ""),
-            ("Longitude", ""),
-            ("Range", ""),
-            ("Modulation", ""),
-            ("Mot Band Type", ""),
-            ("Edacs Band Type", ""),
-            ("Location Type", ""),
-            ("Attenuator", ""),
-            ("Digital Waiting Time", ""),
-            ("Digital Threshold Mode", ""),
-            ("Digital Threshold Level", ""),
-            ("Quick Key", ""),
-            ("NAC", ""),
-        ]
-    )
-
-    # department data format
-    wav_department_data = OrderedDict(
-        [
-            ("TGID", ""),
-            ("MyId", ""),
-            ("ParentId", ""),
-            ("Name Tag", ""),
-            ("Avoid", ""),
-            ("TGID", ""),
-            ("Audio Type", ""),
-            ("FuncTagId", ""),
-            ("Delay", ""),
-            ("Volume Offset", ""),
-            ("Alert Tone", ""),
-            ("Alert Volume", ""),
-            ("Alert Color", ""),
-            ("Alert Pattern", ""),
-            ("Number tag", ""),
-            ("Priority Channel", ""),
-            ("TDMA Slot", ""),
-        ]
-    )
-
-    # conventional data
-    wav_conventional_data = OrderedDict(
-        [
-            ("Conventional", ""),
-            ("MyId", ""),
-            ("ParentId", ""),
-            ("Name Tag", ""),
-            ("Avoid", ""),
-            ("Reserve", ""),
-            ("System Type", ""),
-            ("Quick Key", ""),
-            ("Number tag", ""),
-            ("System Hold Time", ""),
-            ("Analog AGC", ""),
-            ("Digital AGC", ""),
-            ("Digital Waiting Time", ""),
-            ("Digital Threshold Mode", ""),
-            ("Digital Threshold Level", ""),
-        ]
-    )
-
     f_path = Path(directory)
     f = open(f_path, "rb")
 
@@ -286,7 +203,6 @@ def get_wav_meta(directory):
                 chunk_line_bytes = meta_chunk.read(65)
                 try:
                     chunk_line = chunk_line_bytes.decode()
-                    # chunk_byte.
                 # hop out of the loop once you hit a non-utf8 character
                 except UnicodeDecodeError as e:
                     # pos_in_chunk = meta_chunk.tell() - start_byte
@@ -310,6 +226,7 @@ def get_wav_meta(directory):
                 UNID_SYSTEM_DATA,
                 UNID_DEPARTMENT_DATA,
                 UNID_CHANNEL_DATA,
+                UNID_SITE_DATA,
             )
 
             # storage for unid data
@@ -318,10 +235,6 @@ def get_wav_meta(directory):
             # creates a list of all the items from unid header
             for index, line in enumerate(data_heading_sources):
                 unid_list += list(zip(line, delimited_lines[index]))
-
-            # extract information from each of the lists. First line is trunk
-            # first_line = zip(UNID_META_FIRST_LINE, delimited_lines[0])
-            # wav_trunk_data = dict(first_line)
 
             # need to save to dict because second half requires it's own save
             chunk_dict["unid:Delimited"] = unid_list

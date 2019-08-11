@@ -730,3 +730,59 @@ UNID_CHANNEL_DATA = [
     "Channel:NumberTag",
     "Channel:PriorityChannel",
 ]
+
+UNID_SITE_DATA = [
+    "Site:Name",
+    "Site:Avoid",
+    "Site:Latitude",
+    "Site:Longitude",
+    "Site:Range",
+    "Site:Modulation",
+    "Site:MotBandType",
+    "Site:EdacsBandType",
+    "Site:LocationType",
+    "Site:Attenuator",
+    "Site:DigitalWaitingTime",
+    "Site:DigitalThresholdMode",
+    "Site:DigitalThresholdLevel",
+    "Site:QuickKey",
+    "Site:NAC",
+]
+
+# todo: update this data
+# probably not necessary for wav files
+wav_unitid_data = OrderedDict(
+    [
+        ("UnitIds", ""),
+        ("Reserve", ""),
+        ("Reserve", ""),
+        ("Name Tag", ""),
+        ("Unit ID", ""),
+        ("Alert Tone", ""),
+        ("Alert Volue", ""),
+        ("Alert Color", ""),
+        ("Alert Pattern", ""),
+    ]
+)
+
+# todo: update this data
+# conventional data
+wav_conventional_data = OrderedDict(
+    [
+        ("Conventional", ""),
+        ("MyId", ""),
+        ("ParentId", ""),
+        ("Name Tag", ""),
+        ("Avoid", ""),
+        ("Reserve", ""),
+        ("System Type", ""),
+        ("Quick Key", ""),
+        ("Number tag", ""),
+        ("System Hold Time", ""),
+        ("Analog AGC", ""),
+        ("Digital AGC", ""),
+        ("Digital Waiting Time", ""),
+        ("Digital Threshold Mode", ""),
+        ("Digital Threshold Level", ""),
+    ]
+)
