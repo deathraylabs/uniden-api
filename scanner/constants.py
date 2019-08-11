@@ -765,24 +765,20 @@ wav_unitid_data = OrderedDict(
     ]
 )
 
-# todo: update this data
-# conventional data
-wav_conventional_data = OrderedDict(
-    [
-        ("Conventional", ""),
-        ("MyId", ""),
-        ("ParentId", ""),
-        ("Name Tag", ""),
-        ("Avoid", ""),
-        ("Reserve", ""),
-        ("System Type", ""),
-        ("Quick Key", ""),
-        ("Number tag", ""),
-        ("System Hold Time", ""),
-        ("Analog AGC", ""),
-        ("Digital AGC", ""),
-        ("Digital Waiting Time", ""),
-        ("Digital Threshold Mode", ""),
-        ("Digital Threshold Level", ""),
-    ]
-)
+UNID_CONVENTIONAL_DATA = [
+    "Conventional",
+    "Conventional:MyId",
+    "Conventional:ParentId",
+    "Conventional:NameTag",
+    "Conventional:Avoid",
+    "Conventional:Reserve",
+    "Conventional:SystemType",
+    "Conventional:QuickKey",
+    "Conventional:Numbertag",
+    "Conventional:SystemHoldTime",
+    "Conventional:AnalogAGC",
+    "Conventional:DigitalAGC",
+    "Conventional:DigitalWaitingTime",
+    "Conventional:DigitalThresholdMode",
+    "Conventional:DigitalThresholdLevel",
+]

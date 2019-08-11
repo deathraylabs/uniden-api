@@ -205,12 +205,12 @@ def get_wav_meta(directory):
                     chunk_line = chunk_line_bytes.decode()
                 # hop out of the loop once you hit a non-utf8 character
                 except UnicodeDecodeError as e:
-                    # pos_in_chunk = meta_chunk.tell() - start_byte
-                    # print(
-                    #     f"{e}"
-                    #     f"position in chunk: {pos_in_chunk}\nabsolute "
-                    #     f"position: {meta_chunk.tell()}"
-                    # )
+                    pos_in_chunk = meta_chunk.tell() - start_byte
+                    print(
+                        f"{e}"
+                        f"position in chunk: {pos_in_chunk}\nabsolute "
+                        f"position: {meta_chunk.tell()}"
+                    )
                     break
 
                 chunk_line = chunk_line.rstrip("\x00")
@@ -227,6 +227,7 @@ def get_wav_meta(directory):
                 UNID_DEPARTMENT_DATA,
                 UNID_CHANNEL_DATA,
                 UNID_SITE_DATA,
+                UNID_CONVENTIONAL_DATA,
             )
 
             # storage for unid data
