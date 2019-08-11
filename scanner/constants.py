@@ -749,21 +749,6 @@ UNID_SITE_DATA = [
     "Site:NAC",
 ]
 
-# todo: update this data
-# probably not necessary for wav files
-wav_unitid_data = OrderedDict(
-    [
-        ("UnitIds", ""),
-        ("Reserve", ""),
-        ("Reserve", ""),
-        ("Name Tag", ""),
-        ("Unit ID", ""),
-        ("Alert Tone", ""),
-        ("Alert Volue", ""),
-        ("Alert Color", ""),
-        ("Alert Pattern", ""),
-    ]
-)
 
 UNID_CONVENTIONAL_DATA = [
     "Conventional",
@@ -782,3 +767,19 @@ UNID_CONVENTIONAL_DATA = [
     "Conventional:DigitalThresholdMode",
     "Conventional:DigitalThresholdLevel",
 ]
+
+# todo: update this data
+# probably not necessary for wav files
+wav_unitid_data = OrderedDict(
+    [
+        ("UnitIds", ""),
+        ("Reserve", ""),
+        ("Reserve", ""),
+        ("Name Tag", ""),
+        ("Unit ID", ""),
+        ("Alert Tone", ""),
+        ("Alert Volue", ""),
+        ("Alert Color", ""),
+        ("Alert Pattern", ""),
+    ]
+)
