@@ -224,6 +224,9 @@ def get_wav_meta(directory):
                 delimited_lines_bytes.append(chunk_line_bytes)
                 delimited_lines.append(chunk_line)
 
+                # create new entry in dict for raw lines (for debugging)
+                chunk_dict[f"line {len(delimited_lines)}"] = chunk_line
+
             # todo: ensure lines go to correct definition list
             data_heading_sources = (
                 UNID_FAVORITES_DATA,
