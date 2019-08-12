@@ -447,10 +447,10 @@ if __name__ == "__main__":
     wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/2019-08-06_15-12-35.wav"
 
     # matching tag
-    # tag = "Orange"
+    tag = "Red"
     # output_file_name = "merged.wav"
 
-    # matched_files = files_with_matched_tags(clipboard, tag)
+    matched_files = files_with_matched_tags(clipboard, tag)
     #
     # output = merge_tagged_wav_files(matched_files)
 
