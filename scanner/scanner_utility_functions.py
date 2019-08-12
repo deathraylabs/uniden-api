@@ -163,6 +163,7 @@ def get_wav_meta(directory):
 
     # this tells us the overall size of the header in bytes
     chunk_length = meta_chunk.read(4)
+
     # converts byte data to an integer we can work with
     chunk_length = int.from_bytes(chunk_length, byteorder="little")
 
@@ -208,11 +209,12 @@ def get_wav_meta(directory):
                 # hop out of the loop once you hit a non-utf8 character
                 except UnicodeDecodeError as e:
                     pos_in_chunk = meta_chunk.tell() - start_byte
-                    print(
-                        f"{e}"
-                        f"position in chunk: {pos_in_chunk}\nabsolute "
-                        f"position: {meta_chunk.tell()}"
-                    )
+                    # todo: change to logging instead of printing
+                    # print(
+                    #     f"{e}"
+                    #     f"position in chunk: {pos_in_chunk}\nabsolute "
+                    #     f"position: {meta_chunk.tell()}"
+                    # )
                     break
 
                 chunk_line = chunk_line.rstrip("\x00")
@@ -440,8 +442,8 @@ if __name__ == "__main__":
     # input(help_statement)
 
     # get contents of clipboard
-    clipboard = cb.paste()
-    # clipboard = "/Users/peej/Desktop/trial audio/2019-07-17_15-04-13.wav"
+    # clipboard = cb.paste()
+    clipboard = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/wav_files_for_testing/"
 
     # path to directory that contains the audio of interest
     wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/2019-08-06_15-12-35.wav"
@@ -456,13 +458,13 @@ if __name__ == "__main__":
 
     # todo: reset the tag to something else after it's merged
 
-    metadata = get_wav_meta(wav_dir_path)
+    # metadata = get_wav_meta(wav_dir_path)
 
     # audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
-    # for file in matched_files:
-    #     metadata = get_wav_meta(file)
-    # print(metadata)
+    for file in matched_files:
+        metadata = get_wav_meta(file)
+        print(metadata)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
     # scanstring = get_string_at_offset(start, length, audio_path)
