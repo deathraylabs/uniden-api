@@ -64,8 +64,12 @@ def files_with_matched_tags(working_dir, tags):
     # tagCmd is location of tag executable on computer
     tagCmd = Path("/usr/local/bin/tag")
 
+    # create path object
+    working_dir = Path(working_dir)
+
     # strip the file name to ensure we're working with directory only
-    working_dir = Path(working_dir).parent
+    if working_dir.is_file():
+        working_dir = working_dir.parent
 
     # change the current working directory to the location of audio files
     os.chdir(working_dir)

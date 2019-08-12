@@ -19,5 +19,19 @@ def test_get_wav_meta():
     return meta_output
 
 
-if __name__ == "__main__":
-    test_get_wav_meta()
+def test_files_with_matched_tags():
+    """Check against test directory."""
+
+    tag = "Red"
+    directory = "./scanner_test_data/wav_files_for_testing"
+    p = Path(directory)
+
+    assert p.is_dir()
+
+    files = files_with_matched_tags(directory, tag)
+
+    assert type(files) == list
+
+
+# if __name__ == "__main__":
+#     test_get_wav_meta()
