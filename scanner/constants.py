@@ -768,18 +768,13 @@ UNID_CONVENTIONAL_DATA = [
     "Conventional:DigitalThresholdLevel",
 ]
 
-# todo: update this data
-# probably not necessary for wav files
-wav_unitid_data = OrderedDict(
-    [
-        ("UnitIds", ""),
-        ("Reserve", ""),
-        ("Reserve", ""),
-        ("Name Tag", ""),
-        ("Unit ID", ""),
-        ("Alert Tone", ""),
-        ("Alert Volue", ""),
-        ("Alert Color", ""),
-        ("Alert Pattern", ""),
-    ]
-)
+UNID_UNITID_DATA = [
+    "UnitIds",
+    "UnitIds:Reserve",
+    "UnitIds:NameTag",
+    "UnitIds:UnitID",
+    "UnitIds:AlertTone",
+    "UnitIds:AlertVolue",
+    "UnitIds:AlertColor",
+    "UnitIds:AlertPattern",
+]

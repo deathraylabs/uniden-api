@@ -181,10 +181,8 @@ def get_wav_meta(directory):
         chunk_length = meta_chunk.read(4)
         chunk_length = int.from_bytes(chunk_length, byteorder="little")
 
-        # "unid" is probably "uniden" data, and needs to be treated differently
-        # The logic used on this if statement is not generally applicable and
-        # I've run into an error. I think I need to read byte by byte in order
-        # to avoid the error.
+        # -------------Uniden proprietary chunk----------------- #
+
         if chunk_name == "unid":
             # unid is 2048 bytes long but only first 328 bytes are utf8
             # I don't understand code starting after byte 1180 or so
@@ -220,13 +218,14 @@ def get_wav_meta(directory):
                 delimited_lines_bytes.append(chunk_line_bytes)
                 delimited_lines.append(chunk_line)
 
-            # todo: need to store each line of data into approp dict
+            # todo: ensure lines go to correct definition list
             data_heading_sources = (
                 UNID_FAVORITES_DATA,
                 UNID_SYSTEM_DATA,
                 UNID_DEPARTMENT_DATA,
                 UNID_CHANNEL_DATA,
                 UNID_SITE_DATA,
+                UNID_UNITID_DATA,
                 UNID_CONVENTIONAL_DATA,
             )
 
@@ -238,7 +237,11 @@ def get_wav_meta(directory):
                 unid_list += list(zip(line, delimited_lines[index]))
 
             # need to save to dict because second half requires it's own save
-            chunk_dict["unid:Delimited"] = unid_list
+            # chunk_dict["unid:Delimited"] = unid_list
+
+            # grab key and value from each tuple and save to dict
+            for meta_item in unid_list:
+                chunk_dict[meta_item[0]] = meta_item[1]
 
             continue
 
@@ -273,7 +276,6 @@ def get_wav_meta(directory):
 
     f.close()
 
-    # return raw_string, scan_frame
     return chunk_dict
 
 
@@ -438,17 +440,19 @@ if __name__ == "__main__":
     # clipboard = "/Users/peej/Desktop/trial audio/2019-07-17_15-04-13.wav"
 
     # path to directory that contains the audio of interest
-    # wav_dir_path = "/Users/peej/Downloads/uniden audio/01 HPD-N/2019-07-17_09-50-28.wav"
+    wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/2019-08-06_15-12-35.wav"
 
     # matching tag
-    tag = "Orange"
-    output_file_name = "merged.wav"
+    # tag = "Orange"
+    # output_file_name = "merged.wav"
 
     # matched_files = files_with_matched_tags(clipboard, tag)
     #
     # output = merge_tagged_wav_files(matched_files)
 
     # todo: reset the tag to something else after it's merged
+
+    metadata = get_wav_meta(wav_dir_path)
 
     # audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
