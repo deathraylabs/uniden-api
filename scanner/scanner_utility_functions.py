@@ -43,6 +43,35 @@ def unique_path(directory, name_pattern):
             return path
 
 
+def get_directories(directory):
+    """Return all directories contained within the passed directory. Doesn't
+    scan recursively for subdirectories.
+
+    Args:
+        directory (str): path string to container directory
+
+    Returns:
+        list: list of all directories found as Path objects
+    """
+    # create path object
+    dir = Path(directory)
+    directories = []
+
+    # check to ensure function was passed an actual path
+    if not (dir.is_file() or dir.is_dir()):
+        return None
+
+    # strip the file name to ensure we're working with directory only
+    if dir.is_file():
+        dir = dir.parent
+
+    for item in dir.iterdir():
+        if item.is_dir():
+            directories.append(item)
+
+    return directories
+
+
 def files_with_matched_tags(working_dir, tags):
     """Function generates a list of files with matching extended
     attribute tags in the finder.

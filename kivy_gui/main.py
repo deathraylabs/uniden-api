@@ -2,12 +2,26 @@
 
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivy.properties import ObjectProperty
+
+# from kivy.uix.button import Button
+# from kivy.uix.label import Label
+
+from scanner.constants import *
+from scanner.uniden import *
 
 
 class DataWindow(Widget):
     """Root element of Application UI."""
 
-    pass
+    dickbutt = ObjectProperty(None)
+
+    def update(self, dt):
+        """Handles updates."""
+        pass
+
+    # variable for testing
+    zoop = UNID_FAVORITES_DATA
 
 
 class DataWindowApp(App):
@@ -23,7 +37,9 @@ class DataWindowApp(App):
     """
 
     def build(self):
-        return DataWindow()
+        """Handles something..."""
+        window = DataWindow()
+        return window
 
 
 if __name__ == "__main__":

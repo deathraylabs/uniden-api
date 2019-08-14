@@ -1,17 +1,24 @@
 #:kivy 1.11.1
 
 <DataWindow>:
+    dickbutt: shizzle
+
     canvas:
 
 
     Label:
-        font_size: 70
+        font_size: 14
         center_x: root.width / 4
         top: root.top - 50
-        text: "Wassup?"
+        # weird syntax for including variables in here
+        text: root.zoop[2]
 
     Label:
         font_size: 70
         center_x: root.width * 3 / 4
         top: root.top - 50
         text: "0"
+
+    Button:
+        id: shizzle
+        text: "push me"

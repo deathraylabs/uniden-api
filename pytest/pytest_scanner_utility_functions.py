@@ -60,5 +60,17 @@ def test_files_with_matched_tags():
     # assert str(files[2]) == test_list[2]
 
 
+def test_get_directories():
+    """Ensure get_directories utility function works."""
+
+    d = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/"
+    d_fake = "not a path"
+
+    # catch incorrectly formatted paths
+    assert get_directories(d_fake) is None
+    assert type(get_directories(d)) == list
+    assert len(get_directories(d)) == 3
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()

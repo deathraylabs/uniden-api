@@ -1110,6 +1110,12 @@ class UnidenScanner:
         pass
 
 
+class UnidenMassStorage:
+    def __init__(self):
+        """This class processes data stored on the scanner SD card."""
+        pass
+
+
 class UnidenScannerError(Exception):
     pass
 
