@@ -96,5 +96,15 @@ def test_get_audio_directories():
     assert type(dirs) == list
 
 
+def test_get_wav_files():
+    sd = UnidenMassStorage()
+    d = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/"
+    d = Path(d)
+    dirs = sd.get_wav_files(d)
+
+    assert type(dirs) == list
+    assert len(dirs) == 43
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()

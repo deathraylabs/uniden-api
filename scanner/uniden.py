@@ -1124,6 +1124,7 @@ class UnidenMassStorage:
         if directory == "scanner":
             self.d_root = Path("/Volumes/SDS100")
         self.audio_directories = []
+        self.wav_files = []
 
     def get_audio_directories(self):
         """Gets a list of user recorded audio from scanner and updates
@@ -1147,9 +1148,24 @@ class UnidenMassStorage:
 
         return self.audio_directories
 
-    def get_wav_directories(self, audio_directory):
-        """Get a list of all wav files within the passed directory."""
-        pass
+    def get_wav_files(self, audio_directory):
+        """Get a list of all wav files within the passed directory.
+
+        Args:
+            audio_directory (Path): path object of directory containing wav
+                files.
+        """
+        # make sure you've been passed a directory
+        try:
+            if not audio_directory.is_dir():
+                return False
+        except AttributeError:
+            return False
+
+        for wav in audio_directory.glob("*.wav"):
+            self.wav_files.append(wav)
+
+        return self.wav_files
 
 
 class UnidenScannerError(Exception):
@@ -5092,7 +5108,8 @@ if __name__ == "__main__":
 
     # instantiate tools for working with sd card data
     sd = UnidenMassStorage()
-    sd.get_audio_directories()
+    directories = sd.get_audio_directories()
+    selection = suf.select_from_list(directories)[1]
 
     #
     # s = UnidenScanner("/dev/cu.usbmodem1434401")

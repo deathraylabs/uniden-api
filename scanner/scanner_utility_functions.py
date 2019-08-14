@@ -466,6 +466,29 @@ def convert_dir_name(directory):
     return converted_name
 
 
+def select_from_list(selections):
+    """Command line selection utility.
+
+    Args:
+        selections (list): list containing items you'd like to select.
+
+    Returns:
+        selection (int): number provided by user
+        selections: returns item of type from list of choices.
+    """
+
+    print(("\n" * 2))  # spacer
+    print(f"{'-' * 6} choose the best: {'-' * 6}")
+
+    for index, option in enumerate(selections):
+        print(f"{index:02d} : {option}")
+
+    # todo: need a try statement here
+    selection = int(input("select item: "))
+
+    return (selection, selections[selection])
+
+
 if __name__ == "__main__":
 
     help_statement = """
