@@ -2,6 +2,7 @@ import pytest
 
 from pathlib import Path
 from scanner.scanner_utility_functions import *
+from scanner.uniden import *
 
 
 def test_get_wav_meta():
@@ -70,6 +71,20 @@ def test_get_directories():
     assert get_directories(d_fake) is None
     assert type(get_directories(d)) == list
     assert len(get_directories(d)) == 3
+
+
+# @pytest.fixture()
+# def mass_storage():
+#     """Mass storage test object"""
+#     sd = UnidenMassStorage()
+#     return sd
+
+
+def test_mass_storage_initialized():
+    sd = UnidenMassStorage()
+
+    # root path is correct
+    assert sd.d_root == Path("/Volumes/SDS100")
 
 
 # if __name__ == "__main__":

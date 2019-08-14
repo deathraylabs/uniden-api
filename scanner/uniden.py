@@ -24,12 +24,13 @@ import yaml
 import time
 import serial
 import io
+from pathlib import Path
 
 # import os
 import logging
 import xmltodict
 
-from constants import *
+from scanner.constants import *
 from collections import OrderedDict
 from datetime import datetime
 
@@ -1111,9 +1112,14 @@ class UnidenScanner:
 
 
 class UnidenMassStorage:
-    def __init__(self):
-        """This class processes data stored on the scanner SD card."""
-        pass
+    def __init__(self, directory="scanner"):
+        """This class processes data stored on the scanner SD card.
+
+        Args:
+            directory (str): path to SD card root
+        """
+        if directory == "scanner":
+            self.d_root = Path("/Volumes/SDS100")
 
 
 class UnidenScannerError(Exception):
