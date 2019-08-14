@@ -1126,11 +1126,18 @@ class UnidenMassStorage:
         self.audio_directories = []
 
     def get_audio_directories(self):
-        """Gets a list of user recorded audio from scanner."""
+        """Gets a list of user recorded audio from scanner and updates
+        instance variable.
+
+        Returns:
+            list: list of audio directories found in user folder
+        """
 
         audio_path = Path("BCDx36HP/audio/user_rec/")
         full_path = Path.joinpath(self.d_root, audio_path)
 
+        # todo: need to pass exception if returns None
+        # use scanner utility functions "suf"
         self.audio_directories = suf.get_directories(full_path)
 
         # report number of directories found in logger console
@@ -1138,7 +1145,11 @@ class UnidenMassStorage:
         for dir in self.audio_directories:
             self.logger.debug(dir)
 
-        return None
+        return self.audio_directories
+
+    def get_wav_directories(self, audio_directory):
+        """Get a list of all wav files within the passed directory."""
+        pass
 
 
 class UnidenScannerError(Exception):

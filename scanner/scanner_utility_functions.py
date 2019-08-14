@@ -96,6 +96,10 @@ def files_with_matched_tags(working_dir, tags):
     # create path object
     working_dir = Path(working_dir)
 
+    # check to ensure function was passed an actual path
+    if not (working_dir.is_file() or working_dir.is_dir()):
+        return None
+
     # strip the file name to ensure we're working with directory only
     if working_dir.is_file():
         working_dir = working_dir.parent
