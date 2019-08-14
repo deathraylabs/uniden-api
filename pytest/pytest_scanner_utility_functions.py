@@ -87,5 +87,14 @@ def test_mass_storage_initialized():
     assert sd.d_root == Path("/Volumes/SDS100")
 
 
+def test_get_audio_directories():
+    sd = UnidenMassStorage()
+
+    sd.get_audio_directories()
+    dirs = sd.audio_directories
+
+    assert type(dirs) == list
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()

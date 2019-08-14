@@ -31,6 +31,7 @@ import logging
 import xmltodict
 
 from scanner.constants import *
+import scanner.scanner_utility_functions as suf
 from collections import OrderedDict
 from datetime import datetime
 
@@ -1118,8 +1119,26 @@ class UnidenMassStorage:
         Args:
             directory (str): path to SD card root
         """
+        self.logger = logging.getLogger("uniden_api.UnidenScanner")
+        self.logger.info("Beginning processing SD card data.")
         if directory == "scanner":
             self.d_root = Path("/Volumes/SDS100")
+        self.audio_directories = []
+
+    def get_audio_directories(self):
+        """Gets a list of user recorded audio from scanner."""
+
+        audio_path = Path("BCDx36HP/audio/user_rec/")
+        full_path = Path.joinpath(self.d_root, audio_path)
+
+        self.audio_directories = suf.get_directories(full_path)
+
+        # report number of directories found in logger console
+        self.logger.debug(f"{len(self.audio_directories)} audio directories")
+        for dir in self.audio_directories:
+            self.logger.debug(dir)
+
+        return None
 
 
 class UnidenScannerError(Exception):
@@ -5059,13 +5078,18 @@ if __name__ == "__main__":
     )
     ch.setFormatter(formatter)
     logger.addHandler(ch)
-    #
-    s = UnidenScanner("/dev/cu.usbmodem1434401")
 
-    scanstate = runcmd(s)
-    # flattened scanner state
-    f_state = traverse_state(scanstate)
-    save_state_to_db(f_state)
+    # instantiate tools for working with sd card data
+    sd = UnidenMassStorage()
+    sd.get_audio_directories()
+
+    #
+    # s = UnidenScanner("/dev/cu.usbmodem1434401")
+
+    # scanstate = runcmd(s)
+    # # flattened scanner state
+    # f_state = traverse_state(scanstate)
+    # save_state_to_db(f_state)
 
     # for k, v in f_state.items():
     #     print(f"    {k} = {v},")
