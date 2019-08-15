@@ -1,5 +1,10 @@
 #:kivy 1.11.1
 
+<Label>:
+    # this is how you apply generic formatting to objects
+    font_size: 20
+
+
 <DataWindow>:
     # these are global variables to reference objects below
     # format: [variable name in code]: [id name in kv file]
@@ -13,11 +18,21 @@
     # canvas only contains graphics instructions
     canvas:
 
+#    width: 800
+#    height: 400
+
+
     Label:
         id: fav_list_name
-        font_size: 14
-        center_x:  64  # not what I want
-        top: root.top - 50
+        size: root.width * 0.9, root.height * 0.1
+        top: root.top - 20
+        left: 20
+        text_size: self.size
+        halign: 'left'
+        color: 1, 1, 0, 0.5
+        font_size: 16
+#        center_x:  64  # not what I want
+
         text: "Favorites List Name----*-------*-------*-------*-------*-------*"
 
     Label:
