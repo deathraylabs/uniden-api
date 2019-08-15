@@ -2,6 +2,9 @@
 
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivy.uix.gridlayout import GridLayout
+
+# from kivy.uix.floatlayout import FloatLayout
 
 # Obj..Prop.. allows us to reference id name in kv file
 from kivy.properties import ObjectProperty
@@ -11,6 +14,10 @@ from kivy.properties import ObjectProperty
 
 from scanner.constants import *
 from scanner.uniden import *
+
+
+class GridWindow(GridLayout):
+    pass
 
 
 class DataWindow(Widget):

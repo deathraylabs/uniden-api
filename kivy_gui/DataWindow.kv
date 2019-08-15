@@ -3,7 +3,14 @@
 <Label>:
     # this is how you apply generic formatting to objects
     font_size: 20
+    halign: 'left'
+    left: 20
 
+<GridLayout>:
+    cols: 1
+
+    Label:
+        text: "I'm gridded!"
 
 <DataWindow>:
     # these are global variables to reference objects below
@@ -18,9 +25,13 @@
     # canvas only contains graphics instructions
     canvas:
 
-#    width: 800
-#    height: 400
+    GridLayout:
+#        center: root.width / 2, root.height / 2
+        left: 0
+        top: root.height
 
+        Label:
+            text: "Mee too!"
 
     Label:
         id: fav_list_name
@@ -44,6 +55,7 @@
 
     Label:
         id: dept_name
+        top: root.height * 0.5
         text: "Department:Name"
 
     Label:
