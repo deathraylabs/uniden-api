@@ -21,7 +21,12 @@ class DataWindow(Widget):
     sys_name = ObjectProperty(None)
 
     def btn(self):
+        """Method runs when Button object calls root.btn() from <DataWindow>"""
         print(f"favorites list: {self.fav_list_name.text}")
+
+        # this is how you change the text for labels defined in kv file
+        self.fav_list_name.text = "Hi there, dude!"
+        self.sys_name.text = "I updated too!"
 
     def update(self, dt):
         """Handles updates."""
