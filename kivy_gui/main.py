@@ -16,6 +16,9 @@ from scanner.uniden import *
 class DataWindow(Widget):
     """This is the main window for the app."""
 
+    # todo: format label positions
+    # todo: hook up button logic to get data for view
+
     # initialize id reference to kv file using variable name
     fav_list_name = ObjectProperty(None)
     sys_name = ObjectProperty(None)

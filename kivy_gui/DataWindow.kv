@@ -5,6 +5,10 @@
     # format: [variable name in code]: [id name in kv file]
     fav_list_name: fav_list_name
     sys_name: sys_name
+    dept_name: dept_name
+    site_name: site_name
+    unit_ids: unit_ids
+    unit_ids_name_tag: unit_ids_name_tag
 
     # canvas only contains graphics instructions
     canvas:
@@ -12,20 +16,33 @@
     Label:
         id: fav_list_name
         font_size: 14
-        center_x: root.width / 4
+        center_x:  64  # not what I want
         top: root.top - 50
-        # weird syntax for including variables in here
-        text: ""
+        text: "Favorites List Name----*-------*-------*-------*-------*-------*"
 
     Label:
         id: sys_name
         font_size: 14
-        center_x: root.width * 3 / 4
-        top: root.top - 50
-        text: ""
+        left: root.width * 3 / 4
+        top: root.height * 0.8
+        text: "System:Name"
+
+    Label:
+        id: dept_name
+        text: "Department:Name"
+
+    Label:
+        id: site_name
+        text: "Site:Name"
+
+    Label:
+        id: unit_ids
+        text: "UnitIds"
+
+    Label:
+        id: unit_ids_name_tag
+        text: "UnitIds:NameTag"
 
     Button:
         text: "push me"
-        # if you don't specify `root` you will be referencing a function
-        # within main instead of the method in DataWindow
         on_press: root.btn()
