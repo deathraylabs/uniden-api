@@ -7,7 +7,10 @@ from scanner.uniden import *
 
 def test_get_wav_meta():
     # static test file
-    directory = "./scanner_test_data/4F067981/2019-08-06_15-12-35.wav"
+    directory = (
+        "./scanner_test_data/BCDx36HP/audio/user_rec//4F067981/2019"
+        "-08-06_15-12-35.wav"
+    )
     p = Path(directory)
 
     meta_output = get_wav_meta(directory)
@@ -64,7 +67,10 @@ def test_files_with_matched_tags():
 def test_get_directories():
     """Ensure get_directories utility function works."""
 
-    d = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/"
+    d = (
+        "/Users/peej/dev/uniden scanner "
+        "scripts/uniden-api/pytest/scanner_test_data/BCDx36HP/audio/user_rec/4F067981/"
+    )
     d_fake = "not a path"
 
     # catch incorrectly formatted paths
@@ -88,7 +94,10 @@ def test_mass_storage_initialized():
 
 
 def test_get_audio_directories():
-    sd = UnidenMassStorage()
+    sd = UnidenMassStorage(
+        directory="/Users/peej/dev/uniden scanner "
+        "scripts/uniden-api/pytest/scanner_test_data/"
+    )
 
     sd.get_audio_directories()
     dirs = sd.audio_directories
@@ -98,7 +107,7 @@ def test_get_audio_directories():
 
 def test_get_wav_files():
     sd = UnidenMassStorage()
-    d = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/"
+    d = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/BCDx36HP/audio/user_rec/4F067981/"
     d = Path(d)
     dirs = sd.get_wav_files(d)
 
