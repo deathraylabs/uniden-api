@@ -1,24 +1,32 @@
 #:kivy 1.11.1
 
 <DataWindow>:
-    dickbutt: shizzle
+    # these are global variables to reference objects below
+    # format: [variable name in code]: [id name in kv file]
+    fav_list_name: fav_list_name
+    sys_name: sys_name
 
+    # canvas only contains graphics instructions
     canvas:
 
-
     Label:
+        id: fav_list_name
         font_size: 14
         center_x: root.width / 4
         top: root.top - 50
         # weird syntax for including variables in here
-        text: root.zoop[2]
+        text: "fix me"
 
     Label:
-        font_size: 70
+        id: sys_name
+        font_size: 14
         center_x: root.width * 3 / 4
         top: root.top - 50
-        text: "0"
+        text: "fix me too"
 
     Button:
         id: shizzle
         text: "push me"
+        # if you don't specify `root` you will be referencing a function
+        # within main instead of the method in DataWindow
+        on_press: root.btn()

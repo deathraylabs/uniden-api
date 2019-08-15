@@ -2,6 +2,8 @@
 
 from kivy.app import App
 from kivy.uix.widget import Widget
+
+# Obj..Prop.. allows us to reference id name in kv file
 from kivy.properties import ObjectProperty
 
 # from kivy.uix.button import Button
@@ -12,9 +14,14 @@ from scanner.uniden import *
 
 
 class DataWindow(Widget):
-    """Root element of Application UI."""
+    """This is the main window for the app."""
 
-    dickbutt = ObjectProperty(None)
+    # initialize id reference to kv file using variable name
+    fav_list_name = ObjectProperty(None)
+    sys_name = ObjectProperty(None)
+
+    def btn(self):
+        print(f"favorites list: {self.fav_list_name.text}")
 
     def update(self, dt):
         """Handles updates."""
