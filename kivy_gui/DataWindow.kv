@@ -1,27 +1,32 @@
 #:kivy 1.11.1
 
-<BoxLayout>:
-
-
-
+#<BoxLayout>:
+#
+#
+#
 <Label>:
-    all_labels: all_labels
-
+#    all_labels: all_labels
+#
     # this is how you apply generic formatting to objects
     id: all_labels
-    font_size: 20
+#    font_size: 20
     halign: 'left'
-    left: 0
-    height: 10
+    valign: 'center'
+#    left: 0
+#    height: 100
     text_size: self.size
+#    size: self.texture_size
+    padding: (10, 0)
 
-    # canvas has it's own sort of special syntax
-    canvas:
-        Color:
-            rgba: (1,1,1,0.2)
-        Rectangle:
-            size: self.size
-            pos: self.pos
+
+#
+#    # canvas has it's own sort of special syntax
+#    canvas:
+#        Color:
+#            rgba: (1,1,1,0.2)
+#        Rectangle:
+#            size: self.size
+#            pos: self.pos
 
 
 <DataWindow>:
@@ -35,22 +40,31 @@
     unit_ids_name_tag: unit_ids_name_tag
 
     # canvas only contains graphics instructions
-    size: (800, 400)
+#    size: (800, 400)
+#    size_hint_y: 0.8
+#
+#    canvas:
+#        Color:
+#            rgba: (1,1,1,0.6)
+#        Rectangle:
+#            size: (800, 400)
 
-    canvas:
-        Color:
-            rgba: (1,1,1,0.6)
-        Rectangle:
-            size: (800, 400)
 
     BoxLayout:
-        top: root.height
-        width: root.width
-        height: root.height * 0.75
+#        top: root.top
+
+#        width: root.width
+#        height: root.height
+        width: 800
+        height: 400
+#        center_y: root.center_y
+        center: root.center
+
+
         orientation: 'vertical'
         canvas:
             Color:
-                rgba: (1, 0, 1, 0.2)
+                rgba: (1, 1, 1, 0.15)
             Rectangle:
                 size: self.size
                 pos: self.pos
@@ -60,14 +74,7 @@
 
         Label:
             id: fav_list_name
-#            size: root.width * 0.9, root.height * 0.1
-#            top: root.top - 20
-#            left: 20
-#            halign: 'left'
             color: 1, 1, 0, 0.5
-#            font_size: 16
-    #        center_x:  64  # not what I want
-
             text: "Favorites List Name----*-------*-------*-------*-------*-------*"
 
         Label:
@@ -90,6 +97,6 @@
             id: unit_ids_name_tag
             text: "UnitIds:NameTag"
 
-    Button:
-        text: "push me"
-        on_press: root.btn()
+        Button:
+            text: "push me"
+            on_press: root.btn()

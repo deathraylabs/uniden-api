@@ -48,9 +48,6 @@ class DataWindow(Widget):
         """Handles updates."""
         pass
 
-    # variable for testing
-    zoop = UNID_FAVORITES_DATA
-
 
 class DataWindowApp(App):
     """App class is called 'DataWindow', which means the 'kv' file should
@@ -67,7 +64,7 @@ class DataWindowApp(App):
     def build(self):
         """Handles something..."""
         window = DataWindow()
-        window.size
+        # window.size
         return window
 
 
