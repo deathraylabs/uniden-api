@@ -9,7 +9,7 @@ from kivy.uix.boxlayout import BoxLayout
 # from kivy.uix.floatlayout import FloatLayout
 
 # Obj..Prop.. allows us to reference id name in kv file
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, NumericProperty
 
 # from kivy.uix.button import Button
 # from kivy.uix.label import Label
@@ -36,11 +36,13 @@ class DataWindow(Widget):
 
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
-        print(f"favorites list: {self.fav_list_name.text}")
+        # print(f"favorites list: {self.fav_list_name.text}")
+        print(f"size: {self.size}")
+        print(f"label size: {self.height}")
 
         # this is how you change the text for labels defined in kv file
-        self.fav_list_name.text = "Hi there, dude!"
-        self.sys_name.text = "I updated too!"
+        # self.fav_list_name.text = "Hi there, dude!"
+        # self.sys_name.text = "I updated too!"
 
     def update(self, dt):
         """Handles updates."""
@@ -65,6 +67,7 @@ class DataWindowApp(App):
     def build(self):
         """Handles something..."""
         window = DataWindow()
+        window.size
         return window
 
 
