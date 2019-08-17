@@ -36,6 +36,7 @@ class DataWindow(Widget):
     unit_ids = ObjectProperty()
     unit_ids_name_tag = ObjectProperty()
     transmission_start = ObjectProperty()
+    transmission_end = ObjectProperty()
 
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
@@ -51,6 +52,7 @@ class DataWindow(Widget):
         self.dept_name.text = wav_meta["Department:Name"]
         self.site_name.text = wav_meta["Site:Name"]
         self.transmission_start.text = wav_meta["transmission_start"]
+        self.transmission_end.text = wav_meta["transmission_end:1"]
 
         # unit ID information is not always present.
         try:
