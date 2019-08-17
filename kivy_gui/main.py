@@ -31,12 +31,12 @@ class DataWindow(Widget):
     # todo: hook up button logic to get data for view
 
     # initialize id reference to kv file using variable name
-    fav_list_name = ObjectProperty(None)
-    sys_name = ObjectProperty(None)
-    dept_name = ObjectProperty(None)
-    site_name = ObjectProperty(None)
-    unit_ids = ObjectProperty(None)
-    unit_ids_name_tag = ObjectProperty(None)
+    fav_list_name = ObjectProperty()
+    sys_name = ObjectProperty()
+    dept_name = ObjectProperty()
+    site_name = ObjectProperty()
+    unit_ids = ObjectProperty()
+    unit_ids_name_tag = ObjectProperty()
 
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
