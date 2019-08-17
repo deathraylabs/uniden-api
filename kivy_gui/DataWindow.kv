@@ -17,10 +17,7 @@
     valign: 'center'
     text_size: self.size
     padding: (10, 0)
-
-
-#
-#    # canvas has it's own sort of special syntax
+    # canvas has it's own sort of special syntax
 #    canvas:
 #        Color:
 #            rgba: (1,1,1,0.2)
@@ -28,6 +25,11 @@
 #            size: self.size
 #            pos: self.pos
 
+<Button>
+    # Formats all 'Button' tags.
+
+    # center all buttons
+    halign: "center"
 
 <DataWindow>:
     # these are global variables to reference objects below
@@ -96,11 +98,10 @@
 
             Button:
                 text: "Get Metadata"
-                halign: "center"
                 on_press: root.btn()
 
-            Label:
-                text: "Not a Button"
+            Button:
+                text: "Not Used"
 
-            Label:
-                text: "Not a Button"
+            Button:
+                text: "Not Used"
