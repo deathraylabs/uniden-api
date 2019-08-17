@@ -1,22 +1,20 @@
 """Learning to use Kivy GUI framework."""
 
 from kivy.app import App
+from kivy.core.audio import SoundLoader
 from kivy.uix.widget import Widget
-
-# from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
-
-# from kivy.uix.floatlayout import FloatLayout
-
-# Obj..Prop.. allows us to reference id name in kv file
-from kivy.properties import ObjectProperty, NumericProperty
 
 # from kivy.uix.button import Button
 # from kivy.uix.label import Label
 
+# Obj..Prop.. allows us to reference id name in kv file
+from kivy.properties import ObjectProperty
+
 # from scanner.constants import *
 # from scanner.uniden import *
 from scanner.scanner_utility_functions import get_wav_meta
+from pathlib import Path
 
 
 class BoxWindow(BoxLayout):
@@ -72,6 +70,16 @@ class DataWindow(Widget):
         # self.fav_list_name.text = "Hi there, dude!"
         # self.sys_name.text = "I updated too!"
 
+    def sound_btn(self):
+
+        filepath = wav_dir_path
+
+        sound = SoundLoader.load(filepath)
+        if sound:
+            print("Sound found at %s" % sound.source)
+            print("Sound is %.3f seconds" % sound.length)
+            sound.play()
+
     def update(self, dt):
         """Handles updates."""
         pass
@@ -98,11 +106,12 @@ class DataWindowApp(App):
 
 if __name__ == "__main__":
     # path to directory that contains the audio of interest
-    wav_dir_path = (
-        "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/"
-        "scanner_test_data/wav_files_for_testing/"
-        "2019-07-17_15-04-13.wav"
-    )
+    wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
+
+    # wav_dir_path = (
+    #     "/Users/peej/Downloads/uniden audio/-019-08-04_01-55-12/"
+    #     "female wearing nothing.wav"
+    # )
 
     # run the GUI
     DataWindowApp().run()
