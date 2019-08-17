@@ -38,6 +38,7 @@ class DataWindow(Widget):
     transmission_start = ObjectProperty()
     transmission_end = ObjectProperty()
     total_time = ObjectProperty()
+    play_stop_button = ObjectProperty()
 
     # can I store the sound object here?
     sound = ObjectProperty()
@@ -89,16 +90,18 @@ class DataWindow(Widget):
         # self.fav_list_name.text = "Hi there, dude!"
         # self.sys_name.text = "I updated too!"
 
-    def play_btn(self):
+    def play_stop_btn(self):
 
         filepath = wav_dir_path
 
-        # todo: need logic to see if sound already playing
-        if self.sound:
-            pass
-
-        self.sound = SoundLoader.load(filepath)
-        if self.sound:
+        if self.sound is None:
+            self.sound = SoundLoader.load(filepath)
+            self.sound.play()
+        elif self.sound and self.sound.state == "play":
+            position = self.sound.get_pos()
+            print(position)
+            self.sound.stop()
+        else:
             # print("Sound found at %s" % sound.source)
             # print("Sound is %.3f seconds" % sound.length)
             self.sound.play()

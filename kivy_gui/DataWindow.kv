@@ -33,6 +33,7 @@
     transmission_start: trans_begins
     transmission_end: trans_ends
     total_time: tot_time
+    play_stop_button: stop_play
 
     # canvas only contains graphics instructions
 #    size: (800, 400)
@@ -112,8 +113,9 @@
                 orientation: 'horizontal'
 
                 Button:
+                    id: stop_play
                     text: "Play Wav"
-                    on_press: root.play_btn()
+                    on_press: root.play_stop_btn()
 
                 Button:
                     text: "Stop"
