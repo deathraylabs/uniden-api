@@ -14,8 +14,9 @@ from kivy.properties import ObjectProperty, NumericProperty
 # from kivy.uix.button import Button
 # from kivy.uix.label import Label
 
-from scanner.constants import *
-from scanner.uniden import *
+# from scanner.constants import *
+# from scanner.uniden import *
+from scanner.scanner_utility_functions import get_wav_meta
 
 
 class BoxWindow(BoxLayout):
@@ -27,7 +28,6 @@ class BoxWindow(BoxLayout):
 class DataWindow(Widget):
     """This is the main window for the app."""
 
-    # todo: format label positions
     # todo: hook up button logic to get data for view
 
     # initialize id reference to kv file using variable name
@@ -40,9 +40,33 @@ class DataWindow(Widget):
 
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
+
+        # see if the path is working
+        print(wav_dir_path)
+
+        wav_meta = get_wav_meta(wav_dir_path)
+
+        # update DataWindow with metadata
+        self.fav_list_name.text = wav_meta["FavoritesList:Name"]
+        self.sys_name.text = wav_meta["System:Name"]
+        self.dept_name.text = wav_meta["Department:Name"]
+        self.site_name.text = wav_meta["Site:Name"]
+
+        # unit ID information is not always present.
+        try:
+            self.unit_ids.text = wav_meta["UnitIds"]
+        except KeyError as e:
+            self.unit_ids.text = "-" * 8
+            print("No UnitID data.")
+        try:
+            self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
+        except KeyError as e:
+            self.unit_ids_name_tag.text = ""
+            print(f"No Unit ID Name. {e}")
+
         # print(f"favorites list: {self.fav_list_name.text}")
-        print(f"size: {self.size}")
-        print(f"label size: {self.height}")
+        # print(f"size: {self.size}")
+        # print(f"label size: {self.height}")
 
         # this is how you change the text for labels defined in kv file
         # self.fav_list_name.text = "Hi there, dude!"
@@ -73,4 +97,8 @@ class DataWindowApp(App):
 
 
 if __name__ == "__main__":
+    # path to directory that contains the audio of interest
+    wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/wav_files_for_testing/2019-07-17_15-04-13.wav"
+
+    # run the GUI
     DataWindowApp().run()
