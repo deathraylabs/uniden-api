@@ -97,18 +97,22 @@ class DataWindow(Widget):
         if self.sound is None:
             self.sound = SoundLoader.load(filepath)
             self.sound.play()
+            self.play_stop_button.text = "STOP"
         elif self.sound and self.sound.state == "play":
             position = self.sound.get_pos()
             print(position)
             self.sound.stop()
+            self.play_stop_button.text = "PLAY"
         else:
             # print("Sound found at %s" % sound.source)
             # print("Sound is %.3f seconds" % sound.length)
             self.sound.play()
+            self.play_stop_button.text = "STOP"
 
     def stop_btn(self):
         if self.sound:
             self.sound.stop()
+            self.play_stop_button.text = "PLAY"
 
     def update(self, dt):
         """Handles updates."""
