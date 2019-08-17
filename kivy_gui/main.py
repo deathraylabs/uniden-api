@@ -39,6 +39,9 @@ class DataWindow(Widget):
     transmission_end = ObjectProperty()
     total_time = ObjectProperty()
 
+    # can I store the sound object here?
+    sound = ObjectProperty()
+
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
 
@@ -86,15 +89,23 @@ class DataWindow(Widget):
         # self.fav_list_name.text = "Hi there, dude!"
         # self.sys_name.text = "I updated too!"
 
-    def sound_btn(self):
+    def play_btn(self):
 
         filepath = wav_dir_path
 
-        sound = SoundLoader.load(filepath)
-        if sound:
-            print("Sound found at %s" % sound.source)
-            print("Sound is %.3f seconds" % sound.length)
-            sound.play()
+        # todo: need logic to see if sound already playing
+        if self.sound:
+            pass
+
+        self.sound = SoundLoader.load(filepath)
+        if self.sound:
+            # print("Sound found at %s" % sound.source)
+            # print("Sound is %.3f seconds" % sound.length)
+            self.sound.play()
+
+    def stop_btn(self):
+        if self.sound:
+            self.sound.stop()
 
     def update(self, dt):
         """Handles updates."""
@@ -122,7 +133,10 @@ class DataWindowApp(App):
 
 if __name__ == "__main__":
     # path to directory that contains the audio of interest
-    wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
+    wav_dir_path = (
+        "/Users/peej/dev/uniden scanner "
+        "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13mus.wav"
+    )
 
     # wav_dir_path = (
     #     "/Users/peej/Downloads/uniden audio/-019-08-04_01-55-12/"
