@@ -52,15 +52,12 @@
 
     BoxLayout:
 #        top: root.top
-
 #        width: root.width
 #        height: root.height
+#        center_y: root.center_y
         width: 800
         height: 400
-#        center_y: root.center_y
         center: root.center
-
-
         orientation: 'vertical'
         canvas:
             Color:
@@ -68,9 +65,6 @@
             Rectangle:
                 size: self.size
                 pos: self.pos
-
-        Label:
-            text: "Mee too!"
 
         Label:
             id: fav_list_name
@@ -97,6 +91,15 @@
             id: unit_ids_name_tag
             text: "UnitIds:NameTag"
 
-        Button:
-            text: "push me"
-            on_press: root.btn()
+        BoxLayout:
+            orientation: 'horizontal'
+
+            Button:
+                text: "push me"
+                on_press: root.btn()
+
+            Label:
+                text: "Not a Button"
+
+            Label:
+                text: "Not a Button"
