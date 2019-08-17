@@ -1,9 +1,5 @@
 #:kivy 1.11.1
 
-#<BoxLayout>:
-#
-#
-#
 <Label>:
     # this is how you apply generic formatting to everything tagged Label
     id: all_labels
@@ -54,6 +50,7 @@
         height: 400
         center: root.center
         orientation: 'vertical'
+
         canvas:
             Color:
                 rgba: (1, 1, 1, 0.15)
@@ -85,6 +82,13 @@
         Label:
             id: unit_ids_name_tag
             text: "UnitIds:NameTag"
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            Label:
+                id: trans_begins
+                text: "Transmission Start Time"
 
         BoxLayout:
             orientation: 'horizontal'
