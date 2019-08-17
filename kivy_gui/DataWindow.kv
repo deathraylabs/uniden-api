@@ -48,8 +48,8 @@
 #        width: root.width
 #        height: root.height
 #        center_y: root.center_y
-        width: 800
-        height: 400
+        width: 800 * 2
+        height: 400 * 2
         center: root.center
         orientation: 'vertical'
 
@@ -95,6 +95,10 @@
             Label:
                 id: trans_ends
                 text: "Transmission End Time"
+
+            Label:
+                id: tot_time
+                text: "Total Time"
 
         BoxLayout:
             orientation: 'horizontal'
