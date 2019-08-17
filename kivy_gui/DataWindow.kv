@@ -108,9 +108,16 @@
                 text: "Get Metadata"
                 on_press: root.btn()
 
-            Button:
-                text: "Play Wav"
-                on_press: root.sound_btn()
+            BoxLayout:
+                orientation: 'horizontal'
+
+                Button:
+                    text: "Play Wav"
+                    on_press: root.sound_btn()
+
+                Button:
+                    text: "Stop"
+
 
             Button:
                 text: "Not Used"

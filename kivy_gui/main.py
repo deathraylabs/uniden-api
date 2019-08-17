@@ -48,6 +48,11 @@ class DataWindow(Widget):
         wav_meta = get_wav_meta(wav_dir_path)
 
         trans_start = wav_meta["transmission_start"]
+
+        # calculate starting time in seconds
+        # trans_start_sec = int(trans_start[-4:-2]) * 60 + int(trans_start[-2])
+        # print(trans_start_sec)
+
         trans_end = wav_meta["transmission_end:1"]
 
         # update DataWindow with metadata
@@ -57,6 +62,9 @@ class DataWindow(Widget):
         self.site_name.text = wav_meta["Site:Name"]
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
+
+        # todo: calculate elapsed time in seconds using datetime
+        self.total_time.text = "placeholder"
 
         # unit ID information is not always present.
         try:
