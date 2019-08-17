@@ -42,7 +42,7 @@ class DataWindow(Widget):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
 
         # see if the path is working
-        print(wav_dir_path)
+        # print(wav_dir_path)
 
         wav_meta = get_wav_meta(wav_dir_path)
 
@@ -55,14 +55,14 @@ class DataWindow(Widget):
         # unit ID information is not always present.
         try:
             self.unit_ids.text = wav_meta["UnitIds"]
-        except KeyError as e:
+        except KeyError:
             self.unit_ids.text = "-" * 8
             print("No UnitID data.")
         try:
             self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
-        except KeyError as e:
+        except KeyError:
             self.unit_ids_name_tag.text = ""
-            print(f"No Unit ID Name. {e}")
+            print(f"No Unit ID Name.")
 
         # print(f"favorites list: {self.fav_list_name.text}")
         # print(f"size: {self.size}")
@@ -98,7 +98,11 @@ class DataWindowApp(App):
 
 if __name__ == "__main__":
     # path to directory that contains the audio of interest
-    wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/wav_files_for_testing/2019-07-17_15-04-13.wav"
+    wav_dir_path = (
+        "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/"
+        "scanner_test_data/wav_files_for_testing/"
+        "2019-07-17_15-04-13.wav"
+    )
 
     # run the GUI
     DataWindowApp().run()
