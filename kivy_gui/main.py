@@ -5,9 +5,6 @@ from kivy.core.audio import SoundLoader
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 
-# from kivy.uix.button import Button
-# from kivy.uix.label import Label
-
 # Obj..Prop.. allows us to reference id name in kv file
 from kivy.properties import ObjectProperty
 
@@ -119,6 +116,9 @@ class DataWindow(Widget):
         if self.sound:
             self.sound.stop()
             self.play_stop_button.text = "PLAY"
+
+    def scanner_status_btn(self):
+        self.logger.info("scanner status button press")
 
     def update(self, dt):
         """Handles updates."""
