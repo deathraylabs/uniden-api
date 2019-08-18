@@ -7,6 +7,7 @@ from pathlib import Path
 import os
 import subprocess as sb
 import shutil
+import logging
 import pyperclip as cb
 
 from collections import OrderedDict
@@ -17,6 +18,9 @@ from pydub import AudioSegment
 from scanner.constants import *
 
 # import pandas as pd
+
+# create logger
+suf_logger = logging.getLogger("scanner_utility_functions")
 
 
 def unique_path(directory, name_pattern):
@@ -174,13 +178,16 @@ def get_wav_meta(wav_source, chunk_dict={}):
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
+    logger = logging.getLogger("scanner_utility_functions")
+
     # if the wav_source is not already a Chunk instance, treat it like file
     if not isinstance(wav_source, chunk.Chunk):
         f_path = Path(wav_source)
         f = open(f_path, "rb")
 
-        # The file name is the transmission start time, reformatting to match the
-        # transmission end time found in the WAV header.
+        # The file name is the transmission start time,
+        # reformatting to match the transmission end time
+        # found in the WAV header.
         transmission_start = f_path.stem.replace("-", "")
         transmission_start = transmission_start.replace("_", "")
 
@@ -190,12 +197,13 @@ def get_wav_meta(wav_source, chunk_dict={}):
         # chunk will allow us to parse the byte data in the wav file
         meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=False)
     else:
+        chunk_name = wav_source.getname()
         try:
             meta_chunk = chunk.Chunk(
                 wav_source, align=False, bigendian=False, inclheader=False
             )
         except EOFError:
-            print("no more chunks!")
+            logger.exception(f"Done parsing {chunk_name} chunk.", exc_info=False)
             return chunk_dict
 
     # meta_chunk_name = meta_chunk.getname()
