@@ -116,11 +116,8 @@ class UnidenScanner:
         self.used_memory_blocks = {}
         self.default_band_coverage = ()
 
+        # ------ initialization methods ------- #
         self.open(port, speed)
-
-    # self.exit_program_mode()
-    # self.get_model()
-    # self.get_version()
 
     def open(self, port, speed):
         """Open scanner method, accepts port and speed,

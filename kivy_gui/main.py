@@ -24,7 +24,11 @@ class BoxWindow(BoxLayout):
 
 
 class DataWindow(Widget):
-    """This is the main window for the app."""
+    """This is the main window for the app.
+
+    Notes: creating an initialization method causes python to crash. I'm not
+    sure why.
+    """
 
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
@@ -45,16 +49,13 @@ class DataWindow(Widget):
 
     # can I store the sound object here?
     sound = ObjectProperty()
+    # initialize variable to store scanner data
+    scanner = None
 
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
 
-        # see if the path is working
-        # print(wav_dir_path)
-
         wav_meta = get_wav_meta(wav_dir_path)
-
-        # print(wav_meta)
 
         trans_start = wav_meta["transmission_start"]
 
@@ -80,20 +81,16 @@ class DataWindow(Widget):
             self.unit_ids.text = wav_meta["UnitIds"]
         except KeyError:
             self.unit_ids.text = "-" * 8
-            print("No UnitID data.")
+            self.logger.exception("UnitIds key doesn't exist", exc_info=False)
         try:
             self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
         except KeyError:
             self.unit_ids_name_tag.text = ""
-            logging.exception("No Unit ID Name.", exc_info=False)
+            self.logger.exception("No Unit ID Name.", exc_info=False)
 
         # print(f"favorites list: {self.fav_list_name.text}")
         # print(f"size: {self.size}")
         # print(f"label size: {self.height}")
-
-        # this is how you change the text for labels defined in kv file
-        # self.fav_list_name.text = "Hi there, dude!"
-        # self.sys_name.text = "I updated too!"
 
     def play_stop_btn(self):
 
@@ -122,8 +119,25 @@ class DataWindow(Widget):
     def scanner_status_btn(self):
         self.logger.info("scanner status button press")
 
-        # scanner instance
-        scanner = UnidenScanner()
+        try:
+            scanner_xml = runcmd(self.scanner)
+            self.logger.debug("XML method run successfully.")
+        except AttributeError:
+            self.logger.exception(
+                "Scanner is not initialized, initializing " "now", exc_info=False
+            )
+            # create scanner connection
+            self.scanner = UnidenScanner()
+            self.logger.debug("Scanner Connected.")
+
+    def scanner_disconnect_btn(self):
+        try:
+            self.scanner.close()
+            self.logger.debug("Scanner Connection Closed.")
+        except AttributeError:
+            self.logger.exception(
+                "Scanner is not initialized, no port to close.", exc_info=False
+            )
 
     def update(self, dt):
         """Handles updates."""

@@ -121,7 +121,13 @@
                     text: "Stop"
                     on_press: root.stop_btn()
 
+            BoxLayout:
+                orientation: 'horizontal'
 
-            Button:
-                text: "Get Scanner Status"
-                on_press: root.scanner_status_btn()
+                Button:
+                    text: "Get Scanner Status"
+                    on_press: root.scanner_status_btn()
+
+                Button:
+                    text: "Disconnect"
+                    on_press: root.scanner_disconnect_btn()
