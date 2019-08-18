@@ -11,7 +11,7 @@ from kivy.properties import ObjectProperty
 # from scanner.constants import *
 # from scanner.uniden import *
 from scanner.scanner_utility_functions import get_wav_meta
-from scanner.uniden import runcmd, UnidenScanner
+from scanner.uniden import runcmd, UnidenScanner, traverse_state
 
 from pathlib import Path
 import logging
@@ -46,6 +46,7 @@ class DataWindow(Widget):
     transmission_end = ObjectProperty()
     total_time = ObjectProperty()
     play_stop_button = ObjectProperty()
+    scan_status_button = ObjectProperty()
 
     # can I store the sound object here?
     sound = ObjectProperty()
@@ -120,8 +121,7 @@ class DataWindow(Widget):
         self.logger.info("scanner status button press")
 
         try:
-            scanner_xml = runcmd(self.scanner)
-            self.logger.debug("XML method run successfully.")
+            port_is_open = self.scanner.port_is_open()
         except AttributeError:
             self.logger.exception(
                 "Scanner is not initialized, initializing " "now", exc_info=False
@@ -129,11 +129,25 @@ class DataWindow(Widget):
             # create scanner connection
             self.scanner = UnidenScanner()
             self.logger.debug("Scanner Connected.")
+            self.scan_status_button.text = "Get XML"
+            return
+
+        if not self.scanner.port_is_open():
+            self.scanner.open()
+            self.scan_status_button.text = "Get XML"
+            return
+
+        self.logger.debug("Running XML Method...")
+        scanner_xml = runcmd(self.scanner)
+        self.logger.debug("XML method run successfully.")
+        scanner_state = traverse_state(scanner_xml)
+        self.logger.debug(scanner_state)
 
     def scanner_disconnect_btn(self):
         try:
             self.scanner.close()
             self.logger.debug("Scanner Connection Closed.")
+            self.scan_status_button.text = "Connect to Scanner"
         except AttributeError:
             self.logger.exception(
                 "Scanner is not initialized, no port to close.", exc_info=False

@@ -33,7 +33,9 @@
     transmission_start: trans_begins
     transmission_end: trans_ends
     total_time: tot_time
+
     play_stop_button: stop_play
+    scan_status_button: scanner_status
 
     # canvas only contains graphics instructions
 #    size: (800, 400)
@@ -125,7 +127,8 @@
                 orientation: 'horizontal'
 
                 Button:
-                    text: "Get Scanner Status"
+                    id: scanner_status
+                    text: "Connect to Scanner"
                     on_press: root.scanner_status_btn()
 
                 Button:

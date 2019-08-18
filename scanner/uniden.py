@@ -100,7 +100,11 @@ class UnidenScanner:
             "initialiazing with port=%(port)s and speed=%(speed)s" % locals()
         )
 
+        # serial port connection
         self.serial = None
+        self.port = port
+        self.speed = speed
+
         self.model = None
         self.version = None
         self.isProgramMode = False
@@ -117,16 +121,16 @@ class UnidenScanner:
         self.default_band_coverage = ()
 
         # ------ initialization methods ------- #
-        self.open(port, speed)
+        self.open()
 
-    def open(self, port, speed):
+    def open(self):
         """Open scanner method, accepts port and speed,
         timeout is set for 100ms"""
 
         try:
             # timeout originally set to 0.1
             # timeout set to 0 is non-blocking
-            self.serial = serial.Serial(port, speed, timeout=5.0)
+            self.serial = serial.Serial(self.port, self.speed, timeout=5.0)
 
         except serial.SerialException:
             self.logger.error("Error opening serial port %s!" % port)
@@ -135,6 +139,10 @@ class UnidenScanner:
 
         if self.serial.isOpen():
             self.serial.close()
+
+    def port_is_open(self):
+        """Returns True if open, False if closed."""
+        return self.serial.isOpen()
 
     def __del__(self):
 
