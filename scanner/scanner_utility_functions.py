@@ -194,8 +194,10 @@ def get_wav_meta(wav_source, chunk_dict={}):
             meta_chunk = chunk.Chunk(
                 wav_source, align=False, bigendian=False, inclheader=False
             )
-        except OSError:
+        except EOFError:
             print("no more chunks!")
+
+        return chunk_dict
 
     # meta_chunk_name = meta_chunk.getname()
     # meta_chunk_size = meta_chunk.getsize()
@@ -312,10 +314,25 @@ def get_wav_meta(wav_source, chunk_dict={}):
 
         # continue
 
-        return get_wav_meta(meta_chunk, chunk_dict)
+        return get_wav_meta(wav_source, chunk_dict)
 
-    uniden_chunk_id = WAV_METADATA[chunk_id.decode()]
-    chunk_dict[uniden_chunk_id] = meta_chunk.read().decode()
+    try:
+        decoded_chunk_id = chunk_id.decode()
+    except UnicodeDecodeError:
+        print("not unicode text.")
+        decoded_chunk_id = "invalid"
+
+    if decoded_chunk_id != "invalid":
+        try:
+            uniden_chunk_id = WAV_METADATA[decoded_chunk_id]
+        except KeyError:
+            print("Not valid scanner metadata.")
+            return get_wav_meta(meta_chunk, chunk_dict)
+
+    try:
+        chunk_dict[uniden_chunk_id] = meta_chunk.read().decode()
+    except UnicodeDecodeError:
+        print("Metadata is not UTF-8")
 
     # meta_chunk.close()
     return get_wav_meta(wav_source, chunk_dict)
@@ -331,117 +348,117 @@ def get_wav_meta(wav_source, chunk_dict={}):
 
     # The byte offset here is just approximate
     # todo: use a better conditional for while loop
-    while meta_chunk.tell() < 925:
-        # get chunk name and chunk length
-        chunk_name = meta_chunk.read(4)  # this also sets new absolute seek pos
-        # decode chunk name to UTF-8
-        chunk_name = chunk_name.decode()
-
-        # the very first chunk is the "INFO"
-        if chunk_name == "INFO":
-            # INFO is zero length, IART begins right after it.
-            continue
-
-        # next 4 bytes are little endian order hex number, not ASCII code
-        chunk_length = meta_chunk.read(4)
-        chunk_length = int.from_bytes(chunk_length, byteorder="little")
-
-        # -------------Uniden proprietary chunk----------------- #
-
-        if chunk_name == "unid":
-            # unid is 2048 bytes long but only first 328 bytes are utf8
-            # I don't understand code starting after byte 1180 or so
-            # chunk_string = meta_chunk.read(chunk_length)
-
-            # absolute starting byte position of current chunk
-            start_byte = meta_chunk.tell()
-
-            delimited_lines_bytes = []
-            # variable to contain decoded string
-            delimited_lines = []
-
-            # record all UTF-8 bytes and stop at the first non-UTF-8 byte
-            while meta_chunk.tell() - start_byte <= chunk_length:
-                # scanner records 64 bytes of format, then adds null separator
-                chunk_line_bytes = meta_chunk.read(65)
-                try:
-                    chunk_line = chunk_line_bytes.decode()
-                # hop out of the loop once you hit a non-utf8 character
-                except UnicodeDecodeError as e:
-                    pos_in_chunk = meta_chunk.tell() - start_byte
-                    # todo: change to logging instead of printing
-                    # print(
-                    #     f"{e}"
-                    #     f"position in chunk: {pos_in_chunk}\nabsolute "
-                    #     f"position: {meta_chunk.tell()}"
-                    # )
-                    break
-
-                chunk_line = chunk_line.rstrip("\x00")
-                chunk_line = chunk_line.replace("\x00", "\t")
-                chunk_line = chunk_line.split("\t")
-
-                delimited_lines_bytes.append(chunk_line_bytes)
-                delimited_lines.append(chunk_line)
-
-                # create new entry in dict for raw lines (for debugging)
-                chunk_dict[f"line {len(delimited_lines)}"] = chunk_line
-
-            # todo: ensure lines go to correct definition list
-            data_heading_sources = (
-                UNID_FAVORITES_DATA,
-                UNID_SYSTEM_DATA,
-                UNID_DEPARTMENT_DATA,
-                UNID_CHANNEL_DATA,
-                UNID_SITE_DATA,
-                UNID_UNITID_DATA,
-                UNID_CONVENTIONAL_DATA,
-            )
-
-            # storage for unid data
-            unid_list = []
-
-            # creates a list of all the items from unid header
-            for index, line in enumerate(data_heading_sources):
-                unid_list += list(zip(line, delimited_lines[index]))
-
-            # need to save to dict because second half requires it's own save
-            # chunk_dict["unid:Delimited"] = unid_list
-
-            # grab key and value from each tuple and save to dict
-            for meta_item in unid_list:
-                chunk_dict[meta_item[0]] = meta_item[1]
-
-            continue
-
-        # IKEY is not UTF8, not sure what it is
-        elif chunk_name == "IKEY":
-            chunk_string = meta_chunk.read(chunk_length)
-        else:
-            # get the data in the next `chunk_length` bytes
-            chunk_string = meta_chunk.read(chunk_length)
-
-            chunk_string = chunk_string.rstrip(b"\x00")
-
-            chunk_string = chunk_string.decode()
-
-            # the file spec uses tab separated values but the datastream
-            # from scanner seems to just use null bytes
-            chunk_string = chunk_string.replace("\x00", "\t")
-
-        # try to get the actual descriptive name from the chunk name
-        try:
-            chunk_key = WAV_METADATA[chunk_name]
-        except KeyError:
-            chunk_key = chunk_name
-
-        # save data to dict
-        chunk_dict[chunk_key] = chunk_string
-
-        # debugging text
-        # print(f"name: {chunk_name}\nlength: {chunk_length}")
-        # print(f"string:\n{chunk_string}")
-        # print(f"ending byte no: {meta_chunk.tell()}\n")
+    # while meta_chunk.tell() < 925:
+    #     # get chunk name and chunk length
+    #     chunk_name = meta_chunk.read(4)  # this also sets new absolute seek pos
+    #     # decode chunk name to UTF-8
+    #     chunk_name = chunk_name.decode()
+    #
+    #     # the very first chunk is the "INFO"
+    #     if chunk_name == "INFO":
+    #         # INFO is zero length, IART begins right after it.
+    #         continue
+    #
+    #     # next 4 bytes are little endian order hex number, not ASCII code
+    #     chunk_length = meta_chunk.read(4)
+    #     chunk_length = int.from_bytes(chunk_length, byteorder="little")
+    #
+    #     # -------------Uniden proprietary chunk----------------- #
+    #
+    #     if chunk_name == "unid":
+    #         # unid is 2048 bytes long but only first 328 bytes are utf8
+    #         # I don't understand code starting after byte 1180 or so
+    #         # chunk_string = meta_chunk.read(chunk_length)
+    #
+    #         # absolute starting byte position of current chunk
+    #         start_byte = meta_chunk.tell()
+    #
+    #         delimited_lines_bytes = []
+    #         # variable to contain decoded string
+    #         delimited_lines = []
+    #
+    #         # record all UTF-8 bytes and stop at the first non-UTF-8 byte
+    #         while meta_chunk.tell() - start_byte <= chunk_length:
+    #             # scanner records 64 bytes of format, then adds null separator
+    #             chunk_line_bytes = meta_chunk.read(65)
+    #             try:
+    #                 chunk_line = chunk_line_bytes.decode()
+    #             # hop out of the loop once you hit a non-utf8 character
+    #             except UnicodeDecodeError as e:
+    #                 pos_in_chunk = meta_chunk.tell() - start_byte
+    #                 # todo: change to logging instead of printing
+    #                 # print(
+    #                 #     f"{e}"
+    #                 #     f"position in chunk: {pos_in_chunk}\nabsolute "
+    #                 #     f"position: {meta_chunk.tell()}"
+    #                 # )
+    #                 break
+    #
+    #             chunk_line = chunk_line.rstrip("\x00")
+    #             chunk_line = chunk_line.replace("\x00", "\t")
+    #             chunk_line = chunk_line.split("\t")
+    #
+    #             delimited_lines_bytes.append(chunk_line_bytes)
+    #             delimited_lines.append(chunk_line)
+    #
+    #             # create new entry in dict for raw lines (for debugging)
+    #             chunk_dict[f"line {len(delimited_lines)}"] = chunk_line
+    #
+    #         # todo: ensure lines go to correct definition list
+    #         data_heading_sources = (
+    #             UNID_FAVORITES_DATA,
+    #             UNID_SYSTEM_DATA,
+    #             UNID_DEPARTMENT_DATA,
+    #             UNID_CHANNEL_DATA,
+    #             UNID_SITE_DATA,
+    #             UNID_UNITID_DATA,
+    #             UNID_CONVENTIONAL_DATA,
+    #         )
+    #
+    #         # storage for unid data
+    #         unid_list = []
+    #
+    #         # creates a list of all the items from unid header
+    #         for index, line in enumerate(data_heading_sources):
+    #             unid_list += list(zip(line, delimited_lines[index]))
+    #
+    #         # need to save to dict because second half requires it's own save
+    #         # chunk_dict["unid:Delimited"] = unid_list
+    #
+    #         # grab key and value from each tuple and save to dict
+    #         for meta_item in unid_list:
+    #             chunk_dict[meta_item[0]] = meta_item[1]
+    #
+    #         continue
+    #
+    #     # IKEY is not UTF8, not sure what it is
+    #     elif chunk_name == "IKEY":
+    #         chunk_string = meta_chunk.read(chunk_length)
+    #     else:
+    #         # get the data in the next `chunk_length` bytes
+    #         chunk_string = meta_chunk.read(chunk_length)
+    #
+    #         chunk_string = chunk_string.rstrip(b"\x00")
+    #
+    #         chunk_string = chunk_string.decode()
+    #
+    #         # the file spec uses tab separated values but the datastream
+    #         # from scanner seems to just use null bytes
+    #         chunk_string = chunk_string.replace("\x00", "\t")
+    #
+    #     # try to get the actual descriptive name from the chunk name
+    #     try:
+    #         chunk_key = WAV_METADATA[chunk_name]
+    #     except KeyError:
+    #         chunk_key = chunk_name
+    #
+    #     # save data to dict
+    #     chunk_dict[chunk_key] = chunk_string
+    #
+    #     # debugging text
+    #     # print(f"name: {chunk_name}\nlength: {chunk_length}")
+    #     # print(f"string:\n{chunk_string}")
+    #     # print(f"ending byte no: {meta_chunk.tell()}\n")
 
     f.close()
 
