@@ -215,7 +215,6 @@ def get_wav_meta(wav_source, chunk_dict={}):
             # create a new instance that is the child to RIFF chunk
             # meta_chunk = get_wav_meta(meta_chunk, chunk_dict)
             return get_wav_meta(meta_chunk, chunk_dict)
-
     except AssertionError:
         print("The file is malformed.")
         return
