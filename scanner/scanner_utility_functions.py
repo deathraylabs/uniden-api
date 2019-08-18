@@ -178,7 +178,11 @@ def get_wav_meta(wav_source, chunk_dict={}):
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
-    logger = logging.getLogger("scanner_utility_functions")
+    # logger = logging.getLogger("scanner_utility_functions")
+    # logger.setLevel(logging.DEBUG)
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
 
     # if the wav_source is not already a Chunk instance, treat it like file
     if not isinstance(wav_source, chunk.Chunk):
@@ -233,10 +237,10 @@ def get_wav_meta(wav_source, chunk_dict={}):
         if current_location == 0:
             list_chunk = meta_chunk.read(4)
             if list_chunk == b"INFO":
-                print("Info chunk")
+                logger.info("INFO sub-chunk of LIST chunk.")
                 return get_wav_meta(wav_source, chunk_dict)
             else:
-                print("no info chunk")
+                logger.info("LIST chunk does not contain INFO chunk.")
                 return
         elif current_location == chunk_length:
             # meta_chunk.close()
