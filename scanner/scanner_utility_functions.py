@@ -248,7 +248,7 @@ def get_wav_meta(wav_source, chunk_dict={}):
 
     # todo: build out this logic
     if chunk_id == b"unid":
-        print("I found unid!")
+        print(chunk_length)
         return get_wav_meta(meta_chunk, chunk_dict)
 
     uniden_chunk_id = WAV_METADATA[chunk_id.decode()]
