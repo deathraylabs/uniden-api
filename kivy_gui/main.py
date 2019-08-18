@@ -11,6 +11,8 @@ from kivy.properties import ObjectProperty
 # from scanner.constants import *
 # from scanner.uniden import *
 from scanner.scanner_utility_functions import get_wav_meta
+from scanner.uniden import runcmd, UnidenScanner
+
 from pathlib import Path
 import logging
 
@@ -119,6 +121,9 @@ class DataWindow(Widget):
 
     def scanner_status_btn(self):
         self.logger.info("scanner status button press")
+
+        # scanner instance
+        scanner = UnidenScanner()
 
     def update(self, dt):
         """Handles updates."""

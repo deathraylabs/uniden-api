@@ -93,7 +93,7 @@ class UnidenScanner:
 
     err_list = ("NG", "ORER", "FER", "ERR", "")
 
-    def __init__(self, port, speed="115200"):
+    def __init__(self, port="/dev/cu.usbmodem1434401", speed="115200"):
 
         self.logger = logging.getLogger("uniden_api.UnidenScanner")
         self.logger.info(
