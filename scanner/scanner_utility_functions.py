@@ -206,26 +206,23 @@ def get_wav_meta(wav_source, chunk_dict={}):
             logger.exception(f"Done parsing {chunk_name} chunk.", exc_info=False)
             return chunk_dict
 
-    # meta_chunk_name = meta_chunk.getname()
-    # meta_chunk_size = meta_chunk.getsize()
-
     # the first 4 bytes are the first chunk ID and should be "WAVE"
     try:
         if meta_chunk.getname() == b"RIFF":
             try:
                 first_id = meta_chunk.read(4)
                 if first_id != b"WAVE":
-                    print("First tag ID is not WAVE")
+                    logger.info(f"First tag ID is {first_id}, not WAVE")
                     return
             except AssertionError:
-                print("This is not a standard WAVE file.")
+                logger.exception("The 4 bytes after RIFF are not a UTF8 tag.")
                 return
 
             # create a new instance that is the child to RIFF chunk
             # meta_chunk = get_wav_meta(meta_chunk, chunk_dict)
             return get_wav_meta(meta_chunk, chunk_dict)
     except AssertionError:
-        print("The file is malformed.")
+        logger.exception("The file appears to be corrupt or not WAV file.")
         return
 
     chunk_id = meta_chunk.getname()
