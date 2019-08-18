@@ -248,7 +248,71 @@ def get_wav_meta(wav_source, chunk_dict={}):
 
     # todo: build out this logic
     if chunk_id == b"unid":
-        print(chunk_length)
+        # unid is 2048 bytes long but only first 328 bytes are utf8
+        # I don't understand code starting after byte 1180 or so
+        # chunk_string = meta_chunk.read(chunk_length)
+
+        # absolute starting byte position of current chunk
+        start_byte = meta_chunk.tell()
+
+        delimited_lines_bytes = []
+        # variable to contain decoded string
+        delimited_lines = []
+
+        # record all UTF-8 bytes and stop at the first non-UTF-8 byte
+        while meta_chunk.tell() - start_byte <= chunk_length:
+            # scanner records 64 bytes of format, then adds null separator
+            chunk_line_bytes = meta_chunk.read(65)
+            try:
+                chunk_line = chunk_line_bytes.decode()
+            # hop out of the loop once you hit a non-utf8 character
+            except UnicodeDecodeError as e:
+                pos_in_chunk = meta_chunk.tell() - start_byte
+                # todo: change to logging instead of printing
+                # print(
+                #     f"{e}"
+                #     f"position in chunk: {pos_in_chunk}\nabsolute "
+                #     f"position: {meta_chunk.tell()}"
+                # )
+                break
+
+            chunk_line = chunk_line.rstrip("\x00")
+            chunk_line = chunk_line.replace("\x00", "\t")
+            chunk_line = chunk_line.split("\t")
+
+            delimited_lines_bytes.append(chunk_line_bytes)
+            delimited_lines.append(chunk_line)
+
+            # create new entry in dict for raw lines (for debugging)
+            chunk_dict[f"line {len(delimited_lines)}"] = chunk_line
+
+        # todo: ensure lines go to correct definition list
+        data_heading_sources = (
+            UNID_FAVORITES_DATA,
+            UNID_SYSTEM_DATA,
+            UNID_DEPARTMENT_DATA,
+            UNID_CHANNEL_DATA,
+            UNID_SITE_DATA,
+            UNID_UNITID_DATA,
+            UNID_CONVENTIONAL_DATA,
+        )
+
+        # storage for unid data
+        unid_list = []
+
+        # creates a list of all the items from unid header
+        for index, line in enumerate(data_heading_sources):
+            unid_list += list(zip(line, delimited_lines[index]))
+
+        # need to save to dict because second half requires it's own save
+        # chunk_dict["unid:Delimited"] = unid_list
+
+        # grab key and value from each tuple and save to dict
+        for meta_item in unid_list:
+            chunk_dict[meta_item[0]] = meta_item[1]
+
+        # continue
+
         return get_wav_meta(meta_chunk, chunk_dict)
 
     uniden_chunk_id = WAV_METADATA[chunk_id.decode()]
