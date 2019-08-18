@@ -23,7 +23,7 @@ def unique_path(directory, name_pattern):
     """Create a new and unique file name.
 
     Args:
-        directory (Path): pathlib object representing containing directory
+        directory (Path): pathlib object representing containing wav_source
         name_pattern (str): str.format pattern of desired file name
 
     Returns:
@@ -44,11 +44,11 @@ def unique_path(directory, name_pattern):
 
 
 def get_directories(directory):
-    """Return all directories contained within the passed directory. Doesn't
+    """Return all directories contained within the passed wav_source. Doesn't
     scan recursively for subdirectories.
 
     Args:
-        directory (str): path string to container directory
+        directory (str): path string to container wav_source
 
     Returns:
         list: list of all directories found as Path objects
@@ -61,7 +61,7 @@ def get_directories(directory):
     if not (dir.is_file() or dir.is_dir()):
         return None
 
-    # strip the file name to ensure we're working with directory only
+    # strip the file name to ensure we're working with wav_source only
     if dir.is_file():
         dir = dir.parent
 
@@ -77,7 +77,7 @@ def files_with_matched_tags(working_dir, tags):
     attribute tags in the finder.
 
     Args:
-        working_dir (str): directory containing tagged files, spaces do not
+        working_dir (str): wav_source containing tagged files, spaces do not
             need to be escaped, file name will be stripped.
         tags (str): string containing one or more comma-separated finder
             tags you wish to match against
@@ -100,11 +100,11 @@ def files_with_matched_tags(working_dir, tags):
     if not (working_dir.is_file() or working_dir.is_dir()):
         return None
 
-    # strip the file name to ensure we're working with directory only
+    # strip the file name to ensure we're working with wav_source only
     if working_dir.is_file():
         working_dir = working_dir.parent
 
-    # change the current working directory to the location of audio files
+    # change the current working wav_source to the location of audio files
     os.chdir(working_dir)
 
     # capture_output=True ensures we capture byte string of the resultant stdout
@@ -158,11 +158,11 @@ def merge_tagged_wav_files(wav_file_paths, merged_wav_name=r"merged_{:03d}.wav")
     return merged_wav_path
 
 
-def get_wav_meta(directory):
+def get_wav_meta(wav_source, chunk_dict={}):
     """Read the scanner generated metadata at the start of the file
 
     Args:
-        directory (str): location of wav file
+        wav_source (str or Chunk): path string of wav file
 
     Returns:
         (dict): RIFF tag name: string or bytes representing tag data
@@ -174,25 +174,89 @@ def get_wav_meta(directory):
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
-    f_path = Path(directory)
-    f = open(f_path, "rb")
+    # if the wav_source is not already a Chunk instance, treat it like file
+    if not isinstance(wav_source, chunk.Chunk):
+        f_path = Path(wav_source)
+        f = open(f_path, "rb")
 
-    # The file name is the transmission start time, reformatting to match the
-    # transmission and time found in the WAV header.
-    transmission_start = f_path.stem.replace("-", "")
-    transmission_start = transmission_start.replace("_", "")
+        # The file name is the transmission start time, reformatting to match the
+        # transmission end time found in the WAV header.
+        transmission_start = f_path.stem.replace("-", "")
+        transmission_start = transmission_start.replace("_", "")
 
-    # initializing chunk data variables
-    chunk_dict = {"transmission_start": transmission_start}
+        # initializing dict containing chunk data
+        chunk_dict = {"transmission_start": transmission_start}
 
-    # chunk will allow us to parse the byte data in the wav file
-    meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=True)
+        # chunk will allow us to parse the byte data in the wav file
+        meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=False)
+    else:
+        try:
+            meta_chunk = chunk.Chunk(
+                wav_source, align=False, bigendian=False, inclheader=False
+            )
+        except OSError:
+            print("no more chunks!")
 
-    # the first line of text should be "WAVELIST"
+    # meta_chunk_name = meta_chunk.getname()
+    # meta_chunk_size = meta_chunk.getsize()
+
+    # the first 4 bytes are the first chunk ID and should be "WAVE"
     try:
-        meta_chunk.read(8) == "WAVELIST"
+        if meta_chunk.getname() == b"RIFF":
+            try:
+                first_id = meta_chunk.read(4)
+                if first_id != b"WAVE":
+                    print("First tag ID is not WAVE")
+                    return
+            except AssertionError:
+                print("This is not a standard WAVE file.")
+                return
+
+            # create a new instance that is the child to RIFF chunk
+            # meta_chunk = get_wav_meta(meta_chunk, chunk_dict)
+            return get_wav_meta(meta_chunk, chunk_dict)
+
     except AssertionError:
-        print("oh crap!")
+        print("The file is malformed.")
+        return
+
+    chunk_id = meta_chunk.getname()
+    chunk_length = meta_chunk.getsize()
+    current_location = meta_chunk.tell()
+
+    if chunk_id == b"LIST":
+        if current_location == 0:
+            list_chunk = meta_chunk.read(4)
+            if list_chunk == b"INFO":
+                print("Info chunk")
+                return get_wav_meta(wav_source, chunk_dict)
+            else:
+                print("no info chunk")
+                return
+        elif current_location == chunk_length:
+            # meta_chunk.close()
+            return get_wav_meta(meta_chunk, chunk_dict)
+            # return
+
+    if chunk_id == b"fmt ":
+        print("We've reached the end of the header metadata.")
+        # don't return the chunk dict if it's just that first entry.
+        if len(chunk_dict.items()) <= 1:
+            return
+        else:
+            return chunk_dict
+
+    # todo: build out this logic
+    if chunk_id == b"unid":
+        print("I found unid!")
+        return get_wav_meta(meta_chunk, chunk_dict)
+
+    uniden_chunk_id = WAV_METADATA[chunk_id.decode()]
+    chunk_dict[uniden_chunk_id] = meta_chunk.read().decode()
+
+    # meta_chunk.close()
+    return get_wav_meta(wav_source, chunk_dict)
+    # return
 
     # this tells us the overall size of the header in bytes
     chunk_length = meta_chunk.read(4)
@@ -416,7 +480,7 @@ def group_audio_by_department(directory="~/Downloads/uniden audio/"):
                 # create new folders for each department if it doesn't alread exist
                 p = Path(basepath, department)
                 if not p.exists():
-                    p.mkdir(exist_ok=True)  # wont overwrite existing directory
+                    p.mkdir(exist_ok=True)  # wont overwrite existing wav_source
                     print("New folder created for {}.".format(str(department)))
 
                 # move individual .wav files to their respective dept folders
@@ -440,11 +504,11 @@ def group_audio_by_department(directory="~/Downloads/uniden audio/"):
 
 # todo: add test functions
 def convert_dir_name(directory):
-    """Utility function to convert hexadecimal encoded directory string into
+    """Utility function to convert hexadecimal encoded wav_source string into
     standard decimal format.
 
     Args:
-        directory (str): 4 byte hex number directory name
+        directory (str): 4 byte hex number wav_source name
 
     Returns:
         str: yyyy-MM-DD_hh_mm_ss
@@ -493,7 +557,7 @@ if __name__ == "__main__":
 
     help_statement = """
         **********************
-        Copy path to directory
+        Copy path to wav_source
         Then hit "Enter"
         ----------------------
     """
@@ -504,7 +568,7 @@ if __name__ == "__main__":
     # clipboard = cb.paste()
     clipboard = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/wav_files_for_testing/"
 
-    # path to directory that contains the audio of interest
+    # path to wav_source that contains the audio of interest
     wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/2019-08-06_15-12-35.wav"
 
     # matching tag

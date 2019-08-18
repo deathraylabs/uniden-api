@@ -1152,13 +1152,13 @@ class UnidenMassStorage:
         return self.audio_directories
 
     def get_wav_files(self, audio_directory):
-        """Get a list of all wav files within the passed directory.
+        """Get a list of all wav files within the passed wav_source.
 
         Args:
-            audio_directory (Path): path object of directory containing wav
+            audio_directory (Path): path object of wav_source containing wav
                 files.
         """
-        # make sure you've been passed a directory
+        # make sure you've been passed a wav_source
         try:
             if not audio_directory.is_dir():
                 return False

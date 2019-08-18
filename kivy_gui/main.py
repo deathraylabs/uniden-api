@@ -121,7 +121,7 @@ class DataWindow(Widget):
 
 class DataWindowApp(App):
     """App class is called 'DataWindow', which means the 'kv' file should
-    have the same name. As long as it's in the same directory as the main.py
+    have the same name. As long as it's in the same wav_source as the main.py
     file it will be loaded at the same time.
 
     All based on the `Kivy Tutorial`_
@@ -139,10 +139,10 @@ class DataWindowApp(App):
 
 
 if __name__ == "__main__":
-    # path to directory that contains the audio of interest
+    # path to wav_source that contains the audio of interest
     wav_dir_path = (
         "/Users/peej/dev/uniden scanner "
-        "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13mus.wav"
+        "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
     )
 
     # wav_dir_path = (

@@ -24,7 +24,7 @@ def test_get_wav_meta():
 
 
 def test_files_with_matched_tags():
-    """Check against test directory."""
+    """Check against test wav_source."""
 
     tag = "Red"
     directory = "./scanner_test_data/wav_files_for_testing"

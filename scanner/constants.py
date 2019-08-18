@@ -642,6 +642,8 @@ WAV_METADATA = OrderedDict(
         ("ViewDescription:", None),
         ("dump", (576, 743)),
         ("dump2", (786, 62)),
+        ("IKEY", "IKEY"),
+        ("ICOP", "ICOP"),
     ]
 )
 
