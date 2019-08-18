@@ -196,8 +196,7 @@ def get_wav_meta(wav_source, chunk_dict={}):
             )
         except EOFError:
             print("no more chunks!")
-
-        return chunk_dict
+            return chunk_dict
 
     # meta_chunk_name = meta_chunk.getname()
     # meta_chunk_size = meta_chunk.getsize()
@@ -243,7 +242,8 @@ def get_wav_meta(wav_source, chunk_dict={}):
         print("We've reached the end of the header metadata.")
         # don't return the chunk dict if it's just that first entry.
         if len(chunk_dict.items()) <= 1:
-            return
+            print("you made it to fmt")
+            return chunk_dict
         else:
             return chunk_dict
 

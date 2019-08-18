@@ -51,6 +51,8 @@ class DataWindow(Widget):
 
         wav_meta = get_wav_meta(wav_dir_path)
 
+        print(wav_meta)
+
         trans_start = wav_meta["transmission_start"]
 
         # calculate starting time in seconds
