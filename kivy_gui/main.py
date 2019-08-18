@@ -15,6 +15,7 @@ from kivy.properties import ObjectProperty
 # from scanner.uniden import *
 from scanner.scanner_utility_functions import get_wav_meta
 from pathlib import Path
+import logging
 
 
 class BoxWindow(BoxLayout):
@@ -25,6 +26,9 @@ class BoxWindow(BoxLayout):
 
 class DataWindow(Widget):
     """This is the main window for the app."""
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
 
     # todo: hook up button logic to get data for view
 
@@ -51,7 +55,7 @@ class DataWindow(Widget):
 
         wav_meta = get_wav_meta(wav_dir_path)
 
-        print(wav_meta)
+        # print(wav_meta)
 
         trans_start = wav_meta["transmission_start"]
 
@@ -82,7 +86,7 @@ class DataWindow(Widget):
             self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
         except KeyError:
             self.unit_ids_name_tag.text = ""
-            print(f"No Unit ID Name.")
+            logging.exception("No Unit ID Name.", exc_info=False)
 
         # print(f"favorites list: {self.fav_list_name.text}")
         # print(f"size: {self.size}")

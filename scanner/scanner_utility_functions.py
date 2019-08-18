@@ -178,9 +178,6 @@ def get_wav_meta(wav_source, chunk_dict={}):
     """
     # scan_frame = pd.DataFrame(columns=["offset", "data"])
 
-    # logger = logging.getLogger("scanner_utility_functions")
-    # logger.setLevel(logging.DEBUG)
-
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
@@ -243,24 +240,19 @@ def get_wav_meta(wav_source, chunk_dict={}):
                 logger.info("LIST chunk does not contain INFO chunk.")
                 return
         elif current_location == chunk_length:
-            # meta_chunk.close()
             return get_wav_meta(meta_chunk, chunk_dict)
-            # return
 
     if chunk_id == b"fmt ":
-        print("We've reached the end of the header metadata.")
+        logger.info("Found fmt chunk.")
         # don't return the chunk dict if it's just that first entry.
         if len(chunk_dict.items()) <= 1:
-            print("you made it to fmt")
+            logger.debug("Made it to fmt with no metadata tags.")
             return chunk_dict
         else:
             return chunk_dict
 
-    # todo: build out this logic
     if chunk_id == b"unid":
-        # unid is 2048 bytes long but only first 328 bytes are utf8
         # I don't understand code starting after byte 1180 or so
-        # chunk_string = meta_chunk.read(chunk_length)
 
         # absolute starting byte position of current chunk
         start_byte = meta_chunk.tell()
@@ -276,14 +268,11 @@ def get_wav_meta(wav_source, chunk_dict={}):
             try:
                 chunk_line = chunk_line_bytes.decode()
             # hop out of the loop once you hit a non-utf8 character
-            except UnicodeDecodeError as e:
-                pos_in_chunk = meta_chunk.tell() - start_byte
-                # todo: change to logging instead of printing
-                # print(
-                #     f"{e}"
-                #     f"position in chunk: {pos_in_chunk}\nabsolute "
-                #     f"position: {meta_chunk.tell()}"
-                # )
+            except UnicodeDecodeError:
+                # pos_in_chunk = meta_chunk.tell() - start_byte
+                logger.exception(
+                    "65 byte string contained non-UTF8 " "characters", exc_info=False
+                )
                 break
 
             chunk_line = chunk_line.rstrip("\x00")
@@ -314,36 +303,47 @@ def get_wav_meta(wav_source, chunk_dict={}):
         for index, line in enumerate(data_heading_sources):
             unid_list += list(zip(line, delimited_lines[index]))
 
-        # need to save to dict because second half requires it's own save
-        # chunk_dict["unid:Delimited"] = unid_list
-
         # grab key and value from each tuple and save to dict
         for meta_item in unid_list:
             chunk_dict[meta_item[0]] = meta_item[1]
 
-        # continue
+        # skip the rest of this chunk, which moves all playheads
+        meta_chunk.skip()
 
+        # return original chunk, not current chunk
         return get_wav_meta(wav_source, chunk_dict)
 
     try:
         decoded_chunk_id = chunk_id.decode()
     except UnicodeDecodeError:
-        print("not unicode text.")
-        decoded_chunk_id = "invalid"
-
-    if decoded_chunk_id != "invalid":
-        try:
-            uniden_chunk_id = WAV_METADATA[decoded_chunk_id]
-        except KeyError:
-            print("Not valid scanner metadata.")
-            return get_wav_meta(meta_chunk, chunk_dict)
+        logger.exception(f"chunk ID: {chunk_id} is not valid UTF8.", exc_info=False)
+        # decoded_chunk_id = "invalid"
+        return get_wav_meta(meta_chunk, chunk_dict)
 
     try:
-        chunk_dict[uniden_chunk_id] = meta_chunk.read().decode()
-    except UnicodeDecodeError:
-        print("Metadata is not UTF-8")
+        uniden_chunk_id = WAV_METADATA[decoded_chunk_id]
+    except KeyError:
+        logger.exception(
+            f"chunk {decoded_chunk_id} is not a vallid " f"UNIDEN metadata tag ID.",
+            exc_info=False,
+        )
+        return get_wav_meta(meta_chunk, chunk_dict)
 
-    # meta_chunk.close()
+    meta_chunk_data = meta_chunk.read()
+    meta_chunk_data = meta_chunk_data.strip(b"\x00")
+
+    if uniden_chunk_id != "IKEY":
+        meta_chunk_data = meta_chunk_data.split(b"\x00")[0]
+    try:
+        decoded_meta_chunk_data = meta_chunk_data.decode()
+        chunk_dict[uniden_chunk_id] = decoded_meta_chunk_data
+    except UnicodeDecodeError:
+        logger.exception(
+            f"Uniden Chunk ID {decoded_chunk_id} data "
+            f"{meta_chunk_data} doesn't contain valid UTF8.",
+            exc_info=False,
+        )
+
     return get_wav_meta(wav_source, chunk_dict)
     # return
 
