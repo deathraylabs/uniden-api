@@ -1,6 +1,7 @@
 """Learning to use Kivy GUI framework."""
 
 from kivy.app import App
+from kivy.config import Config
 from kivy.logger import Logger
 from kivy.core.audio import SoundLoader
 from kivy.uix.widget import Widget
@@ -29,11 +30,6 @@ class DataWindow(Widget):
     Notes: creating an initialization method causes python to crash. I'm not
     sure why.
     """
-
-    # logger = logging.getLogger()
-    # logger.setLevel(logging.DEBUG)
-
-    # todo: hook up button logic to get data for view
 
     # initialize id reference to kv file using variable name
     fav_list_name = ObjectProperty()
@@ -195,11 +191,14 @@ class DataWindowApp(App):
 
     """
 
-    def build_config(self, config):
-        config.setdefaults("kivy", {"log_level": "debug"})
+    # def build_config(self, config):
+    #     config.setdefaults("kivy", {"log_level": "info"})
 
     def build(self):
         """Handles something..."""
+
+        # this allows us to configure this particular window in separate file
+        Config.read("datawindow.ini")
 
         window = DataWindow()
         # window.size
