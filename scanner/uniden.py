@@ -185,6 +185,7 @@ class UnidenScanner:
             f2 = res
 
         if f2 in self.err_list:
+            self.logger.exception(res)
             raise CommandError
         else:
             return res
@@ -207,6 +208,7 @@ class UnidenScanner:
 
         # not sure why I'd need the returned command but I'll leave it
         (cmd, self.model) = res.split(",")
+        self.logger.debug(cmd)
 
         return self.model
 
@@ -221,7 +223,7 @@ class UnidenScanner:
             self.logger.error("get_version()")
             return 0
 
-        (cmd, self.version) = res.split(b",")
+        (cmd, self.version) = res.split(",")
 
     def get_rssi_power(self):
 
@@ -239,7 +241,7 @@ class UnidenScanner:
             self.logger.error("get_rssi_power()")
             return 0
 
-        (cmd, rssi, frq) = res.split(b",")
+        (cmd, rssi, frq) = res.split(",")
         rssi_level = {"rssi": rssi, "frq": frq}
 
         return rssi_level
@@ -283,7 +285,7 @@ class UnidenScanner:
             sys_tag,
             chan_tag,
             p25nac,
-        ) = res.split(b",")
+        ) = res.split(",")
 
         reception_status = {
             "frq_tgid": frq_tgid,
@@ -329,7 +331,7 @@ class UnidenScanner:
     #         self.logger.error('get_current_status()')
     #         return 0
     #
-    #     l=res.split(b",")
+    #     l=res.split(",")
     #     n=len(l[1])
     #
     #     cm=l[2:n*2+1]
@@ -599,7 +601,7 @@ class UnidenScanner:
             self.logger.error("set_curfrq_reception_status(): %s" % cmd)
             return 0
 
-        (cmd, rssi, frq, sql) = res.split(b",")
+        (cmd, rssi, frq, sql) = res.split(",")
 
         return rssi, frq, sql
 
@@ -616,7 +618,7 @@ class UnidenScanner:
             self.logger.error("get_volume()")
             return 0
 
-        (cmd, vol) = res.split(b",")
+        (cmd, vol) = res.split(",")
         return vol
 
     def set_volume(self, vol):
@@ -650,7 +652,7 @@ class UnidenScanner:
             self.logger.error("get_squelch()")
             return 0
 
-        (cmd, sql) = res.split(b",")
+        (cmd, sql) = res.split(",")
 
         return sql
 
@@ -683,7 +685,7 @@ class UnidenScanner:
             self.logger.error("get_apco_data_settings()")
             return 0
 
-        (cmd, rsv1, rsv2, err_rate) = res.split(b",")
+        (cmd, rsv1, rsv2, err_rate) = res.split(",")
 
         return err_rate
 
@@ -705,7 +707,7 @@ class UnidenScanner:
 
         return 1
 
-    def jump_number_tag(self, sys_tag="NONE", chan_tag="NONE"):
+    def jump_number_tag(self, fl_tag, sys_tag, chan_tag):
 
         """When both [SYS_TAG] and [CHAN_TAG] are set as blank,
         scanner returns error.
@@ -716,10 +718,10 @@ class UnidenScanner:
         scanner jump to
         the first channel of the system number tag.
 
-        SYS_TAG		System Number Tag (0-999/NONE)
-        CHAN_TAG	Channel Number Tag (0-999/NONE)"""
+        SYS_TAG		System Number Tag (0-999)
+        CHAN_TAG	Channel Number Tag (0-999)"""
 
-        cmd = ",".join(["JNT", str(sys_tag), str(chan_tag)])
+        cmd = ",".join(["JNT", str(fl_tag), str(sys_tag), str(chan_tag)])
 
         try:
             self.raw(cmd)
@@ -730,21 +732,22 @@ class UnidenScanner:
 
         return 1
 
-    def get_battery_voltage(self):
-
-        """A/D Value (0-1023)
-        Battery Level[V] = (3.2[V] * #### * 2 )/1023"""
-
-        try:
-            res = self.raw("BAV")
-
-        except CommandError:
-            self.logger.error("get_battery_voltage()")
-            return 0
-
-        (bav, ad_value) = res.split(",")
-
-        return 3.2 * float(ad_value) * 2 / 1023
+    # non-functional on SDS-100
+    # def get_battery_voltage(self):
+    #
+    #     """A/D Value (0-1023)
+    #     Battery Level[V] = (3.2[V] * #### * 2 )/1023"""
+    #
+    #     try:
+    #         res = self.raw("BAV")
+    #
+    #     except CommandError:
+    #         self.logger.error("get_battery_voltage()")
+    #         return 0
+    #
+    #     (bav, ad_value) = res.split(",")
+    #
+    #     return 3.2 * float(ad_value) * 2 / 1023
 
     def get_window_voltage(self):
 
@@ -1110,8 +1113,7 @@ class UnidenScanner:
 
         return 1
 
-    # TODO 2nd queue
-    def get_localtion_settings(self):
+    def get_location_settings(self):
         pass
 
     def get_weather_settings(self):
