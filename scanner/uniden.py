@@ -133,7 +133,7 @@ class UnidenScanner:
         try:
             # timeout originally set to 0.1
             # timeout set to 0 is non-blocking
-            self.serial = serial.Serial(self.port, self.speed, timeout=0.5)
+            self.serial = serial.Serial(self.port, self.speed, timeout=0.1)
 
         except serial.SerialException:
             self.logger.error("Error opening serial port %s!" % port)

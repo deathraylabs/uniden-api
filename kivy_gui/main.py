@@ -169,12 +169,12 @@ class DataWindow(Widget):
 
         # unit ID information is not always present.
         try:
-            self.unit_ids.text = wav_meta["UnitIds"]
+            self.unit_ids.text = wav_meta["UnitID:U_Id"]
         except KeyError:
             self.unit_ids.text = "-" * 8
             Logger.exception("UnitIds key doesn't exist", exc_info=False)
         try:
-            self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
+            self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
         except KeyError:
             self.unit_ids_name_tag.text = "-" * 8
             Logger.exception("No Unit ID Name.", exc_info=False)
