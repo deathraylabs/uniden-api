@@ -53,45 +53,17 @@ class DataWindow(Widget):
     # initialize variable to store scanner data
     scanner = None
 
+    # todo: call external function to update display, not inside button
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
 
         wav_meta = get_wav_meta(wav_dir_path)
 
-        trans_start = wav_meta["transmission_start"]
+        # update the display
+        self.update_screen(wav_meta)
+        self.logger.debug("Updated screen with WAV metadata.")
 
-        # calculate starting time in seconds
-        # trans_start_sec = int(trans_start[-4:-2]) * 60 + int(trans_start[-2])
-        # print(trans_start_sec)
-
-        trans_end = wav_meta["transmission_end:1"]
-
-        # update DataWindow with metadata
-        self.fav_list_name.text = wav_meta["FavoritesList:Name"]
-        self.sys_name.text = wav_meta["System:Name"]
-        self.dept_name.text = wav_meta["Department:Name"]
-        self.site_name.text = wav_meta["Site:Name"]
-        self.transmission_start.text = trans_start
-        self.transmission_end.text = trans_end
-
-        # todo: calculate elapsed time in seconds using datetime
-        self.total_time.text = "placeholder"
-
-        # unit ID information is not always present.
-        try:
-            self.unit_ids.text = wav_meta["UnitIds"]
-        except KeyError:
-            self.unit_ids.text = "-" * 8
-            self.logger.exception("UnitIds key doesn't exist", exc_info=False)
-        try:
-            self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
-        except KeyError:
-            self.unit_ids_name_tag.text = ""
-            self.logger.exception("No Unit ID Name.", exc_info=False)
-
-        # print(f"favorites list: {self.fav_list_name.text}")
-        # print(f"size: {self.size}")
-        # print(f"label size: {self.height}")
+        return
 
     def play_stop_btn(self):
 
@@ -153,9 +125,48 @@ class DataWindow(Widget):
                 "Scanner is not initialized, no port to close.", exc_info=False
             )
 
-    def update(self, dt):
-        """Handles updates."""
-        pass
+    def update_screen(self, updated_data):
+        """Handles updates.
+        Args:
+            updated_data (dict): contains scanner data keys and values.
+
+        Returns:
+            None
+        """
+        wav_meta = updated_data
+
+        trans_start = wav_meta["transmission_start"]
+
+        # calculate starting time in seconds
+        # trans_start_sec = int(trans_start[-4:-2]) * 60 + int(trans_start[-2])
+        # print(trans_start_sec)
+
+        trans_end = wav_meta["transmission_end:1"]
+
+        # update DataWindow with metadata
+        self.fav_list_name.text = wav_meta["FavoritesList:Name"]
+        self.sys_name.text = wav_meta["System:Name"]
+        self.dept_name.text = wav_meta["Department:Name"]
+        self.site_name.text = wav_meta["Site:Name"]
+        self.transmission_start.text = trans_start
+        self.transmission_end.text = trans_end
+
+        # todo: calculate elapsed time in seconds using datetime
+        self.total_time.text = "placeholder"
+
+        # unit ID information is not always present.
+        try:
+            self.unit_ids.text = wav_meta["UnitIds"]
+        except KeyError:
+            self.unit_ids.text = "-" * 8
+            self.logger.exception("UnitIds key doesn't exist", exc_info=False)
+        try:
+            self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
+        except KeyError:
+            self.unit_ids_name_tag.text = ""
+            self.logger.exception("No Unit ID Name.", exc_info=False)
+
+        return
 
 
 class DataWindowApp(App):
