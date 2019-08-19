@@ -38,7 +38,7 @@ from datetime import datetime
 # from pprint import *  # not super important
 import sqlite3
 
-from kivy.logger import Logger
+# from kivy.logger import Logger
 
 # create logger
 module_logger = logging.getLogger("uniden_api")
@@ -165,7 +165,7 @@ class UnidenScanner:
             res (str): Scanner response as UTF-8 string.
 
         """
-        Logger.debug("raw(): cmd %s" % cmd)
+        self.logger.debug("raw(): cmd %s" % cmd)
         self.serial.write(str.encode("".join([cmd, "\r"])))
 
         # decode byte string to native UTF-8 string
@@ -176,7 +176,7 @@ class UnidenScanner:
         # the \r character is causing me problems, so lets replace with \n
         res = res.replace("\r", "\n")
 
-        Logger.debug("raw(): res %s" % res)
+        self.logger.debug("raw(): res %s" % res)
 
         # check to see if scanner throws error
         if res.count(",") == 1:
@@ -4933,11 +4933,11 @@ def runcmd(scanner, cmd="GSI"):
     # logger = logging.getLogger("uniden_api.runcmd")
 
     # send actual command to scanner
-    Logger.info("sending command to scanner...")
+    logging.info("uniden: sending command to scanner...")
     xmldat = scanner.raw(cmd)
     # Logger.info(xmldat)
     # logger.info(f"Bytes returned : {len(xmldat)}")
-    Logger.info(f"Bytes returned : {len(xmldat)}")
+    logging.info(f"Bytes returned : {len(xmldat)}")
 
     # cut off the extraneous xml prefix information
     xmldat = xmldat[11:]
