@@ -101,7 +101,9 @@ class DataWindow(Widget):
             # create scanner connection
             self.scanner = UnidenScanner()
             self.logger.debug("Scanner Connected.")
+
             self.scan_status_button.text = "Get XML"
+
             return
 
         if not self.scanner.port_is_open():
@@ -110,16 +112,20 @@ class DataWindow(Widget):
             return
 
         self.logger.debug("Running XML Method...")
+
         scanner_xml = runcmd(self.scanner)
         self.logger.debug("XML method run successfully.")
+
         scanner_state = traverse_state(scanner_xml)
         self.logger.debug(scanner_state)
+
         self.update_screen(scanner_state)
 
     def scanner_disconnect_btn(self):
         try:
             self.scanner.close()
             self.logger.debug("Scanner Connection Closed.")
+
             self.scan_status_button.text = "Connect to Scanner"
         except AttributeError:
             self.logger.exception(
