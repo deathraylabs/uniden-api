@@ -1,6 +1,7 @@
 """Learning to use Kivy GUI framework."""
 
 from kivy.app import App
+from kivy.logger import Logger
 from kivy.core.audio import SoundLoader
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
@@ -14,7 +15,6 @@ from scanner.scanner_utility_functions import get_wav_meta
 from scanner.uniden import runcmd, UnidenScanner, traverse_state
 
 from pathlib import Path
-import logging
 
 
 class BoxWindow(BoxLayout):
@@ -30,8 +30,8 @@ class DataWindow(Widget):
     sure why.
     """
 
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
+    # logger = logging.getLogger()
+    # logger.setLevel(logging.DEBUG)
 
     # todo: hook up button logic to get data for view
 
@@ -60,7 +60,7 @@ class DataWindow(Widget):
 
         # update the display
         self.update_screen(wav_meta)
-        self.logger.debug("Updated screen with WAV metadata.")
+        Logger.debug("Updated screen with WAV metadata.")
 
         return
 
@@ -90,17 +90,17 @@ class DataWindow(Widget):
 
     # todo: call update screen and pass data to it
     def scanner_status_btn(self):
-        self.logger.info("scanner status button press")
+        Logger.info("scanner status button press")
 
         try:
             port_is_open = self.scanner.port_is_open()
         except AttributeError:
-            self.logger.exception(
+            Logger.exception(
                 "Scanner is not initialized, initializing " "now", exc_info=False
             )
             # create scanner connection
             self.scanner = UnidenScanner()
-            self.logger.debug("Scanner Connected.")
+            Logger.info("Scanner Connected.")
 
             self.scan_status_button.text = "Get XML"
 
@@ -111,24 +111,23 @@ class DataWindow(Widget):
             self.scan_status_button.text = "Get XML"
             return
 
-        self.logger.debug("Running XML Method...")
-
+        Logger.debug("Running XML Method...")
         scanner_xml = runcmd(self.scanner)
-        self.logger.debug("XML method run successfully.")
+        Logger.debug("XML method run successfully.")
 
         scanner_state = traverse_state(scanner_xml)
-        self.logger.debug(scanner_state)
+        # Logger.debug(scanner_state)
 
         self.update_screen(scanner_state)
 
     def scanner_disconnect_btn(self):
         try:
             self.scanner.close()
-            self.logger.debug("Scanner Connection Closed.")
+            Logger.debug("Scanner Connection Closed.")
 
             self.scan_status_button.text = "Connect to Scanner"
         except AttributeError:
-            self.logger.exception(
+            Logger.exception(
                 "Scanner is not initialized, no port to close.", exc_info=False
             )
 
@@ -145,7 +144,7 @@ class DataWindow(Widget):
         try:
             trans_start = wav_meta["transmission_start"]
         except KeyError:
-            logging.exception("No transmission start time", exc_info=False)
+            Logger.exception("No transmission start time", exc_info=False)
             trans_start = "---"
 
         # calculate starting time in seconds
@@ -155,11 +154,11 @@ class DataWindow(Widget):
         try:
             trans_end = wav_meta["transmission_end:1"]
         except KeyError:
-            logging.exception("No transmission end time.", exc_info=False)
+            Logger.exception("No transmission end time.", exc_info=False)
             trans_end = "---"
 
         # update DataWindow with metadata
-        self.fav_list_name.text = wav_meta["FavoritesList:Name"]
+        self.fav_list_name.text = wav_meta["MonitorList:Name"]
         self.sys_name.text = wav_meta["System:Name"]
         self.dept_name.text = wav_meta["Department:Name"]
         self.site_name.text = wav_meta["Site:Name"]
@@ -174,12 +173,12 @@ class DataWindow(Widget):
             self.unit_ids.text = wav_meta["UnitIds"]
         except KeyError:
             self.unit_ids.text = "-" * 8
-            self.logger.exception("UnitIds key doesn't exist", exc_info=False)
+            Logger.exception("UnitIds key doesn't exist", exc_info=False)
         try:
             self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
         except KeyError:
             self.unit_ids_name_tag.text = "-" * 8
-            self.logger.exception("No Unit ID Name.", exc_info=False)
+            Logger.exception("No Unit ID Name.", exc_info=False)
 
         return
 
@@ -196,8 +195,12 @@ class DataWindowApp(App):
 
     """
 
+    def build_config(self, config):
+        config.setdefaults("kivy", {"log_level": "debug"})
+
     def build(self):
         """Handles something..."""
+
         window = DataWindow()
         # window.size
         return window

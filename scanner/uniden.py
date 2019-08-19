@@ -96,6 +96,7 @@ class UnidenScanner:
     def __init__(self, port="/dev/cu.usbmodem1434401", speed="115200"):
 
         self.logger = logging.getLogger("uniden_api.UnidenScanner")
+        self.logger.setLevel(logging.DEBUG)
         self.logger.info(
             "initialiazing with port=%(port)s and speed=%(speed)s" % locals()
         )
@@ -169,7 +170,6 @@ class UnidenScanner:
         # decode byte string to native UTF-8 string
         res = self.serial.readall().decode()
 
-        # todo: why did the original programmer strip final '\r'?
         res = res.strip("\r")
 
         # the \r character is causing me problems, so lets replace with \n
@@ -4929,11 +4929,14 @@ def runcmd(scanner, cmd="GSI"):
     """
     # get xml data from scanner, convert to unicode
     # exclude the prefix data 'GSI,<XML>,\r'
-    logger = logging.getLogger("uniden_api.runcmd")
+    # logger = logging.getLogger("uniden_api.runcmd")
 
     # send actual command to scanner
+    logging.info("sending command to scanner...")
     xmldat = scanner.raw(cmd)
-    logger.info(f"Bytes returned : {len(xmldat)}")
+    print(xmldat)
+    # logger.info(f"Bytes returned : {len(xmldat)}")
+    logging.info(f"Bytes returned : {len(xmldat)}")
 
     # cut off the extraneous xml prefix information
     xmldat = xmldat[11:]
