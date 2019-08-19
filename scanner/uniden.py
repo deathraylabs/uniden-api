@@ -673,40 +673,6 @@ class UnidenScanner:
 
         return 1
 
-    def get_apco_data_settings(self):
-
-        """Get APCO Data Settings
-
-        ERR_RATE		Error Rate (from 0 to 99)"""
-
-        try:
-            res = self.raw("P25")
-        except CommandError:
-            self.logger.error("get_apco_data_settings()")
-            return 0
-
-        (cmd, rsv1, rsv2, err_rate) = res.split(",")
-
-        return err_rate
-
-    def set_apco_data_settings(self, p25):
-
-        """Set APCO Data Settings
-
-        ERR_RATE		Error Rate (from 0 to 99)"""
-
-        rsv = ""
-        cmd = ",".join(["P25", rsv, rsv, str(p25)])
-
-        try:
-            self.raw(cmd)
-
-        except CommandError:
-            self.logger.error("set_apco_data_settings(): %s" % cmd)
-            return 0
-
-        return 1
-
     def jump_number_tag(self, fl_tag, sys_tag, chan_tag):
 
         """When both [SYS_TAG] and [CHAN_TAG] are set as blank,
@@ -731,23 +697,6 @@ class UnidenScanner:
             return 0
 
         return 1
-
-    # non-functional on SDS-100
-    # def get_battery_voltage(self):
-    #
-    #     """A/D Value (0-1023)
-    #     Battery Level[V] = (3.2[V] * #### * 2 )/1023"""
-    #
-    #     try:
-    #         res = self.raw("BAV")
-    #
-    #     except CommandError:
-    #         self.logger.error("get_battery_voltage()")
-    #         return 0
-    #
-    #     (bav, ad_value) = res.split(",")
-    #
-    #     return 3.2 * float(ad_value) * 2 / 1023
 
     def get_window_voltage(self):
 
@@ -1113,11 +1062,63 @@ class UnidenScanner:
 
         return 1
 
-    def get_location_settings(self):
-        pass
+    # def get_location_settings(self):
+    #     pass
+    #
+    # def get_weather_settings(self):
+    #     pass
 
-    def get_weather_settings(self):
-        pass
+    # ---- Methods don't appear to work with SDS-100 ------- #
+
+    # def get_apco_data_settings(self):
+    #
+    #     """Get APCO Data Settings
+    #
+    #     ERR_RATE		Error Rate (from 0 to 99)"""
+    #
+    #     try:
+    #         res = self.raw("P25")
+    #     except CommandError:
+    #         self.logger.error("get_apco_data_settings()")
+    #         return 0
+    #
+    #     (cmd, rsv1, rsv2, err_rate) = res.split(",")
+    #
+    #     return err_rate
+    #
+    # def set_apco_data_settings(self, p25):
+    #
+    #     """Set APCO Data Settings
+    #
+    #     ERR_RATE		Error Rate (from 0 to 99)"""
+    #
+    #     rsv = ""
+    #     cmd = ",".join(["P25", rsv, rsv, str(p25)])
+    #
+    #     try:
+    #         self.raw(cmd)
+    #
+    #     except CommandError:
+    #         self.logger.error("set_apco_data_settings(): %s" % cmd)
+    #         return 0
+    #
+    #     return 1
+    #
+    # def get_battery_voltage(self):
+    #
+    #     """A/D Value (0-1023)
+    #     Battery Level[V] = (3.2[V] * #### * 2 )/1023"""
+    #
+    #     try:
+    #         res = self.raw("BAV")
+    #
+    #     except CommandError:
+    #         self.logger.error("get_battery_voltage()")
+    #         return 0
+    #
+    #     (bav, ad_value) = res.split(",")
+    #
+    #     return 3.2 * float(ad_value) * 2 / 1023
 
 
 class UnidenMassStorage:
@@ -5134,13 +5135,15 @@ if __name__ == "__main__":
         "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/"
     )
 
+    s = UnidenScanner()
+
     # instantiate tools for working with sd card data
-    sd = UnidenMassStorage(directory=test_dir)
-    directories = sd.get_audio_directories()
-    directory = suf.select_from_list(directories)[1]
-    # creates a list of paths to wav files
-    waves = sd.get_wav_files(directory)
-    sd.get_wav_files_meta()
+    # sd = UnidenMassStorage(directory=test_dir)
+    # directories = sd.get_audio_directories()
+    # directory = suf.select_from_list(directories)[1]
+    # # creates a list of paths to wav files
+    # waves = sd.get_wav_files(directory)
+    # sd.get_wav_files_meta()
     #
     # s = UnidenScanner("/dev/cu.usbmodem1434401")
 
