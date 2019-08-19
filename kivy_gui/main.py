@@ -2,7 +2,7 @@
 
 from kivy.app import App
 from kivy.config import Config
-from kivy.logger import Logger
+from kivy.logger import Logger, ColoredFormatter
 from kivy.core.audio import SoundLoader
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
@@ -14,6 +14,8 @@ from kivy.properties import ObjectProperty
 # from scanner.uniden import *
 from scanner.scanner_utility_functions import get_wav_meta
 from scanner.uniden import runcmd, UnidenScanner, traverse_state
+
+from pprint import pprint
 
 from pathlib import Path
 
@@ -92,7 +94,7 @@ class DataWindow(Widget):
             port_is_open = self.scanner.port_is_open()
         except AttributeError:
             Logger.exception(
-                "Scanner is not initialized, initializing " "now", exc_info=False
+                "Scanner is not initialized, initializing " "now...", exc_info=False
             )
             # create scanner connection
             self.scanner = UnidenScanner()
@@ -112,7 +114,8 @@ class DataWindow(Widget):
         Logger.debug("XML method run successfully.")
 
         scanner_state = traverse_state(scanner_xml)
-        # Logger.debug(scanner_state)
+        Logger.debug(pprint(scanner_state))
+        # pprint(scanner_state)
 
         self.update_screen(scanner_state)
 
@@ -193,6 +196,14 @@ class DataWindowApp(App):
 
     # def build_config(self, config):
     #     config.setdefaults("kivy", {"log_level": "info"})
+
+    # def build_settings(self, settings):
+    #     jsondata = (
+    #         '[{"type": "title", '
+    #         '"title": "My Application"},'
+    #         '{"type": "options", "title": "my first key"}]'
+    #     )
+    #     settings.add_json_panel("My Application", self.config, data=jsondata)
 
     def build(self):
         """Handles something..."""

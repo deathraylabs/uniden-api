@@ -719,19 +719,19 @@ UNID_DEPARTMENT_DATA = [
 ]
 
 UNID_CHANNEL_DATA = [
-    "Channel:Name",
-    "Channel:Avoid",
-    "Channel:TGID",
-    "Channel:AudioType",
-    "Channel:FuncTagID",
-    "Channel:Delay",
-    "Channel:VolOffset",
-    "Channel:AlertTone",
-    "Channel:AlertVol",
-    "Channel:AlertColor",
-    "Channel:AlertPattern",
-    "Channel:NumberTag",
-    "Channel:PriorityChannel",
+    "TGID:Name",
+    "TGID:Avoid",
+    "TGID:TGID",
+    "TGID:AudioType",
+    "TGID:FuncTagID",
+    "TGID:Delay",
+    "TGID:VolOffset",
+    "TGID:AlertTone",
+    "TGID:AlertVol",
+    "TGID:AlertColor",
+    "TGID:AlertPattern",
+    "TGID:NumberTag",
+    "TGID:PriorityChannel",
 ]
 
 UNID_SITE_DATA = [

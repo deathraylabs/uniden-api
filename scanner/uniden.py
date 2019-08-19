@@ -38,6 +38,8 @@ from datetime import datetime
 # from pprint import *  # not super important
 import sqlite3
 
+from kivy.logger import Logger
+
 # create logger
 module_logger = logging.getLogger("uniden_api")
 
@@ -131,7 +133,7 @@ class UnidenScanner:
         try:
             # timeout originally set to 0.1
             # timeout set to 0 is non-blocking
-            self.serial = serial.Serial(self.port, self.speed, timeout=5.0)
+            self.serial = serial.Serial(self.port, self.speed, timeout=0.5)
 
         except serial.SerialException:
             self.logger.error("Error opening serial port %s!" % port)
@@ -163,8 +165,7 @@ class UnidenScanner:
             res (str): Scanner response as UTF-8 string.
 
         """
-
-        self.logger.debug("raw(): cmd %s" % cmd)
+        Logger.debug("raw(): cmd %s" % cmd)
         self.serial.write(str.encode("".join([cmd, "\r"])))
 
         # decode byte string to native UTF-8 string
@@ -175,7 +176,7 @@ class UnidenScanner:
         # the \r character is causing me problems, so lets replace with \n
         res = res.replace("\r", "\n")
 
-        self.logger.debug("raw(): res %s" % res)
+        Logger.debug("raw(): res %s" % res)
 
         # check to see if scanner throws error
         if res.count(",") == 1:
@@ -4932,11 +4933,11 @@ def runcmd(scanner, cmd="GSI"):
     # logger = logging.getLogger("uniden_api.runcmd")
 
     # send actual command to scanner
-    logging.info("sending command to scanner...")
+    Logger.info("sending command to scanner...")
     xmldat = scanner.raw(cmd)
-    print(xmldat)
+    # Logger.info(xmldat)
     # logger.info(f"Bytes returned : {len(xmldat)}")
-    logging.info(f"Bytes returned : {len(xmldat)}")
+    Logger.info(f"Bytes returned : {len(xmldat)}")
 
     # cut off the extraneous xml prefix information
     xmldat = xmldat[11:]
@@ -4974,7 +4975,7 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
             try:
                 f_state[new_k] = v
             except KeyError as e:
-                print(f"{e}: field not in database")
+                Logger.exception(f"{e}: field not in database")
         # I want categories with no data to end with colon
         # todo: do I actually need these categories with no data?
         elif v is None:
