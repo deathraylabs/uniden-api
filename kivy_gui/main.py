@@ -140,7 +140,7 @@ class DataWindow(Widget):
             trans_start = wav_meta["transmission_start"]
         except KeyError:
             logging.exception("No transmission start time", exc_info=False)
-            trans_start = None
+            trans_start = "---"
 
         # calculate starting time in seconds
         # trans_start_sec = int(trans_start[-4:-2]) * 60 + int(trans_start[-2])
@@ -150,7 +150,7 @@ class DataWindow(Widget):
             trans_end = wav_meta["transmission_end:1"]
         except KeyError:
             logging.exception("No transmission end time.", exc_info=False)
-            trans_end = None
+            trans_end = "---"
 
         # update DataWindow with metadata
         self.fav_list_name.text = wav_meta["FavoritesList:Name"]
@@ -172,7 +172,7 @@ class DataWindow(Widget):
         try:
             self.unit_ids_name_tag = wav_meta["UnitIds:NameTag"]
         except KeyError:
-            self.unit_ids_name_tag.text = ""
+            self.unit_ids_name_tag.text = "-" * 8
             self.logger.exception("No Unit ID Name.", exc_info=False)
 
         return
