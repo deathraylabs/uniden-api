@@ -682,12 +682,12 @@ WAV_METADATA = OrderedDict(
 
 # Only the first 64 bytes of this data are recorded
 UNID_FAVORITES_DATA = [
-    "FavoritesList:Name",  # favorites list name
-    "FavoritesList:Filename",
-    "FavoritesList:LocationControl",
-    "FavoritesList:Monitor",
-    "FavoritesList:QuickKey",
-    "FavoritesList:NumberTag",
+    "MonitorList:Name",  # favorites list name
+    "MonitorList:Filename",
+    "MonitorList:LocationControl",
+    "MonitorList:Monitor",
+    "MonitorList:QuickKey",
+    "MonitorList:NumberTag",
     # remaining items are QKey states and not needed
 ]
 
