@@ -114,6 +114,7 @@ class DataWindow(Widget):
         self.logger.debug("XML method run successfully.")
         scanner_state = traverse_state(scanner_xml)
         self.logger.debug(scanner_state)
+        self.update_screen(scanner_state)
 
     def scanner_disconnect_btn(self):
         try:
@@ -135,13 +136,21 @@ class DataWindow(Widget):
         """
         wav_meta = updated_data
 
-        trans_start = wav_meta["transmission_start"]
+        try:
+            trans_start = wav_meta["transmission_start"]
+        except KeyError:
+            logging.exception("No transmission start time", exc_info=False)
+            trans_start = None
 
         # calculate starting time in seconds
         # trans_start_sec = int(trans_start[-4:-2]) * 60 + int(trans_start[-2])
         # print(trans_start_sec)
 
-        trans_end = wav_meta["transmission_end:1"]
+        try:
+            trans_end = wav_meta["transmission_end:1"]
+        except KeyError:
+            logging.exception("No transmission end time.", exc_info=False)
+            trans_end = None
 
         # update DataWindow with metadata
         self.fav_list_name.text = wav_meta["FavoritesList:Name"]

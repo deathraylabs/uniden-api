@@ -501,17 +501,18 @@ human_ch_logs = {"0": "off", "1": "on", "2": "extend"}
 
 # list of parameters the scanner outputs when running GSI command
 # this must match the order and number in database
+# todo: compare GSI output to tag names used for wav metadata parsing
 GSI_OUTPUT = OrderedDict(
     [
         ("date_code", (376, 14)),
         ("ScannerInfo:Mode", None),
         ("ScannerInfo:V_Screen", None),
-        ("MonitorList:Name", None),
-        ("MonitorList:Index", None),
-        ("MonitorList:ListType", None),
-        ("MonitorList:Q_Key", None),
-        ("MonitorList:N_Tag", None),
-        ("MonitorList:DB_Counter", None),
+        ("FavoritesList:Name", None),
+        ("FavoritesList:Index", None),
+        ("FavoritesList:ListType", None),
+        ("FavoritesList:Q_Key", None),
+        ("FavoritesList:N_Tag", None),
+        ("FavoritesList:DB_Counter", None),
         ("System:Name", None),
         ("System:Index", None),
         ("System:Avoid", None),
