@@ -53,7 +53,6 @@ class DataWindow(Widget):
     # initialize variable to store scanner data
     scanner = None
 
-    # todo: call external function to update display, not inside button
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
 
@@ -89,6 +88,7 @@ class DataWindow(Widget):
             self.sound.stop()
             self.play_stop_button.text = "PLAY"
 
+    # todo: call update screen and pass data to it
     def scanner_status_btn(self):
         self.logger.info("scanner status button press")
 
