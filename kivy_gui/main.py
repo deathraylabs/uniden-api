@@ -1,5 +1,11 @@
 """Learning to use Kivy GUI framework."""
 
+import sys
+import os
+
+if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
+    sys.path.extend(["~/dev/uniden-api"])
+
 from kivy.app import App
 from kivy.config import Config
 from kivy.logger import Logger, ColoredFormatter

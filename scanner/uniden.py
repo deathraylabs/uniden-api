@@ -372,7 +372,7 @@ class UnidenScanner:
         try:
             # get xml data from scanner, convert to unicode
             # exclude the prefix data 'GSI,<XML>,\r'
-            res = s.raw("GSI").decode()[11:]
+            res = s.raw("GSI")[11:]
 
         except CommandError:
             self.logger.error("get_scanner_information()")
@@ -737,6 +737,7 @@ class UnidenScanner:
 
         return 1
 
+    # doesn't appear to work correctly
     def exit_program_mode(self):
 
         """The scanner exits from Program Mode.
