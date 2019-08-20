@@ -1,11 +1,5 @@
 """Learning to use Kivy GUI framework."""
 
-import sys
-import os
-
-if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
-    sys.path.extend(["~/dev/uniden-api"])
-
 from kivy.app import App
 from kivy.config import Config
 from kivy.logger import Logger, ColoredFormatter
@@ -223,6 +217,12 @@ class DataWindowApp(App):
 
 
 if __name__ == "__main__":
+    import sys
+    import os
+
+    if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
+        sys.path.extend(["~/dev/uniden-api"])
+
     # path to wav_source that contains the audio of interest
     wav_dir_path = (
         "/Users/peej/dev/uniden scanner "
