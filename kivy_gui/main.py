@@ -221,6 +221,7 @@ if __name__ == "__main__":
     import os
 
     if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
+        print("On RPi")
         sys.path.extend(["~/dev/uniden-api"])
 
     # path to wav_source that contains the audio of interest
