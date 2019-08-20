@@ -115,8 +115,6 @@ class DataWindow(Widget):
         Logger.debug("XML method run successfully.")
 
         scanner_state = traverse_state(scanner_xml)
-        Logger.debug(pprint(scanner_state))
-        # pprint(scanner_state)
 
         self.update_screen(scanner_state)
 
@@ -194,9 +192,6 @@ class DataWindowApp(App):
     -with-various-popular-IDE's#setting-up-kivy-with-pycharm-on-osx
 
     """
-
-    # def build_config(self, config):
-    #     config.setdefaults("kivy", {"log_level": "info"})
 
     def build(self):
         """Handles something..."""

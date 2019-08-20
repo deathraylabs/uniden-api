@@ -4946,8 +4946,6 @@ def runcmd(scanner, cmd="GSI"):
     # send actual command to scanner
     logging.info("uniden: sending command to scanner...")
     xmldat = scanner.raw(cmd)
-    # Logger.info(xmldat)
-    # logger.info(f"Bytes returned : {len(xmldat)}")
     logging.info(f"Bytes returned : {len(xmldat)}")
 
     # cut off the extraneous xml prefix information
@@ -4986,7 +4984,7 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
             try:
                 f_state[new_k] = v
             except KeyError as e:
-                Logger.exception(f"{e}: field not in database")
+                logging.exception(f"{e}: field not in database")
         # I want categories with no data to end with colon
         # todo: do I actually need these categories with no data?
         elif v is None:
