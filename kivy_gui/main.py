@@ -1,7 +1,8 @@
 """Learning to use Kivy GUI framework."""
 
 from kivy.app import App
-from kivy.config import Config
+
+# from kivy.config import Config
 from kivy.logger import Logger, ColoredFormatter
 from kivy.core.audio import SoundLoader
 from kivy.uix.widget import Widget
@@ -17,7 +18,7 @@ from scanner.uniden import runcmd, UnidenScanner, traverse_state
 
 from pprint import pprint
 
-from pathlib import Path
+# from pathlib import Path
 
 
 class BoxWindow(BoxLayout):
@@ -209,7 +210,7 @@ class DataWindowApp(App):
         """Handles something..."""
 
         # this allows us to configure this particular window in separate file
-        Config.read("datawindow.ini")
+        # Config.read("datawindow.ini")
 
         window = DataWindow()
         # window.size
@@ -217,12 +218,12 @@ class DataWindowApp(App):
 
 
 if __name__ == "__main__":
-    import sys
-    import os
+    # import sys
+    # import os
 
-    if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
-        print("On RPi")
-        sys.path.extend(["/home/pi/dev/uniden-api", "/home/pi/dev/uniden-api/scanner"])
+    # if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
+    #     print("On RPi")
+    #     sys.path.extend(["/home/pi/dev/uniden-api", "/home/pi/dev/uniden-api/scanner"])
 
     # path to wav_source that contains the audio of interest
     # wav_dir_path = (
