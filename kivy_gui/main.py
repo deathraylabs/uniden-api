@@ -139,6 +139,8 @@ class DataWindow(Widget):
         """
         wav_meta = updated_data
 
+        # todo: need a method to clear the text boxes before update
+
         try:
             trans_start = wav_meta["transmission_start"]
         except KeyError:
