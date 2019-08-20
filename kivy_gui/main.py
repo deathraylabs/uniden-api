@@ -1,4 +1,5 @@
 """Learning to use Kivy GUI framework."""
+import os
 
 from kivy.app import App
 from kivy.logger import Logger
@@ -86,7 +87,18 @@ class DataWindow(Widget):
                 "Scanner is not initialized, initializing " "now...", exc_info=False
             )
             # create scanner connection
-            self.scanner = UnidenScanner()
+            if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
+                print("On RPi")
+                port = "/dev/ttyACM0"
+            else:
+                port = "/dev/cu.usbmodem1434401"
+
+            try:
+                self.scanner = UnidenScanner(port=port)
+            except NameError:
+                Logger.error("No Scanner Found.")
+                return
+
             Logger.info("Scanner Connected.")
 
             self.scan_status_button.text = "Get XML"
@@ -198,12 +210,12 @@ class DataWindowApp(App):
 
 
 if __name__ == "__main__":
-    import sys
-    import os
-
-    if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
-        print("On RPi")
-        sys.path.extend(["/home/pi/dev/uniden-api", "/home/pi/dev/uniden-api/scanner"])
+    # import sys
+    # import os
+    #
+    # if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
+    #     print("On RPi")
+    #     # sys.path.extend(["/home/pi/dev/uniden-api", "/home/pi/dev/uniden-api/scanner"])
 
     # path to wav_source that contains the audio of interest
     # wav_dir_path = (
