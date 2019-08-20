@@ -186,14 +186,6 @@ class DataWindowApp(App):
     # def build_config(self, config):
     #     config.setdefaults("kivy", {"log_level": "info"})
 
-    # def build_settings(self, settings):
-    #     jsondata = (
-    #         '[{"type": "title", '
-    #         '"title": "My Application"},'
-    #         '{"type": "options", "title": "my first key"}]'
-    #     )
-    #     settings.add_json_panel("My Application", self.config, data=jsondata)
-
     def build(self):
         """Handles something..."""
 
@@ -206,12 +198,12 @@ class DataWindowApp(App):
 
 
 if __name__ == "__main__":
-    # import sys
-    # import os
+    import sys
+    import os
 
-    # if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
-    #     print("On RPi")
-    #     sys.path.extend(["/home/pi/dev/uniden-api", "/home/pi/dev/uniden-api/scanner"])
+    if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
+        print("On RPi")
+        sys.path.extend(["/home/pi/dev/uniden-api", "/home/pi/dev/uniden-api/scanner"])
 
     # path to wav_source that contains the audio of interest
     # wav_dir_path = (
