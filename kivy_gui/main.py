@@ -225,10 +225,10 @@ if __name__ == "__main__":
         sys.path.extend(["/home/pi/dev/uniden-api", "/home/pi/dev/uniden-api/scanner"])
 
     # path to wav_source that contains the audio of interest
-    wav_dir_path = (
-        "/Users/peej/dev/uniden scanner "
-        "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
-    )
+    # wav_dir_path = (
+    #     "/Users/peej/dev/uniden scanner "
+    #     "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
+    # )
 
     # wav_dir_path = (
     #     "/Users/peej/Downloads/uniden audio/-019-08-04_01-55-12/"
