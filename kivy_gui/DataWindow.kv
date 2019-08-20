@@ -7,13 +7,6 @@
     valign: 'center'
     text_size: self.size
     padding: (10, 0)
-    # canvas has it's own sort of special syntax
-#    canvas:
-#        Color:
-#            rgba: (1,1,1,0.2)
-#        Rectangle:
-#            size: self.size
-#            pos: self.pos
 
 <Button>
     # Formats all 'Button' tags.
@@ -38,11 +31,11 @@
 
     BoxLayout:
 #        top: root.top
-#        width: root.width
-#        height: root.height
+        width: root.width
+        height: root.height
 #        center_y: root.center_y
-        width: 800
-        height: 400
+#        width: 800
+#        height: 400
         center: root.center
         orientation: 'vertical'
 

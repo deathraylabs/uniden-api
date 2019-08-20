@@ -197,7 +197,7 @@ class DataWindowApp(App):
     def build(self):
         """Handles something..."""
 
-        # this allows us to configure this particular window in separate file
+        # uncomment to configure datawindow separately
         # Config.read("datawindow.ini")
 
         window = DataWindow()
