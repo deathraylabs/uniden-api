@@ -2,9 +2,11 @@
 import os
 
 from kivy.app import App
+from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.core.audio import SoundLoader
 from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import ScreenManager, Screen
 
 # from kivy.uix.boxlayout import BoxLayout
 # from kivy.uix.label import Label
@@ -15,10 +17,10 @@ from kivy.properties import ObjectProperty
 from scanner.scanner_utility_functions import get_wav_meta
 from scanner.uniden import runcmd, UnidenScanner, traverse_state
 
-from pprint import pprint
+Builder.load_file("datawindow.kv")
 
 
-class DataWindow(Widget):
+class DataWindow(Screen):
     """This is the main window for the app.
 
     Notes: creating an initialization method causes python to crash. I'm not
@@ -187,6 +189,16 @@ class DataWindow(Widget):
         return
 
 
+class PlaybackScreen(Screen):
+    pass
+
+
+# create the screen manager
+sm = ScreenManager()
+sm.add_widget(DataWindow(name="datawindow"))
+sm.add_widget(PlaybackScreen(name="playback"))
+
+
 class DataWindowApp(App):
     """App class is called 'DataWindow', which means the 'kv' file should
     have the same name. As long as it's in the same wav_source as the main.py
@@ -205,9 +217,9 @@ class DataWindowApp(App):
         # uncomment to configure datawindow separately
         # Config.read("datawindow.ini")
 
-        window = DataWindow()
-        # window.size
-        return window
+        # window = DataWindow()
+        # return window
+        return sm
 
 
 if __name__ == "__main__":
