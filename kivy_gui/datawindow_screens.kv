@@ -44,7 +44,9 @@
     play_stop_button: stop_play
     scan_status_button: scanner_status
 
-    BoxLayout:
+#    BoxLayout:
+    GridLayout:
+        cols: 1
         id: 'main_container'
 #        top: root.top
         width: root.width
@@ -53,7 +55,7 @@
 #        width: 800
 #        height: 400
 #        center: root.center
-        orientation: 'vertical'
+#        orientation: 'vertical'
 
         BoxLayout:
             id: "large_text_layout"
@@ -61,8 +63,8 @@
 #            width: root.width
 #            height: root.height
     #        center_y: root.center_y
-            width: 800
-            height: 200
+#            width: 800
+#            height: 200
     #        center: root.center
             orientation: 'vertical'
 
@@ -122,44 +124,47 @@
                     text: "Total Time"
                     font_size: '15sp'
 
+        BoxLayout:  #
+            id: "menu_layout"
+#            height: '300sp'
+            size_hint_y: .2
+
             BoxLayout:
+                orientation: 'horizontal'
+
+                Button:
+                    text: "Get Metadata"
+                    on_press: root.btn()
 
                 BoxLayout:
                     orientation: 'horizontal'
 
                     Button:
-                        text: "Get Metadata"
-                        on_press: root.btn()
+                        id: stop_play
+                        text: "Play Wav"
+                        on_press: root.play_stop_btn()
 
-                    BoxLayout:
-                        orientation: 'horizontal'
+                    Button:
+                        text: "Stop"
+                        on_press: root.stop_btn()
 
-                        Button:
-                            id: stop_play
-                            text: "Play Wav"
-                            on_press: root.play_stop_btn()
+                BoxLayout:
+                    orientation: 'horizontal'
 
-                        Button:
-                            text: "Stop"
-                            on_press: root.stop_btn()
+                    Button:
+                        id: scanner_status
+                        text: "Connect to Scanner"
+                        on_press: root.scanner_status_btn()
 
-                    BoxLayout:
-                        orientation: 'horizontal'
+                    Button:
+                        text: "Disconnect"
+                        on_press: root.scanner_disconnect_btn()
 
-                        Button:
-                            id: scanner_status
-                            text: "Connect to Scanner"
-                            on_press: root.scanner_status_btn()
-
-                        Button:
-                            text: "Disconnect"
-                            on_press: root.scanner_disconnect_btn()
-
-                        Button:
-                            text: "playback"
-                            on_press:
-                                root.manager.transition.direction = 'left'
-                                root.manager.current = 'playback'
+                    Button:
+                        text: "playback"
+                        on_press:
+                            root.manager.transition.direction = 'left'
+                            root.manager.current = 'playback'
 
 <PlaybackScreen>:
     BoxLayout:
