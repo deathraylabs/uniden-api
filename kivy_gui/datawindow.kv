@@ -1,6 +1,8 @@
 #:kivy 1.11.1
 
 <Label>:
+    all_labels: all_labels
+
     # this is how you apply generic formatting to everything tagged Label
     id: all_labels
     halign: 'left'
@@ -16,6 +18,10 @@
 
     font_size: '15sp'
     halign: "center"
+
+<NoData@Label>:
+    color: .2, .2, .2, 1
+    text: "No Data"
 
 <DataWindow>:
     # these are global variables to reference objects below

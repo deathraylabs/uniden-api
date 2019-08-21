@@ -578,6 +578,7 @@ WAV_METADATA = OrderedDict(
         ("ScannerInfo:V_Screen", "---"),
         ("MonitorList:Name:1", "ISBJ"),
         ("ISBJ", "MonitorList:Name:1"),
+        ("MonitorList:Name", "fav_list_name"),
         ("MonitorList:Index", "---"),
         ("MonitorList:ListType", "---"),
         ("MonitorList:Q_Key", "---"),
