@@ -9,6 +9,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 # from kivy.uix.boxlayout import BoxLayout
+
 # from kivy.uix.label import Label
 
 # Obj..Prop.. allows us to reference id name in kv file
@@ -17,7 +18,7 @@ from kivy.properties import ObjectProperty
 from scanner.scanner_utility_functions import get_wav_meta
 from scanner.uniden import runcmd, UnidenScanner, traverse_state
 
-Builder.load_file("datawindow.kv")
+Builder.load_file("datawindow_screens.kv")
 
 
 class DataWindow(Screen):
