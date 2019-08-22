@@ -124,7 +124,7 @@ class UnidenScanner:
         self.default_band_coverage = ()
 
         # initialize empty scanner state OrderedDict
-        self.scan_state = GSI_OUTPUT
+        self.scan_state = GSI_OUTPUT.copy()
 
         # ------ initialization methods ------- #
         self.open()
@@ -397,7 +397,9 @@ class UnidenScanner:
         scanner_xml["@date_code"] = datetime.now().isoformat()
         self.logger.info("Timestamp added.")
 
-        self.scan_state = traverse_state(scanner_xml, prefix="", f_state=GSI_OUTPUT)
+        # note: you have to create an empty copy because traverse state is
+        empty_state_dict = GSI_OUTPUT.copy()
+        self.scan_state = traverse_state(scanner_xml)
 
         return 1
 
@@ -4977,7 +4979,7 @@ def runcmd(scanner, cmd="GSI"):
     return parsed_xml
 
 
-def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
+def traverse_state(state, prefix="", f_state="first pass"):
     """ Run through the OrderedDict generated from XML scanner output and
         reorganize to better suit DB.
 
@@ -4991,6 +4993,10 @@ def traverse_state(state, prefix="", f_state=GSI_OUTPUT.copy()):
         Returns:
             New, flattened OrderedDict representation of the scanner state.
     """
+    # check to see if this is recursive run or first run
+    if f_state == "first pass":
+        # initialize with fresh, empty ordered dict
+        f_state = GSI_OUTPUT.copy()
 
     for k, v in state.items():
 

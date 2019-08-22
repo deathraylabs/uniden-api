@@ -178,17 +178,20 @@ class DataWindow(Screen):
         # todo: calculate elapsed time in seconds using datetime
         self.total_time.text = "placeholder"
 
+        self.unit_ids.text = wav_meta["UnitID:U_Id"]
+        self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
+
         # unit ID information is not always present.
-        try:
-            self.unit_ids.text = wav_meta["UnitID:U_Id"]
-        except KeyError:
-            self.unit_ids.text = "-" * 8
-            Logger.exception("UnitIds key doesn't exist", exc_info=False)
-        try:
-            self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
-        except KeyError:
-            self.unit_ids_name_tag.text = "-" * 8
-            Logger.exception("No Unit ID Name.", exc_info=False)
+        # try:
+        #     self.unit_ids.text = wav_meta["UnitID:U_Id"]
+        # except KeyError:
+        #     self.unit_ids.text = "-" * 8
+        #     Logger.exception("UnitIds key doesn't exist", exc_info=False)
+        # try:
+        #     self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
+        # except KeyError:
+        #     self.unit_ids_name_tag.text = "-" * 8
+        #     Logger.exception("No Unit ID Name.", exc_info=False)
 
         return
 
