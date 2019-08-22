@@ -123,6 +123,9 @@ class UnidenScanner:
         self.used_memory_blocks = {}
         self.default_band_coverage = ()
 
+        # initialize empty scanner state OrderedDict
+        self.scan_state = GSI_OUTPUT
+
         # ------ initialization methods ------- #
         self.open()
 
@@ -312,7 +315,7 @@ class UnidenScanner:
         return reception_status
 
     # todo: this is not the preferred method for polling scanner
-    # def get_current_status(self):
+    # def get_current_scanner_information(self):
     #
     #     """Returns current scanner status.
     #     DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1)
@@ -335,7 +338,7 @@ class UnidenScanner:
     #         res = self.raw('STS')
     #
     #     except CommandError:
-    #         self.logger.error('get_current_status()')
+    #         self.logger.error('get_current_scanner_information()')
     #         return 0
     #
     #     l=res.split(",")
@@ -359,7 +362,7 @@ class UnidenScanner:
     #
     #     return dict
 
-    def get_current_status(self):
+    def update_scanner_information(self):
 
         """Returns current scanner status.
         DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1)
@@ -379,16 +382,30 @@ class UnidenScanner:
         try:
             # get xml data from scanner, convert to unicode
             # exclude the prefix data 'GSI,<XML>,\r'
-            res = s.raw("GSI")[11:]
-
+            self.logger.info("uniden: sending command to scanner...")
+            res = self.raw("GSI")[11:]
+            self.logger.info(f"Bytes returned : {len(res)}")
         except CommandError:
-            self.logger.error("get_scanner_information()")
+            self.logger.error("get_scanner_information() failed.")
             return 0
 
         # generate ordered dict containing scanner information
         scanner_xml = xmltodict.parse(res)
+        self.logger.info("finished parsing xml")
 
-        return scanner_xml
+        # add the current time to dict using @ symbol as flag
+        scanner_xml["@date_code"] = datetime.now().isoformat()
+        self.logger.info("Timestamp added.")
+
+        self.scan_state = traverse_state(scanner_xml, prefix="", f_state=GSI_OUTPUT)
+
+        return 1
+
+    def get_current_scanner_information(self):
+        """Runs update curent status, then passes the state to caller."""
+        self.update_scanner_information()
+
+        return self.scan_state
 
     def push_key(self, mode, key):
 
@@ -4928,7 +4945,7 @@ class Search:
             self.global_lout_frqs = tuple(global_lout_frqs)
 
 
-# todo: function should eventually save to object state variables
+# todo: function should no longer be necessary
 def runcmd(scanner, cmd="GSI"):
     """Function gets current state from scanner for further processing.
 
@@ -5142,6 +5159,7 @@ if __name__ == "__main__":
     )
 
     s = UnidenScanner()
+    current_state = s.get_current_scanner_information()
 
     # instantiate tools for working with sd card data
     # sd = UnidenMassStorage(directory=test_dir)

@@ -17,6 +17,7 @@ from kivy.properties import ObjectProperty
 
 from scanner.scanner_utility_functions import get_wav_meta
 from scanner.uniden import runcmd, UnidenScanner, traverse_state
+from scanner.constants import GSI_OUTPUT
 
 Builder.load_file("datawindow_screens.kv")
 
@@ -27,6 +28,10 @@ class DataWindow(Screen):
     Notes: creating an initialization method causes python to crash. I'm not
     sure why.
     """
+
+    # def __init__(self, name):
+    #     super(DataWindow, self).__init__()
+    #     self.color = "0,1,0,1"
 
     # initialize id reference to kv file using variable name
     fav_list_name = ObjectProperty()
@@ -43,7 +48,7 @@ class DataWindow(Screen):
 
     # can I store the sound object here?
     sound = ObjectProperty()
-    all_labels = ObjectProperty
+    # all_labels = ObjectProperty()
     # initialize variable to store scanner data
     scanner = None
 
@@ -107,21 +112,19 @@ class DataWindow(Screen):
 
             Logger.info("Scanner Connected.")
 
-            self.scan_status_button.text = "Get XML"
+            self.scan_status_button.text = "Get Data"
 
             return
 
         if not self.scanner.port_is_open():
             self.scanner.open()
-            self.scan_status_button.text = "Get XML"
+            self.scan_status_button.text = "Get Data"
             return
 
-        Logger.debug("Running XML Method...")
-        scanner_xml = runcmd(self.scanner)
-        Logger.debug("XML method run successfully.")
+        Logger.debug("getting scanner state...")
+        scanner_state = self.scanner.get_current_scanner_information()
 
-        scanner_state = traverse_state(scanner_xml)
-
+        Logger.debug("Scanner state retrieved, updating screen...")
         self.update_screen(scanner_state)
 
     def scanner_disconnect_btn(self):

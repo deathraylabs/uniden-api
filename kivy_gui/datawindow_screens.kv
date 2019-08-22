@@ -1,10 +1,10 @@
 #:kivy 1.11.1
 
 <Label>:
-    all_labels: all_labels
+#    all_labels: all_labels
 
     # this is how you apply generic formatting to everything tagged Label
-    id: all_labels
+    id: "all_labels"
     halign: 'left'
     valign: 'center'
     text_size: self.size
@@ -12,6 +12,7 @@
 #    texture_size: self.size
     font_size: '25sp'
     padding: ('10sp', '10sp')
+    text: ""
 
 <Button>:
     # Formats all 'Button' tags.
@@ -19,14 +20,12 @@
     font_size: '15sp'
     halign: "center"
 
-#<MenuBar@BoxLayout>:
-#    height: 45
-#    canvas:
-#        Color:
-#            rgba: (1, 0, 0, 0.15)
-#        Rectangle:
-#            size: self.size
-#            pos: self.pos
+<ColorLabel@Label>:
+    color: 1,0,0,1
+
+<MenuBar@BoxLayout>:
+    id: "menu_layout"
+    size_hint_y: .2
 
 <DataWindow>:
     # these are global variables to reference objects below
@@ -81,7 +80,7 @@
                 text: "Favorites List Name----*-------*-------*-------*-------*-------*"
                 font_size: '30sp'
 
-            Label:
+            ColorLabel:
                 id: sys_name
                 text: "System:Name"
                 font_size: '25sp'
@@ -124,10 +123,10 @@
                     text: "Total Time"
                     font_size: '15sp'
 
-        BoxLayout:  #
+        MenuBar:  #
             id: "menu_layout"
 #            height: '300sp'
-            size_hint_y: .2
+#            size_hint_y: .2
 
             BoxLayout:
                 orientation: 'horizontal'
