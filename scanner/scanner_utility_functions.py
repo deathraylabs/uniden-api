@@ -428,7 +428,8 @@ def get_string_at_offset(start, length, directory):
 
 
 def group_audio_by_department(
-    source_dir="~/Downloads/uniden audio/", save_dir="~/Downloads/uniden_audio"
+    source_dir="~/Downloads/uniden audio/",
+    save_dir="/Users/peej/Downloads/uniden audio/",
 ):
     """Function takes directories as exported from scanner and groups the
     audio recordings into new directories based on department name.
@@ -448,10 +449,12 @@ def group_audio_by_department(
     # source_dir where the grouped data will end up
     savepath = Path(save_dir)
 
-    for folder in basepath.iterdir():
-        if folder.is_dir():
+    parent_dir = None
+
+    for file_or_folder in basepath.iterdir():
+        if not parent_dir is None:
             # the .glob ensures that we only get audio files, no hidden files
-            for file in folder.glob("*.wav"):
+            for file in parent_dir.glob("*.wav"):
                 # create tinytag object that contains metadata
                 ttag = TinyTag.get(file)
                 # get the department name, which is stored under title
@@ -478,11 +481,19 @@ def group_audio_by_department(
                     #                 print("{} already exists".format(str(p)))
                     pass
 
+        # if you find a wav file, use its parent directory
+        elif file_or_folder.suffix == ".wav":
+            parent_dir = file_or_folder.parent
+        # code is not smart enough to deal with files nested more than 2
+        # directories deep
+        elif file_or_folder.is_dir():
+            parent_dir = file_or_folder
+
     # remove the directories that are now empty
-    for folder in basepath.iterdir():
+    for file_or_folder in basepath.iterdir():
         try:
-            folder.rmdir()
-            print("{} deleted".format(str(folder)))
+            file_or_folder.rmdir()
+            print("{} deleted".format(str(file_or_folder)))
         except:
             #         print("Directory '{}' isn't empty".format(str(folder)))
             pass
@@ -557,8 +568,8 @@ if __name__ == "__main__":
 
     # get contents of clipboard
     # clipboard = cb.paste()
-    source_path = "~/Desktop/user_rec/4F181500"
-    save_path = "~/Downloads/uniden audio"
+    source_path = "/Users/peej/Desktop/user_rec/4F18187C/"
+    save_path = "/Users/peej/Downloads/uniden audio/"
 
     group_audio_by_department(source_path, save_path)
 
