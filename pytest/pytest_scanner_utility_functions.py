@@ -15,7 +15,7 @@ def test_get_wav_meta():
 
     meta_output = get_wav_meta(directory)
     assert meta_output["Site:Name"] == "98 HOU PubSafety NW Simulcast"
-    assert meta_output["Channel:Name"] == "01 HPD-N"
+    assert meta_output["TGID:Name"] == "01 HPD-N"
 
     assert p.is_file()
     assert type(meta_output) == dict
