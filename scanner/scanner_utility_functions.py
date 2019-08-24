@@ -576,9 +576,9 @@ if __name__ == "__main__":
     # get contents of clipboard
     # clipboard = cb.paste()
     source_path = "/Users/peej/Desktop/user_rec/4F18187C/"
-    save_path = "/Users/peej/Downloads/uniden audio/"
+    save_path = "/Users/peej/Downloads/uniden audio/1 HPD-N"
 
-    group_audio_by_department(source_path, save_path)
+    # group_audio_by_department(source_path, save_path)
 
     # matching tag
     tag = "Red"
