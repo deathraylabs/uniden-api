@@ -493,10 +493,17 @@ def group_audio_by_department(
     for file_or_folder in basepath.iterdir():
         try:
             file_or_folder.rmdir()
-            print("{} deleted".format(str(file_or_folder)))
+            logging.info("{} deleted".format(str(file_or_folder)))
         except:
             #         print("Directory '{}' isn't empty".format(str(folder)))
             pass
+
+    # also remove parent directory
+    try:
+        parent_dir.rmdir()
+        logging.info(f"{parent_dir} deleted.")
+    except FileExistsError:
+        pass
 
     return
 
@@ -574,20 +581,20 @@ if __name__ == "__main__":
     group_audio_by_department(source_path, save_path)
 
     # matching tag
-    # tag = "Red"
-    # output_file_name = "merged.wav"
+    tag = "Red"
+    output_file_name = "sigh guy.wav"
 
-    # matched_files = files_with_matched_tags(clipboard, tag)
+    matched_files = files_with_matched_tags(save_path, tag)
     #
-    # output = merge_tagged_wav_files(matched_files)
+    output = merge_tagged_wav_files(matched_files)
 
     # metadata = get_wav_meta(wav_dir_path)
 
     # audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
-    # for file in matched_files:
-    #     metadata = get_wav_meta(file)
-    #     print(metadata)
+    for file in matched_files:
+        metadata = get_wav_meta(file)
+        print(metadata)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
     # scanstring = get_string_at_offset(start, length, audio_path)
