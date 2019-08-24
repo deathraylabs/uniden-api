@@ -5168,11 +5168,11 @@ if __name__ == "__main__":
     current_state = s.get_current_scanner_information()
 
     # instantiate tools for working with sd card data
-    # sd = UnidenMassStorage(directory=test_dir)
+    # sd = UnidenMassStorage(source_dir=test_dir)
     # directories = sd.get_audio_directories()
-    # directory = suf.select_from_list(directories)[1]
+    # source_dir = suf.select_from_list(directories)[1]
     # # creates a list of paths to wav files
-    # waves = sd.get_wav_files(directory)
+    # waves = sd.get_wav_files(source_dir)
     # sd.get_wav_files_meta()
     #
     # s = UnidenScanner("/dev/cu.usbmodem1434401")

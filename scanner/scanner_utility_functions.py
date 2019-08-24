@@ -427,15 +427,27 @@ def get_string_at_offset(start, length, directory):
     return decoded_string
 
 
-def group_audio_by_department(directory="~/Downloads/uniden audio/"):
+def group_audio_by_department(
+    source_dir="~/Downloads/uniden audio/", save_dir="~/Downloads/uniden_audio"
+):
     """Function takes directories as exported from scanner and groups the
     audio recordings into new directories based on department name.
+
+    Args:
+        source_dir (str): source directory containing scanner audio files
+        save_dir (str): directory where newly organized directory tree will
+            saved.
+
+    Returns:
+        None
     """
 
     # Path object for the root of our folder tree
-    basepath = Path(directory).expanduser()
+    basepath = Path(source_dir).expanduser()
 
-    # todo: change logic to use pathlib instead of shutil
+    # source_dir where the grouped data will end up
+    savepath = Path(save_dir)
+
     for folder in basepath.iterdir():
         if folder.is_dir():
             # the .glob ensures that we only get audio files, no hidden files
@@ -449,14 +461,15 @@ def group_audio_by_department(directory="~/Downloads/uniden audio/"):
                 try:
                     department = department.replace("/", " ")
                 except AttributeError:
-                    print("Encountered file without department tag.")
+                    logging.error("Encountered file without department tag.")
                     break
 
-                # create new folders for each department if it doesn't alread exist
-                p = Path(basepath, department)
+                # create new folders for each department
+                # if it doesn't already exist
+                p = Path(savepath, department)
                 if not p.exists():
                     p.mkdir(exist_ok=True)  # wont overwrite existing wav_source
-                    print("New folder created for {}.".format(str(department)))
+                    logging.info("New folder created for {}.".format(str(department)))
 
                 # move individual .wav files to their respective dept folders
                 try:
@@ -530,39 +543,40 @@ def select_from_list(selections):
 
 if __name__ == "__main__":
 
-    help_statement = """
-        **********************
-        Copy path to wav_source
-        Then hit "Enter"
-        ----------------------
-    """
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+
+    # help_statement = """
+    #     **********************
+    #     Copy path to wav_source
+    #     Then hit "Enter"
+    #     ----------------------
+    # """
 
     # input(help_statement)
 
     # get contents of clipboard
     # clipboard = cb.paste()
-    clipboard = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/wav_files_for_testing/"
+    source_path = "~/Desktop/user_rec/4F181500"
+    save_path = "~/Downloads/uniden audio"
 
-    # path to wav_source that contains the audio of interest
-    wav_dir_path = "/Users/peej/dev/uniden scanner scripts/uniden-api/pytest/scanner_test_data/4F067981/2019-08-06_15-12-35.wav"
+    group_audio_by_department(source_path, save_path)
 
     # matching tag
-    tag = "Red"
+    # tag = "Red"
     # output_file_name = "merged.wav"
 
-    matched_files = files_with_matched_tags(clipboard, tag)
+    # matched_files = files_with_matched_tags(clipboard, tag)
     #
     # output = merge_tagged_wav_files(matched_files)
-
-    # todo: reset the tag to something else after it's merged
 
     # metadata = get_wav_meta(wav_dir_path)
 
     # audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
-    for file in matched_files:
-        metadata = get_wav_meta(file)
-        print(metadata)
+    # for file in matched_files:
+    #     metadata = get_wav_meta(file)
+    #     print(metadata)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
     # scanstring = get_string_at_offset(start, length, audio_path)
