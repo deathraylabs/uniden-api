@@ -21,6 +21,8 @@ if not, write to the Free Software Foundation, Inc.,
 """
 
 # import yaml
+import threading
+import queue
 import time
 import serial
 import io
@@ -37,8 +39,6 @@ from datetime import datetime
 
 # from pprint import *  # not super important
 import sqlite3
-
-# from kivy.logger import Logger
 
 # create logger
 module_logger = logging.getLogger("uniden_api")
@@ -95,7 +95,8 @@ class UnidenScanner:
 
     err_list = ("NG", "ORER", "FER", "ERR", "")
 
-    def __init__(self, port="/dev/cu.usbmodem1434401", speed="115200"):
+    # todo: set code to automatically find correct port
+    def __init__(self, port="/dev/cu.usbmodem1434101", speed="115200"):
 
         self.logger = logging.getLogger("uniden_api.UnidenScanner")
         self.logger.setLevel(logging.DEBUG)
@@ -139,7 +140,7 @@ class UnidenScanner:
             self.serial = serial.Serial(self.port, self.speed, timeout=0.1)
 
         except serial.SerialException:
-            self.logger.error("Error opening serial port %s!" % port)
+            self.logger.error("Error opening serial port %s!" % self.port)
 
     def close(self):
 
@@ -377,7 +378,11 @@ class UnidenScanner:
         SIG_LVL		Signal Level (0–5)
         BK_COLOR	Backlight Color
                     (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
-        BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )"""
+        BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )
+
+
+
+        """
 
         try:
             # get xml data from scanner, convert to unicode
@@ -389,13 +394,15 @@ class UnidenScanner:
             self.logger.error("get_scanner_information() failed.")
             return 0
 
-        # generate ordered dict containing scanner information
-        scanner_xml = xmltodict.parse(res)
-        self.logger.info("finished parsing xml")
+        # # generate ordered dict containing scanner information
+        # scanner_xml = xmltodict.parse(res)
+        # self.logger.info("finished parsing xml")
+        #
+        # # add the current time to dict using @ symbol as flag
+        # scanner_xml["@date_code"] = datetime.now().isoformat()
+        # self.logger.info("Timestamp added.")
 
-        # add the current time to dict using @ symbol as flag
-        scanner_xml["@date_code"] = datetime.now().isoformat()
-        self.logger.info("Timestamp added.")
+        scanner_xml = raw_state_xml_to_ordered_dict(res)
 
         # note: you have to create an empty copy because traverse state is
         empty_state_dict = GSI_OUTPUT.copy()
@@ -487,6 +494,28 @@ class UnidenScanner:
         except CommandError:
             self.logger.error("push_key(): %s" % cmd)
             return 0
+
+    def set_push_state_updating(self, rate_in_ms, inputQueue):
+        """Number of seconds between state pushes from scanner.
+
+        0 ms -> turns scan push off
+
+        Args:
+            rate_in_ms (int): refresh rate in number of milliseconds
+
+        Returns:
+
+        """
+        logging.info(f"scanner update time: {rate_in_ms} ms")
+
+        # set scanner to push state information every X ms
+        self.raw(f"PSI,{rate_in_ms}")
+
+        # while True:
+        #
+        #
+        #
+        # return
 
     def set_quick_search_hold(
         self,
@@ -4969,6 +4998,21 @@ def runcmd(scanner, cmd="GSI"):
 
     # cut off the extraneous xml prefix information
     xmldat = xmldat[11:]
+
+    # get xml data into dict form
+    parsed_xml = xmltodict.parse(xmldat)
+
+    # add the current time to dict using @ symbol as flag
+    parsed_xml["@date_code"] = datetime.now().isoformat()
+
+    return parsed_xml
+
+
+def raw_state_xml_to_ordered_dict(raw_output):
+    """Convert raw xml provided by scanner to ordered dict."""
+
+    # cut off the extraneous xml prefix information
+    xmldat = raw_output[11:]
 
     # get xml data into dict form
     parsed_xml = xmltodict.parse(xmldat)

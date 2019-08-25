@@ -452,7 +452,7 @@ def group_audio_by_department(
     parent_dir = None
 
     for file_or_folder in basepath.iterdir():
-        if not parent_dir is None:
+        if parent_dir is not None:
             # the .glob ensures that we only get audio files, no hidden files
             for file in parent_dir.glob("*.wav"):
                 # create tinytag object that contains metadata
