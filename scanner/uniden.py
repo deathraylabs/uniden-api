@@ -433,6 +433,25 @@ class UnidenScanner:
 
         return True
 
+    def push_update_scanner_state(self, interval=500):
+        """Method to set scanner 'push scanner information' (PSI) mode, then
+        automatically keep self.scan_state updated with most recent information.
+
+        Args:
+            interval (int): number of milliseconds scanner should wait before
+                pushing data to serial bus.
+
+        Returns:
+            True: when method successfully ends
+
+        """
+
+        # sets the scanner into push state
+        cmd_response = self.raw(f"PSI,{interval}")
+        logger.info(f"Setting PSI mode. Response from scanner: {cmd_response}")
+
+        return True
+
     def get_scanner_state(self):
         """Returns the most recently downloaded state of scanner but doesn't
         actually update that state."""
