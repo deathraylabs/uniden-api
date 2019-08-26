@@ -38,6 +38,7 @@ class DataWindow(Screen):
     sys_name = ObjectProperty()
     dept_name = ObjectProperty()
     site_name = ObjectProperty()
+    tgid_name = ObjectProperty()
     unit_ids = ObjectProperty()
     unit_ids_name_tag = ObjectProperty()
     transmission_start = ObjectProperty()
@@ -174,6 +175,7 @@ class DataWindow(Screen):
         self.fav_list_name.text = wav_meta["MonitorList:Name"]
         self.sys_name.text = wav_meta["System:Name"]
         self.dept_name.text = wav_meta["Department:Name"]
+        self.tgid_name.text = wav_meta["TGID:Name"]
         self.site_name.text = wav_meta["Site:Name"]
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end

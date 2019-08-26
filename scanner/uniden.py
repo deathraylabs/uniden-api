@@ -392,21 +392,7 @@ class UnidenScanner:
     #     return dict
 
     def update_scanner_state(self):
-
         """Updates the state variable for the class.
-        DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1)
-                    0 means Small Font / 1 means Large Font.
-        Lx_CHAR		Linex Characters 16char (fixed length)
-        Lx_MODE		Linex Display Mode 16char
-        SQL 		Squelch Status (0:CLOSE / 1:OPEN)
-        MUT 		Mute Status (0:OFF / 1:ON)
-        BAT 		Battery Low Status (0:No Alert / 1:Alert)
-        WAT		    Weather Alert Status (0:No Alert / 1: Alert / $$$: Alert
-                    SAME CODE)
-        SIG_LVL		Signal Level (0–5)
-        BK_COLOR	Backlight Color
-                    (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
-        BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )
 
         Returns:
             True: if the internal state was updated
@@ -427,6 +413,10 @@ class UnidenScanner:
             self.logger.error("get_scanner_information() failed.")
             return False
 
+        # separate command response from returned state data
+        # first line is response, remaining text is xml formatted state
+        response, raw_state_xml = res.split("\n", 1)
+
         # # generate ordered dict containing scanner information
         # scanner_xml = xmltodict.parse(res)
         # self.logger.info("finished parsing xml")
@@ -435,11 +425,11 @@ class UnidenScanner:
         # scanner_xml["@date_code"] = datetime.now().isoformat()
         # self.logger.info("Timestamp added.")
 
-        scanner_xml = raw_state_xml_to_ordered_dict(res)
+        state_ordered_dict = raw_state_xml_to_ordered_dict(raw_state_xml)
 
         # note: you have to create an empty copy because traverse state is
-        empty_state_dict = GSI_OUTPUT.copy()
-        self.scan_state = traverse_state(scanner_xml)
+        # empty_state_dict = GSI_OUTPUT.copy()
+        self.scan_state = traverse_state(state_ordered_dict)
 
         return True
 
@@ -5042,13 +5032,18 @@ def runcmd(scanner, cmd="GSI"):
 
 
 def raw_state_xml_to_ordered_dict(raw_output):
-    """Convert raw xml provided by scanner to ordered dict."""
+    """Convert raw xml provided by scanner to ordered dict.
 
-    # cut off the extraneous xml prefix information
-    xmldat = raw_output[11:]
+    Args:
+        raw_output (xml): should be xml formatted data, make sure any
+            extraneous header information has been stripped first.
+    """
+
+    # the first line is just the return value from command
+    # xmldat = raw_output.split("\n", 1)[1]
 
     # get xml data into dict form
-    parsed_xml = xmltodict.parse(xmldat)
+    parsed_xml = xmltodict.parse(raw_output)
 
     # add the current time to dict using @ symbol as flag
     parsed_xml["@date_code"] = datetime.now().isoformat()
