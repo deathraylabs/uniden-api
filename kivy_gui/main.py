@@ -122,8 +122,10 @@ class DataWindow(Screen):
             self.scan_status_button.text = "Get Data"
             return
 
+        self.scanner.update_scanner_state()
+
         Logger.debug("getting scanner state...")
-        scanner_state = self.scanner.get_current_scanner_information()
+        scanner_state = self.scanner.get_scanner_state()
 
         Logger.debug("Scanner state retrieved, updating screen...")
         self.update_screen(scanner_state)

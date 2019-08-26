@@ -344,7 +344,7 @@ class UnidenScanner:
         return reception_status
 
     # todo: this is not the preferred method for polling scanner
-    # def get_current_scanner_information(self):
+    # def get_scanner_state(self):
     #
     #     """Returns current scanner status.
     #     DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1)
@@ -367,7 +367,7 @@ class UnidenScanner:
     #         res = self.raw('STS')
     #
     #     except CommandError:
-    #         self.logger.error('get_current_scanner_information()')
+    #         self.logger.error('get_scanner_state()')
     #         return 0
     #
     #     l=res.split(",")
@@ -391,9 +391,9 @@ class UnidenScanner:
     #
     #     return dict
 
-    def update_scanner_information(self):
+    def update_scanner_state(self):
 
-        """Returns current scanner status.
+        """Updates the state variable for the class.
         DSP_FORM	Display Form (4 - 8dight:########) (each # is 0 or 1)
                     0 means Small Font / 1 means Large Font.
         Lx_CHAR		Linex Characters 16char (fixed length)
@@ -408,19 +408,24 @@ class UnidenScanner:
                     (OFF,BLUE,RED,MAGENTA,GREEN,CYAN,YELLOW,WHITE)
         BK_DIMMER	Backlight Dimmer (0:OFF / 1:Low / 2:Middle / 3:High )
 
-
+        Returns:
+            True: if the internal state was updated
+            False: if there is an error communicating with scanner
 
         """
+
+        if not self.port_is_open():
+            return False
 
         try:
             # get xml data from scanner, convert to unicode
             # exclude the prefix data 'GSI,<XML>,\r'
             self.logger.info("uniden: sending command to scanner...")
-            res = self.raw("GSI")[11:]
+            res = self.raw("GSI")
             self.logger.info(f"Bytes returned : {len(res)}")
         except CommandError:
             self.logger.error("get_scanner_information() failed.")
-            return 0
+            return False
 
         # # generate ordered dict containing scanner information
         # scanner_xml = xmltodict.parse(res)
@@ -436,11 +441,11 @@ class UnidenScanner:
         empty_state_dict = GSI_OUTPUT.copy()
         self.scan_state = traverse_state(scanner_xml)
 
-        return 1
+        return True
 
-    def get_current_scanner_information(self):
-        """Runs update curent status, then passes the state to caller."""
-        self.update_scanner_information()
+    def get_scanner_state(self):
+        """Returns the most recently downloaded state of scanner but doesn't
+        actually update that state."""
 
         return self.scan_state
 
@@ -5237,7 +5242,7 @@ if __name__ == "__main__":
     )
 
     s = UnidenScanner()
-    current_state = s.get_current_scanner_information()
+    current_state = s.get_scanner_state()
 
     # instantiate tools for working with sd card data
     # sd = UnidenMassStorage(source_dir=test_dir)
