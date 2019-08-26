@@ -102,10 +102,11 @@ class DataWindow(Screen):
                 print("On RPi")
                 port = "/dev/ttyACM0"
             else:
-                port = "/dev/cu.usbmodem1434401"
+                port = "/dev/cu.usbmodem1434101"
+                # print("trying the default port")
 
             try:
-                self.scanner = UnidenScanner(port=port)
+                self.scanner = UnidenScanner()
             except NameError:
                 Logger.error("No Scanner Found.")
                 return

@@ -115,5 +115,10 @@ def test_get_wav_files():
     assert len(dirs) == 43
 
 
+def test_open_scanner_port():
+    s = UnidenScanner()
+    assert s.open()
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()

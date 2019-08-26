@@ -25,6 +25,7 @@ import threading
 import queue
 import time
 import serial
+import serial.tools.list_ports as stlp
 import io
 from pathlib import Path
 
@@ -96,20 +97,22 @@ class UnidenScanner:
     err_list = ("NG", "ORER", "FER", "ERR", "")
 
     # todo: set code to automatically find correct port
-    def __init__(self, port="/dev/cu.usbmodem1434101", speed="115200"):
+    def __init__(self, model="SDS100", speed="115200"):
+        """
+
+        Args:
+            model (str): Model name of scanner used to open port.
+            speed (int): Port connection speed.
+        """
 
         self.logger = logging.getLogger("uniden_api.UnidenScanner")
         self.logger.setLevel(logging.DEBUG)
-        self.logger.info(
-            "initialiazing with port=%(port)s and speed=%(speed)s" % locals()
-        )
 
         # serial port connection
         self.serial = None
-        self.port = port
+        self.port = ""
         self.speed = speed
-
-        self.model = None
+        self.model = model
         self.version = None
         self.isProgramMode = False
         self.system_index_head = None
@@ -131,16 +134,35 @@ class UnidenScanner:
         self.open()
 
     def open(self):
-        """Open scanner method, accepts port and speed,
-        timeout is set for 100ms"""
+        """Open port connection to scanner using device model name and port
+        speed specified when class is instantiated.
+
+        Returns:
+            False: if no scanner is found during port serach
+
+        """
+
+        description = f"{self.model} Serial Port "
+
+        # check currently available ports for our model
+        for port in stlp.comports():
+            if port.description == description:
+                self.port = port.device
+                self.logger.info(f"the {self.model} port is: {self.port}")
+                break
+
+        if self.port == "":
+            self.logger.error("No scanner port found, port was NOT opened.")
+            return False
 
         try:
             # timeout originally set to 0.1
             # timeout set to 0 is non-blocking
             self.serial = serial.Serial(self.port, self.speed, timeout=0.1)
-
         except serial.SerialException:
             self.logger.error("Error opening serial port %s!" % self.port)
+
+        return True
 
     def close(self):
 
@@ -177,7 +199,13 @@ class UnidenScanner:
 
         """
         self.logger.debug("raw(): cmd %s" % cmd)
-        self.serial.write(str.encode("".join([cmd, "\r"])))
+        try:
+            self.serial.write(str.encode("".join([cmd, "\r"])))
+        except serial.serialutil.SerialException:
+            self.logger.error(
+                f"{cmd} cannot be executed by raw method, " f"port is not open."
+            )
+            return "Port Closed"
 
         # decode byte string to native UTF-8 string
         res = self.serial.readall().decode()
