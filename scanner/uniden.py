@@ -422,9 +422,9 @@ class UnidenScanner:
                 self.logger.error("get_scanner_information() failed.")
                 return False
 
-            # separate command response from returned state data
-            # first line is response, remaining text is xml formatted state
-            response, raw_state_xml = res.split("\n", 1)
+        # separate command response from returned state data
+        # first line is response, remaining text is xml formatted state
+        response, raw_state_xml = res.split("\n", 1)
 
         # # generate ordered dict containing scanner information
         # scanner_xml = xmltodict.parse(res)
@@ -442,7 +442,7 @@ class UnidenScanner:
 
         return True
 
-    def push_update_scanner_state(self, interval=500):
+    def push_update_scanner_state(self, interval=1000):
         """Method to set scanner 'push scanner information' (PSI) mode, then
         automatically keep self.scan_state updated with most recent information.
 
@@ -457,7 +457,7 @@ class UnidenScanner:
 
         # sets the scanner into push state
         cmd_response = self.raw(f"PSI,{interval}")
-        logger.info(f"Setting PSI mode. Response from scanner: {cmd_response}")
+        self.logger.info(f"Setting PSI mode. Response from scanner:" f" {cmd_response}")
 
         # initialize threading queue
         inputQueue = queue.Queue()
@@ -471,8 +471,10 @@ class UnidenScanner:
             if inputQueue.qsize() > 0:
                 serial_buffer = inputQueue.get()
 
-                if input_str == EXIT_COMMAND:
-                    print("Exiting serial terminal.")
+                self.update_scanner_state(mode="push", raw_state_xml=serial_buffer)
+
+                # if input_str == EXIT_COMMAND:
+                #     print("Exiting serial terminal.")
 
             # give CPU some time to rest
             time.sleep(0.01)
@@ -489,7 +491,11 @@ class UnidenScanner:
 
         """
         while True:
-            serial_buffer = ""
+            # self.serial is the serial port connection
+            # not sure if this is blocking until condition is fulfilled or not
+            serial_buffer = self.serial.read_until(b"</ScannerInfo>\r").decode()
+
+            serial_buffer = serial_buffer.replace("\r", "\n")
 
             # loads the input queue with contents we got from buffer
             inputQueue.put(serial_buffer)
