@@ -391,8 +391,16 @@ class UnidenScanner:
     #
     #     return dict
 
-    def update_scanner_state(self):
+    def update_scanner_state(self, mode="pull", raw_state_xml=""):
         """Updates the state variable for the class.
+
+        Args:
+            mode (str):
+                "pull": if using 'GSI' command to get data
+                "push": if using 'PSI' command to have scanner push data
+
+            raw_state_xml (str): used when passing xml data pushed to serial
+                buffer from scanner.
 
         Returns:
             True: if the internal state was updated
@@ -403,19 +411,20 @@ class UnidenScanner:
         if not self.port_is_open():
             return False
 
-        try:
-            # get xml data from scanner, convert to unicode
-            # exclude the prefix data 'GSI,<XML>,\r'
-            self.logger.info("uniden: sending command to scanner...")
-            res = self.raw("GSI")
-            self.logger.info(f"Bytes returned : {len(res)}")
-        except CommandError:
-            self.logger.error("get_scanner_information() failed.")
-            return False
+        if mode == "pull":
+            try:
+                # get xml data from scanner, convert to unicode
+                # exclude the prefix data 'GSI,<XML>,\r'
+                self.logger.info("uniden: sending command to scanner...")
+                res = self.raw("GSI")
+                self.logger.info(f"Bytes returned : {len(res)}")
+            except CommandError:
+                self.logger.error("get_scanner_information() failed.")
+                return False
 
-        # separate command response from returned state data
-        # first line is response, remaining text is xml formatted state
-        response, raw_state_xml = res.split("\n", 1)
+            # separate command response from returned state data
+            # first line is response, remaining text is xml formatted state
+            response, raw_state_xml = res.split("\n", 1)
 
         # # generate ordered dict containing scanner information
         # scanner_xml = xmltodict.parse(res)
@@ -450,7 +459,40 @@ class UnidenScanner:
         cmd_response = self.raw(f"PSI,{interval}")
         logger.info(f"Setting PSI mode. Response from scanner: {cmd_response}")
 
+        # initialize threading queue
+        inputQueue = queue.Queue()
+        # initialize thread
+        inputThread = threading.Thread(
+            target=self._read_serial_buffer, args=(inputQueue,), daemon=True
+        )
+        inputThread.start()
+
+        while True:
+            if inputQueue.qsize() > 0:
+                serial_buffer = inputQueue.get()
+
+                if input_str == EXIT_COMMAND:
+                    print("Exiting serial terminal.")
+
+            # give CPU some time to rest
+            time.sleep(0.01)
+
         return True
+
+    def _read_serial_buffer(self, inputQueue):
+        """Start a thread that waits for buffer to fill before passing data.
+
+        Args:
+            inputQueue: variable that allows us to pass data to main thread
+
+        Returns:
+
+        """
+        while True:
+            serial_buffer = ""
+
+            # loads the input queue with contents we got from buffer
+            inputQueue.put(serial_buffer)
 
     def get_scanner_state(self):
         """Returns the most recently downloaded state of scanner but doesn't
