@@ -229,6 +229,46 @@ class UnidenScanner:
         else:
             return res
 
+    def process_command(self, cmd):
+        """Method is similar to raw but checks scanner for appropriate
+        response and passes on data in useful format.
+
+        Args:
+            cmd (str): 3 letter command string
+
+        Returns:
+
+
+        """
+
+        self.logger.debug("raw(): cmd %s" % cmd)
+
+        # allow user to input lowercase commands
+        cmd = cmd.capitalize()
+        cmd_str = str.encode("".join([cmd, "\r"]))
+
+        try:
+            self.serial.write(cmd_str)
+        except serial.serialutil.SerialException:
+            self.logger.error(
+                f"{cmd_str} cannot be executed by raw method, " f"port is not " f"open."
+            )
+            return "Port Closed"
+
+        # UTF8 string returned by scanner
+        res_str = self.serial.readall().decode()
+
+        # get the name of command returned by scanner
+        cmd_returned, res_str = res_str.split(",", 1)
+
+        # switch out for more common linefeed
+        res_str = res_str.replace("\r", "\n")
+
+        expected_res = SCANNER_COMMAND_RESPONSE[cmd_returned]
+        self.logger.info(expected_res)
+
+        # cmd_res, data_res = res_str.split("\r", 1)
+
     def get_model(self):
         """Get scanner model information, saving to internal state as well as
         returning the value.
