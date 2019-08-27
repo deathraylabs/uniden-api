@@ -416,15 +416,17 @@ class UnidenScanner:
                 # get xml data from scanner, convert to unicode
                 # exclude the prefix data 'GSI,<XML>,\r'
                 self.logger.info("uniden: sending command to scanner...")
-                res = self.raw("GSI")
+                raw_state_xml = self.raw("GSI")
                 self.logger.info(f"Bytes returned : {len(res)}")
             except CommandError:
                 self.logger.error("get_scanner_information() failed.")
                 return False
-
+        elif raw_state_xml == "":
+            self.logger.debug("No file returned from PSI mode.")
+            return False
         # separate command response from returned state data
         # first line is response, remaining text is xml formatted state
-        response, raw_state_xml = res.split("\n", 1)
+        response, state_xml = raw_state_xml.split("\n", 1)
 
         # # generate ordered dict containing scanner information
         # scanner_xml = xmltodict.parse(res)
@@ -434,7 +436,7 @@ class UnidenScanner:
         # scanner_xml["@date_code"] = datetime.now().isoformat()
         # self.logger.info("Timestamp added.")
 
-        state_ordered_dict = raw_state_xml_to_ordered_dict(raw_state_xml)
+        state_ordered_dict = raw_state_xml_to_ordered_dict(state_xml)
 
         # note: you have to create an empty copy because traverse state is
         # empty_state_dict = GSI_OUTPUT.copy()
@@ -469,6 +471,7 @@ class UnidenScanner:
 
         while True:
             if inputQueue.qsize() > 0:
+                self.logger.debug(f"input queue size: {inputQueue.qsize()}")
                 serial_buffer = inputQueue.get()
 
                 self.update_scanner_state(mode="push", raw_state_xml=serial_buffer)
@@ -477,7 +480,7 @@ class UnidenScanner:
                 #     print("Exiting serial terminal.")
 
             # give CPU some time to rest
-            time.sleep(0.01)
+            time.sleep(0.3)
 
         return True
 
