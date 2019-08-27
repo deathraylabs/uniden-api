@@ -417,7 +417,7 @@ class UnidenScanner:
                 # exclude the prefix data 'GSI,<XML>,\r'
                 self.logger.info("uniden: sending command to scanner...")
                 raw_state_xml = self.raw("GSI")
-                self.logger.info(f"Bytes returned : {len(res)}")
+                self.logger.info(f"Bytes returned : {len(raw_state_xml)}")
             except CommandError:
                 self.logger.error("get_scanner_information() failed.")
                 return False

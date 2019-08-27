@@ -1,16 +1,21 @@
-#!/usr/bin/python
-#
-# Uniden Scanner Python API
-# Copyright (C) 2014 Anton Komarov
-#
-# This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with this program;
-# if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+"""Uniden Scanner Python API
+Copyright (C) 2014 Anton Komarov
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License
+as published by the Free Software Foundation;
+either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program;
+if not, write to the Free Software Foundation, Inc.,
+59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+"""
 
 from collections import OrderedDict
 
@@ -169,7 +174,6 @@ human_ctcss_dcs = {
     "215": "606",
     "216": "612",
     "217": "624",
-    "218": "627",
     "218": "627",
     "219": "631",
     "220": "632",
@@ -498,6 +502,43 @@ disp_mode_values = {"mode1": "1", "mode2": "2", "mode3": "3"}
 
 scanner_ch_logs = {"off": "0", "on": "1", "extend": "2"}
 human_ch_logs = {"0": "off", "1": "on", "2": "extend"}
+
+# list of commands available via serial port and the first line of response
+SCANNER_COMMAND_RESPONSE = {
+    # information
+    "MDL": r"MDL,[MODEL_NAME]\r",
+    "VER": r"VER,[VERSION]\r",
+    "KEY": r"KEY,OK\r",
+    "STS": r"",
+    "GLT": r"",
+    # xml formatted responses
+    "PSI": r"PSI,<XML>\r",
+    "GSI": r"GSI,<XML>\r",
+    "MSI": r"MSI,<XML>\r",
+    # getters/setters
+    "FQK": r"",
+    "SQK": r"",
+    "DQK": r"",
+    "SVC": r"",
+    "DTM": r"",
+    "LCR": r"",
+    "URC": r"",
+    # set only
+    "HLD": r"HDL,OK\r",
+    "MSV": r"MSV,OK\r",
+    "AVD": r"AVD,OK\r",
+    "JPM": r"JPM,OK\r",
+    # navigation
+    "JNT": r"JNT,OK\r",
+    "QSH": r"",
+    "NXT": r"",
+    "PRV": r"",
+    "MNU": r"MNU,OK\r",
+    "MSB": r"MSB,OK\r",
+    # misc
+    "AST": r"",
+    "APR": r"",
+}
 
 # list of parameters the scanner outputs when running GSI command
 # this must match the order and number in database
