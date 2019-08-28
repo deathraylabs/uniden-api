@@ -185,6 +185,7 @@ class UnidenScanner:
 
         self.close()
 
+    # todo: migrate everything to use "process command" method instead.
     def raw(self, cmd):
         """Accepts scanner commands as UTF-8 strings and handles all the
         encoding and decoding required to communicate with the scanner.
