@@ -233,7 +233,7 @@ class UnidenScanner:
         else:
             return res
 
-    def process_command(self, cmd):
+    def send_command(self, cmd):
         """Method is similar to raw but checks scanner for appropriate
         response and passes on data in useful format.
 
@@ -504,30 +504,23 @@ class UnidenScanner:
                 # get xml data from scanner, convert to unicode
                 # exclude the prefix data 'GSI,<XML>,\r'
                 self.logger.info("uniden: sending command to scanner...")
-                raw_state_xml = self.raw("GSI")
+                state_xml = self.send_command("GSI")
                 self.logger.info(f"Bytes returned : {len(raw_state_xml)}")
             except CommandError:
                 self.logger.error("get_scanner_information() failed.")
                 return False
-        elif raw_state_xml == "":
-            self.logger.debug("No file returned from PSI mode.")
-            return False
-        # separate command response from returned state data
-        # first line is response, remaining text is xml formatted state
-        response, state_xml = raw_state_xml.split("\n", 1)
+        elif mode == "push":
+            # separate command response from returned state data
+            # first line is response, remaining text is xml formatted state
+            response, state_xml = raw_state_xml.split("\n", 1)
+            self.logger.debug(f"Serial port response: {response}")
 
-        # # generate ordered dict containing scanner information
-        # scanner_xml = xmltodict.parse(res)
-        # self.logger.info("finished parsing xml")
-        #
         # # add the current time to dict using @ symbol as flag
         # scanner_xml["@date_code"] = datetime.now().isoformat()
         # self.logger.info("Timestamp added.")
 
         state_ordered_dict = raw_state_xml_to_ordered_dict(state_xml)
 
-        # note: you have to create an empty copy because traverse state is
-        # empty_state_dict = GSI_OUTPUT.copy()
         self.scan_state = traverse_state(state_ordered_dict)
 
         return True

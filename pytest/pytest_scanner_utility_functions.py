@@ -121,11 +121,18 @@ def test_open_scanner_port():
     s.close()
 
 
-def test_process_command():
+def test_update_scanner_state():
     s = UnidenScanner()
 
-    assert s.process_command("MDL")["MODEL_NAME"] == "SDS100"
-    assert s.process_command("VER")["VERSION"] == "Version 1.10.00"
+    assert s.update_scanner_state()
+    s.close()
+
+
+def test_send_command():
+    s = UnidenScanner()
+
+    assert s.send_command("MDL")["MODEL_NAME"] == "SDS100"
+    assert s.send_command("VER")["VERSION"] == "Version 1.10.00"
     s.close()
 
 

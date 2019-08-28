@@ -514,9 +514,9 @@ SCANNER_COMMAND_RESPONSE = {
     "STS": r"",
     "GLT": r"",
     # xml formatted responses
-    "PSI": ("PSI", "<XML"),
+    "PSI": ("PSI", "<XML>"),
     "GSI": ("GSI", "<XML>"),
-    "MSI": r"MSI,<XML>\r",
+    "MSI": ("MSI", "<XML>"),
     # getters/setters
     "FQK": r"",
     "SQK": r"",
