@@ -240,37 +240,80 @@ class UnidenScanner:
             cmd (str): 3 letter command string
 
         Returns:
-
+            xml_str (str): xml formatted data returned by scanner
+            False (bool): command and response don't match
+            True (bool): OK signal returned by scanner
+            res_values (str): first line of response from scanner
 
         """
 
         self.logger.debug("raw(): cmd %s" % cmd)
 
         # allow user to input lowercase commands
-        cmd = cmd.capitalize()
+        cmd = cmd.upper()
+        # command needs to be byte string with "\r" line terminator
         cmd_str = str.encode("".join([cmd, "\r"]))
 
         try:
-            self.serial.write(cmd_str)
+            write_ack = self.serial.write(cmd_str)
+            self.logger.debug(f"write ack: {write_ack}")
         except serial.serialutil.SerialException:
             self.logger.error(
                 f"{cmd_str} cannot be executed by raw method, " f"port is not " f"open."
             )
             return "Port Closed"
 
+        # first response line contains information on how to proceed
+        res_line = self.serial.read_until(b"\r").decode()
+        # return character is not useful here
+        res_line = res_line.rstrip("\r")
+
+        # response is comma separated
+        res_items = res_line.split(",")
+
+        if len(res_items) == 1:
+            return res_items[0]
+
+        # non xml values returned by scanner
+        res_values = {}
+
+        try:
+            # use command to get expected response format from constants
+            expected_res = SCANNER_COMMAND_RESPONSE[cmd]
+        except KeyError:
+            self.logger.exception(f"{cmd} was not recognized.")
+            return False
+
+        for index, item in enumerate(res_items):
+            self.logger.debug(f"actual response: {item}")
+
+            scan_cmd_res = SCANNER_COMMAND_RESPONSE[index]
+            self.logger.debug(f"expected response: {scan_cmd_res}")
+
+            # make sure the command and response match
+            if index == 0 and cmd != scan_cmd_res:
+                self.logger.error("Command and response are not identical.")
+                return False
+            # return with success signal
+            elif index == 1 and item == "OK":
+                return True
+            # hop out of the for loop if we're dealing with xml data
+            elif index == 1 and item == "<XML>":
+                break
+            # return non-xml data as tuple
+
+            res_values[scan_cmd_res] = item
+
+            return res_values
+
         # UTF8 string returned by scanner
-        res_str = self.serial.readall().decode()
+        # res_str = self.serial.readall().decode()
 
-        # get the name of command returned by scanner
-        cmd_returned, res_str = res_str.split(",", 1)
+        # get the xml data
+        xml_str = self.serial.read_until(b"</ScannerInfo>\r").decode()
+        xml_str = xml_str.replace("\r", "\n")
 
-        # switch out for more common linefeed
-        res_str = res_str.replace("\r", "\n")
-
-        expected_res = SCANNER_COMMAND_RESPONSE[cmd_returned]
-        self.logger.info(expected_res)
-
-        # cmd_res, data_res = res_str.split("\r", 1)
+        return xml_str
 
     def get_model(self):
         """Get scanner model information, saving to internal state as well as

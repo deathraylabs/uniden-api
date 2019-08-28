@@ -506,7 +506,7 @@ human_ch_logs = {"0": "off", "1": "on", "2": "extend"}
 # list of commands available via serial port and the first line of response
 SCANNER_COMMAND_RESPONSE = {
     # information
-    "MDL": r"MDL,[MODEL_NAME]\r",
+    "MDL": ("MDL", "[MODEL_NAME]", r"\r"),
     "VER": r"VER,[VERSION]\r",
     "KEY": r"KEY,OK\r",
     "STS": r"",
