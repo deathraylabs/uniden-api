@@ -158,7 +158,8 @@ class UnidenScanner:
         try:
             # timeout originally set to 0.1
             # timeout set to 0 is non-blocking
-            self.serial = serial.Serial(self.port, self.speed, timeout=0.1)
+            self.serial = serial.Serial(self.port, self.speed, timeout=3.1)
+
         except serial.SerialException:
             self.logger.error("Error opening serial port %s!" % self.port)
 
@@ -207,6 +208,8 @@ class UnidenScanner:
             )
             return "Port Closed"
 
+        # todo: update so this isn't blocking
+        # this function blocks for entire duration of timeout
         # decode byte string to native UTF-8 string
         res = self.serial.readall().decode()
 
@@ -484,6 +487,7 @@ class UnidenScanner:
 
         return True
 
+    # todo: Don't continue trying to handle threads in object
     def push_update_scanner_state(self, interval=1000):
         """Method to set scanner 'push scanner information' (PSI) mode, then
         automatically keep self.scan_state updated with most recent information.
