@@ -504,16 +504,18 @@ scanner_ch_logs = {"off": "0", "on": "1", "extend": "2"}
 human_ch_logs = {"0": "off", "1": "on", "2": "extend"}
 
 # list of commands available via serial port and the first line of response
+# technically all responses end in "\r"
+# todo: finish adding to this list
 SCANNER_COMMAND_RESPONSE = {
     # information
-    "MDL": ("MDL", "[MODEL_NAME]", r"\r"),
-    "VER": r"VER,[VERSION]\r",
-    "KEY": r"KEY,OK\r",
+    "MDL": ("MDL", "MODEL_NAME"),
+    "VER": ("VER", "VERSION", r"\r"),
+    "KEY": ("KEY", "OK"),
     "STS": r"",
     "GLT": r"",
     # xml formatted responses
-    "PSI": r"PSI,<XML>\r",
-    "GSI": r"GSI,<XML>\r",
+    "PSI": ("PSI", "<XML"),
+    "GSI": ("GSI", "<XML>"),
     "MSI": r"MSI,<XML>\r",
     # getters/setters
     "FQK": r"",

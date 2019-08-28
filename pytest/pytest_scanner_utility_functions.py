@@ -118,6 +118,15 @@ def test_get_wav_files():
 def test_open_scanner_port():
     s = UnidenScanner()
     assert s.open()
+    s.close()
+
+
+def test_process_command():
+    s = UnidenScanner()
+
+    assert s.process_command("MDL")["MODEL_NAME"] == "SDS100"
+    assert s.process_command("VER")["VERSION"] == "Version 1.10.00"
+    s.close()
 
 
 # if __name__ == "__main__":
