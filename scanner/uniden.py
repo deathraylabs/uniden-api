@@ -532,10 +532,8 @@ class UnidenScanner:
 
         return True
 
-    # todo: Don't continue trying to handle threads in object
-    def push_update_scanner_state(self, interval=1000):
-        """Method to set scanner 'push scanner information' (PSI) mode, then
-        automatically keep self.scan_state updated with most recent information.
+    def start_push_updates(self, interval=1000):
+        """Method to set scanner 'push scanner information' (PSI) mode
 
         Args:
             interval (int): number of milliseconds scanner should wait before
@@ -545,31 +543,16 @@ class UnidenScanner:
             True: when method successfully ends
 
         """
+        # todo: add error checking logic
+        self.send_command(f"PSI,{interval}")
 
-        # sets the scanner into push state
-        # cmd_response = self.raw(f"PSI,{interval}")
-        # self.logger.info(f"Setting PSI mode. Response from scanner:" f" {cmd_response}")
-        #
-        # # initialize threading queue
-        # inputQueue = queue.Queue()
-        # # initialize thread
-        # inputThread = threading.Thread(
-        #     target=self._read_serial_buffer, args=(inputQueue,), daemon=True
-        # )
-        # inputThread.start()
-        #
-        # while True:
-        #     if inputQueue.qsize() > 0:
-        #         self.logger.debug(f"input queue size: {inputQueue.qsize()}")
-        #         serial_buffer = inputQueue.get()
-        #
-        #         self.update_scanner_state(mode="push", raw_state_xml=serial_buffer)
-        #
-        #         # if input_str == EXIT_COMMAND:
-        #         #     print("Exiting serial terminal.")
-        #
-        #     # give CPU some time to rest
-        #     time.sleep(0.3)
+        return True
+
+    def stop_push_updates(self):
+        """Method turns off scanner push updates."""
+
+        # todo: add error checking logic
+        self.send_command("PSI,0")
 
         return True
 
@@ -676,28 +659,6 @@ class UnidenScanner:
         except CommandError:
             self.logger.error("push_key(): %s" % cmd)
             return 0
-
-    def set_push_state_updating(self, rate_in_ms, inputQueue):
-        """Number of seconds between state pushes from scanner.
-
-        0 ms -> turns scan push off
-
-        Args:
-            rate_in_ms (int): refresh rate in number of milliseconds
-
-        Returns:
-
-        """
-        logging.info(f"scanner update time: {rate_in_ms} ms")
-
-        # set scanner to push state information every X ms
-        self.raw(f"PSI,{rate_in_ms}")
-
-        # while True:
-        #
-        #
-        #
-        # return
 
     def set_quick_search_hold(
         self,
