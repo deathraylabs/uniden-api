@@ -166,7 +166,8 @@ class DataWindow(Screen):
         Returns:
             None
         """
-
+        # update the scanner first
+        self.scanner.update_scanner_state(mode="push")
         # grab the scanner state
         wav_meta = self.scanner.get_scanner_state()
 
