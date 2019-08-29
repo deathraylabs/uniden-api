@@ -100,7 +100,7 @@ class DataWindow(Screen):
         Logger.info("scanner status button press")
 
         # Set the timer for redrawing the screen
-        refresh_time = 1
+        refresh_time = 1.5
         Clock.schedule_interval(self.update_screen, refresh_time)
 
         try:
@@ -138,7 +138,7 @@ class DataWindow(Screen):
         # self.scanner.update_scanner_state()
 
         # start the scanner sending push updates
-        self.scanner.start_push_updates(interval=1500)
+        self.scanner.start_push_updates(interval=1000)
 
     def scanner_disconnect_btn(self):
 

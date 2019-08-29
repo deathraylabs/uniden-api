@@ -516,8 +516,12 @@ class UnidenScanner:
         elif mode == "push":
             # separate command response from returned state data
             # first line is response, remaining text is xml formatted state
-            response, state_xml = self.get_serial_buffer().split("\n", 1)
-            self.logger.debug(f"Serial port response: {response}")
+            try:
+                response, state_xml = self.get_serial_buffer().split("\n", 1)
+                self.logger.debug(f"Serial port response: {response}")
+            except ValueError:
+                self.logger.exception("No data in buffer.", exc_info=False)
+                return False
         else:
             self.logger.error("For some reason this is neither push nor pull")
             return False
