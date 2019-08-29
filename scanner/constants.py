@@ -514,6 +514,7 @@ SCANNER_COMMAND_RESPONSE = {
     "STS": r"",
     "GLT": r"",
     # xml formatted responses
+    # I think the response should be "OK" if it's a command
     "PSI": ("PSI", "<XML>"),
     "GSI": ("GSI", "<XML>"),
     "MSI": ("MSI", "<XML>"),

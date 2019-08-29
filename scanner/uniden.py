@@ -308,6 +308,7 @@ class UnidenScanner:
                 xml_str = xml_str.replace("\r", "\n")
 
                 return xml_str
+
             elif index == 1 and item == "OK":
                 continue
 
@@ -508,7 +509,7 @@ class UnidenScanner:
                 # exclude the prefix data 'GSI,<XML>,\r'
                 self.logger.info("uniden: sending command to scanner...")
                 state_xml = self.send_command("GSI")
-                self.logger.info(f"Bytes returned : {len(raw_state_xml)}")
+                self.logger.info(f"Bytes returned : {len(state_xml)}")
             except CommandError:
                 self.logger.error("get_scanner_information() failed.")
                 return False
@@ -517,6 +518,9 @@ class UnidenScanner:
             # first line is response, remaining text is xml formatted state
             response, state_xml = raw_state_xml.split("\n", 1)
             self.logger.debug(f"Serial port response: {response}")
+        else:
+            self.logger.error("For some reason this is neither push nor pull")
+            return False
 
         # # add the current time to dict using @ symbol as flag
         # scanner_xml["@date_code"] = datetime.now().isoformat()
