@@ -483,7 +483,7 @@ class UnidenScanner:
     #
     #     return dict
 
-    def update_scanner_state(self, mode="pull", raw_state_xml=""):
+    def update_scanner_state(self, mode="pull"):
         """Updates the state variable for the class.
 
         Args:

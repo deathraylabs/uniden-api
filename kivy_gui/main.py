@@ -54,11 +54,11 @@ class DataWindow(Screen):
         super(DataWindow, self).__init__(**kwargs)
 
         # Set the timer for redrawing the screen
-        refresh_time = 0.5
-        Clock.schedule_interval(self.timer, refresh_time)
+        # refresh_time = 0.5
+        # Clock.schedule_interval(self.timer, refresh_time)
 
-    def timer(self, dt):
-        pass
+    # def timer(self, dt):
+    #     pass
 
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
@@ -133,11 +133,11 @@ class DataWindow(Screen):
 
         self.scanner.update_scanner_state()
 
-        Logger.debug("getting scanner state...")
-        scanner_state = self.scanner.get_scanner_state()
+        # Logger.debug("getting scanner state...")
+        # scanner_state = self.scanner.get_scanner_state()
 
         Logger.debug("Scanner state retrieved, updating screen...")
-        self.update_screen(scanner_state)
+        self.update_screen()
 
     def scanner_disconnect_btn(self):
         try:
@@ -150,7 +150,7 @@ class DataWindow(Screen):
                 "Scanner is not initialized, no port to close.", exc_info=False
             )
 
-    def update_screen(self, updated_data):
+    def update_screen(self):
         """Handles updates.
         Args:
             updated_data (dict): contains scanner data keys and values.
@@ -159,7 +159,8 @@ class DataWindow(Screen):
             None
         """
 
-        wav_meta = updated_data
+        # grab the scanner state
+        wav_meta = self.scanner.get_scanner_state()
 
         # todo: need a method to clear the text boxes before update
 
