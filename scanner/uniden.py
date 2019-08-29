@@ -547,29 +547,29 @@ class UnidenScanner:
         """
 
         # sets the scanner into push state
-        cmd_response = self.raw(f"PSI,{interval}")
-        self.logger.info(f"Setting PSI mode. Response from scanner:" f" {cmd_response}")
-
-        # initialize threading queue
-        inputQueue = queue.Queue()
-        # initialize thread
-        inputThread = threading.Thread(
-            target=self._read_serial_buffer, args=(inputQueue,), daemon=True
-        )
-        inputThread.start()
-
-        while True:
-            if inputQueue.qsize() > 0:
-                self.logger.debug(f"input queue size: {inputQueue.qsize()}")
-                serial_buffer = inputQueue.get()
-
-                self.update_scanner_state(mode="push", raw_state_xml=serial_buffer)
-
-                # if input_str == EXIT_COMMAND:
-                #     print("Exiting serial terminal.")
-
-            # give CPU some time to rest
-            time.sleep(0.3)
+        # cmd_response = self.raw(f"PSI,{interval}")
+        # self.logger.info(f"Setting PSI mode. Response from scanner:" f" {cmd_response}")
+        #
+        # # initialize threading queue
+        # inputQueue = queue.Queue()
+        # # initialize thread
+        # inputThread = threading.Thread(
+        #     target=self._read_serial_buffer, args=(inputQueue,), daemon=True
+        # )
+        # inputThread.start()
+        #
+        # while True:
+        #     if inputQueue.qsize() > 0:
+        #         self.logger.debug(f"input queue size: {inputQueue.qsize()}")
+        #         serial_buffer = inputQueue.get()
+        #
+        #         self.update_scanner_state(mode="push", raw_state_xml=serial_buffer)
+        #
+        #         # if input_str == EXIT_COMMAND:
+        #         #     print("Exiting serial terminal.")
+        #
+        #     # give CPU some time to rest
+        #     time.sleep(0.3)
 
         return True
 
