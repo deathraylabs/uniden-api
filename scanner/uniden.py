@@ -278,9 +278,12 @@ class UnidenScanner:
         # non xml values returned by scanner
         res_values = {}
 
+        # separate command stem from arguments
+        cmd_stem = cmd.split(",")[0]
+
         try:
             # use command to get expected response format from constants
-            expected_res = SCANNER_COMMAND_RESPONSE[cmd]
+            expected_res = SCANNER_COMMAND_RESPONSE[cmd_stem]
         except KeyError:
             self.logger.exception(f"{cmd} was not recognized.")
             return False
