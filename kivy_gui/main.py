@@ -144,6 +144,9 @@ class DataWindow(Screen):
         # self.update_screen()
 
     def scanner_disconnect_btn(self):
+        # stop updating screen with clock
+        Clock.unschedule(self.update_screen)
+
         try:
             self.scanner.close()
             Logger.debug("Scanner Connection Closed.")
