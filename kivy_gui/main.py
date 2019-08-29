@@ -5,6 +5,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.core.audio import SoundLoader
+from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import ScreenManager, Screen
 
@@ -52,6 +53,13 @@ class DataWindow(Screen):
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
 
+        # Set the timer for redrawing the screen
+        refresh_time = 0.5
+        Clock.schedule_interval(self.timer, refresh_time)
+
+    def timer(self, dt):
+        pass
+
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
 
@@ -97,13 +105,14 @@ class DataWindow(Screen):
             Logger.exception(
                 "Scanner is not initialized, initializing " "now...", exc_info=False
             )
+            # todo: can I ignore this step?
             # create scanner connection
-            if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
-                print("On RPi")
-                port = "/dev/ttyACM0"
-            else:
-                port = "/dev/cu.usbmodem1434101"
-                # print("trying the default port")
+            # if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
+            #     print("On RPi")
+            #     port = "/dev/ttyACM0"
+            # else:
+            #     port = "/dev/cu.usbmodem1434101"
+            #     # print("trying the default port")
 
             try:
                 self.scanner = UnidenScanner()
