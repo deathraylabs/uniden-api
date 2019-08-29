@@ -100,7 +100,7 @@ class DataWindow(Screen):
         Logger.info("scanner status button was pressed")
 
         # Set the timer for redrawing the screen
-        refresh_time = 1.5
+        refresh_time = 0.1
 
         try:
             port_is_open = self.scanner.port_is_open()
@@ -137,17 +137,16 @@ class DataWindow(Screen):
             return
 
         # start the scanner sending push updates
-        self.scanner.start_push_updates(interval=1000)
+        self.scanner.start_push_updates(interval=250)
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
 
     def scanner_disconnect_btn(self):
+        # stop updating screen with clock
+        Clock.unschedule(self.update_screen)
 
         # stop the scanner push updates
         self.scanner.stop_push_updates()
-
-        # stop updating screen with clock
-        Clock.unschedule(self.update_screen)
 
         try:
             self.scanner.close()
@@ -204,6 +203,11 @@ class DataWindow(Screen):
 
         self.unit_ids.text = wav_meta["UnitID:U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
+
+        # if wav_meta["Site:Hold"] == "On":
+        #     self.site_name.hold_color = (1, 1, 0.1, 0.15)
+        # else:
+        #     self.site_name.hold_color = (1, 1, 0.1, 0)
 
         # unit ID information is not always present.
         # try:

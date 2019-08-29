@@ -44,6 +44,8 @@
     play_stop_button: stop_play
     scan_status_button: scanner_status
 
+
+
 #    BoxLayout:
     GridLayout:
         cols: 1
@@ -94,10 +96,17 @@
                 id: tgid_name
                 text: "TGID:Name"
 
+
             Label:
                 id: site_name
+                hold_color: (1, 1, 1, 0)
                 text: "Site:Name"
-
+                canvas:
+                    Color:
+                        rgba: self.hold_color
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
 
             Label:
                 id: unit_ids
