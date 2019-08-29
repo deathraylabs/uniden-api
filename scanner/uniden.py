@@ -516,7 +516,7 @@ class UnidenScanner:
         elif mode == "push":
             # separate command response from returned state data
             # first line is response, remaining text is xml formatted state
-            response, state_xml = raw_state_xml.split("\n", 1)
+            response, state_xml = self.get_serial_buffer().split("\n", 1)
             self.logger.debug(f"Serial port response: {response}")
         else:
             self.logger.error("For some reason this is neither push nor pull")
@@ -556,24 +556,15 @@ class UnidenScanner:
 
         return True
 
-    def _read_serial_buffer(self, inputQueue):
-        """Start a thread that waits for buffer to fill before passing data.
-
-        Args:
-            inputQueue: variable that allows us to pass data to main thread
-
-        Returns:
-
+    def get_serial_buffer(self):
+        """Get serial port buffer.
         """
-        while True:
-            # self.serial is the serial port connection
-            # not sure if this is blocking until condition is fulfilled or not
-            serial_buffer = self.serial.read_until(b"</ScannerInfo>\r").decode()
+        # self.serial is the serial port connection
+        serial_buffer = self.serial.read_until(b"</ScannerInfo>\r").decode()
 
-            serial_buffer = serial_buffer.replace("\r", "\n")
+        serial_buffer = serial_buffer.replace("\r", "\n")
 
-            # loads the input queue with contents we got from buffer
-            inputQueue.put(serial_buffer)
+        return serial_buffer
 
     def get_scanner_state(self):
         """Returns the most recently downloaded state of scanner but doesn't
