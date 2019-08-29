@@ -295,9 +295,9 @@ class UnidenScanner:
             self.logger.debug(f"expected response: {expected_res[index]}")
 
             # make sure the command and response match
-            if index == 0 and cmd == expected_res[index]:
+            if index == 0 and cmd_stem == expected_res[index]:
                 continue
-            elif index == 0 and cmd != expected_res[index]:
+            elif index == 0 and cmd_stem != expected_res[index]:
                 self.logger.error("Command and response are not identical.")
                 return False
             # return with success signal
