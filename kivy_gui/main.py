@@ -97,18 +97,16 @@ class DataWindow(Screen):
 
     # todo: call update screen and pass data to it
     def scanner_status_btn(self):
-        Logger.info("scanner status button press")
+        Logger.info("scanner status button was pressed")
 
         # Set the timer for redrawing the screen
         refresh_time = 1.5
-        Clock.schedule_interval(self.update_screen, refresh_time)
 
         try:
             port_is_open = self.scanner.port_is_open()
+            Logger.debug("The scanner port is already open.")
         except AttributeError:
-            Logger.exception(
-                "Scanner is not initialized, initializing " "now...", exc_info=False
-            )
+            Logger.exception("Scanner is not initialized.", exc_info=False)
             # todo: can I ignore this step?
             # create scanner connection
             # if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
@@ -119,26 +117,26 @@ class DataWindow(Screen):
             #     # print("trying the default port")
 
             try:
+                Logger.info("Trying to initialize scanner...")
                 self.scanner = UnidenScanner()
+                Logger.info("Scanner is initialized.")
             except NameError:
-                Logger.error("No Scanner Found.")
+                Logger.error("Initialization failed, No Scanner Found.")
                 return
 
-            Logger.info("Scanner Connected.")
-
             self.scan_status_button.text = "Get Data"
 
             return
 
-        if not self.scanner.port_is_open():
-            self.scanner.open()
-            self.scan_status_button.text = "Get Data"
-            return
-
-        # self.scanner.update_scanner_state()
+        # if not self.scanner.port_is_open():
+        #     self.scanner.open()
+        #     self.scan_status_button.text = "Get Data"
+        #     return
 
         # start the scanner sending push updates
         self.scanner.start_push_updates(interval=1000)
+        # start the screen update process
+        Clock.schedule_interval(self.update_screen, refresh_time)
 
     def scanner_disconnect_btn(self):
 
