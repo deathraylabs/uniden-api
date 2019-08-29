@@ -128,10 +128,13 @@ class DataWindow(Screen):
 
             return
 
-        # if not self.scanner.port_is_open():
-        #     self.scanner.open()
-        #     self.scan_status_button.text = "Get Data"
-        #     return
+        # if the port is simply closed, open it.
+        if not self.scanner.port_is_open():
+            Logger.debug("Looks like the scanner port is closed. Opening...")
+            self.scanner.open()
+            Logger.debug("Port should be open now.")
+            self.scan_status_button.text = "Get Data"
+            return
 
         # start the scanner sending push updates
         self.scanner.start_push_updates(interval=1000)
