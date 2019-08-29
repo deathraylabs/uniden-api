@@ -54,8 +54,8 @@ class DataWindow(Screen):
         super(DataWindow, self).__init__(**kwargs)
 
         # Set the timer for redrawing the screen
-        # refresh_time = 0.5
-        # Clock.schedule_interval(self.timer, refresh_time)
+        # refresh_time = 1
+        # Clock.schedule_interval(self.update_screen, refresh_time)
 
     # def timer(self, dt):
     #     pass
@@ -99,6 +99,10 @@ class DataWindow(Screen):
     def scanner_status_btn(self):
         Logger.info("scanner status button press")
 
+        # Set the timer for redrawing the screen
+        refresh_time = 1
+        Clock.schedule_interval(self.update_screen, refresh_time)
+
         try:
             port_is_open = self.scanner.port_is_open()
         except AttributeError:
@@ -136,8 +140,8 @@ class DataWindow(Screen):
         # Logger.debug("getting scanner state...")
         # scanner_state = self.scanner.get_scanner_state()
 
-        Logger.debug("Scanner state retrieved, updating screen...")
-        self.update_screen()
+        # Logger.debug("Scanner state retrieved, updating screen...")
+        # self.update_screen()
 
     def scanner_disconnect_btn(self):
         try:
@@ -150,7 +154,7 @@ class DataWindow(Screen):
                 "Scanner is not initialized, no port to close.", exc_info=False
             )
 
-    def update_screen(self):
+    def update_screen(self, dt):
         """Handles updates.
         Args:
             updated_data (dict): contains scanner data keys and values.
