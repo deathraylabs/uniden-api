@@ -29,10 +29,6 @@ class DataWindow(Screen):
     sure why.
     """
 
-    # def __init__(self, name):
-    #     super(DataWindow, self).__init__()
-    #     self.color = "0,1,0,1"
-
     # initialize id reference to kv file using variable name
     fav_list_name = ObjectProperty()
     sys_name = ObjectProperty()
@@ -52,6 +48,9 @@ class DataWindow(Screen):
     # all_labels = ObjectProperty()
     # initialize variable to store scanner data
     scanner = None
+
+    def __init__(self, **kwargs):
+        super(DataWindow, self).__init__(**kwargs)
 
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
