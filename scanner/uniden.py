@@ -300,9 +300,7 @@ class UnidenScanner:
             elif index == 0 and cmd_stem != expected_res[index]:
                 self.logger.error("Command and response are not identical.")
                 return False
-            # return with success signal
-            elif index == 1 and item == "OK":
-                return True
+
             # hop out of the for loop if we're dealing with xml data
             elif index == 1 and item == "<XML>":
                 # get the xml data
@@ -310,6 +308,8 @@ class UnidenScanner:
                 xml_str = xml_str.replace("\r", "\n")
 
                 return xml_str
+            elif index == 1 and item == "OK":
+                continue
 
             # return non-xml data as tuple
 
