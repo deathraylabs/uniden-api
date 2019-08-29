@@ -135,15 +135,16 @@ class DataWindow(Screen):
             self.scan_status_button.text = "Get Data"
             return
 
-        self.scanner.update_scanner_state()
+        # self.scanner.update_scanner_state()
 
-        # Logger.debug("getting scanner state...")
-        # scanner_state = self.scanner.get_scanner_state()
-
-        # Logger.debug("Scanner state retrieved, updating screen...")
-        # self.update_screen()
+        # start the scanner sending push updates
+        self.scanner.start_push_updates(interval=1500)
 
     def scanner_disconnect_btn(self):
+
+        # stop the scanner push updates
+        self.scanner.stop_push_updates()
+
         # stop updating screen with clock
         Clock.unschedule(self.update_screen)
 
