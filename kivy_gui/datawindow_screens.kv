@@ -21,7 +21,16 @@
     halign: "center"
 
 <ColorLabel@Label>:
+    color_label: color_label
+    id: color_label
     color: 1,0,0,1
+    canvas:
+        Color:
+            rgba: (1,0,0,.4)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
 
 <MenuBar@BoxLayout>:
     id: "menu_layout"
@@ -60,7 +69,7 @@
 #        orientation: 'vertical'
 
         BoxLayout:
-            id: "large_text_layout"
+            id: large_text_layout
     #        top: root.top
 #            width: root.width
 #            height: root.height
@@ -69,6 +78,7 @@
 #            height: 200
     #        center: root.center
             orientation: 'vertical'
+
 
             canvas:
                 Color:

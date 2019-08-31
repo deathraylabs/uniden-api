@@ -428,8 +428,8 @@ def get_string_at_offset(start, length, directory):
 
 
 def group_audio_by_department(
-    source_dir="~/Downloads/uniden audio/",
-    save_dir="/Users/peej/Downloads/uniden audio/",
+    source_dir="/Volumes/SDS100/BCDx36HP/audio/user_rec/",
+    save_dir="/Users/peej/Downloads/uniden_audio2/",
 ):
     """Function takes directories as exported from scanner and groups the
     audio recordings into new directories based on department name.
@@ -494,16 +494,18 @@ def group_audio_by_department(
         try:
             file_or_folder.rmdir()
             logging.info("{} deleted".format(str(file_or_folder)))
-        except:
-            #         print("Directory '{}' isn't empty".format(str(folder)))
+        except FileNotFoundError:
+            logger.exception(
+                "Directory '{}' wasn't found".format(str(folder)), exc_info=False
+            )
             pass
 
     # also remove parent directory
-    try:
-        parent_dir.rmdir()
-        logging.info(f"{parent_dir} deleted.")
-    except FileExistsError:
-        pass
+    # try:
+    #     parent_dir.rmdir()
+    #     logging.info(f"{parent_dir} deleted.")
+    # except FileExistsError:
+    #     pass
 
     return
 
@@ -564,6 +566,8 @@ if __name__ == "__main__":
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
+    group_audio_by_department()
+
     # help_statement = """
     #     **********************
     #     Copy path to wav_source
@@ -575,26 +579,26 @@ if __name__ == "__main__":
 
     # get contents of clipboard
     # clipboard = cb.paste()
-    source_path = "/Users/peej/Desktop/user_rec/4F18187C/"
-    save_path = "/Users/peej/Downloads/uniden audio/1 HPD-N"
+    # source_path = "/Users/peej/Desktop/user_rec/4F18187C/"
+    # save_path = "/Users/peej/Downloads/uniden audio/1 HPD-N"
 
     # group_audio_by_department(source_path, save_path)
 
     # matching tag
-    tag = "Red"
-    output_file_name = "sigh guy.wav"
-
-    matched_files = files_with_matched_tags(save_path, tag)
+    # tag = "Red"
+    # output_file_name = "sigh guy.wav"
     #
-    output = merge_tagged_wav_files(matched_files)
+    # matched_files = files_with_matched_tags(save_path, tag)
+    # #
+    # output = merge_tagged_wav_files(matched_files)
 
     # metadata = get_wav_meta(wav_dir_path)
 
     # audio_path = "/Users/peej/Downloads/uniden audio/00 HPD-NW/2019-07-05_11-39-47.wav"
 
-    for file in matched_files:
-        metadata = get_wav_meta(file)
-        print(metadata)
+    # for file in matched_files:
+    #     metadata = get_wav_meta(file)
+    #     print(metadata)
     # metalist = re.sub(r"(?:\x00+)", "\n", metadata[0])
 
     # scanstring = get_string_at_offset(start, length, audio_path)

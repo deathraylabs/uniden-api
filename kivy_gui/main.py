@@ -11,7 +11,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 # from kivy.uix.boxlayout import BoxLayout
 
-# from kivy.uix.label import Label
+from kivy.uix.label import Label
+from kivy.graphics import Color
 
 # Obj..Prop.. allows us to reference id name in kv file
 from kivy.properties import ObjectProperty
@@ -205,7 +206,7 @@ class DataWindow(Screen):
         self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
 
         # if wav_meta["Site:Hold"] == "On":
-        #     self.site_name.hold_color = (1, 1, 0.1, 0.15)
+        #     self.root.ids.site_name.hold_color = (1, 1, 0.1, 0.15)
         # else:
         #     self.site_name.hold_color = (1, 1, 0.1, 0)
 
