@@ -452,51 +452,53 @@ def group_audio_by_department(
     parent_dir = None
 
     for file_or_folder in basepath.iterdir():
-        if parent_dir is not None:
-            # the .glob ensures that we only get audio files, no hidden files
-            for file in parent_dir.glob("*.wav"):
-                # create tinytag object that contains metadata
-                ttag = TinyTag.get(file)
-                # get the department name, which is stored under title
-                department = ttag.title
-                # forward slashes are not allowed in path names,
-                # this will convert them to space instead
-                try:
-                    department = department.replace("/", " ")
-                except AttributeError:
-                    logging.error("Encountered file without department tag.")
-                    break
-
-                # create new folders for each department
-                # if it doesn't already exist
-                p = Path(savepath, department)
-                if not p.exists():
-                    p.mkdir(exist_ok=True)  # wont overwrite existing wav_source
-                    logging.info("New folder created for {}.".format(str(department)))
-
-                # move individual .wav files to their respective dept folders
-                try:
-                    shutil.move(str(file), str(p))
-                except:
-                    #                 print("{} already exists".format(str(p)))
-                    pass
-
         # if you find a wav file, use its parent directory
-        elif file_or_folder.suffix == ".wav":
+        if file_or_folder.suffix == ".wav":
             parent_dir = file_or_folder.parent
         # code is not smart enough to deal with files nested more than 2
         # directories deep
         elif file_or_folder.is_dir():
             parent_dir = file_or_folder
+        else:
+            continue
+
+        # the .glob ensures that we only get audio files, no hidden files
+        for file in parent_dir.glob("*.wav"):
+            # create tinytag object that contains metadata
+            ttag = TinyTag.get(file)
+            # get the department name, which is stored under title
+            department = ttag.title
+            # forward slashes are not allowed in path names,
+            # this will convert them to space instead
+            try:
+                department = department.replace("/", " ")
+            except AttributeError:
+                logging.error("Encountered file without department tag.")
+                break
+
+            # create new folders for each department
+            # if it doesn't already exist
+            p = Path(savepath, department)
+            if not p.exists():
+                p.mkdir(exist_ok=True)  # wont overwrite existing wav_source
+                logging.info("New folder created for {}.".format(str(department)))
+
+            # move individual .wav files to their respective dept folders
+            try:
+                shutil.move(str(file), str(p))
+            except:
+                #                 print("{} already exists".format(str(p)))
+                pass
 
     # remove the directories that are now empty
     for file_or_folder in basepath.iterdir():
         try:
             file_or_folder.rmdir()
             logging.info("{} deleted".format(str(file_or_folder)))
-        except FileNotFoundError:
+        except OSError:
             logger.exception(
-                "Directory '{}' wasn't found".format(str(folder)), exc_info=False
+                "Directory '{}' is not empty, cannot delete it".format(str(folder)),
+                exc_info=False,
             )
             pass
 
