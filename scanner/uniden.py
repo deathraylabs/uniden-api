@@ -184,12 +184,13 @@ class UnidenScanner:
         """Returns True if open, False if closed."""
 
         try:
-            self.serial.isOpen()
+            if not self.serial.isOpen():
+                return False
+            else:
+                return True
         except AttributeError:
             logging.error("No Scanner Found at port.")
             return False
-
-        return True
 
     def __del__(self):
 
