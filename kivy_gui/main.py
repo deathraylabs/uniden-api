@@ -158,8 +158,12 @@ class DataWindow(Screen):
         # stop updating screen with clock
         Clock.unschedule(self.update_screen)
 
-        # stop the scanner push updates
-        self.scanner.stop_push_updates()
+        try:
+            # stop the scanner push updates
+            self.scanner.stop_push_updates()
+        except AttributeError:
+            Logger.exception("No scanner instance available to disconnect.")
+            return False
 
         try:
             self.scanner.close()
