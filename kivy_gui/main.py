@@ -50,7 +50,7 @@ class DataWindow(Screen):
     transmission_start = ObjectProperty()
     transmission_end = ObjectProperty()
     total_time = ObjectProperty()
-    play_stop_button = ObjectProperty()
+
     scan_status_button = ObjectProperty()
 
     # can I store the sound object here?
@@ -65,52 +65,6 @@ class DataWindow(Screen):
         # color for hold highlight
         self.highlight_color = (0.8, 0.8, 0, 0.8)
         self.transparent_color = (1, 1, 1, 0)
-
-        # Set the timer for redrawing the screen
-        # refresh_time = 1
-        # Clock.schedule_interval(self.update_screen, refresh_time)
-
-    # def timer(self, dt):
-    #     pass
-
-    def btn(self):
-        """Method runs when Button object calls root.btn() from <DataWindow>"""
-
-        wav_meta = get_wav_meta(wav_dir_path)
-
-        # update the display
-        self.update_screen(wav_meta)
-        Logger.debug("Updated screen with WAV metadata.")
-
-        return
-
-    def play_stop_btn(self):
-
-        filepath = wav_dir_path
-
-        if self.sound is None:
-            self.sound = SoundLoader.load(filepath)
-            self.sound.play()
-            self.play_stop_button.text = "STOP"
-        elif self.sound and self.sound.state == "play":
-            position = self.sound.get_pos()
-            print(position)
-            self.sound.stop()
-            self.play_stop_button.text = "PLAY"
-        else:
-            # print("Sound found at %s" % sound.source)
-            # print("Sound is %.3f seconds" % sound.length)
-            self.sound.play()
-            self.play_stop_button.text = "STOP"
-
-    def stop_btn(self):
-        if self.sound:
-            self.sound.stop()
-            self.play_stop_button.text = "PLAY"
-
-        # this instruction will change the variable defined in the
-        # kv file under the id'd label.
-        self.ids["site_name"].hold_color = self.highlight_color
 
     # todo: call update screen and pass data to it
     def scanner_status_btn(self):
@@ -250,7 +204,42 @@ class DataWindow(Screen):
 
 
 class PlaybackScreen(Screen):
-    pass
+    play_stop_button = ObjectProperty()
+
+    def btn(self):
+        """Method runs when Button object calls root.btn() from <DataWindow>"""
+
+        wav_meta = get_wav_meta(wav_dir_path)
+
+        # update the display
+        self.update_screen(wav_meta)
+        Logger.debug("Updated screen with WAV metadata.")
+
+        return
+
+    def play_stop_btn(self):
+
+        filepath = wav_dir_path
+
+        if self.sound is None:
+            self.sound = SoundLoader.load(filepath)
+            self.sound.play()
+            self.play_stop_button.text = "STOP"
+        elif self.sound and self.sound.state == "play":
+            position = self.sound.get_pos()
+            print(position)
+            self.sound.stop()
+            self.play_stop_button.text = "PLAY"
+        else:
+            # print("Sound found at %s" % sound.source)
+            # print("Sound is %.3f seconds" % sound.length)
+            self.sound.play()
+            self.play_stop_button.text = "STOP"
+
+    def stop_btn(self):
+        if self.sound:
+            self.sound.stop()
+            self.play_stop_button.text = "PLAY"
 
 
 # create the screen manager
@@ -288,11 +277,6 @@ if __name__ == "__main__":
     # wav_dir_path = (
     #     "/Users/peej/dev/uniden scanner "
     #     "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
-    # )
-
-    # wav_dir_path = (
-    #     "/Users/peej/Downloads/uniden audio/-019-08-04_01-55-12/"
-    #     "female wearing nothing.wav"
     # )
 
     # run the GUI

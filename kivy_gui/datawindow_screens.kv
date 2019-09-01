@@ -17,9 +17,17 @@
 
 <Button>:
     # Formats all 'Button' tags.
-
     font_size: '15sp'
     halign: "center"
+
+<BlankLabel@Label>:
+    id: blank_label
+    canvas:
+        Color:
+            rgba: (1, 1, 1, 0.15)
+        Rectangle:
+            size: self.size
+            pos: self.pos
 
 <ColorLabel@Label>:
     id: color_label
@@ -50,7 +58,7 @@
     transmission_end: trans_ends
     total_time: tot_time
 
-    play_stop_button: stop_play
+
     scan_status_button: scanner_status
 
 
@@ -162,6 +170,76 @@
             BoxLayout:
                 orientation: 'horizontal'
 
+                BlankLabel:
+                    text: ""
+
+                BoxLayout:
+                    orientation: 'horizontal'
+
+                    BlankLabel:
+
+                    BlankLabel:
+
+                BoxLayout:
+                    orientation: 'horizontal'
+
+                    Button:
+                        id: scanner_status
+                        text: "Connect to Scanner"
+                        on_press: root.scanner_status_btn()
+
+                    Button:
+                        text: "Stop\nDisplay"
+                        on_press: root.scanner_disconnect_btn()
+
+                    Button:
+                        text: "playback"
+                        on_press:
+                            root.manager.transition.direction = 'left'
+                            root.manager.current = 'playback'
+
+<PlaybackScreen>:
+    play_stop_button: stop_play
+
+#    BoxLayout:
+    GridLayout:
+        cols: 1
+        id: 'main_container'
+#        top: root.top
+        width: root.width
+        height: root.height
+#        center_y: root.center_y
+#        width: 800
+#        height: 400
+#        center: root.center
+#        orientation: 'vertical'
+
+        BoxLayout:
+            id: large_text_layout
+    #        top: root.top
+#            width: root.width
+#            height: root.height
+    #        center_y: root.center_y
+#            width: 800
+#            height: 200
+    #        center: root.center
+            orientation: 'vertical'
+
+            canvas:
+                Color:
+                    rgba: (1, 1, 1, 0.15)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+        MenuBar:  #
+            id: "menu_layout"
+#            height: '300sp'
+#            size_hint_y: .2
+
+            BoxLayout:
+                orientation: 'horizontal'
+
                 Button:
                     text: "Get Metadata"
                     on_press: root.btn()
@@ -184,22 +262,14 @@
                     Button:
                         id: scanner_status
                         text: "Connect to Scanner"
-                        on_press: root.scanner_status_btn()
+#                        on_press: root.scanner_status_btn()
 
                     Button:
                         text: "Stop\nDisplay"
-                        on_press: root.scanner_disconnect_btn()
+#                        on_press: root.scanner_disconnect_btn()
 
                     Button:
-                        text: "playback"
+                        text: 'Back to Menu'
                         on_press:
-                            root.manager.transition.direction = 'left'
-                            root.manager.current = 'playback'
-
-<PlaybackScreen>:
-    BoxLayout:
-        Button:
-            text: 'Back to Menu'
-            on_press:
-                root.manager.transition.direction = 'right'
-                root.manager.current = 'datawindow'
+                            root.manager.transition.direction = 'right'
+                            root.manager.current = 'datawindow'
