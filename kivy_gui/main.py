@@ -144,12 +144,14 @@ class DataWindow(Screen):
         self.scan_status_button.text = "Push Mode"
 
     def scanner_disconnect_btn(self):
+        Logger.info("Disconnect button pushed.")
         # stop updating screen with clock
         Clock.unschedule(self.update_screen)
 
         try:
             # stop the scanner push updates
             self.scanner.stop_push_updates()
+            Logger.info("Stop update command sent to scanner.")
         except AttributeError:
             Logger.exception(
                 "No scanner instance available to disconnect.", exc_info=False
@@ -161,11 +163,6 @@ class DataWindow(Screen):
 
         # update button label
         self.scan_status_button.text = "Connect to Scanner"
-
-        # except AttributeError:
-        #     Logger.exception(
-        #         "Scanner is not initialized, no port to close.", exc_info=False
-        #     )
 
     def update_screen(self, dt):
         """Handles updates.
