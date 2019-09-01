@@ -134,12 +134,14 @@ class DataWindow(Screen):
 
         Logger.info("The scanner port is open.")
 
-        self.scan_status_button.text = "Get Data"
+        self.scan_status_button.text = "Push Startup"
 
         # start the scanner sending push updates
         self.scanner.start_push_updates(interval=250)
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
+
+        self.scan_status_button.text = "Push Mode"
 
     def scanner_disconnect_btn(self):
         # stop updating screen with clock
