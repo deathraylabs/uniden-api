@@ -163,6 +163,7 @@ class UnidenScanner:
 
         except serial.SerialException:
             self.logger.error("Error opening serial port %s!" % self.port)
+            return False
 
         return True
 

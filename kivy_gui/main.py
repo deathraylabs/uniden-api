@@ -121,38 +121,20 @@ class DataWindow(Screen):
 
             Logger.info("Trying to initialize scanner...")
             self.scanner = UnidenScanner()
-
             Logger.info("Scanner is initialized. Checking port connection...")
 
-            if not self.scanner.port_is_open():
-                Logger.info("Scanner is not connected to computer.")
-                return False
-
-        try:
-            self.scanner.port_is_open()
-            Logger.info("The scanner port is already open.")
-        except AttributeError:
-            Logger.exception("Scanner is not initialized.", exc_info=False)
-
-            try:
-                Logger.info("Trying to initialize scanner...")
-                self.scanner = UnidenScanner()
-                Logger.info("Scanner is initialized.")
-            except NameError:
-                Logger.error("Initialization failed, No Scanner Found.")
-                return
-
-            self.scan_status_button.text = "Get Data"
-
-            return
-
-        # if the port is simply closed, open it.
         if not self.scanner.port_is_open():
-            Logger.debug("Looks like the scanner port is closed. Opening...")
-            self.scanner.open()
-            Logger.debug("Port should be open now.")
-            self.scan_status_button.text = "Get Data"
-            return
+            port_open = self.scanner.open()
+
+            if not port_open:
+                Logger.info(
+                    "Cannot open port. Scanner is likely not connected to computer."
+                )
+            return False
+
+        Logger.info("The scanner port is open.")
+
+        self.scan_status_button.text = "Get Data"
 
         # start the scanner sending push updates
         self.scanner.start_push_updates(interval=250)
