@@ -21,12 +21,13 @@ if not, write to the Free Software Foundation, Inc.,
 """
 
 # import yaml
-import threading
-import queue
+# import threading
+# import queue
 import time
 import serial
 import serial.tools.list_ports as stlp
-import io
+
+# import io
 from pathlib import Path
 
 # import os
@@ -142,11 +143,11 @@ class UnidenScanner:
 
         """
 
-        description = f"{self.model} Serial Port "
+        # description = f"{self.model} Serial Port "
 
         # check currently available ports for our model
         for port in stlp.comports():
-            if port.description == description:
+            if port.description.find(self.model) != -1:
                 self.port = port.device
                 self.logger.info(f"the {self.model} port is: {self.port}")
                 break
