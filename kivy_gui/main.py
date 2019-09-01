@@ -142,6 +142,7 @@ class DataWindow(Screen):
         Clock.schedule_interval(self.update_screen, refresh_time)
 
         self.scan_status_button.text = "Push Mode"
+        self.scan_status_button.color = (1, 1, 1, 0.5)
 
     def scanner_disconnect_btn(self):
         Logger.info("Disconnect button pushed.")

@@ -332,6 +332,26 @@ class UnidenScanner:
         # UTF8 string returned by scanner
         # res_str = self.serial.readall().decode()
 
+    def reset_port(self):
+        """Method resets the port to ensure no data is waiting on the scanner
+        buffer
+
+        Returns:
+            False: if no port is open
+        """
+
+        if not self.port_is_open():
+            return False
+
+        # reset psi command to zero
+        self.send_command("PSI,0")
+
+        if self.serial.in_waiting() > 0:
+            # get read all data on the port to zero it out
+            self.serial.readall()
+
+        return True
+
     def get_model(self):
         """Get scanner model information, saving to internal state as well as
         returning the value.
