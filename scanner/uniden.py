@@ -556,8 +556,11 @@ class UnidenScanner:
     def stop_push_updates(self):
         """Method turns off scanner push updates."""
 
-        # todo: add error checking logic
-        self.send_command("PSI,0")
+        # check to see if port is open
+        if self.port_is_open():
+            self.send_command("PSI,0")
+        else:
+            self.logger.debug("Port is closed, cannot send PSI,0 command.")
 
         return True
 
