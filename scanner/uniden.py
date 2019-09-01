@@ -554,15 +554,21 @@ class UnidenScanner:
         return True
 
     def stop_push_updates(self):
-        """Method turns off scanner push updates."""
+        """Method turns off scanner push updates.
+
+        Returns:
+            True: when stop push update command is sent
+            False: command could not be sent or received error
+        """
 
         # check to see if port is open
         if self.port_is_open():
-            self.send_command("PSI,0")
+            res = self.send_command("PSI,0")
+            self.logger.info(f"PSI,0 response: {res}")
+            return True
         else:
             self.logger.debug("Port is closed, cannot send PSI,0 command.")
-
-        return True
+            return False
 
     def get_serial_buffer(self):
         """Get serial port buffer.
