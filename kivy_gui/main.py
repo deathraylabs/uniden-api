@@ -63,7 +63,7 @@ class DataWindow(Screen):
         super(DataWindow, self).__init__(**kwargs)
 
         # color for hold highlight
-        self.highlight_color = (1, 1, 0, 0.8)
+        self.highlight_color = (0.8, 0.8, 0, 0.8)
         self.transparent_color = (1, 1, 1, 0)
 
         # Set the timer for redrawing the screen
@@ -110,7 +110,7 @@ class DataWindow(Screen):
 
         # this instruction will change the variable defined in the
         # kv file under the id'd label.
-        self.ids["site_name"].hold_color = (1, 0, 1, 0.5)
+        self.ids["site_name"].hold_color = self.highlight_color
 
     # todo: call update screen and pass data to it
     def scanner_status_btn(self):
