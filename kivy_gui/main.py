@@ -159,7 +159,7 @@ class DataWindow(Screen):
             return False
 
         self.scanner.close()
-        Logger.debug("Scanner Connection Closed.")
+        Logger.info("Scanner Connection Closed.")
 
         # update button label
         self.scan_status_button.text = "Connect to Scanner"

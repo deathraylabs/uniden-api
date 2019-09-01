@@ -582,6 +582,11 @@ class UnidenScanner:
     def get_serial_buffer(self):
         """Get serial port buffer.
         """
+
+        if not self.port_is_open():
+            self.logger.error("Serial port isn't open, can't get buffer.")
+            return "Port is closed"
+
         # self.serial is the serial port connection
         serial_buffer = self.serial.read_until(b"</ScannerInfo>\r").decode()
 
