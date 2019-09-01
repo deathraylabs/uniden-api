@@ -73,23 +73,38 @@
 
             Label:
                 id: fav_list_name
-#                color: 1, 1, 0, 0.5
                 text: "Favorites List Name----*-------*-------*-------*-------*-------*"
                 font_size: '30sp'
-
 
             Label:
                 id: sys_name
                 text: "System:Name"
                 font_size: '25sp'
 
+                highlight_color: (1,1,1,0)
+                canvas.before:
+                    Color:
+                        rgba: self.highlight_color
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
             Label:
                 id: dept_name
                 text: "Department:Name"
 
+                highlight_color: (1,1,1,0)
+                canvas.before:
+                    Color:
+                        rgba: self.highlight_color
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
             Label:
                 id: tgid_name
                 text: "TGID:Name"
+
                 highlight_color: (1,1,1,0)
                 canvas.before:
                     Color:
@@ -100,12 +115,12 @@
 
             Label:
                 id: site_name
-                hold_color: (1, 1, 1, 0)
+                highlight_color: (1,1,1,0)
                 text: "Site:Name"
                 # using canvas.before ensures text is over highlight
                 canvas.before:
                     Color:
-                        rgba: self.hold_color
+                        rgba: self.highlight_color
                     Rectangle:
                         size: self.size
                         pos: self.pos

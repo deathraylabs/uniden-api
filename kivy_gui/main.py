@@ -183,6 +183,16 @@ class DataWindow(Screen):
         self.unit_ids.text = wav_meta["UnitID:U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
 
+        if wav_meta["Department:Hold"] == "On":
+            self.ids["dept_name"].highlight_color = self.highlight_color
+        else:
+            self.ids["dept_name"].highlight_color = self.transparent_color
+
+        if wav_meta["System:Hold"] == "On":
+            self.ids["sys_name"].highlight_color = self.highlight_color
+        else:
+            self.ids["sys_name"].highlight_color = self.transparent_color
+
         if wav_meta["TGID:Hold"] == "On":
             self.ids["tgid_name"].highlight_color = self.highlight_color
         else:
