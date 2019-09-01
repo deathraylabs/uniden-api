@@ -167,9 +167,17 @@ class UnidenScanner:
         return True
 
     def close(self):
+        """Close open serial port connection.
+
+        Returns:
+            False: if serial port was already closed.
+        """
 
         if self.serial.isOpen():
             self.serial.close()
+        else:
+            self.logger.info("Serial port was already closed.")
+            return False
 
     def port_is_open(self):
         """Returns True if open, False if closed."""

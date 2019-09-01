@@ -162,18 +162,21 @@ class DataWindow(Screen):
             # stop the scanner push updates
             self.scanner.stop_push_updates()
         except AttributeError:
-            Logger.exception("No scanner instance available to disconnect.")
+            Logger.exception(
+                "No scanner instance available to disconnect.", exc_info=False
+            )
             return False
 
-        try:
-            self.scanner.close()
-            Logger.debug("Scanner Connection Closed.")
+        self.scanner.close()
+        Logger.debug("Scanner Connection Closed.")
 
-            self.scan_status_button.text = "Connect to Scanner"
-        except AttributeError:
-            Logger.exception(
-                "Scanner is not initialized, no port to close.", exc_info=False
-            )
+        # update button label
+        self.scan_status_button.text = "Connect to Scanner"
+
+        # except AttributeError:
+        #     Logger.exception(
+        #         "Scanner is not initialized, no port to close.", exc_info=False
+        #     )
 
     def update_screen(self, dt):
         """Handles updates.
