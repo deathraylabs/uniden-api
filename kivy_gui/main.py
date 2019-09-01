@@ -152,6 +152,16 @@ class DataWindow(Screen):
         self.scan_status_button.color = (1, 1, 1, 0.5)
 
     def scanner_disconnect_btn(self):
+
+        # make sure the port is open and connected to scanner
+        try:
+            if not self.scanner.port_is_open():
+                Logger.info("Port is already closed.")
+                return False
+        except AttributeError:
+            Logger.exception("No scanner connection", exc_info=False)
+            return False
+
         Logger.info("Disconnect button pushed.")
         # stop updating screen with clock
         Clock.unschedule(self.update_screen)
