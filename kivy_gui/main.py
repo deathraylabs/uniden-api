@@ -130,7 +130,7 @@ class DataWindow(Screen):
                 Logger.info(
                     "Cannot open port. Scanner is likely not connected to computer."
                 )
-            return False
+                return False
 
         Logger.info("The scanner port is open.")
 
