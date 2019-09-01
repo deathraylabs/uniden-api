@@ -21,20 +21,11 @@
     halign: "center"
 
 <BlankLabel@Label>:
+    # sets properties for blank label placeholders
     id: blank_label
     canvas:
         Color:
             rgba: (1, 1, 1, 0.15)
-        Rectangle:
-            size: self.size
-            pos: self.pos
-
-<ColorLabel@Label>:
-    id: color_label
-    color: 1,0,0,1
-    canvas:
-        Color:
-            rgba: (1,0,0,.4)
         Rectangle:
             size: self.size
             pos: self.pos
@@ -58,7 +49,6 @@
     transmission_end: trans_ends
     total_time: tot_time
 
-
     scan_status_button: scanner_status
 
 
@@ -67,26 +57,12 @@
     GridLayout:
         cols: 1
         id: 'main_container'
-#        top: root.top
         width: root.width
         height: root.height
-#        center_y: root.center_y
-#        width: 800
-#        height: 400
-#        center: root.center
-#        orientation: 'vertical'
 
         BoxLayout:
             id: large_text_layout
-    #        top: root.top
-#            width: root.width
-#            height: root.height
-    #        center_y: root.center_y
-#            width: 800
-#            height: 200
-    #        center: root.center
             orientation: 'vertical'
-
 
             canvas:
                 Color:
