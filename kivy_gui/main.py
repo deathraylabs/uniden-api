@@ -115,19 +115,24 @@ class DataWindow(Screen):
         # Set the timer for redrawing the screen
         refresh_time = 0.1
 
+        # check to see if scanner instance has been created
+        if self.scanner == None:
+            Logger.info("Scanner is not initialized.")
+
+            Logger.info("Trying to initialize scanner...")
+            self.scanner = UnidenScanner()
+
+            Logger.info("Scanner is initialized. Checking port connection...")
+
+            if not self.scanner.port_is_open():
+                Logger.info("Scanner is not connected to computer.")
+                return False
+
         try:
-            port_is_open = self.scanner.port_is_open()
-            Logger.debug("The scanner port is already open.")
+            self.scanner.port_is_open()
+            Logger.info("The scanner port is already open.")
         except AttributeError:
             Logger.exception("Scanner is not initialized.", exc_info=False)
-            # todo: can I ignore this step?
-            # create scanner connection
-            # if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
-            #     print("On RPi")
-            #     port = "/dev/ttyACM0"
-            # else:
-            #     port = "/dev/cu.usbmodem1434101"
-            #     # print("trying the default port")
 
             try:
                 Logger.info("Trying to initialize scanner...")
