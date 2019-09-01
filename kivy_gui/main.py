@@ -198,6 +198,11 @@ class DataWindow(Screen):
         else:
             self.ids["tgid_name"].highlight_color = self.transparent_color
 
+        if wav_meta["Site:Hold"] == "On":
+            self.ids["site_name"].highlight_color = self.highlight_color
+        else:
+            self.ids["site_name"].highlight_color = self.transparent_color
+
         # unit ID information is not always present.
         # try:
         #     self.unit_ids.text = wav_meta["UnitID:U_Id"]

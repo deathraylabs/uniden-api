@@ -33,7 +33,7 @@
 
 <MenuBar@BoxLayout>:
     id: "menu_layout"
-    size_hint_y: .2
+#    size_hint_x: .2
 
 <DataWindow>:
     # these are global variables to reference objects below
@@ -55,13 +55,13 @@
 
 #    BoxLayout:
     GridLayout:
-        cols: 1
+        cols: 2
         id: 'main_container'
         width: root.width
         height: root.height
 
         BoxLayout:
-            id: large_text_layout
+            id: "left_side"
             orientation: 'vertical'
 
             canvas:
@@ -115,9 +115,9 @@
 
             Label:
                 id: site_name
-                highlight_color: (1,1,1,0)
                 text: "Site:Name"
                 # using canvas.before ensures text is over highlight
+                highlight_color: (1,1,1,0)
                 canvas.before:
                     Color:
                         rgba: self.highlight_color
@@ -132,6 +132,7 @@
             Label:
                 id: unit_ids_name_tag
                 text: "UnitIds:NameTag"
+
 
 
             BoxLayout:
@@ -153,23 +154,21 @@
                     text: "Total Time"
                     font_size: '15sp'
 
-        MenuBar:  #
-            id: "menu_layout"
-#            height: '300sp'
-#            size_hint_y: .2
+        BoxLayout:
+            id: "right_side"
+            orientation: 'vertical'
+            size_hint_x: .35
+            canvas.before:
+                Color:
+                    rgb: (.5,.5,.5)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
 
-            BoxLayout:
-                orientation: 'horizontal'
+            BlankLabel:
 
-                BlankLabel:
-                    text: ""
-
-                BoxLayout:
-                    orientation: 'horizontal'
-
-                    BlankLabel:
-
-                    BlankLabel:
+            MenuBar:
+                id: "menu_layout"
 
                 BoxLayout:
                     orientation: 'horizontal'
