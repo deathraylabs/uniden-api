@@ -104,6 +104,10 @@ class DataWindow(Screen):
             self.sound.stop()
             self.play_stop_button.text = "PLAY"
 
+        # this instruction will change the variable defined in the
+        # kv file under the id'd label.
+        self.ids["site_name"].hold_color = (1, 0, 1, 0.5)
+
     # todo: call update screen and pass data to it
     def scanner_status_btn(self):
         Logger.info("scanner status button was pressed")
@@ -213,10 +217,10 @@ class DataWindow(Screen):
         self.unit_ids.text = wav_meta["UnitID:U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
 
-        # if wav_meta["Site:Hold"] == "On":
-        #     self.root.ids.site_name.hold_color = (1, 1, 0.1, 0.15)
-        # else:
-        #     self.site_name.hold_color = (1, 1, 0.1, 0)
+        if wav_meta["TGID:Hold"] == "On":
+            self.ids["tgid_name"].highlight_color = (1, 0, 1, 0.5)
+        else:
+            self.ids["tgid_name"].highlight_color = (1, 1, 1, 0.1)
 
         # unit ID information is not always present.
         # try:

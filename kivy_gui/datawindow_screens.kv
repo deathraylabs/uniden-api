@@ -21,7 +21,6 @@
     halign: "center"
 
 <ColorLabel@Label>:
-    color_label: color_label
     id: color_label
     color: 1,0,0,1
     canvas:
@@ -93,6 +92,7 @@
                 text: "Favorites List Name----*-------*-------*-------*-------*-------*"
                 font_size: '30sp'
 
+
             ColorLabel:
                 id: sys_name
                 text: "System:Name"
@@ -104,8 +104,14 @@
 
             Label:
                 id: tgid_name
+                highlight_color: (1,1,1,0)
                 text: "TGID:Name"
-
+                canvas:
+                    Color:
+                        rgba: self.highlight_color
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
 
             Label:
                 id: site_name
