@@ -346,7 +346,7 @@ class UnidenScanner:
         # reset psi command to zero
         self.send_command("PSI,0")
 
-        if self.serial.in_waiting() > 0:
+        if self.serial.in_waiting > 0:
             # get read all data on the port to zero it out
             self.serial.readall()
 

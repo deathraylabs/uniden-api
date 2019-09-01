@@ -62,6 +62,10 @@ class DataWindow(Screen):
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
 
+        # color for hold highlight
+        self.highlight_color = (1, 1, 0, 0.8)
+        self.transparent_color = (1, 1, 1, 0)
+
         # Set the timer for redrawing the screen
         # refresh_time = 1
         # Clock.schedule_interval(self.update_screen, refresh_time)
@@ -134,6 +138,9 @@ class DataWindow(Screen):
 
         Logger.info("The scanner port is open.")
 
+        Logger.info("clearing the buffer")
+        self.scanner.reset_port()
+
         self.scan_status_button.text = "Push Startup"
 
         # start the scanner sending push updates
@@ -164,6 +171,7 @@ class DataWindow(Screen):
 
         # update button label
         self.scan_status_button.text = "Connect to Scanner"
+        self.scan_status_button.color = (1, 1, 1, 1)
 
     def update_screen(self, dt):
         """Handles updates.
@@ -212,9 +220,9 @@ class DataWindow(Screen):
         self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
 
         if wav_meta["TGID:Hold"] == "On":
-            self.ids["tgid_name"].highlight_color = (1, 0, 1, 0.5)
+            self.ids["tgid_name"].highlight_color = self.highlight_color
         else:
-            self.ids["tgid_name"].highlight_color = (1, 1, 1, 0.1)
+            self.ids["tgid_name"].highlight_color = self.transparent_color
 
         # unit ID information is not always present.
         # try:
