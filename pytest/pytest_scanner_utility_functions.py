@@ -157,5 +157,20 @@ def test_get_response():
     s.close()
 
 
+def test_get_response_many_items():
+    s = UnidenScanner()
+
+    # get department quick key status for FL 0, Sys 0
+    s.serial.write(b"DQK,0,0\r")
+    response = s.get_response()
+    data = response["data"]
+
+    assert type(data) == type(list())
+    assert len(data) == 100
+    assert False
+
+    s.close()
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()

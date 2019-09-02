@@ -359,6 +359,8 @@ class UnidenScanner:
             raise CommandError
 
         res_dict = {"cmd": res_list.pop(0), "data": res_list}
+        self.logger.debug(f"cmd: {res_dict['cmd']}")
+        self.logger.debug(f"data list: {res_dict['data']}")
 
         return res_dict
 
