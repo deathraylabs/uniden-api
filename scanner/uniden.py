@@ -33,6 +33,7 @@ from pathlib import Path
 # import os
 import logging
 import xmltodict
+import xml.etree.ElementTree as ET
 
 from scanner.constants import *
 import scanner.scanner_utility_functions as suf
@@ -344,9 +345,8 @@ class UnidenScanner:
 
         # first response line contains command and data or format note
         res_line = self.serial.read_until(b"\r").decode()
-        # strip the \r character on first read line, it's not needed
+        # the ending \r character is not useful at this stage
         res_line = res_line.rstrip("\r")
-
         res_list = res_line.split(",")
 
         # the number of response items allows us to triage data
@@ -358,9 +358,42 @@ class UnidenScanner:
             self.logger.exception(f"scanner error response: {res_list[0]}")
             raise CommandError
 
-        res_dict = {"cmd": res_list.pop(0), "data": res_list}
-        self.logger.debug(f"cmd: {res_dict['cmd']}")
-        self.logger.debug(f"data list: {res_dict['data']}")
+        # this statement deals with xml code specifically
+        # todo: the xml processing logic needs to be better implemented
+        elif res_list[1] == "<XML>":
+            self.logger.debug(f"found xml data.")
+
+            # ---- parse xml using non-blocking parser ---- #
+
+            parser = ET.XMLPullParser(["start", "end"])
+            at_xml_end = False
+
+            while not at_xml_end:
+                # data we will feed the parser
+                read_line = self.serial.read_until(b"\r").decode()
+                self.logger.debug(f"parser feed data: {read_line}")
+
+                parser.feed(read_line)
+                for event, elem in parser.read_events()
+                    self.logger.debug(f"parser event: {event}")
+                    self.logger.debug(f"parser element: {element}")
+
+                    if event == 'end': at_xml_end = True
+
+            # read the xml header line
+            # todo: could use error catching at this step
+            header_line = self.serial.read_until(b"\r").decode()
+            self.logger.debug(f"xml header line: {header_line}")
+
+            xml_str = self.serial.read_until(b"</ScannerInfo>\r").decode()
+            xml_str = xml_str.replace("\r", "\n")
+            self.logger.debug(xml_str)
+
+            res_dict = {"cmd": res_list.pop(0), "data": [xml_str]}  # temp
+        else:
+            res_dict = {"cmd": res_list.pop(0), "data": res_list}
+            self.logger.debug(f"cmd: {res_dict['cmd']}")
+            self.logger.debug(f"data list: {res_dict['data']}")
 
         return res_dict
 
