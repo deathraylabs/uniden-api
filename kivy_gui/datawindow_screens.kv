@@ -8,7 +8,6 @@
     halign: 'left'
     valign: 'center'
     text_size: self.size
-#    text_size: [None, None]
 #    texture_size: self.size
     font_size: '25sp'
     padding: ('10sp', '10sp')
@@ -52,7 +51,6 @@
     scan_status_button: scanner_status
 
 
-
 #    BoxLayout:
     GridLayout:
         cols: 2
@@ -71,15 +69,23 @@
                     size: self.size
                     pos: self.pos
 
-            Label:
-                id: fav_list_name
-                text: "Favorites List Name----*-------*-------*-------*-------*-------*"
-                font_size: '30sp'
+            BoxLayout:
+                id: "top_row"
+                orientation: "horizontal"
+
+                Label:
+                    id: fav_list_name
+                    text: "Favorites List"
+                    #                font_size: '30sp'
+
+                Label:
+                    id: unit_ids_name_tag
+                    text: "UnitIds:NameTag"
+#                    size_hint_x: .5
 
             Label:
                 id: sys_name
                 text: "System:Name"
-                font_size: '25sp'
 
                 highlight_color: (1,1,1,0)
                 canvas.before:
@@ -113,6 +119,7 @@
                         size: self.size
                         pos: self.pos
 
+
             Label:
                 id: site_name
                 text: "Site:Name"
@@ -129,15 +136,9 @@
                 id: unit_ids
                 text: "UnitIds"
 
-            Label:
-                id: unit_ids_name_tag
-                text: "UnitIds:NameTag"
-
-
-
             BoxLayout:
+                id: "transmission_times"
                 orientation: 'horizontal'
-
 
                 Label:
                     id: trans_begins
@@ -157,7 +158,7 @@
         BoxLayout:
             id: "right_side"
             orientation: 'vertical'
-            size_hint_x: .35
+            size_hint_x: .4
             canvas.before:
                 Color:
                     rgb: (.5,.5,.5)
@@ -165,7 +166,13 @@
                     size: self.size
                     pos: self.pos
 
-            BlankLabel:
+            MenuBar:
+
+            MenuBar:
+
+            MenuBar:
+
+            MenuBar:
 
             MenuBar:
                 id: "menu_layout"
@@ -175,7 +182,7 @@
 
                     Button:
                         id: scanner_status
-                        text: "Connect to Scanner"
+                        text: "Mirron\nScanner"
                         on_press: root.scanner_status_btn()
 
                     Button:
@@ -183,10 +190,11 @@
                         on_press: root.scanner_disconnect_btn()
 
                     Button:
-                        text: "playback"
+                        text: "->"
                         on_press:
                             root.manager.transition.direction = 'left'
                             root.manager.current = 'playback'
+
 
 <PlaybackScreen>:
     play_stop_button: stop_play

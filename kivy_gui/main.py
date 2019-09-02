@@ -134,8 +134,11 @@ class DataWindow(Screen):
         Logger.info("Scanner Connection Closed.")
 
         # update button label
-        self.scan_status_button.text = "Connect to Scanner"
+        self.scan_status_button.text = "Mirron\nScanner"
         self.scan_status_button.color = (1, 1, 1, 1)
+
+    def hold_channel(self):
+        print("trying to hold channel")
 
     def update_screen(self, dt):
         """Handles updates.
@@ -183,6 +186,7 @@ class DataWindow(Screen):
         self.unit_ids.text = wav_meta["UnitID:U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
 
+        # code to highlight held quantities
         if wav_meta["Department:Hold"] == "On":
             self.ids["dept_name"].highlight_color = self.highlight_color
         else:
