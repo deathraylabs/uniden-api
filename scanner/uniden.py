@@ -348,11 +348,12 @@ class UnidenScanner:
         res_line = res_line.rstrip("\r")
 
         res_list = res_line.split(",")
+
         # the number of response items allows us to triage data
         num_res_items = len(res_list)
         self.logger.debug(f"{num_res_items} items in first response line.")
 
-        # a single item means an error has occurred
+        # check to see if error code passed instead of command code
         if res_list[0] in self.err_list:
             self.logger.exception(f"scanner error response: {res_list[0]}")
             raise CommandError

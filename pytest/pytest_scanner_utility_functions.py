@@ -136,5 +136,26 @@ def test_send_command():
     s.close()
 
 
+def test_get_response():
+    s = UnidenScanner()
+
+    s.serial.write(b"MDL\r")
+    response = s.get_response()
+
+    assert response["cmd"] == "MDL"
+    assert response["data"] == ["SDS100"]
+    # assert s.send_command("VER")["VERSION"] == "Version 1.10.00"
+
+    # ridiculous writes should result in exception.
+    s.serial.write(b"POO\r")
+
+    try:
+        s.get_response()
+    except CommandError as e:
+        assert type(CommandError()) == type(e)
+
+    s.close()
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()
