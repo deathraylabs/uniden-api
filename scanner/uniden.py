@@ -333,8 +333,24 @@ class UnidenScanner:
         # UTF8 string returned by scanner
         # res_str = self.serial.readall().decode()
 
-    def get_response(self, cmd):
-        pass
+    def get_response(self):
+        """Method reads data on the serial buffer, finds components,
+        and returns a dict containing raw organized data."""
+
+        # check to ensure there is data waiting in the buffer
+        if self.serial.in_waiting == 0:
+            self.logger.info("get_response(): no data in waiting")
+            return
+
+        # first response line contains command and data or format note
+        res_line = self.serial.read_until(b"\r").decode()
+        res_line = res_line.replace("\r", "\n")
+
+        res_list = res_line.split(",")
+
+        res_dict = {"cmd": res_list.pop(0), "data": res_list}
+
+        return res_dict
 
     def reset_port(self):
         """Method resets the port to ensure no data is waiting on the scanner
