@@ -392,20 +392,38 @@ class UnidenScanner:
             # ---- parse xml using non-blocking parser ---- #
 
             parser = ET.XMLPullParser(["start", "end"])
-            at_xml_end = False
 
+            # variable flag to keep track of position in parse
+            at_xml_end = False
+            # counter to determine tree depth
+            count = 0
+
+            # this code is what ultimately parses the xml
             while not at_xml_end:
                 # data we will feed the parser
                 read_line = self._read_and_decode_line()
-                self.logger.debug(f"parser feed data: {read_line}")
+                # self.logger.debug(f"parser feed data: {read_line}")
+
+                xml_str += read_line
 
                 parser.feed(read_line)
                 for event, elem in parser.read_events():
                     self.logger.debug(f"parser event: {event}")
-                    self.logger.debug(f"parser element: {elem}")
 
-                    if event == "end":
-                        at_xml_end = True
+                    # logic to track tree depth
+                    if event == "start":
+                        count += 1
+                    elif event == "end":
+                        count -= 1
+
+                    self.logger.debug(f"elem tag: {elem.tag}")
+
+                    for item in elem.attrib.items():
+                        self.logger.debug(f"elem attrib: {item}")
+
+                # if we end up back at root, stop parsing
+                if count == 0:
+                    at_xml_end = True
 
             xml_str = self.serial.read_until(b"</ScannerInfo>\r").decode()
             xml_str = xml_str.replace("\r", "\n")
