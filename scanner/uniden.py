@@ -337,16 +337,25 @@ class UnidenScanner:
         """Method reads data on the serial buffer, finds components,
         and returns a dict containing raw organized data."""
 
-        # check to ensure there is data waiting in the buffer
-        if self.serial.in_waiting == 0:
-            self.logger.info("get_response(): no data in waiting")
-            return
+        # # check to ensure there is data waiting in the buffer
+        # if self.serial.in_waiting == 0:
+        #     self.logger.info("get_response(): no data in waiting")
+        #     return
 
         # first response line contains command and data or format note
         res_line = self.serial.read_until(b"\r").decode()
-        res_line = res_line.replace("\r", "\n")
+        # strip the \r character on first read line, it's not needed
+        res_line = res_line.rstrip("\r")
 
         res_list = res_line.split(",")
+        # the number of response items allows us to triage data
+        num_res_items = len(res_list)
+        self.logger.debug(f"{num_res_items} items in first response line.")
+
+        # a single item means an error has occurred
+        if res_list[0] in self.err_list:
+            self.logger.exception(f"scanner error response: {res_list[0]}")
+            raise CommandError
 
         res_dict = {"cmd": res_list.pop(0), "data": res_list}
 
@@ -5369,6 +5378,10 @@ if __name__ == "__main__":
 
     s = UnidenScanner()
     current_state = s.get_scanner_state()
+
+    # testing code.
+    s.serial.write(b"MDL\r")
+    print(s.get_response())
 
     # instantiate tools for working with sd card data
     # sd = UnidenMassStorage(source_dir=test_dir)
