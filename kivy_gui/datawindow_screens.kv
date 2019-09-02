@@ -159,12 +159,12 @@
             id: "right_side"
             orientation: 'vertical'
             size_hint_x: .4
-            canvas.before:
-                Color:
-                    rgb: (.5,.5,.5)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
+#            canvas.before:
+#                Color:
+#                    rgb: (.5,.5,.5)
+#                Rectangle:
+#                    size: self.size
+#                    pos: self.pos
 
             MenuBar:
 
@@ -173,6 +173,12 @@
             MenuBar:
 
             MenuBar:
+                id: "fourth_row"
+
+                Button:
+                    id: "tgid_hold"
+                    text: "Channel\nHold"
+                    on_press: root.hold_channel()
 
             MenuBar:
                 id: "menu_layout"
@@ -214,13 +220,6 @@
 
         BoxLayout:
             id: large_text_layout
-    #        top: root.top
-#            width: root.width
-#            height: root.height
-    #        center_y: root.center_y
-#            width: 800
-#            height: 200
-    #        center: root.center
             orientation: 'vertical'
 
             canvas:
