@@ -259,7 +259,7 @@ class UnidenScanner:
 
         """
 
-        self.logger.debug("raw(): cmd %s" % cmd)
+        self.logger.debug(f"Command sent: {cmd}")
 
         # allow user to input lowercase commands
         cmd = cmd.upper()
@@ -270,9 +270,7 @@ class UnidenScanner:
             write_ack = self.serial.write(cmd_str)
             self.logger.debug(f"write ack: {write_ack}")
         except serial.serialutil.SerialException:
-            self.logger.error(
-                f"{cmd_str} cannot be executed by raw method, " f"port is not " f"open."
-            )
+            self.logger.error(f"{cmd_str} not executed, port was not open.")
             return "Port Closed"
 
         # first response line contains information on how to proceed
@@ -295,6 +293,7 @@ class UnidenScanner:
         try:
             # use command to get expected response format from constants
             expected_res = SCANNER_COMMAND_RESPONSE[cmd_stem]
+            self.logger.debug(f"expected response format: {expected_res}")
         except KeyError:
             self.logger.exception(f"{cmd} was not recognized.")
             return False
@@ -456,6 +455,87 @@ class UnidenScanner:
 
         return self.scan_state
 
+    # ---- Older Code ------ #
+
+    def push_key(self, mode, key):
+
+        """push_key method is used to push keys on the scanner
+
+        Keys:
+         M : menu
+         F : func
+         H : hold
+         S : scan/srch
+         L : lo
+         1 : 1
+         2 : 2
+         3 : 3
+         4 : 4
+         5 : 5
+         6 : 6
+         7 : 7
+         8 : 8
+         9 : 9
+         0 : 0
+         .(dot) : dot/no/pri
+         E : E/yes/gps
+         > : vright * Set "P" to KEY_MODE.
+         < : vleft * Set "P" to KEY_MODE.
+         ^ : vpush
+         P : pwr/light/lock
+
+        Modes:
+         P : press
+         L : long (press)
+         H : hold (Press and Hold until Release receive)
+         R : release (Cancel Hold state)"""
+
+        keys = {
+            "menu": "M",
+            "func": "F",
+            "hold": "H",
+            "scan": "S",
+            "srch": "S",
+            "lo": "L",
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "0": "0",
+            "dot": ".",
+            "no": ".",
+            "pri": ".",
+            "E": "E",
+            "yes": "E",
+            "gps": "E",
+            "pwr": "P",
+            "vright": ">",
+            "vleft": "<",
+            "vpush": "^",
+            "lock": "P",
+            "light": "P",
+        }
+
+        modes = {"press": "P", "long": "L", "hold": "H", "release": "R"}
+
+        try:
+            cmd = ",".join(["KEY", keys[key], modes[mode]])
+        except KeyError:
+            self.logger.error("Wrong key %(key)s or mode %(mode)s" % locals())
+            return 0
+
+        try:
+            res = self.raw(cmd)
+
+        except CommandError:
+            self.logger.error("push_key(): %s" % cmd)
+            return 0
+
     def get_model(self):
         """Get scanner model information, saving to internal state as well as
         returning the value.
@@ -569,85 +649,6 @@ class UnidenScanner:
         }
 
         return reception_status
-
-    def push_key(self, mode, key):
-
-        """push_key method is used to push keys on the scanner
-
-        Keys:
-         M : menu
-         F : func
-         H : hold
-         S : scan/srch
-         L : lo
-         1 : 1
-         2 : 2
-         3 : 3
-         4 : 4
-         5 : 5
-         6 : 6
-         7 : 7
-         8 : 8
-         9 : 9
-         0 : 0
-         .(dot) : dot/no/pri
-         E : E/yes/gps
-         > : vright * Set "P" to KEY_MODE.
-         < : vleft * Set "P" to KEY_MODE.
-         ^ : vpush
-         P : pwr/light/lock
-
-        Modes:
-         P : press
-         L : long (press)
-         H : hold (Press and Hold until Release receive)
-         R : release (Cancel Hold state)"""
-
-        keys = {
-            "menu": "M",
-            "func": "F",
-            "hold": "H",
-            "scan": "S",
-            "srch": "S",
-            "lo": "L",
-            "1": "1",
-            "2": "2",
-            "3": "3",
-            "4": "4",
-            "5": "5",
-            "6": "6",
-            "7": "7",
-            "8": "8",
-            "9": "9",
-            "0": "0",
-            "dot": ".",
-            "no": ".",
-            "pri": ".",
-            "E": "E",
-            "yes": "E",
-            "gps": "E",
-            "pwr": "P",
-            "vright": ">",
-            "vleft": "<",
-            "vpush": "^",
-            "lock": "P",
-            "light": "P",
-        }
-
-        modes = {"press": "P", "long": "L", "hold": "H", "release": "R"}
-
-        try:
-            cmd = ",".join(["KEY", keys[key], modes[mode]])
-        except KeyError:
-            self.logger.error("Wrong key %(key)s or mode %(mode)s" % locals())
-            return 0
-
-        try:
-            res = self.raw(cmd)
-
-        except CommandError:
-            self.logger.error("push_key(): %s" % cmd)
-            return 0
 
     def set_quick_search_hold(
         self,

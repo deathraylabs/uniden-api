@@ -521,7 +521,7 @@ SCANNER_COMMAND_RESPONSE = {
     # getters/setters
     "FQK": r"",
     "SQK": r"",
-    "DQK": r"",
+    "DQK": ("DQK", "depends"),
     "SVC": r"",
     "DTM": r"",
     "LCR": r"",
