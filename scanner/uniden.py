@@ -245,6 +245,26 @@ class UnidenScanner:
         else:
             return res
 
+    def _read_and_decode_line(self):
+        """helper method, reads buffer until it gets to a \r character, then
+        provices a decoded string with \r replaced by \n characters
+
+        Returns:
+            str: proper UTF8 decoded string with \n characters
+        """
+        # double check that the port is open
+        if not self.port_is_open():
+            self.logger.error("Cannot read line, port is closed.")
+            return
+
+        res_line = self.serial.read_until(b"\r").decode()
+        self.logger.debug(f"parser feed data: {res_line}")
+
+        res_line = res_line.replace("\r", "\n")
+        self.logger.debug(f"returned string: {res_line}")
+
+        return res_line
+
     def send_command(self, cmd):
         """Method sends command to scanner and checks response returned
         before returning data.
@@ -374,11 +394,12 @@ class UnidenScanner:
                 self.logger.debug(f"parser feed data: {read_line}")
 
                 parser.feed(read_line)
-                for event, elem in parser.read_events()
+                for event, elem in parser.read_events():
                     self.logger.debug(f"parser event: {event}")
                     self.logger.debug(f"parser element: {element}")
 
-                    if event == 'end': at_xml_end = True
+                    if event == "end":
+                        at_xml_end = True
 
             # read the xml header line
             # todo: could use error catching at this step
@@ -521,7 +542,7 @@ class UnidenScanner:
 
         return self.scan_state
 
-    # ---- Older Code ------ #
+    # --------------- Older Code ------------------- #
 
     def push_key(self, mode, key):
 
@@ -5416,7 +5437,7 @@ if __name__ == "__main__":
     current_state = s.get_scanner_state()
 
     # testing code.
-    s.serial.write(b"MDL\r")
+    s.serial.write(b"GSI\r")
     print(s.get_response())
 
     # instantiate tools for working with sd card data

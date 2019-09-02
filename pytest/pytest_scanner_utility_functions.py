@@ -171,6 +171,18 @@ def test_get_response_many_items():
     s.close()
 
 
+def test_read_and_decode_line():
+    s = UnidenScanner()
+
+    # get department quick key status for FL 0, Sys 0
+    s.serial.write(b"MDL\r")
+    response = s._read_and_decode_line()
+
+    assert response == "MDL,SDS100\n"
+
+    s.close()
+
+
 def test_get_response_xml():
     s = UnidenScanner()
 
