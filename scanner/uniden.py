@@ -364,9 +364,8 @@ class UnidenScanner:
         #     return
 
         # first response line contains command and data or format note
-        res_line = self.serial.read_until(b"\r").decode()
-        # the ending \r character is not useful at this stage
-        res_line = res_line.rstrip("\r")
+        res_line = self._read_and_decode_line()
+        res_line = res_line.rstrip("\n")
         res_list = res_line.split(",")
 
         # the number of response items allows us to triage data
@@ -383,6 +382,13 @@ class UnidenScanner:
         elif res_list[1] == "<XML>":
             self.logger.debug(f"found xml data.")
 
+            # raw xml string
+            xml_str = ""
+
+            # read the xml header line (essentially useless except for check)
+            header_line = self._read_and_decode_line()
+            self.logger.debug(f"xml header line: {header_line}")
+
             # ---- parse xml using non-blocking parser ---- #
 
             parser = ET.XMLPullParser(["start", "end"])
@@ -390,21 +396,16 @@ class UnidenScanner:
 
             while not at_xml_end:
                 # data we will feed the parser
-                read_line = self.serial.read_until(b"\r").decode()
+                read_line = self._read_and_decode_line()
                 self.logger.debug(f"parser feed data: {read_line}")
 
                 parser.feed(read_line)
                 for event, elem in parser.read_events():
                     self.logger.debug(f"parser event: {event}")
-                    self.logger.debug(f"parser element: {element}")
+                    self.logger.debug(f"parser element: {elem}")
 
                     if event == "end":
                         at_xml_end = True
-
-            # read the xml header line
-            # todo: could use error catching at this step
-            header_line = self.serial.read_until(b"\r").decode()
-            self.logger.debug(f"xml header line: {header_line}")
 
             xml_str = self.serial.read_until(b"</ScannerInfo>\r").decode()
             xml_str = xml_str.replace("\r", "\n")
