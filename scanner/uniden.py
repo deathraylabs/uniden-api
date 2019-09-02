@@ -352,6 +352,110 @@ class UnidenScanner:
 
         return True
 
+    def update_scanner_state(self, mode="pull"):
+        """Updates the state variable for the class.
+
+        Args:
+            mode (str):
+                "pull": if using 'GSI' command to get data
+                "push": if using 'PSI' command to have scanner push data
+
+        Returns:
+            True: if the internal state was updated
+            False: if there is an error communicating with scanner
+
+        """
+
+        if not self.port_is_open():
+            return False
+
+        if mode == "pull":
+            try:
+                # get xml data from scanner, convert to unicode
+                # exclude the prefix data 'GSI,<XML>,\r'
+                self.logger.info("uniden: sending command to scanner...")
+                state_xml = self.send_command("GSI")
+                self.logger.info(f"Bytes returned : {len(state_xml)}")
+            except CommandError:
+                self.logger.error("get_scanner_information() failed.")
+                return False
+        elif mode == "push":
+            # separate command response from returned state data
+            # first line is response, remaining text is xml formatted state
+            try:
+                response, state_xml = self.get_serial_buffer().split("\n", 1)
+                self.logger.debug(f"Serial port response: {response}")
+            except ValueError:
+                self.logger.exception("No data in buffer.", exc_info=False)
+                return False
+        else:
+            self.logger.error("For some reason this is neither push nor pull")
+            return False
+
+        # # add the current time to dict using @ symbol as flag
+        # scanner_xml["@date_code"] = datetime.now().isoformat()
+        # self.logger.info("Timestamp added.")
+
+        state_ordered_dict = raw_state_xml_to_ordered_dict(state_xml)
+
+        self.scan_state = traverse_state(state_ordered_dict)
+
+        return True
+
+    def start_push_updates(self, interval=1000):
+        """Method to set scanner 'push scanner information' (PSI) mode
+
+        Args:
+            interval (int): number of milliseconds scanner should wait before
+                pushing data to serial bus.
+
+        Returns:
+            True: when method successfully ends
+
+        """
+        # todo: add error checking logic
+        self.send_command(f"PSI,{interval}")
+
+        return True
+
+    def stop_push_updates(self):
+        """Method turns off scanner push updates.
+
+        Returns:
+            True: when stop push update command is sent
+            False: command could not be sent or received error
+        """
+
+        # check to see if port is open
+        if self.port_is_open():
+            res = self.send_command("PSI,0")
+            self.logger.info(f"PSI,0 response: {res}")
+            return True
+        else:
+            self.logger.debug("Port is closed, cannot send PSI,0 command.")
+            return False
+
+    def get_serial_buffer(self):
+        """Get serial port buffer.
+        """
+
+        if not self.port_is_open():
+            self.logger.error("Serial port isn't open, can't get buffer.")
+            return "Port is closed"
+
+        # self.serial is the serial port connection
+        serial_buffer = self.serial.read_until(b"</ScannerInfo>\r").decode()
+
+        serial_buffer = serial_buffer.replace("\r", "\n")
+
+        return serial_buffer
+
+    def get_scanner_state(self):
+        """Returns the most recently downloaded state of scanner but doesn't
+        actually update that state."""
+
+        return self.scan_state
+
     def get_model(self):
         """Get scanner model information, saving to internal state as well as
         returning the value.
@@ -465,113 +569,6 @@ class UnidenScanner:
         }
 
         return reception_status
-
-    def update_scanner_state(self, mode="pull"):
-        """Updates the state variable for the class.
-
-        Args:
-            mode (str):
-                "pull": if using 'GSI' command to get data
-                "push": if using 'PSI' command to have scanner push data
-
-            raw_state_xml (str): used when passing xml data pushed to serial
-                buffer from scanner.
-
-        Returns:
-            True: if the internal state was updated
-            False: if there is an error communicating with scanner
-
-        """
-
-        if not self.port_is_open():
-            return False
-
-        if mode == "pull":
-            try:
-                # get xml data from scanner, convert to unicode
-                # exclude the prefix data 'GSI,<XML>,\r'
-                self.logger.info("uniden: sending command to scanner...")
-                state_xml = self.send_command("GSI")
-                self.logger.info(f"Bytes returned : {len(state_xml)}")
-            except CommandError:
-                self.logger.error("get_scanner_information() failed.")
-                return False
-        elif mode == "push":
-            # separate command response from returned state data
-            # first line is response, remaining text is xml formatted state
-            try:
-                response, state_xml = self.get_serial_buffer().split("\n", 1)
-                self.logger.debug(f"Serial port response: {response}")
-            except ValueError:
-                self.logger.exception("No data in buffer.", exc_info=False)
-                return False
-        else:
-            self.logger.error("For some reason this is neither push nor pull")
-            return False
-
-        # # add the current time to dict using @ symbol as flag
-        # scanner_xml["@date_code"] = datetime.now().isoformat()
-        # self.logger.info("Timestamp added.")
-
-        state_ordered_dict = raw_state_xml_to_ordered_dict(state_xml)
-
-        self.scan_state = traverse_state(state_ordered_dict)
-
-        return True
-
-    def start_push_updates(self, interval=1000):
-        """Method to set scanner 'push scanner information' (PSI) mode
-
-        Args:
-            interval (int): number of milliseconds scanner should wait before
-                pushing data to serial bus.
-
-        Returns:
-            True: when method successfully ends
-
-        """
-        # todo: add error checking logic
-        self.send_command(f"PSI,{interval}")
-
-        return True
-
-    def stop_push_updates(self):
-        """Method turns off scanner push updates.
-
-        Returns:
-            True: when stop push update command is sent
-            False: command could not be sent or received error
-        """
-
-        # check to see if port is open
-        if self.port_is_open():
-            res = self.send_command("PSI,0")
-            self.logger.info(f"PSI,0 response: {res}")
-            return True
-        else:
-            self.logger.debug("Port is closed, cannot send PSI,0 command.")
-            return False
-
-    def get_serial_buffer(self):
-        """Get serial port buffer.
-        """
-
-        if not self.port_is_open():
-            self.logger.error("Serial port isn't open, can't get buffer.")
-            return "Port is closed"
-
-        # self.serial is the serial port connection
-        serial_buffer = self.serial.read_until(b"</ScannerInfo>\r").decode()
-
-        serial_buffer = serial_buffer.replace("\r", "\n")
-
-        return serial_buffer
-
-    def get_scanner_state(self):
-        """Returns the most recently downloaded state of scanner but doesn't
-        actually update that state."""
-
-        return self.scan_state
 
     def push_key(self, mode, key):
 
