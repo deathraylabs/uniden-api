@@ -245,11 +245,11 @@ class UnidenScanner:
             return res
 
     def send_command(self, cmd):
-        """Method is similar to raw but checks scanner for appropriate
-        response and passes on data in useful format.
+        """Method sends command to scanner and checks response returned
+        before returning data.
 
         Args:
-            cmd (str): 3 letter command string
+            cmd (str): 3 letter uniden command string
 
         Returns:
             xml_str (str): xml formatted data returned by scanner
@@ -267,18 +267,20 @@ class UnidenScanner:
         cmd_str = str.encode("".join([cmd, "\r"]))
 
         try:
+            # send command to scanner and note the ack
+            self.logger.debug(f"write len: {len(cmd_str)}")
             write_ack = self.serial.write(cmd_str)
-            self.logger.debug(f"write ack: {write_ack}")
+            self.logger.debug(f"write ack len: {write_ack}")
         except serial.serialutil.SerialException:
             self.logger.error(f"{cmd_str} not executed, port was not open.")
             return "Port Closed"
 
-        # first response line contains information on how to proceed
+        # first response line contains command and data or format note
         res_line = self.serial.read_until(b"\r").decode()
         # return character is not useful here
         res_line = res_line.rstrip("\r")
 
-        # response is comma separated
+        # response sections are comma separated
         res_items = res_line.split(",")
 
         if len(res_items) == 1:
@@ -301,8 +303,8 @@ class UnidenScanner:
         for index, item in enumerate(res_items):
             self.logger.debug(f"actual response: {item}")
 
-            # scan_cmd_res = SCANNER_COMMAND_RESPONSE[index]
-            self.logger.debug(f"expected response: {expected_res[index]}")
+            # # scan_cmd_res = SCANNER_COMMAND_RESPONSE[index]
+            # self.logger.debug(f"expected response: {expected_res[index]}")
 
             # make sure the command and response match
             if index == 0 and cmd_stem == expected_res[index]:
@@ -330,6 +332,9 @@ class UnidenScanner:
 
         # UTF8 string returned by scanner
         # res_str = self.serial.readall().decode()
+
+    def get_response(self, cmd):
+        pass
 
     def reset_port(self):
         """Method resets the port to ensure no data is waiting on the scanner
