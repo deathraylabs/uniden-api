@@ -68,10 +68,12 @@ class DataWindow(Screen):
 
     # todo: call update screen and pass data to it
     def scanner_status_btn(self):
+        """Start pulling scanner display data."""
+
         Logger.info("scanner status button was pressed")
 
         # Set the timer for redrawing the screen
-        refresh_time = 0.1
+        refresh_time = 0.25
 
         # check to see if scanner instance has been created
         if self.scanner == None:
@@ -95,14 +97,15 @@ class DataWindow(Screen):
         Logger.info("clearing the buffer")
         self.scanner.reset_port()
 
-        self.scan_status_button.text = "Push Startup"
+        self.scan_status_button.text = "Pull Startup"
 
-        # start the scanner sending push updates
-        self.scanner.start_push_updates(interval=250)
+        # start the scanner push updates
+        # self.scanner.start_push_updates(interval=250)
+
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
 
-        self.scan_status_button.text = "Push Mode"
+        self.scan_status_button.text = "Pull Mode"
         self.scan_status_button.color = (1, 1, 1, 0.5)
 
     def scanner_disconnect_btn(self):
@@ -149,7 +152,7 @@ class DataWindow(Screen):
             None
         """
         # update the scanner first
-        self.scanner.update_scanner_state(mode="push")
+        self.scanner.update_scanner_state(mode="pull")
         # grab the scanner state
         wav_meta = self.scanner.get_scanner_state()
 
