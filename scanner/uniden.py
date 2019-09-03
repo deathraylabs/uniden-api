@@ -189,54 +189,6 @@ class UnidenScanner:
 
         self.close()
 
-    # todo: migrate everything to use "process command" method instead.
-    def raw(self, cmd):
-        """Accepts scanner commands as UTF-8 strings and handles all the
-        encoding and decoding required to communicate with the scanner.
-        Scanner response is returned as UTF-8 string.
-
-        Args:
-            cmd (str): Scanner command as UTF-8 string (see scanner
-            documentation). Actual command will be converted to byte string
-            before being sent to scanner.
-
-        Returns:
-            res (str): Scanner response as UTF-8 string.
-
-        """
-        self.logger.debug("raw(): cmd %s" % cmd)
-        try:
-            self.serial.write(str.encode("".join([cmd, "\r"])))
-        except serial.serialutil.SerialException:
-            self.logger.error(
-                f"{cmd} cannot be executed by raw method, " f"port is not open."
-            )
-            return "Port Closed"
-
-        # todo: update so this isn't blocking
-        # this function blocks for entire duration of timeout
-        # decode byte string to native UTF-8 string
-        res = self.serial.readall().decode()
-
-        res = res.strip("\r")
-
-        # the \r character is causing me problems, so lets replace with \n
-        res = res.replace("\r", "\n")
-
-        self.logger.debug("raw(): res %s" % res)
-
-        # check to see if scanner throws error
-        if res.count(",") == 1:
-            f2 = res.split(",")[1]
-        else:
-            f2 = res
-
-        if f2 in self.err_list:
-            self.logger.exception(res)
-            raise CommandError
-        else:
-            return res
-
     def _read_and_decode_line(self):
         """helper method, reads buffer until it gets to a \r character, then
         provices a decoded string with \r replaced by \n characters
@@ -666,6 +618,54 @@ class UnidenScanner:
             return 0
 
     # --------------- Older Code ------------------- #
+
+    # todo: migrate everything to use "process command" method instead.
+    def raw(self, cmd):
+        """Accepts scanner commands as UTF-8 strings and handles all the
+        encoding and decoding required to communicate with the scanner.
+        Scanner response is returned as UTF-8 string.
+
+        Args:
+            cmd (str): Scanner command as UTF-8 string (see scanner
+            documentation). Actual command will be converted to byte string
+            before being sent to scanner.
+
+        Returns:
+            res (str): Scanner response as UTF-8 string.
+
+        """
+        self.logger.debug("raw(): cmd %s" % cmd)
+        try:
+            self.serial.write(str.encode("".join([cmd, "\r"])))
+        except serial.serialutil.SerialException:
+            self.logger.error(
+                f"{cmd} cannot be executed by raw method, " f"port is not open."
+            )
+            return "Port Closed"
+
+        # todo: update so this isn't blocking
+        # this function blocks for entire duration of timeout
+        # decode byte string to native UTF-8 string
+        res = self.serial.readall().decode()
+
+        res = res.strip("\r")
+
+        # the \r character is causing me problems, so lets replace with \n
+        res = res.replace("\r", "\n")
+
+        self.logger.debug("raw(): res %s" % res)
+
+        # check to see if scanner throws error
+        if res.count(",") == 1:
+            f2 = res.split(",")[1]
+        else:
+            f2 = res
+
+        if f2 in self.err_list:
+            self.logger.exception(res)
+            raise CommandError
+        else:
+            return res
 
     def get_model(self):
         """Get scanner model information, saving to internal state as well as
