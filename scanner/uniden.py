@@ -657,6 +657,7 @@ class UnidenScanner:
 
         return res
 
+    # todo: method is currently incomplete
     def get_list(self, list_type, index_value=""):
         """Gets specified list from scanner.
 
