@@ -11,6 +11,7 @@ print("Checked if on RPi")
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.logger import Logger
+from kivy.config import Config
 from kivy.core.audio import SoundLoader
 from kivy.clock import Clock
 
@@ -66,14 +67,13 @@ class DataWindow(Screen):
         self.highlight_color = (0.8, 0.8, 0, 0.8)
         self.transparent_color = (1, 1, 1, 0)
 
-    # todo: call update screen and pass data to it
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
 
         Logger.info("scanner status button was pressed")
 
         # Set the timer for redrawing the screen
-        refresh_time = 0.25
+        refresh_time = 0.2
 
         # check to see if scanner instance has been created
         if self.scanner == None:
@@ -143,6 +143,26 @@ class DataWindow(Screen):
     def hold_channel(self):
         print("trying to hold channel")
 
+        # for id in self.ids:
+        #     print(id)
+
+        # print(self.ids["tgid_hold_btn"].text)
+
+        if self.scanner is None:
+            Logger.error("No connection to scanner.")
+            return False
+
+        if self.ids["tgid_hold_btn"].text == "Channel\nHold":
+            self.scanner.send_command("HLD,off,,")
+            res = self.scanner.get_response()
+            Logger.debug(res)
+            self.ids["tgid_hold_btn"].text = "Holding"
+        else:
+            self.scanner.send_command("HLD,OFF,,")
+            res = self.scanner.get_response()
+            Logger.debug(res)
+            self.ids["tgid_hold_btn"].text = "Channel\nHold"
+
     def update_screen(self, dt):
         """Handles updates.
         Args:
@@ -159,7 +179,7 @@ class DataWindow(Screen):
         try:
             trans_start = wav_meta["transmission_start"]
         except KeyError:
-            Logger.exception("No transmission start time", exc_info=False)
+            # Logger.exception("No transmission start time", exc_info=False)
             trans_start = "---"
 
         # calculate starting time in seconds
@@ -169,7 +189,7 @@ class DataWindow(Screen):
         try:
             trans_end = wav_meta["transmission_end:1"]
         except KeyError:
-            Logger.exception("No transmission end time.", exc_info=False)
+            # Logger.exception("No transmission end time.", exc_info=False)
             trans_end = "---"
 
         # update DataWindow with metadata
@@ -298,6 +318,8 @@ if __name__ == "__main__":
     #     "/Users/peej/dev/uniden scanner "
     #     "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
     # )
+
+    Config.set("kivy", "log_level", "debug")
 
     # run the GUI
     DataWindowApp().run()

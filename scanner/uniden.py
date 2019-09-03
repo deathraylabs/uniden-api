@@ -20,17 +20,10 @@ if not, write to the Free Software Foundation, Inc.,
 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 """
 
-# import yaml
-# import threading
-# import queue
 import time
 import serial
 import serial.tools.list_ports as stlp
-
-# import io
 from pathlib import Path
-
-# import os
 import logging
 import xmltodict
 import xml.etree.ElementTree as ET
@@ -40,7 +33,6 @@ import scanner.scanner_utility_functions as suf
 from collections import OrderedDict
 from datetime import datetime
 
-# from pprint import *  # not super important
 import sqlite3
 
 # create logger
@@ -357,11 +349,6 @@ class UnidenScanner:
         """Method reads data on the serial buffer, finds components,
         and returns a dict containing raw organized data."""
 
-        # # check to ensure there is data waiting in the buffer
-        # if self.serial.in_waiting == 0:
-        #     self.logger.info("get_response(): no data in waiting")
-        #     return
-
         # first response line contains command and data or format note
         res_line = self._read_and_decode_line()
         res_line = res_line.rstrip("\n")
@@ -375,9 +362,6 @@ class UnidenScanner:
         if res_list[0] in self.err_list:
             self.logger.exception(f"scanner error response: {res_list[0]}")
             raise CommandError
-
-        # this statement deals with xml code specifically
-        # todo: the xml processing logic needs to be better implemented
         elif res_list[1] == "<XML>":
             self.logger.debug(f"found xml data.")
 
