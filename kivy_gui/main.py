@@ -156,8 +156,6 @@ class DataWindow(Screen):
         # grab the scanner state
         wav_meta = self.scanner.get_scanner_state()
 
-        # todo: need a method to clear the text boxes before update
-
         try:
             trans_start = wav_meta["transmission_start"]
         except KeyError:
