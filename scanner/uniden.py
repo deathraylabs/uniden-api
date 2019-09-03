@@ -617,6 +617,36 @@ class UnidenScanner:
             self.logger.error("push_key(): %s" % cmd)
             return 0
 
+    def jump_number_tag(self, fl_tag, sys_tag, chan_tag):
+
+        """When both [SYS_TAG] and [CHAN_TAG] are set as blank,
+        scanner returns error.
+        When [SYS_TAG] is set as blank, [CHAN_TAG] is set with a number tag,
+        scanner jump to
+        the channel number tag in current system.
+        When [SYS_TAG] is set with a number tag, [CHAN_TAG] is set as blank,
+        scanner jump to
+        the first channel of the system number tag.
+
+        SYS_TAG		System Number Tag (0-999)
+        CHAN_TAG	Channel Number Tag (0-999)
+
+        Returns:
+            res (dict): scanner response
+        """
+
+        cmd = ",".join(["JNT", str(fl_tag), str(sys_tag), str(chan_tag)])
+
+        try:
+            ack = self.send_command(cmd)
+            res = self.get_response()
+
+        except CommandError:
+            self.logger.error(f"jump_number_tag(): {cmd}")
+            return 0
+
+        return res
+
     # --------------- Older Code ------------------- #
 
     # todo: migrate everything to use "process command" method instead.
@@ -988,31 +1018,6 @@ class UnidenScanner:
 
         except CommandError:
             self.logger.error("set_squelch(): cmd %s" % cmd)
-            return 0
-
-        return 1
-
-    def jump_number_tag(self, fl_tag, sys_tag, chan_tag):
-
-        """When both [SYS_TAG] and [CHAN_TAG] are set as blank,
-        scanner returns error.
-        When [SYS_TAG] is set as blank, [CHAN_TAG] is set with a number tag,
-        scanner jump to
-        the channel number tag in current system.
-        When [SYS_TAG] is set with a number tag, [CHAN_TAG] is set as blank,
-        scanner jump to
-        the first channel of the system number tag.
-
-        SYS_TAG		System Number Tag (0-999)
-        CHAN_TAG	Channel Number Tag (0-999)"""
-
-        cmd = ",".join(["JNT", str(fl_tag), str(sys_tag), str(chan_tag)])
-
-        try:
-            self.raw(cmd)
-
-        except CommandError:
-            self.logger.error("jump_number_tag(): %s" % cmd)
             return 0
 
         return 1
