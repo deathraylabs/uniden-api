@@ -334,7 +334,7 @@ class UnidenScanner:
 
         return res_dict
 
-    # todo: broken with GLT command
+    # todo: broken with GLT command. different FL names but same keys are used
     def get_xml_response(self, cmd):
         """Method to handle parsing xml serial data line-by line and
         producing a formatted dict with scanner information.
@@ -5531,8 +5531,8 @@ if __name__ == "__main__":
     )
 
     s = UnidenScanner()
-    s.update_scanner_state()
-    current_state = s.get_scanner_state()
+    # s.update_scanner_state()
+    s.get_list("favorites list")
 
     # testing code.
     # s.serial.write(b"GSI\r")
