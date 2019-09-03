@@ -621,45 +621,48 @@ class UnidenScanner:
 
         return self.scan_state
 
-    # --------------- Older Code ------------------- #
-
     def push_key(self, mode, key):
-
         """push_key method is used to push keys on the scanner
 
-        Keys:
-         M : menu
-         F : func
-         L : AVOID
-         1 : 1
-         2 : 2
-         3 : 3
-         4 : 4
-         5 : 5
-         6 : 6
-         7 : 7
-         8 : 8
-         9 : 9
-         0 : 0
-         .(dot) : dot/no/pri
-         E : E/yes
-         > : vright * Set "P" to KEY_MODE.
-         < : vleft * Set "P" to KEY_MODE.
-         C : CHAN
-         ^ : vpush
-         V : backlight
-         P : pwr/light
+        Notes:
 
-        Modes:
-         P : press
-         L : long (press)
-         H : hold (Press and Hold until Release receive)
-         R : release (Cancel Hold state)"""
+            Keys:
+             M : menu
+             F : func
+             L : avoid
+             1 : 1
+             2 : 2
+             3 : 3
+             4 : 4
+             5 : 5
+             6 : 6
+             7 : 7
+             8 : 8
+             9 : 9
+             0 : 0
+             .(dot) : dot/no/pri
+             E : E/yes
+             > : vright * Set "P" to KEY_MODE.
+             < : vleft * Set "P" to KEY_MODE.
+             ^ : vpush
+             V : backlight
+             Y : replay
+             A : system
+             B : dept
+             C : chan
+             Z : zip
+             P : pwr/light
+
+            Modes:
+             P : press
+             L : long (press)
+             H : hold (Press and Hold until Release receive)
+             R : release (Cancel Hold state)"""
 
         keys = {
             "menu": "M",
             "func": "F",
-            "AVOID": "L",
+            "avoid": "L",
             "1": "1",
             "2": "2",
             "3": "3",
@@ -679,8 +682,14 @@ class UnidenScanner:
             "vleft": "<",
             "vpush": "^",
             "backlight": "V",
-            "none": "Q",  # is it really none?
-            "CHAN": "C",
+            "sq": "Q",  # acts like 0
+            "replay": "Y",
+            "system": "A",
+            "dept": "B",
+            "chan": "C",
+            "zip": "Z",
+            "srev": "T",  # acts like 0
+            "rang": "R",  # acts like 0
             "light": "P",
             "pwr": "P",
         }
@@ -700,6 +709,8 @@ class UnidenScanner:
         except CommandError:
             self.logger.error("push_key(): %s" % cmd)
             return 0
+
+    # --------------- Older Code ------------------- #
 
     def get_model(self):
         """Get scanner model information, saving to internal state as well as
