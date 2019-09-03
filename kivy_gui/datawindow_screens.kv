@@ -39,6 +39,11 @@
     text: ""
     color: 1,1,1,1
 
+    background_normal: ""
+    background_down: ""
+    background_color: (1,1,1,0)
+
+
 <MenuBar@BoxLayout>:
     id: "menu_layout"
 #    size_hint_x: .2
@@ -50,7 +55,7 @@
     sys_name: sys_name
     dept_name: dept_name
     site_name: site_name
-    tgid_name: tgid_name
+#    tgid_name: tgid_name
     unit_ids: unit_ids
     unit_ids_name_tag: unit_ids_name_tag
     transmission_start: trans_begins
@@ -59,6 +64,7 @@
 
     scan_status_button: scanner_status
     tgid_hold_btn: tgid_hold_btn
+    tgid_hld: tgid_hld
 
 
 #    BoxLayout:
@@ -117,21 +123,22 @@
                         size: self.size
                         pos: self.pos
 
-            Label:
-                id: tgid_name
-                text: "TGID:Name"
-
-                highlight_color: (1,1,1,0)
-                canvas.before:
-                    Color:
-                        rgba: self.highlight_color
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+#            Label:
+#                id: tgid_name
+#                text: "TGID:Name"
+#
+#                highlight_color: (1,1,1,0)
+#                canvas.before:
+#                    Color:
+#                        rgba: self.highlight_color
+#                    Rectangle:
+#                        size: self.size
+#                        pos: self.pos
 
             TouchArea:
                 id: tgid_hld
                 text: "pigpen"
+
                 on_press: root.hold_channel()
 
             Label:

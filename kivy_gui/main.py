@@ -45,7 +45,7 @@ class DataWindow(Screen):
     sys_name = ObjectProperty()
     dept_name = ObjectProperty()
     site_name = ObjectProperty()
-    tgid_name = ObjectProperty()
+    # tgid_name = ObjectProperty()
     unit_ids = ObjectProperty()
     unit_ids_name_tag = ObjectProperty()
     transmission_start = ObjectProperty()
@@ -150,19 +150,6 @@ class DataWindow(Screen):
         res = self.scanner.push_key("press", "chan")
         Logger.debug(res)
 
-        # state = self.scanner.get_scanner_state()
-
-        # if state["TGID:Hold"] == "ON":
-        #     self.scanner.push_key("press", "chan")
-        #     res = self.scanner.get_response()
-        #     Logger.debug(res)
-        #     self.ids["tgid_hold_btn"].text = "Holding"
-        # else:
-        #     self.scanner.send_command("HLD,OFF,,")
-        #     res = self.scanner.get_response()
-        #     Logger.debug(res)
-        #     self.ids["tgid_hold_btn"].text = "Channel\nHold"
-
     def update_screen(self, dt):
         """Handles updates.
         Args:
@@ -196,7 +183,8 @@ class DataWindow(Screen):
         self.fav_list_name.text = wav_meta["MonitorList:Name"]
         self.sys_name.text = wav_meta["System:Name"]
         self.dept_name.text = wav_meta["Department:Name"]
-        self.tgid_name.text = wav_meta["TGID:Name"]
+        # self.tgid_name.text = wav_meta["TGID:Name"]
+        self.tgid_hld.text = wav_meta["TGID:Name"]
         self.site_name.text = wav_meta["Site:Name"]
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
@@ -219,10 +207,12 @@ class DataWindow(Screen):
             self.ids["sys_name"].highlight_color = self.transparent_color
 
         if wav_meta["TGID:Hold"] == "On":
-            self.ids["tgid_name"].highlight_color = self.highlight_color
+            # self.ids["tgid_name"].highlight_color = self.highlight_color
+            self.ids["tgid_hld"].background_color = self.highlight_color
             self.ids["tgid_hold_btn"].text = "Holding"
         else:
-            self.ids["tgid_name"].highlight_color = self.transparent_color
+            # self.ids["tgid_name"].highlight_color = self.transparent_color
+            self.ids["tgid_hld"].background_color = self.transparent_color
             self.ids["tgid_hold_btn"].text = "Channel\nHold"
 
         if wav_meta["Site:Hold"] == "On":
