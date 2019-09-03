@@ -328,6 +328,7 @@ class UnidenScanner:
 
         return res_dict
 
+    # todo: broken with GLT command
     def get_xml_response(self):
         """Method to handle parsing xml serial data line-by line and
         producing a formatted dict with scanner information.
@@ -643,6 +644,44 @@ class UnidenScanner:
 
         except CommandError:
             self.logger.error(f"jump_number_tag(): {cmd}")
+            return 0
+
+        return res
+
+    def get_list(self, list_type, index_value=""):
+        """Gets specified list from scanner.
+
+        Args:
+            list_type (str): plain english list name (see GLT command spec)
+            index_value (int or str): optional index, depending on list desired
+
+        Returns:
+            res (dict): dict containing data entries outlined in GTL command
+                reference.
+
+        Notes:
+            - GTL command reference can be found in the
+                SDSx00_RemoteCommand_Specifications PDF file.
+        """
+
+        try:
+            # make sure the command is available by checking commands
+            glt_cmd = GLT_COMMANDS[list_type][0]
+        except KeyError:
+            self.logger.exception(
+                f"{list_type} is not a known list type", exc_info=False
+            )
+            return False
+
+        cmd = ",".join(["GLT", str(glt_cmd), str(index_value)])
+
+        # todo: xml parser doesn't work correctly for GLT commands
+        try:
+            ack = self.send_command(cmd)
+            res = self.get_response()
+
+        except CommandError:
+            self.logger.error(f"get_list(): {cmd}")
             return 0
 
         return res

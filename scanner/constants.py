@@ -797,7 +797,6 @@ UNID_SITE_DATA = [
     "Site:NAC",
 ]
 
-
 UNID_CONVENTIONAL_DATA = [
     "Conventional",
     "Conventional:MyId",
@@ -826,3 +825,12 @@ UNID_UNITID_DATA = [
     "UnitIds:AlertColor",
     "UnitIds:AlertPattern",
 ]
+
+# get list commands
+# todo: 12 more commands to write out
+GLT_COMMANDS = {
+    "favorites list": "FL",
+    "system": ("SYS", "fl_index"),
+    "department": ("DEPT", "system_index"),
+    "site": ("SITE", "system_index"),
+}
