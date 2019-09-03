@@ -382,61 +382,121 @@ class UnidenScanner:
         elif res_list[1] == "<XML>":
             self.logger.debug(f"found xml data.")
 
-            # dictionary to store xml data
-            xml_dict = {}
+            xml_dict = self.get_xml_response()
 
-            # read the xml header line (essentially useless except for check)
-            header_line = self._read_and_decode_line()
-            self.logger.debug(f"xml header line: {header_line}")
+            # # dictionary to store xml data
+            # xml_dict = {}
+            #
+            # # read the xml header line (essentially useless except for check)
+            # header_line = self._read_and_decode_line()
+            # self.logger.debug(f"xml header line: {header_line}")
+            #
+            # # ---- parse xml using non-blocking parser ---- #
+            #
+            # parser = ET.XMLPullParser(["start", "end"])
+            #
+            # # variable flag to keep track of position in parse
+            # at_xml_end = False
+            # # counter to determine tree depth
+            # count = 0
+            #
+            # # this code is what ultimately parses the xml
+            # while not at_xml_end:
+            #     # data we will feed the parser
+            #     read_line = self._read_and_decode_line()
+            #
+            #     parser.feed(read_line)
+            #     for event, elem in parser.read_events():
+            #
+            #         # next add the attributes
+            #         for item in elem.attrib.items():
+            #             new_key = f"{elem.tag}:{item[0]}"
+            #             xml_dict[new_key] = item[1]
+            #
+            #         self.logger.debug(f"parser event: {event}")
+            #
+            #         # logic to track tree depth
+            #         if event == "start":
+            #             count += 1
+            #         elif event == "end":
+            #             count -= 1
+            #
+            #         # self.logger.debug(f"elem tag: {elem.tag}")
+            #         #
+            #         # for item in elem.attrib.items():
+            #         #     self.logger.debug(f"elem attrib: {item}")
+            #
+            #     # if we end up back at root, stop parsing
+            #     if count == 0:
+            #         at_xml_end = True
+            #
+            return xml_dict
 
-            # ---- parse xml using non-blocking parser ---- #
+        else:
+            res_dict = {"cmd": res_list.pop(0), "data": res_list}
+            self.logger.debug(f"cmd: {res_dict['cmd']}")
+            self.logger.debug(f"data list: {res_dict['data']}")
 
-            parser = ET.XMLPullParser(["start", "end"])
+        return res_dict
 
-            # variable flag to keep track of position in parse
-            at_xml_end = False
-            # counter to determine tree depth
-            count = 0
+    def get_xml_response(self):
+        """Method to handle parsing xml serial data line-by line and
+        producing a formatted dict with scanner information.
 
-            # this code is what ultimately parses the xml
-            while not at_xml_end:
-                # data we will feed the parser
-                read_line = self._read_and_decode_line()
+        Notes:
+            - only tested against GSI and PSI style data
 
-                parser.feed(read_line)
-                for event, elem in parser.read_events():
+        Returns:
+            xml_dict (dict): colon-separated dict keys with associated
+                scanner values.
 
-                    # next add the attributes
-                    for item in elem.attrib.items():
-                        new_key = f"{elem.tag}:{item[0]}"
-                        xml_dict[new_key] = item[1]
+        """
 
-                    self.logger.debug(f"parser event: {event}")
+        # dictionary to store xml data
+        xml_dict = {}
 
-                    # logic to track tree depth
-                    if event == "start":
-                        count += 1
-                    elif event == "end":
-                        count -= 1
+        # read the xml header line (essentially useless except for check)
+        header_line = self._read_and_decode_line()
+        self.logger.debug(f"xml header line: {header_line}")
 
-                    # self.logger.debug(f"elem tag: {elem.tag}")
-                    #
-                    # for item in elem.attrib.items():
-                    #     self.logger.debug(f"elem attrib: {item}")
+        # ---- parse xml using non-blocking parser ---- #
 
-                # if we end up back at root, stop parsing
-                if count == 0:
-                    at_xml_end = True
+        parser = ET.XMLPullParser(["start", "end"])
 
-            # xml_str = self.serial.read_until(b"</ScannerInfo>\r").decode()
-            # xml_str = xml_str.replace("\r", "\n")
-            # self.logger.debug(xml_str)
+        # variable flag to keep track of position in parse
+        at_xml_end = False
+        # counter to determine tree depth
+        count = 0
 
-        #     res_dict = {"cmd": res_list.pop(0), "data": [xml_str]}  # temp
-        # else:
-        #     res_dict = {"cmd": res_list.pop(0), "data": res_list}
-        #     self.logger.debug(f"cmd: {res_dict['cmd']}")
-        #     self.logger.debug(f"data list: {res_dict['data']}")
+        # this code is what ultimately parses the xml
+        while not at_xml_end:
+            # data we will feed the parser
+            read_line = self._read_and_decode_line()
+
+            parser.feed(read_line)
+            for event, elem in parser.read_events():
+
+                # next add the attributes
+                for item in elem.attrib.items():
+                    new_key = f"{elem.tag}:{item[0]}"
+                    xml_dict[new_key] = item[1]
+
+                self.logger.debug(f"parser event: {event}")
+
+                # logic to track tree depth
+                if event == "start":
+                    count += 1
+                elif event == "end":
+                    count -= 1
+
+                # self.logger.debug(f"elem tag: {elem.tag}")
+                #
+                # for item in elem.attrib.items():
+                #     self.logger.debug(f"elem attrib: {item}")
+
+            # if we end up back at root, stop parsing
+            if count == 0:
+                at_xml_end = True
 
         return xml_dict
 
