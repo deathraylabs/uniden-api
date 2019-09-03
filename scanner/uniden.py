@@ -572,9 +572,14 @@ class UnidenScanner:
 
         # self.scan_state = traverse_state(state_dict)
 
+        # get a copy of the empty state, so scanner refreshes properly.
+        fresh_state = GSI_OUTPUT.copy()
+
         # save new states to dict
         for item in state_dict.items():
-            self.scan_state[item[0]] = item[1]
+            fresh_state[item[0]] = item[1]
+
+        self.scan_state = fresh_state
 
         return True
 
