@@ -630,9 +630,7 @@ class UnidenScanner:
         Keys:
          M : menu
          F : func
-         H : hold
-         S : scan/srch
-         L : lo
+         L : AVOID
          1 : 1
          2 : 2
          3 : 3
@@ -644,11 +642,13 @@ class UnidenScanner:
          9 : 9
          0 : 0
          .(dot) : dot/no/pri
-         E : E/yes/gps
+         E : E/yes
          > : vright * Set "P" to KEY_MODE.
          < : vleft * Set "P" to KEY_MODE.
+         C : CHAN
          ^ : vpush
-         P : pwr/light/lock
+         V : backlight
+         P : pwr/light
 
         Modes:
          P : press
@@ -659,10 +659,7 @@ class UnidenScanner:
         keys = {
             "menu": "M",
             "func": "F",
-            "hold": "H",
-            "scan": "S",
-            "srch": "S",
-            "lo": "L",
+            "AVOID": "L",
             "1": "1",
             "2": "2",
             "3": "3",
@@ -678,13 +675,14 @@ class UnidenScanner:
             "pri": ".",
             "E": "E",
             "yes": "E",
-            "gps": "E",
-            "pwr": "P",
             "vright": ">",
             "vleft": "<",
             "vpush": "^",
-            "lock": "P",
+            "backlight": "V",
+            "none": "Q",  # is it really none?
+            "CHAN": "C",
             "light": "P",
+            "pwr": "P",
         }
 
         modes = {"press": "P", "long": "L", "hold": "H", "release": "R"}
@@ -696,7 +694,8 @@ class UnidenScanner:
             return 0
 
         try:
-            res = self.raw(cmd)
+            ack = self.send_command(cmd)
+            res = self.get_response()
 
         except CommandError:
             self.logger.error("push_key(): %s" % cmd)
