@@ -361,7 +361,7 @@ class UnidenScanner:
         # check to see if error code passed instead of command code
         if res_list[0] in self.err_list:
             self.logger.exception(f"scanner error response: {res_list[0]}")
-            raise CommandError
+            return res_list[0]
         elif res_list[1] == "<XML>":
             self.logger.debug(f"found xml data.")
 

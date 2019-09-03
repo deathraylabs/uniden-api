@@ -141,27 +141,28 @@ class DataWindow(Screen):
         self.scan_status_button.color = (1, 1, 1, 1)
 
     def hold_channel(self):
-        print("trying to hold channel")
-
-        # for id in self.ids:
-        #     print(id)
-
-        # print(self.ids["tgid_hold_btn"].text)
+        Logger.debug("trying to hold channel")
 
         if self.scanner is None:
             Logger.error("No connection to scanner.")
             return False
 
-        if self.ids["tgid_hold_btn"].text == "Channel\nHold":
-            self.scanner.send_command("HLD,off,,")
-            res = self.scanner.get_response()
-            Logger.debug(res)
-            self.ids["tgid_hold_btn"].text = "Holding"
-        else:
-            self.scanner.send_command("HLD,OFF,,")
-            res = self.scanner.get_response()
-            Logger.debug(res)
-            self.ids["tgid_hold_btn"].text = "Channel\nHold"
+        self.scanner.push_key("press", "chan")
+        res = self.scanner.get_response()
+        Logger.debug(res)
+
+        # state = self.scanner.get_scanner_state()
+
+        # if state["TGID:Hold"] == "ON":
+        #     self.scanner.push_key("press", "chan")
+        #     res = self.scanner.get_response()
+        #     Logger.debug(res)
+        #     self.ids["tgid_hold_btn"].text = "Holding"
+        # else:
+        #     self.scanner.send_command("HLD,OFF,,")
+        #     res = self.scanner.get_response()
+        #     Logger.debug(res)
+        #     self.ids["tgid_hold_btn"].text = "Channel\nHold"
 
     def update_screen(self, dt):
         """Handles updates.
@@ -220,8 +221,10 @@ class DataWindow(Screen):
 
         if wav_meta["TGID:Hold"] == "On":
             self.ids["tgid_name"].highlight_color = self.highlight_color
+            self.ids["tgid_hold_btn"].text = "Holding"
         else:
             self.ids["tgid_name"].highlight_color = self.transparent_color
+            self.ids["tgid_hold_btn"].text = "Channel\nHold"
 
         if wav_meta["Site:Hold"] == "On":
             self.ids["site_name"].highlight_color = self.highlight_color
