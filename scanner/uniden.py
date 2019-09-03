@@ -459,6 +459,9 @@ class UnidenScanner:
         header_line = self._read_and_decode_line()
         self.logger.debug(f"xml header line: {header_line}")
 
+        if header_line != '<?xml version="1.0" encoding="utf-8"?>\n':
+            self.logger.error(f"{header_line} is not a valid xml line.")
+
         # ---- parse xml using non-blocking parser ---- #
 
         parser = ET.XMLPullParser(["start", "end"])
