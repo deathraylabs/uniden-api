@@ -382,8 +382,8 @@ class UnidenScanner:
         elif res_list[1] == "<XML>":
             self.logger.debug(f"found xml data.")
 
-            # raw xml string
-            xml_str = ""
+            # dictionary to store xml data
+            xml_dict = {}
 
             # read the xml header line (essentially useless except for check)
             header_line = self._read_and_decode_line()
@@ -402,12 +402,15 @@ class UnidenScanner:
             while not at_xml_end:
                 # data we will feed the parser
                 read_line = self._read_and_decode_line()
-                # self.logger.debug(f"parser feed data: {read_line}")
-
-                xml_str += read_line
 
                 parser.feed(read_line)
                 for event, elem in parser.read_events():
+
+                    # next add the attributes
+                    for item in elem.attrib.items():
+                        new_key = f"{elem.tag}:{item[0]}"
+                        xml_dict[new_key] = item[1]
+
                     self.logger.debug(f"parser event: {event}")
 
                     # logic to track tree depth
@@ -416,26 +419,26 @@ class UnidenScanner:
                     elif event == "end":
                         count -= 1
 
-                    self.logger.debug(f"elem tag: {elem.tag}")
-
-                    for item in elem.attrib.items():
-                        self.logger.debug(f"elem attrib: {item}")
+                    # self.logger.debug(f"elem tag: {elem.tag}")
+                    #
+                    # for item in elem.attrib.items():
+                    #     self.logger.debug(f"elem attrib: {item}")
 
                 # if we end up back at root, stop parsing
                 if count == 0:
                     at_xml_end = True
 
-            xml_str = self.serial.read_until(b"</ScannerInfo>\r").decode()
-            xml_str = xml_str.replace("\r", "\n")
-            self.logger.debug(xml_str)
+            # xml_str = self.serial.read_until(b"</ScannerInfo>\r").decode()
+            # xml_str = xml_str.replace("\r", "\n")
+            # self.logger.debug(xml_str)
 
-            res_dict = {"cmd": res_list.pop(0), "data": [xml_str]}  # temp
-        else:
-            res_dict = {"cmd": res_list.pop(0), "data": res_list}
-            self.logger.debug(f"cmd: {res_dict['cmd']}")
-            self.logger.debug(f"data list: {res_dict['data']}")
+        #     res_dict = {"cmd": res_list.pop(0), "data": [xml_str]}  # temp
+        # else:
+        #     res_dict = {"cmd": res_list.pop(0), "data": res_list}
+        #     self.logger.debug(f"cmd: {res_dict['cmd']}")
+        #     self.logger.debug(f"data list: {res_dict['data']}")
 
-        return res_dict
+        return xml_dict
 
     def reset_port(self):
         """Method resets the port to ensure no data is waiting on the scanner
