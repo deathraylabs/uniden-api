@@ -545,20 +545,21 @@ class UnidenScanner:
                 # exclude the prefix data 'GSI,<XML>,\r'
                 self.logger.info("uniden: sending command to scanner...")
                 cmd_resp = self.send_command("GSI")
-                self.logger.info(f"GSI Ack: {len(cmd_resp)}")
-
+                self.logger.info(f"GSI Ack: {cmd_resp}")
+                self.logger.debug("getting scanner response...")
+                state_dict = self.get_response()
             except CommandError:
                 self.logger.error("get_scanner_information() failed.")
                 return False
-        elif mode == "push":
-            # separate command response from returned state data
-            # first line is response, remaining text is xml formatted state
-            try:
-                response, state_xml = self.get_serial_buffer().split("\n", 1)
-                self.logger.debug(f"Serial port response: {response}")
-            except ValueError:
-                self.logger.exception("No data in buffer.", exc_info=False)
-                return False
+        # elif mode == "push":
+        #     # separate command response from returned state data
+        #     # first line is response, remaining text is xml formatted state
+        #     try:
+        #         response, state_xml = self.get_serial_buffer().split("\n", 1)
+        #         self.logger.debug(f"Serial port response: {response}")
+        #     except ValueError:
+        #         self.logger.exception("No data in buffer.", exc_info=False)
+        #         return False
         else:
             self.logger.error("For some reason this is neither push nor pull")
             return False
@@ -567,9 +568,13 @@ class UnidenScanner:
         # scanner_xml["@date_code"] = datetime.now().isoformat()
         # self.logger.info("Timestamp added.")
 
-        state_ordered_dict = raw_state_xml_to_ordered_dict(state_xml)
+        # state_ordered_dict = raw_state_xml_to_ordered_dict(state_xml)
 
-        self.scan_state = traverse_state(state_ordered_dict)
+        # self.scan_state = traverse_state(state_dict)
+
+        # save new states to dict
+        for item in state_dict.items():
+            self.scan_state[item[0]] = item[1]
 
         return True
 
@@ -5519,11 +5524,12 @@ if __name__ == "__main__":
     )
 
     s = UnidenScanner()
+    s.update_scanner_state()
     current_state = s.get_scanner_state()
 
     # testing code.
-    s.serial.write(b"GSI\r")
-    print(s.get_response())
+    # s.serial.write(b"GSI\r")
+    # print(s.get_response())
 
     # instantiate tools for working with sd card data
     # sd = UnidenMassStorage(source_dir=test_dir)
