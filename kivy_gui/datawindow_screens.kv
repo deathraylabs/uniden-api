@@ -14,11 +14,6 @@
     text: ""
     color: 1,1,1,1
 
-<Button>:
-    # Formats all 'Button' tags.
-    font_size: '15sp'
-    halign: "center"
-
 <BlankLabel@Label>:
     # sets properties for blank label placeholders
     id: blank_label
@@ -29,6 +24,20 @@
             size: self.size
             pos: self.pos
 
+<Button>:
+    # Formats all 'Button' tags.
+    font_size: '15sp'
+    halign: "center"
+
+<TouchArea@Button>:
+    halign: 'left'
+    valign: 'center'
+    text_size: self.size
+#    texture_size: self.size
+    font_size: '25sp'
+    padding: ('10sp', '10sp')
+    text: ""
+    color: 1,1,1,1
 
 <MenuBar@BoxLayout>:
     id: "menu_layout"
@@ -120,6 +129,10 @@
                         size: self.size
                         pos: self.pos
 
+            TouchArea:
+                id: tgid_hld
+                text: "pigpen"
+                on_press: root.hold_channel()
 
             Label:
                 id: site_name

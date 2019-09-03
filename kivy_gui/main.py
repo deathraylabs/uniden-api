@@ -147,8 +147,7 @@ class DataWindow(Screen):
             Logger.error("No connection to scanner.")
             return False
 
-        self.scanner.push_key("press", "chan")
-        res = self.scanner.get_response()
+        res = self.scanner.push_key("press", "chan")
         Logger.debug(res)
 
         # state = self.scanner.get_scanner_state()

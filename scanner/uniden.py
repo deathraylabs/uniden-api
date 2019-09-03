@@ -367,52 +367,6 @@ class UnidenScanner:
 
             xml_dict = self.get_xml_response()
 
-            # # dictionary to store xml data
-            # xml_dict = {}
-            #
-            # # read the xml header line (essentially useless except for check)
-            # header_line = self._read_and_decode_line()
-            # self.logger.debug(f"xml header line: {header_line}")
-            #
-            # # ---- parse xml using non-blocking parser ---- #
-            #
-            # parser = ET.XMLPullParser(["start", "end"])
-            #
-            # # variable flag to keep track of position in parse
-            # at_xml_end = False
-            # # counter to determine tree depth
-            # count = 0
-            #
-            # # this code is what ultimately parses the xml
-            # while not at_xml_end:
-            #     # data we will feed the parser
-            #     read_line = self._read_and_decode_line()
-            #
-            #     parser.feed(read_line)
-            #     for event, elem in parser.read_events():
-            #
-            #         # next add the attributes
-            #         for item in elem.attrib.items():
-            #             new_key = f"{elem.tag}:{item[0]}"
-            #             xml_dict[new_key] = item[1]
-            #
-            #         self.logger.debug(f"parser event: {event}")
-            #
-            #         # logic to track tree depth
-            #         if event == "start":
-            #             count += 1
-            #         elif event == "end":
-            #             count -= 1
-            #
-            #         # self.logger.debug(f"elem tag: {elem.tag}")
-            #         #
-            #         # for item in elem.attrib.items():
-            #         #     self.logger.debug(f"elem attrib: {item}")
-            #
-            #     # if we end up back at root, stop parsing
-            #     if count == 0:
-            #         at_xml_end = True
-            #
             return xml_dict
 
         else:
@@ -705,6 +659,7 @@ class UnidenScanner:
         try:
             ack = self.send_command(cmd)
             res = self.get_response()
+            return res
 
         except CommandError:
             self.logger.error("push_key(): %s" % cmd)
