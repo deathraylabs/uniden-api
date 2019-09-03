@@ -131,8 +131,10 @@ def test_update_scanner_state():
 def test_send_command():
     s = UnidenScanner()
 
-    assert s.send_command("MDL")["MODEL_NAME"] == "SDS100"
-    assert s.send_command("VER")["VERSION"] == "Version 1.10.00"
+    assert s.send_command("MDL") == 4
+    # nonsensical command
+    assert s.send_command("POO,0,0") == 8
+    # assert s.send_command("VER")["VERSION"] == "Version 1.10.00"
     s.close()
 
 

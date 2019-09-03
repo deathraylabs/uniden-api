@@ -273,9 +273,7 @@ class UnidenScanner:
             cmd (str): 3 letter uniden command string
 
         Returns:
-            False (bool): command and response don't match
-            True (bool): OK signal returned by scanner
-            res_values (str): first line of response from scanner
+            write_ack (str): write status returned by scanner
 
         """
 
