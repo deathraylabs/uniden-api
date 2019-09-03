@@ -310,14 +310,20 @@ class UnidenScanner:
         num_res_items = len(res_list)
         self.logger.debug(f"{num_res_items} items in first response line.")
 
+        # 3 letter command, or 3 letter error code
+        cmd = res_list[0]
+        # first response item
+        res_1 = res_list[1]
+
         # check to see if error code passed instead of command code
-        if res_list[0] in self.err_list:
-            self.logger.exception(f"scanner error response: {res_list[0]}")
-            return res_list[0]
-        elif res_list[1] == "<XML>":
+        if cmd in self.err_list:
+            self.logger.exception(f"scanner error response: {cmd}")
+            return cmd
+        elif res_1 == "<XML>":
             self.logger.debug(f"found xml data.")
 
-            xml_dict = self.get_xml_response()
+            # xml parsing is handled by separate method
+            xml_dict = self.get_xml_response(cmd)
 
             return xml_dict
 
@@ -329,12 +335,15 @@ class UnidenScanner:
         return res_dict
 
     # todo: broken with GLT command
-    def get_xml_response(self):
+    def get_xml_response(self, cmd):
         """Method to handle parsing xml serial data line-by line and
         producing a formatted dict with scanner information.
 
         Notes:
             - only tested against GSI and PSI style data
+
+        Args:
+            cmd (str): three letter string scanner command.
 
         Returns:
             xml_dict (dict): colon-separated dict keys with associated
