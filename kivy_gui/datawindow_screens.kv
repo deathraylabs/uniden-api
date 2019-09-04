@@ -226,6 +226,7 @@
         BoxLayout:
             id: large_text_layout
             orientation: 'vertical'
+
             canvas:
                 Color:
                     rgba: (1, 1, 1, 0.15)
@@ -233,8 +234,13 @@
                     size: self.size
                     pos: self.pos
 
+            Label:
+                text: "pootnanny"
+                valign: "top"
+
         MenuBar:  #
             id: "menu_layout"
+            size_hint_x: .5
 
             BoxLayout:
                 orientation: 'vertical'
@@ -243,6 +249,8 @@
                     id: command_input
                     text: "Get Metadata"
                     multiline: False
+                    valign: "center"
+                    size_hint_y: .2
                     on_text_validate: root.command_input(args[0])
 
                 BoxLayout:
