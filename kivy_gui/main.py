@@ -73,7 +73,7 @@ class DataWindow(Screen):
         Logger.info("scanner status button was pressed")
 
         # Set the timer for redrawing the screen
-        refresh_time = 0.2
+        refresh_time = 0.1
 
         # check to see if scanner instance has been created
         if self.scanner == None:
@@ -147,8 +147,9 @@ class DataWindow(Screen):
             Logger.error("No connection to scanner.")
             return False
 
+        Logger.debug(f"bytes waiting: {self.scanner.serial.in_waiting}")
         res = self.scanner.push_key("press", hold_key)
-        Logger.debug(res)
+        Logger.debug(f"hold button response: {res}")
 
     def site_hold(self):
         Logger.debug("trying to hold channel")

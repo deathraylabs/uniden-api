@@ -622,7 +622,8 @@ class UnidenScanner:
         try:
             ack = self.send_command(cmd)
             res = self.get_response()
-            return res
+            self.logger.debug(f"button response: {res}")
+            return ack, res
 
         except CommandError:
             self.logger.error("push_key(): %s" % cmd)
