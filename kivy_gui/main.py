@@ -14,14 +14,8 @@ from kivy.logger import Logger
 from kivy.config import Config
 from kivy.core.audio import SoundLoader
 from kivy.clock import Clock
-
-# from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import ScreenManager, Screen
-
-# from kivy.uix.boxlayout import BoxLayout
-
-from kivy.uix.label import Label
-from kivy.graphics import Color
+from kivy.uix.textinput import TextInput
 
 # Obj..Prop.. allows us to reference id name in kv file
 from kivy.properties import ObjectProperty
@@ -295,6 +289,9 @@ class PlaybackScreen(Screen):
         if self.sound:
             self.sound.stop()
             self.play_stop_button.text = "PLAY"
+
+    def command_input(self, value):
+        print(value.text)
 
 
 # create the screen manager

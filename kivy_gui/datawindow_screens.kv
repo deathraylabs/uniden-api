@@ -218,21 +218,14 @@
 
 #    BoxLayout:
     GridLayout:
-        cols: 1
+        cols: 2
         id: 'main_container'
-#        top: root.top
         width: root.width
         height: root.height
-#        center_y: root.center_y
-#        width: 800
-#        height: 400
-#        center: root.center
-#        orientation: 'vertical'
 
         BoxLayout:
             id: large_text_layout
             orientation: 'vertical'
-
             canvas:
                 Color:
                     rgba: (1, 1, 1, 0.15)
@@ -242,15 +235,15 @@
 
         MenuBar:  #
             id: "menu_layout"
-#            height: '300sp'
-#            size_hint_y: .2
 
             BoxLayout:
-                orientation: 'horizontal'
+                orientation: 'vertical'
 
-                Button:
+                TextInput:
+                    id: command_input
                     text: "Get Metadata"
-                    on_press: root.btn()
+                    multiline: False
+                    on_text_validate: root.command_input(args[0])
 
                 BoxLayout:
                     orientation: 'horizontal'
