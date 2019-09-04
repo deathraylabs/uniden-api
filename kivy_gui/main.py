@@ -165,7 +165,7 @@ class DataWindow(Screen):
     def update_screen(self, dt):
         """Handles updates.
         Args:
-            updated_data (dict): contains scanner data keys and values.
+            dt: argument used internally by kivy
 
         Returns:
             None
@@ -231,18 +231,6 @@ class DataWindow(Screen):
             self.ids["site_name"].background_color = self.highlight_color
         else:
             self.ids["site_name"].background_color = self.transparent_color
-
-        # unit ID information is not always present.
-        # try:
-        #     self.unit_ids.text = wav_meta["UnitID:U_Id"]
-        # except KeyError:
-        #     self.unit_ids.text = "-" * 8
-        #     Logger.exception("UnitIds key doesn't exist", exc_info=False)
-        # try:
-        #     self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
-        # except KeyError:
-        #     self.unit_ids_name_tag.text = "-" * 8
-        #     Logger.exception("No Unit ID Name.", exc_info=False)
 
         return
 

@@ -423,7 +423,8 @@ class UnidenScanner:
         return True
 
     def update_scanner_state(self, mode="pull"):
-        """Updates the state variable for the class.
+        """Gets scanner status from serial and updates the scanner state
+        object variable.
 
         Args:
             mode (str):
