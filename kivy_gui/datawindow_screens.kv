@@ -63,7 +63,7 @@
     total_time: tot_time
 
     scan_status_button: scanner_status
-    tgid_hold_btn: tgid_hold_btn
+#    tgid_hold_btn: tgid_hold_btn
     tgid_hld: tgid_hld
 
 
@@ -99,34 +99,24 @@
                     text: "UnitIds:NameTag"
 #                    size_hint_x: .5
 
-            Label:
+            TouchArea:
                 id: sys_name
                 text: "System:Name"
+                on_press: root.scanner_hold("system")
 
-                highlight_color: (1,1,1,0)
-                canvas.before:
-                    Color:
-                        rgba: self.highlight_color
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+#                highlight_color: (1,1,1,0)
+#                canvas.before:
+#                    Color:
+#                        rgba: self.highlight_color
+#                    Rectangle:
+#                        size: self.size
+#                        pos: self.pos
 
-            Label:
+            TouchArea:
                 id: dept_name
                 text: "Department:Name"
+                on_press: root.scanner_hold("dept")
 
-                highlight_color: (1,1,1,0)
-                canvas.before:
-                    Color:
-                        rgba: self.highlight_color
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-
-#            Label:
-#                id: tgid_name
-#                text: "TGID:Name"
-#
 #                highlight_color: (1,1,1,0)
 #                canvas.before:
 #                    Color:
@@ -138,19 +128,20 @@
             TouchArea:
                 id: tgid_hld
                 text: "TGID:Name"
-                on_press: root.hold_channel("chan")
+                on_press: root.scanner_hold("chan")
 
             TouchArea:
                 id: site_name
                 text: "Site:Name"
+                on_press: root.site_hold()
                 # using canvas.before ensures text is over highlight
-                highlight_color: (1,1,1,0)
-                canvas.before:
-                    Color:
-                        rgba: self.highlight_color
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+#                highlight_color: (1,1,1,0)
+#                canvas.before:
+#                    Color:
+#                        rgba: self.highlight_color
+#                    Rectangle:
+#                        size: self.size
+#                        pos: self.pos
 
             Label:
                 id: unit_ids
@@ -195,10 +186,10 @@
             MenuBar:
                 id: "fourth_row"
 
-                Button:
-                    id: tgid_hold_btn
-                    text: "Channel\nHold"
-                    on_press: root.hold_channel("chan")
+#                Button:
+#                    id: tgid_hold_btn
+#                    text: "Channel\nHold"
+#                    on_press: root.scanner_hold("chan")
 
             MenuBar:
                 id: "menu_layout"

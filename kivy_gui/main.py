@@ -140,7 +140,7 @@ class DataWindow(Screen):
         self.scan_status_button.text = "Mirron\nScanner"
         self.scan_status_button.color = (1, 1, 1, 1)
 
-    def hold_channel(self, hold_key):
+    def scanner_hold(self, hold_key):
         Logger.debug("trying to hold channel")
 
         if self.scanner is None:
@@ -148,6 +148,18 @@ class DataWindow(Screen):
             return False
 
         res = self.scanner.push_key("press", hold_key)
+        Logger.debug(res)
+
+    def site_hold(self):
+        Logger.debug("trying to hold channel")
+
+        if self.scanner is None:
+            Logger.error("No connection to scanner.")
+            return False
+
+        res = self.scanner.push_key("press", "func")
+        Logger.debug(res)
+        res = self.scanner.push_key("press", "dept")
         Logger.debug(res)
 
     def update_screen(self, dt):
@@ -197,28 +209,28 @@ class DataWindow(Screen):
 
         # code to highlight held quantities
         if wav_meta["Department:Hold"] == "On":
-            self.ids["dept_name"].highlight_color = self.highlight_color
+            self.ids["dept_name"].background_color = self.highlight_color
         else:
-            self.ids["dept_name"].highlight_color = self.transparent_color
+            self.ids["dept_name"].background_color = self.transparent_color
 
         if wav_meta["System:Hold"] == "On":
-            self.ids["sys_name"].highlight_color = self.highlight_color
+            self.ids["sys_name"].background_color = self.highlight_color
         else:
-            self.ids["sys_name"].highlight_color = self.transparent_color
+            self.ids["sys_name"].background_color = self.transparent_color
 
         if wav_meta["TGID:Hold"] == "On":
             # self.ids["tgid_name"].highlight_color = self.highlight_color
             self.ids["tgid_hld"].background_color = self.highlight_color
-            self.ids["tgid_hold_btn"].text = "Holding"
+            # self.ids["tgid_hold_btn"].text = "Holding"
         else:
             # self.ids["tgid_name"].highlight_color = self.transparent_color
             self.ids["tgid_hld"].background_color = self.transparent_color
-            self.ids["tgid_hold_btn"].text = "Channel\nHold"
+            # self.ids["tgid_hold_btn"].text = "Channel\nHold"
 
         if wav_meta["Site:Hold"] == "On":
-            self.ids["site_name"].highlight_color = self.highlight_color
+            self.ids["site_name"].background_color = self.highlight_color
         else:
-            self.ids["site_name"].highlight_color = self.transparent_color
+            self.ids["site_name"].background_color = self.transparent_color
 
         # unit ID information is not always present.
         # try:
