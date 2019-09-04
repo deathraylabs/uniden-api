@@ -104,26 +104,10 @@
                 text: "System:Name"
                 on_press: root.scanner_hold("system")
 
-#                highlight_color: (1,1,1,0)
-#                canvas.before:
-#                    Color:
-#                        rgba: self.highlight_color
-#                    Rectangle:
-#                        size: self.size
-#                        pos: self.pos
-
             TouchArea:
                 id: dept_name
                 text: "Department:Name"
                 on_press: root.scanner_hold("dept")
-
-#                highlight_color: (1,1,1,0)
-#                canvas.before:
-#                    Color:
-#                        rgba: self.highlight_color
-#                    Rectangle:
-#                        size: self.size
-#                        pos: self.pos
 
             TouchArea:
                 id: tgid_hld
@@ -134,14 +118,6 @@
                 id: site_name
                 text: "Site:Name"
                 on_press: root.site_hold()
-                # using canvas.before ensures text is over highlight
-#                highlight_color: (1,1,1,0)
-#                canvas.before:
-#                    Color:
-#                        rgba: self.highlight_color
-#                    Rectangle:
-#                        size: self.size
-#                        pos: self.pos
 
             Label:
                 id: unit_ids
@@ -215,6 +191,7 @@
 
 <PlaybackScreen>:
     play_stop_button: stop_play
+    text_display: text_display
 
 #    BoxLayout:
     GridLayout:
@@ -235,6 +212,7 @@
                     pos: self.pos
 
             Label:
+                id: text_display
                 text: "pootnanny"
                 valign: "top"
 
@@ -247,7 +225,7 @@
 
                 TextInput:
                     id: command_input
-                    text: "Get Metadata"
+                    text: "GSI"
                     multiline: False
                     valign: "center"
                     size_hint_y: .2
@@ -271,11 +249,11 @@
                     Button:
                         id: scanner_status
                         text: "Connect to Scanner"
-#                        on_press: root.scanner_status_btn()
+                        on_press: root.scanner_status_btn()
 
                     Button:
                         text: "Stop\nDisplay"
-#                        on_press: root.scanner_disconnect_btn()
+                        on_press: root.scanner_disconnect_btn()
 
                     Button:
                         text: 'Back to Menu'

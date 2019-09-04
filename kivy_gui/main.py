@@ -21,7 +21,7 @@ from kivy.uix.textinput import TextInput
 from kivy.properties import ObjectProperty
 
 from scanner.scanner_utility_functions import get_wav_meta
-from scanner.uniden import runcmd, UnidenScanner, traverse_state
+from scanner.uniden import UnidenScanner
 from scanner.constants import GSI_OUTPUT
 
 Builder.load_file("datawindow_screens.kv")
@@ -254,6 +254,9 @@ class DataWindow(Screen):
 
 class PlaybackScreen(Screen):
     play_stop_button = ObjectProperty()
+    text_display = ObjectProperty()
+
+    scanner = None
 
     def btn(self):
         """Method runs when Button object calls root.btn() from <DataWindow>"""
@@ -290,8 +293,56 @@ class PlaybackScreen(Screen):
             self.sound.stop()
             self.play_stop_button.text = "PLAY"
 
+    def scanner_status_btn(self):
+        """Start pulling scanner display data."""
+
+        Logger.info("scanner status button was pressed")
+
+        # check to see if scanner instance has been created
+        if self.scanner is None:
+            Logger.info("Scanner is not initialized.")
+
+            Logger.info("Trying to initialize scanner...")
+            self.scanner = UnidenScanner()
+            Logger.info("Scanner is initialized. Checking port connection...")
+
+        if not self.scanner.port_is_open():
+            port_open = self.scanner.open()
+
+            if not port_open:
+                Logger.info(
+                    "Cannot open port. Scanner is likely not connected to computer."
+                )
+                return False
+
+        Logger.info("The scanner port is open.")
+
+        Logger.info("clearing the buffer")
+        self.scanner.reset_port()
+
+    def scanner_disconnect_btn(self):
+
+        # make sure the port is open and connected to scanner
+        try:
+            if not self.scanner.port_is_open():
+                Logger.info("Port is already closed.")
+                return False
+        except AttributeError:
+            Logger.exception("No scanner connection", exc_info=False)
+            return False
+
+        Logger.info("Disconnect button pushed.")
+
+        self.scanner.close()
+        Logger.info("Scanner Connection Closed.")
+
+    # todo: how can I share the scanner connection between pages?
     def command_input(self, value):
-        print(value.text)
+
+        self.scanner.send_command(value.text)
+        res = self.scanner.get_response()
+
+        self.text_display.text = str(res)
 
 
 # create the screen manager
