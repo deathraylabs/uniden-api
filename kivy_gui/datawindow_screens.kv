@@ -137,11 +137,10 @@
 
             TouchArea:
                 id: tgid_hld
-                text: "pigpen"
+                text: "TGID:Name"
+                on_press: root.hold_channel("chan")
 
-                on_press: root.hold_channel()
-
-            Label:
+            TouchArea:
                 id: site_name
                 text: "Site:Name"
                 # using canvas.before ensures text is over highlight
@@ -199,7 +198,7 @@
                 Button:
                     id: tgid_hold_btn
                     text: "Channel\nHold"
-                    on_press: root.hold_channel()
+                    on_press: root.hold_channel("chan")
 
             MenuBar:
                 id: "menu_layout"

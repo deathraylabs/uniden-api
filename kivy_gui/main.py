@@ -140,14 +140,14 @@ class DataWindow(Screen):
         self.scan_status_button.text = "Mirron\nScanner"
         self.scan_status_button.color = (1, 1, 1, 1)
 
-    def hold_channel(self):
+    def hold_channel(self, hold_key):
         Logger.debug("trying to hold channel")
 
         if self.scanner is None:
             Logger.error("No connection to scanner.")
             return False
 
-        res = self.scanner.push_key("press", "chan")
+        res = self.scanner.push_key("press", hold_key)
         Logger.debug(res)
 
     def update_screen(self, dt):
