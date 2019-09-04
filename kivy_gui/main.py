@@ -162,6 +162,27 @@ class DataWindow(Screen):
         res = self.scanner.push_key("press", "dept")
         Logger.debug(res)
 
+    def print_data(self):
+        """Mainly just a debugging step. This method prints the contents of
+        the scanner state variable."""
+
+        try:
+            self.scanner.port_is_open()
+        except AttributeError:
+            return
+
+        print("\n\nNew data\n\n")
+
+        scanner_state = self.scanner.get_scanner_state()
+
+        for item in scanner_state.items():
+            # print(item)
+            width = 25
+            k = item[0]
+            v = item[1]
+
+            print(f"{k:{width}} {v}")
+
     def update_screen(self, dt):
         """Handles updates.
         Args:
@@ -170,9 +191,10 @@ class DataWindow(Screen):
         Returns:
             None
         """
-        # update the scanner first
+        # update the scanner state variable first
         self.scanner.update_scanner_state(mode="pull")
-        # grab the scanner state
+
+        # then grab the scanner state variable
         wav_meta = self.scanner.get_scanner_state()
 
         try:

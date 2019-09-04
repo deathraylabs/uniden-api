@@ -548,7 +548,7 @@ SCANNER_COMMAND_RESPONSE = {
 # todo: compare GSI output to tag names used for wav metadata parsing
 GSI_OUTPUT = OrderedDict(
     [
-        ("date_code", (376, 14)),
+        # ("date_code", (376, 14)),
         ("ScannerInfo:Mode", "---"),
         ("ScannerInfo:V_Screen", "---"),
         ("MonitorList:Name", "---"),
