@@ -239,64 +239,6 @@ class UnidenScanner:
 
         return write_ack
 
-        # # first response line contains command and data or format note
-        # res_line = self.serial.read_until(b"\r").decode()
-        # # return character is not useful here
-        # res_line = res_line.rstrip("\r")
-        #
-        # # response sections are comma separated
-        # res_items = res_line.split(",")
-        #
-        # if len(res_items) == 1:
-        #     return res_items[0]
-        #
-        # # non xml values returned by scanner
-        # res_values = {}
-        #
-        # # separate command stem from arguments
-        # cmd_stem = cmd.split(",")[0]
-        #
-        # try:
-        #     # use command to get expected response format from constants
-        #     expected_res = SCANNER_COMMAND_RESPONSE[cmd_stem]
-        #     self.logger.debug(f"expected response format: {expected_res}")
-        # except KeyError:
-        #     self.logger.exception(f"{cmd} was not recognized.")
-        #     return False
-        #
-        # for index, item in enumerate(res_items):
-        #     self.logger.debug(f"actual response: {item}")
-        #
-        #     # # scan_cmd_res = SCANNER_COMMAND_RESPONSE[index]
-        #     # self.logger.debug(f"expected response: {expected_res[index]}")
-        #
-        #     # make sure the command and response match
-        #     if index == 0 and cmd_stem == expected_res[index]:
-        #         continue
-        #     elif index == 0 and cmd_stem != expected_res[index]:
-        #         self.logger.error("Command and response are not identical.")
-        #         return False
-        #
-        #     # hop out of the for loop if we're dealing with xml data
-        #     elif index == 1 and item == "<XML>":
-        #         # get the xml data
-        #         xml_str = self.serial.read_until(b"</ScannerInfo>\r").decode()
-        #         xml_str = xml_str.replace("\r", "\n")
-        #
-        #         return xml_str
-        #
-        #     elif index == 1 and item == "OK":
-        #         continue
-        #
-        #     # return non-xml data as tuple
-        #
-        #     res_values[expected_res[index]] = item
-        #
-        # return res_values
-
-        # UTF8 string returned by scanner
-        # res_str = self.serial.readall().decode()
-
     def get_response(self):
         """Method reads data on the serial buffer, finds components,
         and returns a dict containing raw organized data."""
@@ -514,7 +456,8 @@ class UnidenScanner:
             return False
 
     def get_serial_buffer(self):
-        """Get serial port buffer.
+        """Get serial port buffer. Assume it only works for GSI or PSI right
+        now.
         """
 
         if not self.port_is_open():
