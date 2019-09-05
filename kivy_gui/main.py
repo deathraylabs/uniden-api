@@ -144,6 +144,11 @@ class DataWindow(Screen):
         Logger.debug(f"bytes waiting: {self.scanner.serial.in_waiting}")
         res = self.scanner.push_key("press", hold_key)
         Logger.debug(f"hold button response: {res}")
+        Logger.debug(
+            f"bytes waiting after push_key(): {self.scanner.serial.in_waiting}"
+        )
+
+        return res
 
     def site_hold(self):
         Logger.debug("trying to hold channel")

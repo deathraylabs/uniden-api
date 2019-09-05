@@ -220,7 +220,6 @@ class UnidenScanner:
             write_ack (str): write status returned by scanner
 
         """
-
         self.logger.debug(f"Command sent: {cmd}")
 
         # allow user to input lowercase commands
