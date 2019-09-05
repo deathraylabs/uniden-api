@@ -432,7 +432,7 @@ class UnidenScanner:
                 "push": if using 'PSI' command to have scanner push data
 
         Returns:
-            True: if the internal state was updated
+            fresh_state: passes the updated scanner state dict
             False: if there is an error communicating with scanner
 
         """
@@ -469,10 +469,6 @@ class UnidenScanner:
         # scanner_xml["@date_code"] = datetime.now().isoformat()
         # self.logger.info("Timestamp added.")
 
-        # state_ordered_dict = raw_state_xml_to_ordered_dict(state_xml)
-
-        # self.scan_state = traverse_state(state_dict)
-
         # get a copy of the empty state, so scanner refreshes properly.
         fresh_state = GSI_OUTPUT.copy()
 
@@ -482,7 +478,7 @@ class UnidenScanner:
 
         self.scan_state = fresh_state
 
-        return True
+        return fresh_state
 
     def start_push_updates(self, interval=1000):
         """Method to set scanner 'push scanner information' (PSI) mode

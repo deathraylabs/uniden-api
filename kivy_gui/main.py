@@ -186,11 +186,13 @@ class DataWindow(Screen):
         Returns:
             None
         """
+        # Logger.debug(f"refresh time: {dt}")
+
         # update the scanner state variable first
-        self.scanner.update_scanner_state(mode="pull")
+        wav_meta = self.scanner.update_scanner_state(mode="pull")
 
         # then grab the scanner state variable
-        wav_meta = self.scanner.get_scanner_state()
+        # wav_meta = self.scanner.get_scanner_state()
 
         try:
             trans_start = wav_meta["transmission_start"]
