@@ -203,6 +203,7 @@ class UnidenScanner:
 
         res_line = self.serial.read_until(b"\r").decode()
         self.logger.debug(f"parser feed data: {res_line}")
+        print(f"res_line: {res_line}")
 
         res_line = res_line.replace("\r", "\n")
         self.logger.debug(f"returned string: {res_line}")
@@ -231,6 +232,7 @@ class UnidenScanner:
             # send command to scanner and note the ack
             self.logger.debug(f"write len: {len(cmd_str)}")
             write_ack = self.serial.write(cmd_str)
+            print(f"write_ack: {write_ack}")
             self.logger.debug(f"write ack len: {write_ack}")
         except serial.serialutil.SerialException:
             self.logger.error(f"{cmd_str} not executed, port was not open.")
@@ -265,6 +267,7 @@ class UnidenScanner:
 
             # xml parsing is handled by separate method
             xml_dict = self.get_xml_response(cmd)
+            xml_dict["cmd"] = cmd  # not sure about this
 
             return xml_dict
 
@@ -355,7 +358,7 @@ class UnidenScanner:
             return False
 
         # reset psi command to zero
-        self.send_command("PSI,0")
+        # self.send_command("PSI,0")
 
         if self.serial.in_waiting > 0:
             # get read all data on the port to zero it out
@@ -559,7 +562,9 @@ class UnidenScanner:
 
         try:
             ack = self.send_command(cmd)
+
             res = self.get_response()
+
             self.logger.debug(f"button response: {res}")
             return ack, res
 

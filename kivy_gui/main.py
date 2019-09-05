@@ -54,6 +54,9 @@ class DataWindow(Screen):
     # initialize variable to store scanner data
     scanner = None
 
+    # time interval to refresh data
+    refresh_data_dt = 0.25
+
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
 
@@ -61,13 +64,16 @@ class DataWindow(Screen):
         self.highlight_color = (0.8, 0.8, 0, 0.8)
         self.transparent_color = (1, 1, 1, 0)
 
+        # flag to hold channel on next data refresh
+        self.scan_hold_cmd = ""
+
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
 
         Logger.info("scanner status button was pressed")
 
         # Set the timer for redrawing the screen
-        refresh_time = 0.1
+        refresh_time = self.refresh_data_dt
 
         # check to see if scanner instance has been created
         if self.scanner == None:
@@ -193,8 +199,16 @@ class DataWindow(Screen):
         """
         # Logger.debug(f"refresh time: {dt}")
 
+        # print(self.scan_hold_cmd)
+        #
+        # if self.scan_hold_cmd != "":
+        #     self.scanner_hold(self.scan_hold_cmd)
+        #     self.scan_hold_cmd = ""
+
         # update the scanner state variable first
         wav_meta = self.scanner.update_scanner_state(mode="pull")
+
+        # Logger.debug(f"update_scanner_state:{self.scanner.serial.in_waiting}")
 
         # then grab the scanner state variable
         # wav_meta = self.scanner.get_scanner_state()
