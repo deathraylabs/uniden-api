@@ -39,7 +39,6 @@ class DataWindow(Screen):
     sys_name = ObjectProperty()
     dept_name = ObjectProperty()
     site_name = ObjectProperty()
-    # tgid_name = ObjectProperty()
     unit_ids = ObjectProperty()
     unit_ids_name_tag = ObjectProperty()
     transmission_start = ObjectProperty()
@@ -50,12 +49,11 @@ class DataWindow(Screen):
 
     # can I store the sound object here?
     sound = ObjectProperty()
-    # all_labels = ObjectProperty()
     # initialize variable to store scanner data
     scanner = None
 
     # time interval to refresh data
-    refresh_data_dt = 0.25
+    refresh_data_dt = 0.1
 
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
@@ -63,9 +61,6 @@ class DataWindow(Screen):
         # color for hold highlight
         self.highlight_color = (0.8, 0.8, 0, 0.8)
         self.transparent_color = (1, 1, 1, 0)
-
-        # flag to hold channel on next data refresh
-        self.scan_hold_cmd = ""
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
@@ -163,10 +158,10 @@ class DataWindow(Screen):
             Logger.error("No connection to scanner.")
             return False
 
-        res = self.scanner.push_key("press", "func")
-        Logger.debug(res)
-        res = self.scanner.push_key("press", "dept")
-        Logger.debug(res)
+        res1 = self.scanner.push_key("press", "func")
+
+        res2 = self.scanner.push_key("press", "dept")
+        Logger.debug(f"responses: {res1}, {res2}")
 
     def print_data(self):
         """Mainly just a debugging step. This method prints the contents of
@@ -197,21 +192,8 @@ class DataWindow(Screen):
         Returns:
             None
         """
-        # Logger.debug(f"refresh time: {dt}")
-
-        # print(self.scan_hold_cmd)
-        #
-        # if self.scan_hold_cmd != "":
-        #     self.scanner_hold(self.scan_hold_cmd)
-        #     self.scan_hold_cmd = ""
-
         # update the scanner state variable first
         wav_meta = self.scanner.update_scanner_state(mode="pull")
-
-        # Logger.debug(f"update_scanner_state:{self.scanner.serial.in_waiting}")
-
-        # then grab the scanner state variable
-        # wav_meta = self.scanner.get_scanner_state()
 
         try:
             trans_start = wav_meta["transmission_start"]
