@@ -209,12 +209,24 @@
                     size: self.size
                     pos: self.pos
 
-            Label:
-                id: text_display
-                text: "info display"
-                font_size: 24
-                scroll_y: True
-                valign: "top"
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+
+                Label:
+                    id: text_display
+#                    text: "info display"
+                    font_size: 36
+#                    scroll_y: True
+                    valign: "top"
+
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    text_size: self.width, None
+                    padding: 10, 10
+                    text:
+                        'really some amazing text\n' * 100
+
 
         MenuBar:  #
             id: "menu_layout"
@@ -236,12 +248,12 @@
 
                     Button:
                         id: stop_play
-                        text: "Play Wav"
-                        on_press: root.play_stop_btn()
+#                        text: "Play Wav"
+#                        on_press: root.play_stop_btn()
 
                     Button:
-                        text: "Stop"
-                        on_press: root.stop_btn()
+#                        text: "Stop"
+#                        on_press: root.stop_btn()
 
                 BoxLayout:
                     orientation: 'horizontal'

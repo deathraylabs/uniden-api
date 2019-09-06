@@ -1418,22 +1418,6 @@ class UnidenScanner:
     #         return 0
     #
     #     return 1
-    #
-    # def get_battery_voltage(self):
-    #
-    #     """A/D Value (0-1023)
-    #     Battery Level[V] = (3.2[V] * #### * 2 )/1023"""
-    #
-    #     try:
-    #         res = self.raw("BAV")
-    #
-    #     except CommandError:
-    #         self.logger.error("get_battery_voltage()")
-    #         return 0
-    #
-    #     (bav, ad_value) = res.split(",")
-    #
-    #     return 3.2 * float(ad_value) * 2 / 1023
 
 
 class UnidenMassStorage:

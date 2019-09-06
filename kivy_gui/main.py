@@ -349,10 +349,12 @@ class PlaybackScreen(Screen):
             return
         res = self.scanner.get_response()
 
-        for item in res.readlines():
+        display_text = ""
 
+        for item in res.items():
+            display_text += f"{item}\n"
 
-        self.text_display.text = str(line)
+        self.text_display.text = display_text
 
 
 # create the screen manager
