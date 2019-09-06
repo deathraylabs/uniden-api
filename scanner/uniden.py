@@ -313,41 +313,44 @@ class UnidenScanner:
         # counter to determine tree depth
         count = 0
 
+        if cmd == "GLT":
+            self.logger.debug("GLT mode")
+
         # this code is what ultimately parses the xml
         while not at_xml_end:
             # data we will feed the parser
             read_line = self._read_and_decode_line()
 
-            if read_line.strip("\n") == "<GLT>":
-                self.logger.debug("found GLT response")
+            parser.feed(read_line)
+            for event, elem in parser.read_events():
+                try:
+                    element_name = elem.attrib["Name"]
+                except KeyError:
+                    self.logger.exception(
+                        "elem.attrib['Name'] doesn't exist", exc_info=False
+                    )
 
-                # try:
-                #     element_name = elem.attrib["Name"]
-                # except KeyError:
-                #     self.logger.exception(
-                #         "elem.attrib['Name'] doesn't exist", exc_info=False
-                #     )
+                # next add the attributes
+                for item in elem.attrib.items():
+                    new_key = f"{elem.tag}:{item[0]}"
+                    xml_dict[new_key] = item[1]
 
-            else:
-                parser.feed(read_line)
-                for event, elem in parser.read_events():
+                self.logger.debug(f"parser event: {event}")
 
-                    # next add the attributes
-                    for item in elem.attrib.items():
-                        new_key = f"{elem.tag}:{item[0]}"
-                        xml_dict[new_key] = item[1]
+                # logic to track tree depth
+                if event == "start":
+                    count += 1
+                elif event == "end":
+                    count -= 1
 
-                    self.logger.debug(f"parser event: {event}")
+                # self.logger.debug(f"elem tag: {elem.tag}")
+                #
+                # for item in elem.attrib.items():
+                #     self.logger.debug(f"elem attrib: {item}")
 
-                    # logic to track tree depth
-                    if event == "start":
-                        count += 1
-                    elif event == "end":
-                        count -= 1
-
-                # if we end up back at root, stop parsing
-                if count == 0:
-                    at_xml_end = True
+            # if we end up back at root, stop parsing
+            if count == 0:
+                at_xml_end = True
 
         return xml_dict
 
