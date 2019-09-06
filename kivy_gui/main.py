@@ -1,6 +1,7 @@
 """Learning to use Kivy GUI framework."""
 import sys
 import os
+import pprint
 
 if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
     print("On RPi")
@@ -258,6 +259,7 @@ class DataWindow(Screen):
 class PlaybackScreen(Screen):
     play_stop_button = ObjectProperty()
     text_display = ObjectProperty()
+    cmd_input_box = ObjectProperty()
 
     scanner = None
 
@@ -349,13 +351,26 @@ class PlaybackScreen(Screen):
             return
         res = self.scanner.get_response()
 
-        display_text = ""
+        # display_text = ""
+        #
+        # for item in res.items():
+        #     display_text += f"{item}\n"
 
-        for item in res.items():
-            display_text += f"{item}\n"
+        # self.text_display.text = display_text
+        self.text_display.text = pprint.pformat(res, compact=True, width=80, indent=3)
+        self.cmd_input_box.focus = True
+        # self.cmd_input_box.text.select_all()
 
-        self.text_display.text = display_text
 
+# def on_focus(instance, value):
+#     if value:
+#         print("User focused", instance)
+#     else:
+#         print("User defocused", instance)
+#
+#
+# textinput = TextInput()
+# textinput.bind(focus=on_focus)
 
 # create the screen manager
 sm = ScreenManager()

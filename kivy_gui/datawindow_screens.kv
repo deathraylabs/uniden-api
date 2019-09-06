@@ -184,6 +184,7 @@
 <PlaybackScreen>:
     play_stop_button: stop_play
     text_display: text_display
+    cmd_input_box: command_input
 
 #    BoxLayout:
     GridLayout:
@@ -204,22 +205,24 @@
                     pos: self.pos
 
             ScrollView:
-                do_scroll_x: False
-                do_scroll_y: True
+#                do_scroll_x: True
+#                do_scroll_y: True
+                do_scroll: (False, True)
 
                 Label:
                     id: text_display
 #                    text: "info display"
                     font_size: 36
-#                    scroll_y: True
                     valign: "top"
 
-                    size_hint_y: None
+                    size_hint: (1, None)
+                    text_size: (self.width, None)
                     height: self.texture_size[1]
-                    text_size: self.width, None
                     padding: 10, 10
                     text:
                         'really some amazing text\n' * 100
+
+
 
 
         MenuBar:  #
@@ -235,6 +238,13 @@
                     multiline: False
                     valign: "center"
                     size_hint_y: .2
+                    write_tab: False
+                    on_focus: self.select_all()
+                    # this is such a hack
+                    on_focus: self.focus = True
+                    on_touch_down: self.select_all()
+
+#                    on_focus: self.select_all()
                     on_text_validate: root.command_input(args[0])
 
                 BoxLayout:
