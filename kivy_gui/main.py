@@ -342,10 +342,17 @@ class PlaybackScreen(Screen):
     # todo: how can I share the scanner connection between pages?
     def command_input(self, value):
 
-        self.scanner.send_command(value.text)
+        try:
+            self.scanner.send_command(value.text)
+        except AttributeError:
+            Logger.exception("Scanner port isn't open.", exc_info=False)
+            return
         res = self.scanner.get_response()
 
-        self.text_display.text = str(res)
+        for item in res.readlines():
+
+
+        self.text_display.text = str(line)
 
 
 # create the screen manager
