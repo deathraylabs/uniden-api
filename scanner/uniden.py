@@ -365,13 +365,34 @@ class UnidenScanner:
             self.logger.debug("MSI mode")
 
             # this code is what ultimately parses the xml
-            while not at_xml_end:
+            # while not at_xml_end:
+            while self.serial.in_waiting != 0:
                 sub_dict = {}
 
                 # data we will feed the parser
                 read_line = self._read_and_decode_line()
+                bytes_remaining = self.serial.in_waiting
+
+                self.logger.info(f"bytes remaining: {bytes_remaining}")
 
                 parser.feed(read_line)
+
+                # if there are still bytes in the buffer the scanner will
+                # initiate a new xml stream that is a continuation of the
+                # last and we should expect another header line to follow
+                if read_line == "</MSI>\n" and bytes_remaining != 0:
+                    # read the xml header line (essentially useless except for check)
+                    stop_string = b'<?xml version="1.0" encoding="utf-8"?>\r'
+                    try:
+                        header_line = self.serial.read_until(stop_string)
+                        self.logger.debug(header_line.decode())
+                    except ValueError:
+                        self.logger.exception("no header line")
+
+                    # reset parser
+                    parser = ET.XMLPullParser(["start", "end"])
+
+                    continue
 
                 for event, elem in parser.read_events():
                     try:
@@ -405,9 +426,13 @@ class UnidenScanner:
                     elif event == "end":
                         count -= 1
 
+                # if self.serial.in_waiting == 0:
+                #     at_xml_end = True
+
                 # if we end up back at root, stop parsing
-                if count == 0:
-                    at_xml_end = True
+                # if count == 0:
+                #     at_xml_end = True
+                #     print(f"remaining bytes at end: {self.serial.in_waiting}")
 
         elif cmd == "GSI" or cmd == "PSI":
             while not at_xml_end:
