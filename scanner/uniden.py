@@ -361,6 +361,54 @@ class UnidenScanner:
                 if count == 0:
                     at_xml_end = True
 
+        elif cmd == "MSI":
+            self.logger.debug("MSI mode")
+
+            # this code is what ultimately parses the xml
+            while not at_xml_end:
+                sub_dict = {}
+
+                # data we will feed the parser
+                read_line = self._read_and_decode_line()
+
+                parser.feed(read_line)
+
+                for event, elem in parser.read_events():
+                    try:
+                        element_name = elem.attrib["Name"]
+                    except KeyError:
+                        self.logger.exception(
+                            "elem.attrib['Name'] doesn't exist", exc_info=False
+                        )
+
+                        # logic to track tree depth
+                        if event == "start":
+                            count += 1
+                        elif event == "end":
+                            count -= 1
+
+                        continue
+
+                    # next add the attributes
+                    for item in elem.attrib.items():
+                        new_key = f"{elem.tag}:{item[0]}"
+                        sub_dict[new_key] = item[1]
+
+                    # main dict holds the sub dict
+                    xml_dict[element_name] = sub_dict
+
+                    self.logger.debug(f"parser event: {event}")
+
+                    # logic to track tree depth
+                    if event == "start":
+                        count += 1
+                    elif event == "end":
+                        count -= 1
+
+                # if we end up back at root, stop parsing
+                if count == 0:
+                    at_xml_end = True
+
         elif cmd == "GSI" or cmd == "PSI":
             while not at_xml_end:
                 # data we will feed the parser
