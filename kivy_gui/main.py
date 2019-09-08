@@ -51,7 +51,7 @@ class DataWindow(Screen):
     # can I store the sound object here?
     sound = ObjectProperty()
     # initialize variable to store scanner data
-    scanner = None
+    scanner = None  # trying this
 
     # time interval to refresh data
     refresh_data_dt = 0.1
@@ -255,48 +255,55 @@ class DataWindow(Screen):
 
         return
 
+    def zinger(self):
+        print("zing")
+
 
 class PlaybackScreen(Screen):
     play_stop_button = ObjectProperty()
     text_display = ObjectProperty()
     cmd_input_box = ObjectProperty()
-
+    # can I store the sound object here?
+    sound = ObjectProperty()
     scanner = None
 
     def btn(self):
-        """Method runs when Button object calls root.btn() from <DataWindow>"""
-
-        wav_meta = get_wav_meta(wav_dir_path)
-
-        # update the display
-        self.update_screen(wav_meta)
-        Logger.debug("Updated screen with WAV metadata.")
-
-        return
+        """Method runs when Button object calls root.btn() 
+        from <DataWindow>"""
+        pass
+        #
+        # wav_meta = get_wav_meta(wav_dir_path)
+        #
+        # # update the display
+        # self.update_screen(wav_meta)
+        # Logger.debug("Updated screen with WAV metadata.")
+        #
+        # return
 
     def play_stop_btn(self):
-
-        filepath = wav_dir_path
-
-        if self.sound is None:
-            self.sound = SoundLoader.load(filepath)
-            self.sound.play()
-            self.play_stop_button.text = "STOP"
-        elif self.sound and self.sound.state == "play":
-            position = self.sound.get_pos()
-            print(position)
-            self.sound.stop()
-            self.play_stop_button.text = "PLAY"
-        else:
-            # print("Sound found at %s" % sound.source)
-            # print("Sound is %.3f seconds" % sound.length)
-            self.sound.play()
-            self.play_stop_button.text = "STOP"
+        pass
+        # filepath = wav_dir_path
+        #
+        # if self.sound is None:
+        #     self.sound = SoundLoader.load(filepath)
+        #     self.sound.play()
+        #     self.play_stop_button.text = "STOP"
+        # elif self.sound and self.sound.state == "play":
+        #     position = self.sound.get_pos()
+        #     print(position)
+        #     self.sound.stop()
+        #     self.play_stop_button.text = "PLAY"
+        # else:
+        #     print("Sound found at %s" % sound.source)
+        #     print("Sound is %.3f seconds" % sound.length)
+        #     self.sound.play()
+        #     self.play_stop_button.text = "STOP"
 
     def stop_btn(self):
-        if self.sound:
-            self.sound.stop()
-            self.play_stop_button.text = "PLAY"
+        pass
+        # if self.sound:
+        #     self.sound.stop()
+        #     self.play_stop_button.text = "PLAY"
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
@@ -362,16 +369,6 @@ class PlaybackScreen(Screen):
         # self.cmd_input_box.text.select_all()
 
 
-# def on_focus(instance, value):
-#     if value:
-#         print("User focused", instance)
-#     else:
-#         print("User defocused", instance)
-#
-#
-# textinput = TextInput()
-# textinput.bind(focus=on_focus)
-
 # create the screen manager
 sm = ScreenManager()
 sm.add_widget(DataWindow(name="datawindow"))
@@ -390,6 +387,8 @@ class DataWindowApp(App):
 
     """
 
+    # scanner = UnidenScanner()
+
     def build(self):
         """Handles something..."""
 
@@ -399,6 +398,9 @@ class DataWindowApp(App):
         # window = DataWindow()
         # return window
         return sm
+
+    def pooper(self):
+        print("poop")
 
 
 if __name__ == "__main__":
