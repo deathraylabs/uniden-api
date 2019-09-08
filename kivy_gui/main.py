@@ -281,6 +281,9 @@ class PlaybackScreen(Screen):
         # return
 
     def play_stop_btn(self):
+        """Button used to both play and stop sound playing from wav file on
+        scanner. Currently disabled.
+        """
         pass
         # filepath = wav_dir_path
         #
@@ -300,6 +303,8 @@ class PlaybackScreen(Screen):
         #     self.play_stop_button.text = "STOP"
 
     def stop_btn(self):
+        """Button used to stop playback of sound. Currently disabled
+        """
         pass
         # if self.sound:
         #     self.sound.stop()
@@ -333,6 +338,7 @@ class PlaybackScreen(Screen):
         self.scanner.reset_port()
 
     def scanner_disconnect_btn(self):
+        """Button used to close the port used by scanner."""
 
         # make sure the port is open and connected to scanner
         try:
@@ -350,6 +356,9 @@ class PlaybackScreen(Screen):
 
     # todo: how can I share the scanner connection between pages?
     def command_input(self, value):
+        """Method used to send raw commands to scanner and view the raw
+        output. Used for experimentation.
+        """
 
         try:
             self.scanner.send_command(value.text)
@@ -358,15 +367,9 @@ class PlaybackScreen(Screen):
             return
         res = self.scanner.get_response()
 
-        # display_text = ""
-        #
-        # for item in res.items():
-        #     display_text += f"{item}\n"
-
-        # self.text_display.text = display_text
-        self.text_display.text = pprint.pformat(res, compact=True, width=80, indent=3)
+        # display text response from scanner but pretty it up a bit
+        self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
         self.cmd_input_box.focus = True
-        # self.cmd_input_box.text.select_all()
 
 
 # create the screen manager
