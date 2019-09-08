@@ -420,11 +420,35 @@ class UnidenScanner:
                     self.logger.debug(f"parser event: {event}")
 
         elif cmd == "GSI" or cmd == "PSI":
-            while not at_xml_end:
+            while not self.serial.in_waiting != 0:
                 # data we will feed the parser
                 read_line = self._read_and_decode_line()
 
+                # we need to know if data is still waiting in serial buffer
+                bytes_remaining = self.serial.in_waiting
+                self.logger.info(f"bytes remaining: {bytes_remaining}")
+
                 parser.feed(read_line)
+
+                # if there are still bytes in the buffer the scanner will
+                # initiate a new xml stream that is a continuation of the
+                # last, and we should expect another header line to follow
+                if (
+                    read_line == "</GSI>\n" or readline == "</PSI\n"
+                ) and bytes_remaining != 0:
+                    # read the xml header line (essentially useless except for check)
+                    stop_string = b'<?xml version="1.0" encoding="utf-8"?>\r'
+                    try:
+                        header_line = self.serial.read_until(stop_string)
+                        self.logger.debug(header_line.decode())
+                    except ValueError:
+                        self.logger.exception("no header line")
+
+                    # reset parser to clean state
+                    parser = ET.XMLPullParser(["start", "end"])
+
+                    continue
+
                 for event, elem in parser.read_events():
                     # try:
                     #     element_name = elem.attrib["Name"]
@@ -441,14 +465,14 @@ class UnidenScanner:
                     self.logger.debug(f"parser event: {event}")
 
                     # logic to track tree depth
-                    if event == "start":
-                        count += 1
-                    elif event == "end":
-                        count -= 1
+                    # if event == "start":
+                    #     count += 1
+                    # elif event == "end":
+                    #     count -= 1
 
                 # if we end up back at root, stop parsing
-                if count == 0:
-                    at_xml_end = True
+                # if count == 0:
+                #     at_xml_end = True
 
         return xml_dict
 
