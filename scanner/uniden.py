@@ -363,11 +363,25 @@ class UnidenScanner:
                     elif event == "end":
                         count -= 1
 
-                # if we end up back at root, stop parsing
-                if count == 0:
-                    at_xml_end = True
+                # check to see if scanner repopulated the buffer
+                bytes_remaining = self.serial.in_waiting
 
-        # todo: check other modes to see if they need to be treated like msi
+                # if we end up back at root, stop parsing
+                if count == 0 and bytes_remaining == 0:
+                    print(f"{self.serial.in_waiting} bytes at end of GLT cmd")
+                    at_xml_end = True
+                elif count == 0 and bytes_remaining != 0:
+                    # read the xml header line (essentially useless except for check)
+                    stop_string = b'<?xml version="1.0" encoding="utf-8"?>\r'
+                    try:
+                        header_line = self.serial.read_until(stop_string)
+                        self.logger.debug(header_line.decode())
+                    except ValueError:
+                        self.logger.exception("no header line")
+
+                    # reset parser to clean state
+                    parser = ET.XMLPullParser(["start", "end"])
+
         elif cmd == "MSI":
             self.logger.debug("MSI mode")
 
@@ -428,12 +442,12 @@ class UnidenScanner:
 
                 parser.feed(read_line)
                 for event, elem in parser.read_events():
-                    # try:
-                    #     element_name = elem.attrib["Name"]
-                    # except KeyError:
-                    #     self.logger.exception(
-                    #         "elem.attrib['Name'] doesn't exist", exc_info=False
-                    #     )
+                    # logic to track tree depth
+                    if event == "start":
+                        count += 1
+                    elif event == "end":
+                        count -= 1
+                        continue
 
                     # next add the attributes
                     for item in elem.attrib.items():
@@ -441,12 +455,6 @@ class UnidenScanner:
                         xml_dict[new_key] = item[1]
 
                     self.logger.debug(f"parser event: {event}")
-
-                    # logic to track tree depth
-                    if event == "start":
-                        count += 1
-                    elif event == "end":
-                        count -= 1
 
                 # if we end up back at root, stop parsing
                 if count == 0:
