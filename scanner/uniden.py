@@ -254,8 +254,12 @@ class UnidenScanner:
 
         # 3 letter command, or 3 letter error code
         cmd = res_list[0]
-        # first response item
-        res_1 = res_list[1]
+
+        try:
+            # first response item
+            res_1 = res_list[1]
+        except IndexError:
+            self.logger.exception(f"only cmd: {cmd} response.")
 
         # check to see if error code passed instead of command code
         if cmd in self.err_list:
@@ -422,12 +426,12 @@ class UnidenScanner:
 
                 parser.feed(read_line)
                 for event, elem in parser.read_events():
-                    try:
-                        element_name = elem.attrib["Name"]
-                    except KeyError:
-                        self.logger.exception(
-                            "elem.attrib['Name'] doesn't exist", exc_info=False
-                        )
+                    # try:
+                    #     element_name = elem.attrib["Name"]
+                    # except KeyError:
+                    #     self.logger.exception(
+                    #         "elem.attrib['Name'] doesn't exist", exc_info=False
+                    #     )
 
                     # next add the attributes
                     for item in elem.attrib.items():
