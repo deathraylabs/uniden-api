@@ -446,11 +446,6 @@ class UnidenScanner:
                     elif event == "end":
                         count -= 1
 
-                    # self.logger.debug(f"elem tag: {elem.tag}")
-                    #
-                    # for item in elem.attrib.items():
-                    #     self.logger.debug(f"elem attrib: {item}")
-
                 # if we end up back at root, stop parsing
                 if count == 0:
                     at_xml_end = True
