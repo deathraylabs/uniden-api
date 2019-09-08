@@ -2,6 +2,17 @@
 import sys
 import os
 import pprint
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.logger import Logger
+from kivy.config import Config
+
+# from kivy.core.audio import SoundLoader
+from kivy.clock import Clock
+from kivy.uix.screenmanager import ScreenManager, Screen
+
+# from kivy.uix.textinput import TextInput
+from kivy.properties import ObjectProperty  # ref name in kv file
 
 if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
     print("On RPi")
@@ -9,21 +20,10 @@ if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
 
 print("Checked if on RPi")
 
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.logger import Logger
-from kivy.config import Config
-from kivy.core.audio import SoundLoader
-from kivy.clock import Clock
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.textinput import TextInput
-
-# Obj..Prop.. allows us to reference id name in kv file
-from kivy.properties import ObjectProperty
-
-from scanner.scanner_utility_functions import get_wav_meta
 from scanner.uniden import UnidenScanner
-from scanner.constants import GSI_OUTPUT
+
+# from scanner.scanner_utility_functions import get_wav_meta
+# from scanner.constants import GSI_OUTPUT
 
 Builder.load_file("datawindow_screens.kv")
 
@@ -72,7 +72,7 @@ class DataWindow(Screen):
         refresh_time = self.refresh_data_dt
 
         # check to see if scanner instance has been created
-        if self.scanner == None:
+        if self.scanner is None:
             Logger.info("Scanner is not initialized.")
 
             Logger.info("Trying to initialize scanner...")
@@ -105,6 +105,7 @@ class DataWindow(Screen):
         self.scan_status_button.color = (1, 1, 1, 0.5)
 
     def scanner_disconnect_btn(self):
+        """Closes connection to scanner."""
 
         # make sure the port is open and connected to scanner
         try:
@@ -137,6 +138,18 @@ class DataWindow(Screen):
         self.scan_status_button.color = (1, 1, 1, 1)
 
     def scanner_hold(self, hold_key):
+        """Method to hold/release a given system, department, or channel.
+
+        See Also:
+            scanner.push_key method contains details regarding button press
+            command names.
+
+        Args:
+            hold_key (str): key press command
+
+        Returns:
+            res (str): push_key response string
+        """
         Logger.debug("trying to hold channel")
 
         if self.scanner is None:
@@ -153,6 +166,7 @@ class DataWindow(Screen):
         return res
 
     def site_hold(self):
+        """Method to hold/release site."""
         Logger.debug("trying to hold channel")
 
         if self.scanner is None:
@@ -255,11 +269,10 @@ class DataWindow(Screen):
 
         return
 
-    def zinger(self):
-        print("zing")
-
 
 class PlaybackScreen(Screen):
+    """Screen to contain playback controls."""
+
     play_stop_button = ObjectProperty()
     text_display = ObjectProperty()
     cmd_input_box = ObjectProperty()
@@ -401,9 +414,6 @@ class DataWindowApp(App):
         # window = DataWindow()
         # return window
         return sm
-
-    def pooper(self):
-        print("poop")
 
 
 if __name__ == "__main__":
