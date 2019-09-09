@@ -693,6 +693,18 @@ WAV_METADATA = OrderedDict(
     ]
 )
 
+# dict that defines what each of the tuples in XML_TAGS describes
+HUMAN_TAG_HANDLER = {"root_tag": 0, "max_depth": 1, "unique_tag_names": 2}
+
+# max_depth: maximum number of branches from root
+XML_TAG_HANDLER = {
+    "Footer": ("Footer", 0, True),
+    "MSI": ("MSI", 1, False),
+    "GSI": ("ScannerInfo", 1, True),
+    "PSI": ("ScannerInfo", 1, True),
+    "GLT": ("GLT", 1, False),
+}
+
 # uniden proprietary metadata that is 0x00 delimited. «list index» specifies
 # the order corresponding to each property value.
 # ("name", «list index»)
