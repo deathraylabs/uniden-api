@@ -612,6 +612,7 @@ GSI_OUTPUT = OrderedDict(
     ]
 )
 
+# reformatted GSI output template using nested dicts instead of flat dict
 GSI_OUTPUT_2 = OrderedDict(
     [
         # ("date_code", (376, 14)),
