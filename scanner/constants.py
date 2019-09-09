@@ -698,8 +698,26 @@ GSI_OUTPUT_2 = OrderedDict(
                 "Rssi": "---",
             },
         ),
-        ("ViewDescription:", "---"),
-        ("OverWrite", {"Text": "---"}),
+        ("InfoArea1", {}),
+        ("InfoArea2", {}),
+        ("OverWrite", {}),
+        ("PopupScreen", {}),
+        ("PlainText", {}),
+        (
+            "ViewDescription:",
+            {
+                "InfoArea1": {"Text": "---"},
+                "InfoArea2": {"Text": "---"},
+                "OverWrite": {"Text": "---"},
+                "PopupScreen": {},
+                "PlainText": {"Text": "---"},
+            },
+        ),
+        (
+            "ReplayDescription",
+            {"File": {"Index": "---"}, "ReplayMode": {"Mode": "---"}},
+        ),
+        ("MenuSummary", {"index": "---", "name": "---"}),
     ]
 )
 

@@ -606,7 +606,9 @@ class UnidenScanner:
         # todo: set this to parse the sub dicts too
         # save new states to dict
         for key_parent, value_parent in state_dict.items():
-            if type(value_parent) == type(dict()):
+            if len(value_parent) == 0:
+                continue
+            elif type(value_parent) == type(dict()):
                 for key_child, value_child in value_parent.items():
                     fresh_state[key_parent][key_child] = value_child
             else:
