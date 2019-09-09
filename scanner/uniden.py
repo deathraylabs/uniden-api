@@ -601,8 +601,9 @@ class UnidenScanner:
         # self.logger.info("Timestamp added.")
 
         # get a copy of the empty state, so scanner refreshes properly.
-        fresh_state = GSI_OUTPUT.copy()
+        fresh_state = GSI_OUTPUT_2.copy()  # updated
 
+        # todo: set this to parse the sub dicts too
         # save new states to dict
         for item in state_dict.items():
             fresh_state[item[0]] = item[1]
