@@ -275,7 +275,6 @@ class UnidenScanner:
             xml_dict["cmd"] = cmd  # not sure about this
 
             return xml_dict
-
         else:
             res_dict = {"cmd": res_list.pop(0), "data": res_list}
             self.logger.debug(f"cmd: {res_dict['cmd']}")

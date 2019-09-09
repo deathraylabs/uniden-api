@@ -227,33 +227,33 @@ class DataWindow(Screen):
             trans_end = "---"
 
         # update DataWindow with metadata
-        self.fav_list_name.text = wav_meta["MonitorList:Name"]
-        self.sys_name.text = wav_meta["System:Name"]
-        self.dept_name.text = wav_meta["Department:Name"]
+        self.fav_list_name.text = wav_meta["MonitorList"]["Name"]
+        self.sys_name.text = wav_meta["System"]["Name"]
+        self.dept_name.text = wav_meta["Department"]["Name"]
         # self.tgid_name.text = wav_meta["TGID:Name"]
-        self.tgid_hld.text = wav_meta["TGID:Name"]
-        self.site_name.text = wav_meta["Site:Name"]
+        self.tgid_hld.text = wav_meta["TGID"]["Name"]
+        self.site_name.text = wav_meta["Site"]["Name"]
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
 
         # todo: calculate elapsed time in seconds using datetime
         self.total_time.text = "placeholder"
 
-        self.unit_ids.text = wav_meta["UnitID:U_Id"]
-        self.unit_ids_name_tag.text = wav_meta["UnitID:Name"]
+        self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
+        self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
 
         # code to highlight held quantities
-        if wav_meta["Department:Hold"] == "On":
+        if wav_meta["Department"]["Hold"] == "On":
             self.ids["dept_name"].background_color = self.highlight_color
         else:
             self.ids["dept_name"].background_color = self.transparent_color
 
-        if wav_meta["System:Hold"] == "On":
+        if wav_meta["System"]["Hold"] == "On":
             self.ids["sys_name"].background_color = self.highlight_color
         else:
             self.ids["sys_name"].background_color = self.transparent_color
 
-        if wav_meta["TGID:Hold"] == "On":
+        if wav_meta["TGID"]["Hold"] == "On":
             # self.ids["tgid_name"].highlight_color = self.highlight_color
             self.ids["tgid_hld"].background_color = self.highlight_color
             # self.ids["tgid_hold_btn"].text = "Holding"
@@ -262,7 +262,7 @@ class DataWindow(Screen):
             self.ids["tgid_hld"].background_color = self.transparent_color
             # self.ids["tgid_hold_btn"].text = "Channel\nHold"
 
-        if wav_meta["Site:Hold"] == "On":
+        if wav_meta["Site"]["Hold"] == "On":
             self.ids["site_name"].background_color = self.highlight_color
         else:
             self.ids["site_name"].background_color = self.transparent_color
