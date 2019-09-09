@@ -605,8 +605,12 @@ class UnidenScanner:
 
         # todo: set this to parse the sub dicts too
         # save new states to dict
-        for item in state_dict.items():
-            fresh_state[item[0]] = item[1]
+        for key_parent, value_parent in state_dict.items():
+            if type(value_parent) == type(dict()):
+                for key_child, value_child in value_parent.items():
+                    fresh_state[key_parent][key_child] = value_child
+            else:
+                fresh_state[key_parent] = value_parent
 
         self.scan_state = fresh_state
 
@@ -5649,6 +5653,7 @@ if __name__ == "__main__":
     )
 
     s = UnidenScanner()
+    s.update_scanner_state("pull")
 
     # while True:
     #     s.update_scanner_state(mode="pull")

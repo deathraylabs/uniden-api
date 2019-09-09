@@ -124,7 +124,7 @@ def test_open_scanner_port():
 def test_update_scanner_state():
     s = UnidenScanner()
 
-    assert s.update_scanner_state()
+    assert s.update_scanner_state("pull")
     s.close()
 
 
