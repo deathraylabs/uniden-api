@@ -254,7 +254,6 @@ class UnidenScanner:
 
         # 3 letter command, or 3 letter error code
         cmd = res_list[0]
-        # res_1 = res_list[1]
 
         try:
             # first response item
@@ -439,7 +438,12 @@ class UnidenScanner:
                 continue
             elif isinstance(value_parent, dict):
                 for key_child, value_child in value_parent.items():
-                    self.scan_state[key_parent][key_child] = value_child
+                    try:
+                        self.scan_state[key_parent][key_child] = value_child
+                    except KeyError:
+                        self.logger.exception(
+                            f"[{key_parent}[{key_child}] [{value_child}"
+                        )
             else:
                 self.scan_state[key_parent] = value_parent
 
@@ -5463,6 +5467,7 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
 # this code will be executed if this file is run directly
 # if this api is imported into another script, it will be ignored
 if __name__ == "__main__":
+    import pprint
 
     # save_state_to_db(scanstate)
 
@@ -5482,7 +5487,8 @@ if __name__ == "__main__":
     )
 
     s = UnidenScanner()
-    s.update_scanner_state("pull")
+    state = s.update_scanner_state("pull")
+    pprint.pprint(state)
 
     # while True:
     #     s.update_scanner_state(mode="pull")

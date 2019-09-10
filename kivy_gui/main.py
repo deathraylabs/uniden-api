@@ -208,7 +208,7 @@ class DataWindow(Screen):
             None
         """
         # update the scanner state variable first
-        wav_meta = self.scanner.update_scanner_state(mode="pull")
+        wav_meta = self.scanner.update_scanner_state()
 
         try:
             trans_start = wav_meta["transmission_start"]
@@ -402,8 +402,6 @@ class DataWindowApp(App):
     -with-various-popular-IDE's#setting-up-kivy-with-pycharm-on-osx
 
     """
-
-    # scanner = UnidenScanner()
 
     def build(self):
         """Handles something..."""
