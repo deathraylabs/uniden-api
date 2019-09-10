@@ -302,7 +302,6 @@ class UnidenScanner:
 
         xml_dict = {}  # initialize data storage
         at_xml_end = False  # initialize end of xml flag
-        count = 0  # initialize counter
 
         # initialize parser
         parser = ET.XMLPullParser()  # only returns if event is 'end'
@@ -321,218 +320,43 @@ class UnidenScanner:
 
         # ---- parse xml using non-blocking parser ---- #
 
-        if cmd == "GLT2":
-            self.logger.debug("GLT mode")
-
-            # this code is what ultimately parses the xml
-            while not at_xml_end:
-                sub_dict = {}
-
-                # data we will feed the parser
-                read_line = self._read_and_decode_line()
-
-                parser.feed(read_line)
-
-                for event, elem in parser.read_events():
-                    # logic to track tree depth
-                    if event == "start":
-                        count += 1
-                    elif event == "end":
-                        count -= 1
-
-                        # continute without rewriting duplicated data
-                        continue
-
-                    try:
-                        element_name = elem.attrib["Name"]
-                    except KeyError:
-                        self.logger.exception(
-                            "elem.attrib['Name'] doesn't exist", exc_info=False
-                        )
-
-                        # logic to track tree depth
-                        if event == "start":
-                            count += 1
-                        elif event == "end":
-                            count -= 1
-
-                        continue
-
-                    # next add the attributes
-                    for item in elem.attrib.items():
-                        new_key = f"{elem.tag}:{item[0]}"
-                        sub_dict[new_key] = item[1]
-
-                    # main dict holds the sub dict
-                    xml_dict[element_name] = sub_dict
-
-                    self.logger.debug(f"parser event: {event}")
-
-                # check to see if scanner repopulated the buffer
-                bytes_remaining = self.serial.in_waiting
-
-                # if we end up back at root, stop parsing
-                if count == 0 and bytes_remaining == 0:
-                    print(f"{self.serial.in_waiting} bytes at end of GLT cmd")
-                    at_xml_end = True
-                elif count == 0 and bytes_remaining != 0:
-                    # read the xml header line (essentially useless except for check)
-                    stop_string = b'<?xml version="1.0" encoding="utf-8"?>\r'
-                    try:
-                        header_line = self.serial.read_until(stop_string)
-                        self.logger.debug(header_line.decode())
-                    except ValueError:
-                        self.logger.exception("no header line")
-
-                    # reset parser to clean state
-                    parser = ET.XMLPullParser(["start", "end"])
-
-        elif cmd == "MSI2":
-            self.logger.debug("MSI mode")
-
-            while self.serial.in_waiting != 0:
-                sub_dict = {}
-
-                # data we will feed the parser
-                read_line = self._read_and_decode_line()
-
-                # we need to know if data is still waiting in serial buffer
-                bytes_remaining = self.serial.in_waiting
-                self.logger.info(f"bytes remaining: {bytes_remaining}")
-
-                # feed the parser to process xml
-                parser.feed(read_line)
-
-                # if there are still bytes in the buffer the scanner will
-                # initiate a new xml stream that is a continuation of the
-                # last, and we should expect another header line to follow
-                if read_line == "</MSI>\n" and bytes_remaining != 0:
-                    # read the xml header line (essentially useless except for check)
-                    stop_string = b'<?xml version="1.0" encoding="utf-8"?>\r'
-                    try:
-                        header_line = self.serial.read_until(stop_string)
-                        self.logger.debug(header_line.decode())
-                    except ValueError:
-                        self.logger.exception("no header line")
-
-                    # reset parser to clean state
-                    parser = ET.XMLPullParser(["start", "end"])
-
-                    continue
-
-                for event, elem in parser.read_events():
-                    try:
-                        element_name = elem.attrib["Name"]
-                    except KeyError:
-                        self.logger.exception(
-                            "elem.attrib['Name'] doesn't exist", exc_info=False
-                        )
-
-                        continue
-
-                    # next add the attributes
-                    for item in elem.attrib.items():
-                        new_key = f"{elem.tag}:{item[0]}"
-                        sub_dict[new_key] = item[1]
-
-                    # main dict holds the sub dict
-                    xml_dict[element_name] = sub_dict
-
-                    self.logger.debug(f"parser event: {event}")
-
-        # elif cmd == "MSI2":
-        #     self.logger.debug("MSI mode")
-        #
-        #     while not at_xml_end:
-        #
-        #         # data we will feed the parser
-        #         read_line = self._read_and_decode_line()
-        #
-        #         # todo: perhaps get rid of this step
-        #         # we need to know if data is still waiting in serial buffer
-        #         bytes_remaining = self.serial.in_waiting
-        #         self.logger.info(f"bytes remaining: {bytes_remaining}")
-        #
-        #         # feed the parser to process xml
-        #         parser.feed(read_line)
-
-        elif cmd == "GSI2" or cmd == "PSI":
-            while not at_xml_end:
-                # data we will feed the parser
-                read_line = self._read_and_decode_line()
-                parser.feed(read_line)
-
-                for event, elem in parser.read_events():
-                    # logic to track tree depth
-                    if event == "start":
-                        count += 1
-                    elif event == "end":
-                        count -= 1
-
-                        # continue without rewriting duplicate data
-                        continue
-
-                    # next add the attributes
-                    for item in elem.attrib.items():
-                        new_key = f"{elem.tag}:{item[0]}"
-                        xml_dict[new_key] = item[1]
-
-                    self.logger.debug(f"parser event: {event}")
-
-                # if we end up back at root, stop parsing
-                if count == 0:
-                    at_xml_end = True
-
         # this produces nested dicts instead of a flat format like above
-        # elif cmd == "MSI":
-        else:
-            sub_list = []
-            while not at_xml_end:
+        sub_list = []
 
-                # data we will feed the parser
-                read_line = self._read_and_decode_line()
-                parser.feed(read_line)
+        while not at_xml_end:
 
-                # skip read_events() if none are enqueued
-                if type(parser.read_events()) is None:
+            # data we will feed the parser
+            read_line = self._read_and_decode_line()
+            parser.feed(read_line)
+
+            # skip read_events() if none are enqueued
+            if type(parser.read_events()) is None:
+                continue
+
+            # parser is a generator and events are popped internally
+            for event in parser.read_events():
+                element = event[1]
+                current_tag = element.tag
+                sub_dict = {}
+
+                if current_tag == "Footer" and element.attrib["EOT"] == "1":
+                    continue
+                elif current_tag == "Footer" and element.attrib["EOT"] == "0":
+                    self.serial.read_until(b'<?xml version="1.0" encoding="utf-8"?>\r')
+                    continue
+                elif current_tag == root_tag:
+                    at_xml_end = True
+
+                for item in element.attrib.items():
+                    sub_dict[item[0]] = item[1]
+
+                if not unique_tag_names:
+                    sub_list.append({current_tag: sub_dict})
+                    if at_xml_end:
+                        xml_dict[current_tag] = sub_list
                     continue
 
-                # parser is a generator and events are popped internally
-                for event in parser.read_events():
-                    # event_len = len(event)
-                    # event_label = event[0]
-                    element = event[1]
-                    current_tag = element.tag
-                    sub_dict = {}
-                    # sub_list = []
-
-                    if current_tag == "Footer" and element.attrib["EOT"] == "1":
-                        # at_xml_end = True
-                        # last_line = self._read_and_decode_line()
-                        # self.logger.debug(last_line)
-                        # Pass MSI and GLT items as lists
-                        # if not unique_tag_names:
-                        #     xml_dict[root_tag] = sub_list
-                        continue
-                    elif current_tag == "Footer" and element.attrib["EOT"] == "0":
-                        # at_xml_end = False
-                        self.serial.read_until(
-                            b'<?xml version="1.0" encoding="utf-8"?>\r'
-                        )
-                        continue
-                    elif current_tag == root_tag:
-                        at_xml_end = True
-
-                    for item in element.attrib.items():
-                        sub_dict[item[0]] = item[1]
-
-                    if not unique_tag_names:
-                        sub_list.append({current_tag: sub_dict})
-                        if at_xml_end:
-                            xml_dict[current_tag] = sub_list
-                        continue
-
-                    xml_dict[current_tag] = sub_dict
+                xml_dict[current_tag] = sub_dict
 
         return xml_dict
 
@@ -567,6 +391,10 @@ class UnidenScanner:
             False: if there is an error communicating with scanner
 
         """
+        # clear the method dict
+        self.scan_state.clear()
+        # get a copy of the empty state, so scanner refreshes properly.
+        self.scan_state = GSI_OUTPUT_2  # updated
 
         if not self.port_is_open():
             return False
@@ -576,10 +404,14 @@ class UnidenScanner:
                 # get xml data from scanner, convert to unicode
                 # exclude the prefix data 'GSI,<XML>,\r'
                 self.logger.info("uniden: sending command to scanner...")
+
                 cmd_resp = self.send_command("GSI")
+
                 self.logger.info(f"GSI Ack: {cmd_resp}")
                 self.logger.debug("getting scanner response...")
+
                 state_dict = self.get_response()
+
             except CommandError:
                 self.logger.error("get_scanner_information() failed.")
                 return False
@@ -600,23 +432,18 @@ class UnidenScanner:
         # scanner_xml["@date_code"] = datetime.now().isoformat()
         # self.logger.info("Timestamp added.")
 
-        # get a copy of the empty state, so scanner refreshes properly.
-        fresh_state = GSI_OUTPUT_2.copy()  # updated
-
         # todo: set this to parse the sub dicts too
         # save new states to dict
         for key_parent, value_parent in state_dict.items():
             if len(value_parent) == 0:
                 continue
-            elif type(value_parent) == type(dict()):
+            elif isinstance(value_parent, dict):
                 for key_child, value_child in value_parent.items():
-                    fresh_state[key_parent][key_child] = value_child
+                    self.scan_state[key_parent][key_child] = value_child
             else:
-                fresh_state[key_parent] = value_parent
+                self.scan_state[key_parent] = value_parent
 
-        self.scan_state = fresh_state
-
-        return fresh_state
+        return self.scan_state
 
     def start_push_updates(self, interval=1000):
         """Method to set scanner 'push scanner information' (PSI) mode
