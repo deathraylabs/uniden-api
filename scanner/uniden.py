@@ -32,6 +32,8 @@ from scanner.constants import *
 import scanner.scanner_utility_functions as suf
 from collections import OrderedDict
 from datetime import datetime
+from pprint import pprint
+from copy import deepcopy
 
 import sqlite3
 
@@ -391,9 +393,10 @@ class UnidenScanner:
 
         """
         # clear the method dict
-        self.scan_state.clear()
+        # self.scan_state.clear()
         # get a copy of the empty state, so scanner refreshes properly.
-        self.scan_state = GSI_OUTPUT_2  # updated
+        self.scan_state = deepcopy(GSI_OUTPUT_2)  # updated
+        pprint(GSI_OUTPUT_2)
 
         if not self.port_is_open():
             return False
