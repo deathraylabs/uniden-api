@@ -396,7 +396,6 @@ class UnidenScanner:
         # self.scan_state.clear()
         # get a copy of the empty state, so scanner refreshes properly.
         self.scan_state = deepcopy(GSI_OUTPUT_2)  # updated
-        pprint(GSI_OUTPUT_2)
 
         if not self.port_is_open():
             return False
