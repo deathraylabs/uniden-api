@@ -352,9 +352,15 @@ class UnidenScanner:
                     sub_dict[item[0]] = item[1]
 
                 if not unique_tag_names:
-                    sub_list.append({current_tag: sub_dict})
-                    if at_xml_end:
-                        xml_dict[current_tag] = sub_list
+                    # sub_list.append({current_tag: sub_dict})
+                    try:
+                        xml_dict[sub_dict["Name"]] = sub_dict
+                    except KeyError:
+                        self.logger.exception(
+                            "Key error building non-unique tag names."
+                        )
+                    # if at_xml_end:
+                    #     xml_dict[current_tag] = sub_list
                     continue
 
                 xml_dict[current_tag] = sub_dict
