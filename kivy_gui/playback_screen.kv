@@ -38,56 +38,57 @@
                     text:
                         'really some amazing text\n' * 100
 
+        BoxLayout:
+            id: "right_side"
+            orientation: "vertical"
+            size_hint_x: .4
 
-        MenuBar:  #
-            id: "menu_layout"
-            size_hint_x: .5
-
-            BoxLayout:
-                orientation: 'vertical'
-
-                TextInput:
-                    id: command_input
-                    text: "GLT,FL"
-                    multiline: False
-                    valign: "center"
-                    size_hint_y: .2
-                    write_tab: False
-                    on_focus: self.select_all()
-                    # this is such a hack
-                    on_focus: self.focus = True
-                    on_touch_down: self.select_all()
-
-#                    on_focus: self.select_all()
-                    on_text_validate: root.command_input(args[0])
+            MenuBar:
+                id: "menu_layout"
 
                 BoxLayout:
-                    orientation: 'horizontal'
+                    orientation: 'vertical'
 
-                    Button:
-                        id: stop_play
-#                        text: "Play Wav"
-#                        on_press: root.play_stop_btn()
-#                        on_press: app.sm.datawindow.zinger()
+                    TextInput:
+                        id: command_input
+                        text: "GLT,FL"
+                        multiline: False
+                        valign: "center"
+                        size_hint_y: .2
+                        write_tab: False
+                        on_focus: self.select_all()
+                        # this is such a hack
+                        on_focus: self.focus = True
+                        on_touch_down: self.select_all()
 
-                    Button:
-#                        text: "Stop"
-#                        on_press: root.stop_btn()
+    #                    on_focus: self.select_all()
+                        on_text_validate: root.command_input(args[0])
 
-                BoxLayout:
-                    orientation: 'horizontal'
+                    BoxLayout:
+                        orientation: 'horizontal'
 
-                    Button:
-                        id: scanner_status
-                        text: "Connect to Scanner"
-                        on_press: root.scanner_status_btn()
+                        Button:
+                            id: stop_play
+    #                        text: "Play Wav"
+    #                        on_press: root.play_stop_btn()
+    #                        on_press: app.sm.datawindow.zinger()
 
-                    Button:
-                        text: "Stop\nDisplay"
-                        on_press: root.scanner_disconnect_btn()
+                        Button:
 
-                    Button:
-                        text: 'Back to Menu'
-                        on_press:
-                            root.manager.transition.direction = 'right'
-                            root.manager.current = 'datawindow'
+                    BoxLayout:
+                        orientation: 'horizontal'
+
+                        Button:
+                            id: scanner_status
+                            text: "Connect to Scanner"
+                            on_press: root.scanner_status_btn()
+
+                        Button:
+                            text: "Stop\nDisplay"
+                            on_press: root.scanner_disconnect_btn()
+
+                        Button:
+                            text: 'Back to Menu'
+                            on_press:
+                                root.manager.transition.direction = 'right'
+                                root.manager.current = 'datawindow'
