@@ -128,6 +128,14 @@ def test_update_scanner_state():
     s.close()
 
 
+def test_update_scanner_state_no_connection():
+    """Update scanner state should return false if no connection."""
+    s = UnidenScanner()
+    s.close()
+
+    assert s.update_scanner_state() is False
+
+
 def test_send_command():
     s = UnidenScanner()
 

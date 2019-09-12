@@ -398,6 +398,7 @@ class UnidenScanner:
         self.scan_state = deepcopy(GSI_OUTPUT_2)  # updated
 
         if not self.port_is_open():
+            self.logger.error("Serial port is closed.")
             return False
 
         if mode == "pull":

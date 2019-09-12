@@ -26,6 +26,7 @@ from scanner.uniden import UnidenScanner
 # from scanner.constants import GSI_OUTPUT
 
 Builder.load_file("datawindow_screens.kv")
+Builder.load_file("playback_screen.kv")
 
 
 class DataWindow(Screen):
