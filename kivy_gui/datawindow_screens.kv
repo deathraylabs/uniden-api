@@ -17,30 +17,21 @@
     tgid_hld: tgid_hld
 
     GridLayout:
-        cols: 2
         id: 'main_container'
+        cols: 2
         width: root.width
         height: root.height
 
-        BoxLayout:
-            id: "left_side"
-            orientation: 'vertical'
-
-            canvas:
-                Color:
-                    rgba: (1, 1, 1, 0.15)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
+        LargeTextDisplayPanel:
+            id: _left_side
 
             BoxLayout:
-                id: "top_row"
+                id: _top_row
                 orientation: "horizontal"
 
                 Label:
                     id: fav_list_name
                     text: "Favorites List"
-                    #                font_size: '30sp'
 
                 Label:
                     id: unit_ids_name_tag
@@ -71,7 +62,7 @@
                 text: "UnitIds"
 
             BoxLayout:
-                id: "transmission_times"
+                id: _transmission_times
                 orientation: 'horizontal'
 
                 Label:
