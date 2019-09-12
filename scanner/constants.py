@@ -663,6 +663,7 @@ GSI_OUTPUT_2 = {
     },
     "SiteFrequency": {"Freq": "---", "IFX": "---", "SAS": "---", "SAD": "---"},
     "DualWatch": {"PRI": "---", "CC": "---", "WX": "---"},
+    "File": {"Index": ""},
     "Property": {
         "F": "---",
         "VOL": "---",
