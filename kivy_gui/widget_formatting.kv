@@ -1,5 +1,72 @@
 #:kivy 1.11.1
 
+<Label>:
+    # this is how you apply generic formatting to everything tagged Label
+    id: "all_labels"
+    halign: 'left'
+    valign: 'center'
+    text_size: self.size
+    font_size: '25sp'
+    padding: ('10sp', '10sp')
+    text: ""
+    color: 1,1,1,1
+
+<Button>:
+    # Formats all 'Button' tags.
+    font_size: '15sp'
+    halign: "center"
+
+<TouchArea@Button>:
+    halign: 'left'
+    valign: 'center'
+    text_size: self.size
+    font_size: '25sp'
+    padding: ('10sp', '10sp')
+    text: ""
+    color: 1,1,1,1
+
+    background_normal: ""
+    background_down: ""
+    background_color: (1,1,1,0)
+
+<BlankLabel@Label>:
+    # sets properties for blank label placeholders
+    id: blank_label
+    canvas:
+        Color:
+            rgba: (1, 1, 1, 0.15)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
 <MenuBar@BoxLayout>:
 #    id: "menu_layout"
 #    size_hint_x: .5
+
+<CommandLine@TextInput>:
+    multiline: False
+    valign: "center"
+    size_hint_y: .2
+    write_tab: False
+    on_focus: self.select_all()
+    # this is such a hack
+    on_focus: self.focus = True
+    on_touch_down: self.select_all()
+
+# todo: the textture size doesn't work after updating text from scanner
+<ScrollingTextDisplayPanel@Label>:
+    font_size: "12sp"
+    valign: "top"
+    size_hint: (1, None)
+    text_size: (self.width, None)
+    height: self.texture_size[1]
+    padding: 10, 10
+
+<LargeTextDisplayPanel@BoxLayout>:
+    orientation: 'vertical'
+    canvas:
+        Color:
+            rgba: (1, 1, 1, 0.15)
+        Rectangle:
+            size: self.size
+            pos: self.pos

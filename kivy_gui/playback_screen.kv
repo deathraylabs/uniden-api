@@ -11,32 +11,15 @@
         width: root.width
         height: root.height
 
-        BoxLayout:
+        LargeTextDisplayPanel:
             id: large_text_layout
-            orientation: 'vertical'
-
-            canvas:
-                Color:
-                    rgba: (1, 1, 1, 0.15)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
 
             ScrollView:
                 do_scroll: (False, True)
 
-                Label:
+                ScrollingTextDisplayPanel:
                     id: text_display
-#                    text: "info display"
-                    font_size: 36
-                    valign: "top"
-
-                    size_hint: (1, None)
-                    text_size: (self.width, None)
-                    height: self.texture_size[1]
-                    padding: 10, 10
-                    text:
-                        'really some amazing text\n' * 100
+                    text: "Scanner response..."
 
         BoxLayout:
             id: "right_side"
@@ -49,19 +32,9 @@
                 BoxLayout:
                     orientation: 'vertical'
 
-                    TextInput:
+                    CommandLine:
                         id: command_input
                         text: "GLT,FL"
-                        multiline: False
-                        valign: "center"
-                        size_hint_y: .2
-                        write_tab: False
-                        on_focus: self.select_all()
-                        # this is such a hack
-                        on_focus: self.focus = True
-                        on_touch_down: self.select_all()
-
-    #                    on_focus: self.select_all()
                         on_text_validate: root.command_input(args[0])
 
                     BoxLayout:

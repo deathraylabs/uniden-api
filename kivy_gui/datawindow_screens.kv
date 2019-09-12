@@ -1,48 +1,5 @@
 #:kivy 1.11.1
 
-<Label>:
-#    all_labels: all_labels
-
-    # this is how you apply generic formatting to everything tagged Label
-    id: "all_labels"
-    halign: 'left'
-    valign: 'center'
-    text_size: self.size
-#    texture_size: self.size
-    font_size: '25sp'
-    padding: ('10sp', '10sp')
-    text: ""
-    color: 1,1,1,1
-
-<BlankLabel@Label>:
-    # sets properties for blank label placeholders
-    id: blank_label
-    canvas:
-        Color:
-            rgba: (1, 1, 1, 0.15)
-        Rectangle:
-            size: self.size
-            pos: self.pos
-
-<Button>:
-    # Formats all 'Button' tags.
-    font_size: '15sp'
-    halign: "center"
-
-<TouchArea@Button>:
-    halign: 'left'
-    valign: 'center'
-    text_size: self.size
-#    texture_size: self.size
-    font_size: '25sp'
-    padding: ('10sp', '10sp')
-    text: ""
-    color: 1,1,1,1
-
-    background_normal: ""
-    background_down: ""
-    background_color: (1,1,1,0)
-
 <DataWindow>:
     # these are global variables to reference objects below
     # format: [variable name in code]: [id name in kv file]
@@ -59,8 +16,6 @@
     scan_status_button: scanner_status
     tgid_hld: tgid_hld
 
-
-#    BoxLayout:
     GridLayout:
         cols: 2
         id: 'main_container'

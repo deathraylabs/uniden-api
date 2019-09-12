@@ -387,6 +387,7 @@ class PlaybackScreen(Screen):
 
         # display text response from scanner but pretty it up a bit
         self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
+        # self.text_display.height = self.text_display.texture_size[1]
         self.cmd_input_box.focus = True
 
 
