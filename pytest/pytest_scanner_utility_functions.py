@@ -199,12 +199,13 @@ def test_get_response_xml():
     # get department quick key status for FL 0, Sys 0
     s.serial.write(b"GSI\r")
     response = s.get_response()
-    data = response["data"]
-
-    assert type(data) == type(list())
-    assert len(data) == 100
+    s.logger.debug(response)
+    data = response["MonitorList"]["Name"]
 
     s.close()
+
+    assert isinstance(response, dict)
+    assert data == "Home"
 
 
 def test_get_menu_view():
