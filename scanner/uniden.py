@@ -351,16 +351,14 @@ class UnidenScanner:
                 for item in element.attrib.items():
                     sub_dict[item[0]] = item[1]
 
+                # some commands return non-unique tag names, use name attribute instead
                 if not unique_tag_names:
-                    # sub_list.append({current_tag: sub_dict})
                     try:
                         xml_dict[sub_dict["Name"]] = sub_dict
                     except KeyError:
                         self.logger.exception(
                             "Key error building non-unique tag names."
                         )
-                    # if at_xml_end:
-                    #     xml_dict[current_tag] = sub_list
                     continue
 
                 xml_dict[current_tag] = sub_dict
@@ -620,11 +618,45 @@ class UnidenScanner:
             return 0
 
     def set_unid_id_name(self):
-        """Quickly set the unit ID name while a broadcast is in progress."""
+        """Quickly set the unit ID name while a broadcast is in progress.
+
+        Returns:
+            False: if there is no 'Save Unit ID' option available
+        """
         self.push_key("press", "E")
 
         view = self.get_menu_view()
         self.logger.debug(pprint(view))
+
+        try:
+            unid_index = view["Save Unit ID"]["Index"]
+        except KeyError:
+            self.logger.exception(
+                "No Unit ID available for this transmission", exc_info=False
+            )
+            self.push_key("press", "system")
+            return False
+
+        self.send_command(f"MSV,,{unid_index}")
+
+    # todo: method needs error catching
+    def set_menu_value(self, cmd, menu_type=""):
+        """Method to choose from the possible menu values.
+
+        Args:
+            cmd (str): MSV command
+            menu_type (str): acceptable input types
+
+        Returns:
+
+        """
+        cmd_ack = self.send_command(f"MSV,,{cmd}")
+        self.logger.debug(f"MSV ack: {cmd_ack}")
+
+        cmd_resp = self.get_response()
+        self.logger.info(f"MSV response: {cmd_resp}")
+
+        return cmd_resp
 
     def jump_number_tag(self, fl_tag, sys_tag, chan_tag):
 
