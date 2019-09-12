@@ -617,7 +617,7 @@ class UnidenScanner:
             self.logger.error("push_key(): %s" % cmd)
             return 0
 
-    def set_unid_id_name(self):
+    def set_unid_id_name(self, new_unid=""):
         """Quickly set the unit ID name while a broadcast is in progress.
 
         Returns:
@@ -637,7 +637,35 @@ class UnidenScanner:
             self.push_key("press", "system")
             return False
 
-        self.send_command(f"MSV,,{unid_index}")
+        self.set_menu_value(unid_index)
+
+        # scanner requires confirmation to set unid value
+        self.push_key("press", "E")
+
+        view = self.get_menu_view()
+        self.logger.debug(pprint(view))
+
+        try:
+            menu_index = view["Edit Name"]
+        except KeyError:
+            self.logger.exception("Menu item not available", exc_info=False)
+            self.push_key("press", "system")
+            return False
+
+        self.set_menu_value(menu_index)
+
+        view = self.get_menu_view()
+        self.logger.debug(pprint(view))
+
+        # use console input if no ID was passed to method
+        if new_unid == "":
+            new_unid = input("Please enter the new unit ID\n\n:")
+
+        resp = self.set_menu_value(new_unid, menu_type=view["Edit Name"]["MenuType"])
+
+        # send us back to main screen if it worked
+        if resp == "OK":
+            self.push_key("press", "system")
 
     # todo: method needs error catching
     def set_menu_value(self, cmd, menu_type=""):
@@ -648,7 +676,7 @@ class UnidenScanner:
             menu_type (str): acceptable input types
 
         Returns:
-
+            'OK': if the MSV command was executed
         """
         cmd_ack = self.send_command(f"MSV,,{cmd}")
         self.logger.debug(f"MSV ack: {cmd_ack}")
@@ -656,7 +684,8 @@ class UnidenScanner:
         cmd_resp = self.get_response()
         self.logger.info(f"MSV response: {cmd_resp}")
 
-        return cmd_resp
+        # this should return 'OK'
+        return cmd_resp["data"][0]
 
     def jump_number_tag(self, fl_tag, sys_tag, chan_tag):
 
