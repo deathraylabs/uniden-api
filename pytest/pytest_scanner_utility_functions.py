@@ -207,5 +207,14 @@ def test_get_response_xml():
     s.close()
 
 
+def test_get_menu_view():
+    s = UnidenScanner()
+    view = s.get_menu_view()
+    s.close()
+
+    assert isinstance(type(view), type(dict))
+    assert view["cmd"] == "MSI"
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()

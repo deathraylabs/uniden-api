@@ -283,7 +283,6 @@ class UnidenScanner:
 
         return res_dict
 
-    # todo: broken with GLT command. different FL names but same keys are used
     def get_xml_response(self, cmd):
         """Method to parse xml serial data line-by line and
         return a formatted dict with information returned by the scanner.
@@ -507,6 +506,19 @@ class UnidenScanner:
 
         return self.scan_state
 
+    def get_menu_view(self):
+        """Show the curernt menu state.
+
+        Returns:
+            dict: menu response dict
+        """
+
+        cmd_resp = self.send_command("MSI")
+
+        self.logger.info(f"MSI Ack: {cmd_resp}")
+
+        return self.get_response()
+
     def push_key(self, mode, key):
         """push_key method is used to push keys on the scanner
 
@@ -599,6 +611,13 @@ class UnidenScanner:
         except CommandError:
             self.logger.error("push_key(): %s" % cmd)
             return 0
+
+    def set_unid_id_name(self):
+        """Quickly set the unit ID name while a broadcast is in progress."""
+        self.push_key("press", "E")
+
+        view = self.get_menu_view()
+        self.logger.debug(pprint(view))
 
     def jump_number_tag(self, fl_tag, sys_tag, chan_tag):
 
@@ -5470,7 +5489,6 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
 # this code will be executed if this file is run directly
 # if this api is imported into another script, it will be ignored
 if __name__ == "__main__":
-    import pprint
 
     # save_state_to_db(scanstate)
 
@@ -5490,8 +5508,7 @@ if __name__ == "__main__":
     )
 
     s = UnidenScanner()
-    state = s.update_scanner_state("pull")
-    pprint.pprint(state)
+    # state = s.update_scanner_state("pull")
 
     # while True:
     #     s.update_scanner_state(mode="pull")
