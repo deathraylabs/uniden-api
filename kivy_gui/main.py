@@ -215,6 +215,10 @@ class DataWindow(Screen):
         # update the scanner state variable first
         wav_meta = self.scanner.update_scanner_state()
 
+        if isinstance(wav_meta, bool):
+            Logger.error("No data returned by scanner.")
+            return False
+
         try:
             trans_start = wav_meta["transmission_start"]
         except KeyError:

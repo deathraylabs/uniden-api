@@ -438,6 +438,10 @@ class UnidenScanner:
         # scanner_xml["@date_code"] = datetime.now().isoformat()
         # self.logger.info("Timestamp added.")
 
+        if state_dict is None:
+            self.logger.error("No response from scanner. Trying to reset the port...")
+            return self.reset_port()
+
         # todo: set this to parse the sub dicts too
         # save new states to dict
         for key_parent, value_parent in state_dict.items():
