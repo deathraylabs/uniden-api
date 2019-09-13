@@ -80,27 +80,76 @@
                     text: "Total Time"
                     font_size: '15sp'
 
-        BoxLayout:
-            id: "right_side"
-            orientation: 'vertical'
-            size_hint_x: .4
+        RightSidePanel:
+            id: _right_side
 
             MenuBar:
+                id: _first_row
+
+                NumericKeypad:
+                    id: _seven
+                    text: "7"
+
+                NumericKeypad:
+                    id: _eight
+                    text: "8"
+
+                NumericKeypad:
+                    id: _nine
+                    text: "9"
 
             MenuBar:
+                id: _second_row
+
+                NumericKeypad:
+                    id: _four
+                    text: "4"
+
+                NumericKeypad:
+                    id: _five
+                    text: "5"
+
+                NumericKeypad:
+                    id: _six
+                    text: "6"
 
             MenuBar:
+                id: _third_row
+
+                NumericKeypad:
+                    id: _one
+                    text: "1"
+
+                NumericKeypad:
+                    id: _two
+                    text: "2"
+
+                NumericKeypad:
+                    id: _three
+                    text: "3"
 
             MenuBar:
-                id: "fourth_row"
+                id: _fourth_row
+
+                NumericKeypad:
+                    id: _zero
+                    text: "0"
+
+                NumericKeypad:
+                    id: _period
+                    text: "."
 
                 Button:
-                    id: print_data
-                    text: "print GSI data"
-                    on_press: root.print_data()
+                    id: _enter
+                    text: "enter"
+
+#                Button:
+#                    id: print_data
+#                    text: "print GSI data"
+#                    on_press: root.print_data()
 
             MenuBar:
-                id: "menu_layout"
+                id: _fifth_row
 
                 BoxLayout:
                     orientation: 'horizontal'

@@ -16,6 +16,9 @@
     font_size: '15sp'
     halign: "center"
 
+<NumericKeypad@Button>:
+    color: 1, 1, .1, .90
+
 <TouchArea@Button>:
     halign: 'left'
     valign: 'center'
@@ -70,3 +73,7 @@
         Rectangle:
             size: self.size
             pos: self.pos
+
+<RightSidePanel@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_x: .4
