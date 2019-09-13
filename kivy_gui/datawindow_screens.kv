@@ -29,18 +29,16 @@
                 id: _top_row
                 orientation: "horizontal"
 
-                Label:
-                    id: fav_list_name
-                    text: "Favorites List"
-
-                Label:
+                TouchArea:
                     id: unit_ids_name_tag
                     text: "UnitIds:NameTag"
+                    color: 1, 1, .1, .90
+                    size_hint_x: .5
 
-            TouchArea:
-                id: sys_name
-                text: "System:Name"
-                on_press: root.scanner_hold("system")
+                TouchArea:
+                    id: tgid_hld
+                    text: "TGID:Name"
+                    on_press: root.scanner_hold("chan")
 
             TouchArea:
                 id: dept_name
@@ -48,14 +46,18 @@
                 on_press: root.scanner_hold("dept")
 
             TouchArea:
-                id: tgid_hld
-                text: "TGID:Name"
-                on_press: root.scanner_hold("chan")
+                id: sys_name
+                text: "System:Name"
+                on_press: root.scanner_hold("system")
 
             TouchArea:
                 id: site_name
                 text: "Site:Name"
                 on_press: root.site_hold()
+
+            Label:
+                id: fav_list_name
+                text: "Favorites List"
 
             Label:
                 id: unit_ids
@@ -139,7 +141,7 @@
                     id: _period
                     text: "."
 
-                Button:
+                NumericKeypad:
                     id: _enter
                     text: "enter"
 
@@ -151,22 +153,20 @@
             MenuBar:
                 id: _fifth_row
 
-                BoxLayout:
-                    orientation: 'horizontal'
+                Button:
+                    id: scanner_status
+                    text: "Mirron\nScanner"
+                    on_press: root.scanner_status_btn()
 
-                    Button:
-                        id: scanner_status
-                        text: "Mirron\nScanner"
-                        on_press: root.scanner_status_btn()
+                Button:
+                    text: "Stop\nDisplay"
+                    on_press: root.scanner_disconnect_btn()
 
-                    Button:
-                        text: "Stop\nDisplay"
-                        on_press: root.scanner_disconnect_btn()
+                Button:
+                    text: "->"
+                    on_press:
+                        root.manager.transition.direction = 'left'
+                        root.manager.current = 'playback'
 
-                    Button:
-                        text: "->"
-                        on_press:
-                            root.manager.transition.direction = 'left'
-                            root.manager.current = 'playback'
-
-
+            MenuBar:
+                id: _sixth_row
