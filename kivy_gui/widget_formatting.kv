@@ -53,8 +53,8 @@
     write_tab: False
     on_focus: self.select_all()
     # this is such a hack
-    on_focus: self.focus = True
-    on_touch_down: self.select_all()
+#    on_focus: self.focus = True
+    on_touch_up: self.select_all()
 
 # todo: the textture size doesn't work after updating text from scanner
 <ScrollingTextDisplayPanel@Label>:
