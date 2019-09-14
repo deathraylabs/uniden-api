@@ -676,6 +676,7 @@ class UnidenScanner:
 
         Returns:
             False: if there is no 'Save Unit ID' option available
+            view (dict): dict containing scanner view response
         """
         self.push_key("press", "E")
 
@@ -711,7 +712,7 @@ class UnidenScanner:
         view = self.get_menu_view()
         self.logger.debug(pprint(view))
 
-        return True
+        return view
 
     def set_unid_id_from_menu(self, new_unid):
         """set the unit id name when already at the menu"""

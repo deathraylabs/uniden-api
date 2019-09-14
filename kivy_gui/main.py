@@ -83,6 +83,7 @@ class DataWindow(Screen):
     transmission_start = ObjectProperty()
     transmission_end = ObjectProperty()
     total_time = ObjectProperty()
+    command_input = ObjectProperty()
 
     scan_status_button = ObjectProperty()
 
@@ -253,7 +254,19 @@ class DataWindow(Screen):
             Logger.error("scanner isn't connected")
             return False
 
-        self.scanner.open_unid_set_menu()
+        current_view = self.scanner.open_unid_set_menu()
+
+        if isinstance(current_view, bool):
+            Logger.error("You are not in menu state.")
+            return False
+
+        try:
+            unid_name = current_view["Edit Name"]["Value"]
+        except KeyError:
+            Logger.exception("no unid name available.")
+            return False
+
+        self.command_input.text = unid_name
 
         return True
 

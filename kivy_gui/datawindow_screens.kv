@@ -12,6 +12,7 @@
     transmission_start: trans_begins
     transmission_end: trans_ends
     total_time: tot_time
+    command_input: _command_input
 
     scan_status_button: scanner_status
     tgid_hld: tgid_hld
@@ -89,8 +90,8 @@
                 id: _first_row
 
                 CommandLine:
-                    id: command_input
-                    text: "GLT,FL"
+                    id: _command_input
+#                    text: "GLT,FL"
                     on_text_validate: root.update_unid(args[0])
 
             MenuBar:
