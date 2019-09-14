@@ -671,6 +671,60 @@ class UnidenScanner:
         if resp == "OK":
             self.push_key("press", "system")
 
+    def open_unid_set_menu(self):
+        """Quickly set the unit ID name while a broadcast is in progress.
+
+        Returns:
+            False: if there is no 'Save Unit ID' option available
+        """
+        self.push_key("press", "E")
+
+        view = self.get_menu_view()
+        self.logger.debug(pprint(view))
+
+        try:
+            unid_index = view["Save Unit ID"]["Index"]
+        except KeyError:
+            self.logger.exception(
+                "No Unit ID available for this transmission", exc_info=False
+            )
+            self.push_key("press", "system")
+            return False
+
+        self.set_menu_value(unid_index)
+
+        # scanner requires confirmation to set unid value
+        self.push_key("press", "E")
+
+        view = self.get_menu_view()
+        self.logger.debug(pprint(view))
+
+        try:
+            menu_index = view["Edit Name"]
+        except KeyError:
+            self.logger.exception("Menu item not available", exc_info=False)
+            self.push_key("press", "system")
+            return False
+
+        self.set_menu_value(menu_index)
+
+        view = self.get_menu_view()
+        self.logger.debug(pprint(view))
+
+        return True
+
+    def set_unid_id_from_menu(self, new_unid):
+        """set the unit id name when already at the menu"""
+
+        view = self.get_menu_view()
+        self.logger.debug(pprint(view))
+
+        resp = self.set_menu_value(new_unid, menu_type=view["Edit Name"]["MenuType"])
+
+        # send us back to main screen if it worked
+        if resp == "OK":
+            self.push_key("press", "system")
+
     # todo: method needs error catching
     def set_menu_value(self, cmd, menu_type=""):
         """Method to choose from the possible menu values.

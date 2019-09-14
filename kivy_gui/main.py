@@ -11,6 +11,7 @@ from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.textinput import TextInput
 from kivy.uix.vkeyboard import VKeyboard
 from kivy.uix.widget import Widget
 
@@ -242,6 +243,19 @@ class DataWindow(Screen):
         """Update the unit ID text for the current unit ID."""
 
         print(f"unit ID name: {value.text}")
+
+        self.scanner.set_unid_id_from_menu(value.text)
+
+    def open_unid_menu(self):
+        """experimental"""
+
+        if self.scanner is None:
+            Logger.error("scanner isn't connected")
+            return False
+
+        self.scanner.open_unid_set_menu()
+
+        return True
 
     def update_screen(self, dt):
         """Handles updates.
