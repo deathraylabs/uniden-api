@@ -238,6 +238,11 @@ class DataWindow(Screen):
 
             print(f"{k:{width}} {v}")
 
+    def update_unid(self, value):
+        """Update the unit ID text for the current unit ID."""
+
+        print(f"unit ID name: {value.text}")
+
     def update_screen(self, dt):
         """Handles updates.
         Args:
