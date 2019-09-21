@@ -23,5 +23,5 @@ source_path = Path("/Volumes/iMac HDD/uniden_scanner_audio/Ch2Alternate/")
 wavedata = []
 
 for wave in source_path.iterdir():
-    meta = get_wav_meta(str(source_path))
+    meta = get_wav_meta(str(wave))
     wavedata.append(meta)

@@ -162,11 +162,12 @@ def merge_tagged_wav_files(wav_file_paths, merged_wav_name=r"merged_{:03d}.wav")
     return merged_wav_path
 
 
-def get_wav_meta(wav_source, chunk_dict={}):
+def get_wav_meta(wav_source, chunk_dict=None):
     """Read the scanner generated metadata at the start of the file
 
     Args:
         wav_source (str or Chunk): path string of wav file
+        chunk_dict (dict):
 
     Returns:
         (dict): RIFF tag name: string or bytes representing tag data

@@ -695,6 +695,8 @@ GSI_OUTPUT_2 = {
     "ReplayMode": {"Mode": "---"},
     "MenuSummary": {"index": "---", "name": "---"},
     "Button": {"KeyCode": "", "Text": ""},
+    "TransmissionStart": "---",
+    "TransmissionEnd": "---",
 }
 
 # human readable metadata names and their corresponding tag/location in WAV
