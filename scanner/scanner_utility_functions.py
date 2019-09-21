@@ -496,8 +496,10 @@ def group_audio_by_department(
             file_or_folder.rmdir()
             logging.info("{} deleted".format(str(file_or_folder)))
         except OSError:
-            logger.exception(
-                "Directory '{}' is not empty, cannot delete it".format(str(folder)),
+            logging.exception(
+                "Directory '{}' is not empty, cannot delete it".format(
+                    str(file_or_folder)
+                ),
                 exc_info=False,
             )
             pass
@@ -580,11 +582,12 @@ if __name__ == "__main__":
     # input(help_statement)
 
     # get contents of clipboard
-    # clipboard = cb.paste()
+    clipboard = cb.paste()
     # source_path = "/Users/peej/Desktop/user_rec/4F18187C/"
     # save_path = "/Users/peej/Downloads/uniden audio/1 HPD-N"
 
-    # group_audio_by_department(source_path, save_path)
+    source_path = clipboard
+    group_audio_by_department(source_path)
 
     # matching tag
     # tag = "Red"

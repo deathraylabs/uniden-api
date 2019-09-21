@@ -931,3 +931,16 @@ GLT_COMMANDS = {
     "department": ("DEPT", "system_index"),
     "site": ("SITE", "system_index"),
 }
+
+# podcast categories
+PODCAST = {
+    "title:": "",
+    "date:": r"YYYY-MM-DD",
+    "categories:": "podcast",
+    "tags:": "",
+    "permalink:": "",
+    "podcast_link:": r"http://localhost:4000/scanner_audio/",
+    "podcast_file_size:": r"000 KB",
+    "podcast_duration:": r"\"0:0:0\"",
+    "podcast_length:": 000,
+}
