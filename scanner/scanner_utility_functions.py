@@ -194,7 +194,7 @@ def get_wav_meta(wav_source, chunk_dict=None):
         transmission_start = transmission_start.replace("_", "")
 
         # initializing dict containing chunk data
-        chunk_dict = {"transmission_start": transmission_start}
+        chunk_dict = {"TransmissionStart": transmission_start}
 
         # chunk will allow us to parse the byte data in the wav file
         meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=False)
