@@ -20,4 +20,8 @@ destination_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/
 # temporary path
 source_path = Path("/Volumes/iMac HDD/uniden_scanner_audio/Ch2Alternate/")
 
-meta = get_wav_meta(source_path)
+wavedata = []
+
+for wave in source_path.iterdir():
+    meta = get_wav_meta(str(source_path))
+    wavedata.append(meta)
