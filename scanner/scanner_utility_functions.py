@@ -9,6 +9,7 @@ import subprocess as sb
 import shutil
 import logging
 import pyperclip as cb
+from datetime import datetime, date, time, timedelta
 
 from collections import OrderedDict
 from tinytag import TinyTag
@@ -573,6 +574,29 @@ def select_from_list(selections):
     selection = int(input("select item: "))
 
     return (selection, selections[selection])
+
+
+def parse_time(raw_timedate, beginning=True):
+    """Convenience function to handle reformatting and calculating time differences.
+
+    Args:
+        raw_timedate (str): string from scanner or wav metadata
+        beginning (bool): is this the start of transmission?
+
+    Returns:
+
+
+    """
+
+    # time and date that the recording started
+    trans_start_date = date(
+        int(raw_timedate[:4]), int(raw_timedate[4:6]), int(raw_timedate[6:8])
+    )
+    trans_start_time = time(
+        int(raw_timedate[8:10]), int(raw_timedate[10:12]), int(raw_timedate[12:])
+    )
+
+    return True
 
 
 if __name__ == "__main__":

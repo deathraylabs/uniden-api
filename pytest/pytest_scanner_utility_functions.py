@@ -217,5 +217,15 @@ def test_get_menu_view():
     assert view["cmd"] == "MSI"
 
 
+def test_parse_time():
+    """Function required to deal with time passed by scanner."""
+
+    raw_timedate = "20190815103245"
+
+    ptimedate = parse_time(raw_timedate)
+
+    assert ptimedate
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()
