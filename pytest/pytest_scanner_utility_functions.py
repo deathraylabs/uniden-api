@@ -221,8 +221,9 @@ def test_parse_time():
     """Function required to deal with time passed by scanner."""
 
     raw_timedate = "20010101000224"
+    raw_timedate_end = "20010101000448"
 
-    ptimedate = parse_time(raw_timedate)
+    ptimedate = parse_time(raw_timedate, raw_timedate_end)
 
     assert ptimedate["TransmissionStart"]["date"] == "2001-01-01"
     assert ptimedate["TransmissionStart"]["time"] == "00:02:24"

@@ -11,7 +11,7 @@ import shutil
 from sys import argv
 from datetime import datetime, date, time, timedelta
 
-from scanner.scanner_utility_functions import get_wav_meta
+from scanner.scanner_utility_functions import get_wav_meta, parse_time
 from scanner.constants import PODCAST
 
 
@@ -30,18 +30,17 @@ for wave in source_path.iterdir():
     # grab metadata from the wave file
     meta = get_wav_meta(str(wave))
 
-    rec_time = meta["TransmissionStart"]
+    rec_start = meta["TransmissionStart"]
+    rec_end = meta["TransmissionEnd"]
 
-    # time and date that the recording started
-    trans_start_date = date(int(rec_time[:4]), int(rec_time[4:6]), int(rec_time[6:8]))
-    trans_start_time = time(
-        int(rec_time[8:10]), int(rec_time[10:12]), int(rec_time[12:])
-    )
+    trans_datetime = parse_time(rec_start, rec_end)
+
+    duration = trans_datetime["PodcastDuration"]
 
     podcast_string = (
         f"---\n"
         f"title: {1}\n"
-        f"date: {trans_start_date}\n"
+        f"date: {trans_datetime['TransmissionStart']['date']}\n"
         f"categories: podcast\n"
         f"tags: {2}\n"
         f"permalink: \n"
