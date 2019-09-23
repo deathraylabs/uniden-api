@@ -935,7 +935,7 @@ GLT_COMMANDS = {
     "site": ("SITE", "system_index"),
 }
 
-# podcast categories
+# podcast categories and corresponding get_wav_meta tags
 PODCAST = {
     "title:": "",
     "date:": r"YYYY-MM-DD",
@@ -943,7 +943,7 @@ PODCAST = {
     "tags:": "",
     "permalink:": "",
     "podcast_link:": r"http://localhost:4000/scanner_audio/",
-    "podcast_file_size:": r"000 KB",
+    "podcast_file_size:": "FileSize",
     "podcast_duration:": r"\"0:0:0\"",
     "podcast_length:": 000,
 }

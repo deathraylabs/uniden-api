@@ -26,5 +26,23 @@ wavedata = []
 
 # todo: need to match get_wav_metadata to dict style used while reading scanner
 for wave in source_path.iterdir():
+    # grab metadata from the wave file
     meta = get_wav_meta(str(wave))
-    wavedata.append(meta)
+
+    rec_time = meta["TransmissionStart"]
+
+    file_date = f"{rec_time[:4]}-{rec_time[4:6]}-{rec_time[6:8]}"
+
+    podcast_string = (
+        f"---\n"
+        f"title: {1}\n"
+        f"date: {file_date}\n"
+        f"categories: podcast\n"
+        f"tags: {2}\n"
+        f"permalink: \n"
+        f"podcast_link: {3}"
+    )
+
+    print(podcast_string)
+
+    wavedata.append(podcast_string)
