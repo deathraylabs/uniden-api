@@ -697,6 +697,7 @@ GSI_OUTPUT_2 = {
     "Button": {"KeyCode": "", "Text": ""},
     "TransmissionStart": "---",
     "TransmissionEnd": "---",
+    "FileSize": "---",
 }
 
 # human readable metadata names and their corresponding tag/location in WAV

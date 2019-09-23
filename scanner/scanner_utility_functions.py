@@ -167,7 +167,8 @@ def get_wav_meta(wav_source, chunk_dict=None):
 
     Args:
         wav_source (str or Chunk): path string of wav file
-        chunk_dict (dict):
+        chunk_dict (dict): this dictionary is used for recursive calls and allows us to
+            pass partially processed data back to function.
 
     Returns:
         (dict): RIFF tag name: string or bytes representing tag data
@@ -183,6 +184,7 @@ def get_wav_meta(wav_source, chunk_dict=None):
     logger.setLevel(logging.DEBUG)
 
     # if the wav_source is not already a Chunk instance, treat it like file
+    # because this is the first pass through function
     if not isinstance(wav_source, chunk.Chunk):
         f_path = Path(wav_source)
         f = open(f_path, "rb")
@@ -199,7 +201,9 @@ def get_wav_meta(wav_source, chunk_dict=None):
         # chunk will allow us to parse the byte data in the wav file
         meta_chunk = chunk.Chunk(f, align=False, bigendian=False, inclheader=False)
     else:
+        # use Chunk method to get the chunk name
         chunk_name = wav_source.getname()
+        chunk_size = wav_source.getsize()
         try:
             meta_chunk = chunk.Chunk(
                 wav_source, align=False, bigendian=False, inclheader=False
@@ -315,6 +319,7 @@ def get_wav_meta(wav_source, chunk_dict=None):
         return get_wav_meta(wav_source, chunk_dict)
 
     try:
+        # useful data will be UTF8 and not non-text binary
         decoded_chunk_id = chunk_id.decode()
     except UnicodeDecodeError:
         logger.exception(f"chunk ID: {chunk_id} is not valid UTF8.", exc_info=False)
