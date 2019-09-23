@@ -704,8 +704,8 @@ GSI_OUTPUT_2 = {
 # header metadata
 WAV_METADATA = OrderedDict(
     [
-        ("transmission_end:1", "ICRD"),
-        ("ICRD", "transmission_end:1"),
+        ("TransmissionEnd", "ICRD"),
+        ("ICRD", "TransmissionEnd"),
         ("ScannerInfo:Mode:1", "---"),
         ("ScannerInfo:V_Screen", "---"),
         ("MonitorList:Name:1", "ISBJ"),

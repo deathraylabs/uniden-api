@@ -220,11 +220,15 @@ def test_get_menu_view():
 def test_parse_time():
     """Function required to deal with time passed by scanner."""
 
-    raw_timedate = "20190815103245"
+    raw_timedate = "20010101000224"
 
     ptimedate = parse_time(raw_timedate)
 
-    assert ptimedate
+    assert ptimedate["TransmissionStart"]["date"] == "2001-01-01"
+    assert ptimedate["TransmissionStart"]["time"] == "00:02:24"
+    assert ptimedate["TransmissionEnd"]["date"] == "2001-01-01"
+    assert ptimedate["TransmissionEnd"]["time"] == "00:04:48"
+    assert ptimedate["PodcastDuration"] == 144
 
 
 # if __name__ == "__main__":

@@ -576,27 +576,60 @@ def select_from_list(selections):
     return (selection, selections[selection])
 
 
-def parse_time(raw_timedate, beginning=True):
+def parse_time(raw_timedate_start, raw_timedate_end="20010101000448"):
     """Convenience function to handle reformatting and calculating time differences.
 
     Args:
-        raw_timedate (str): string from scanner or wav metadata
-        beginning (bool): is this the start of transmission?
+        raw_timedate_start (str): string from scanner or wav metadata transmission start
+        raw_timedate_end (str): string from scanner or wav metadata transmission end
 
     Returns:
-
+        time_date_dict (dict): contains time and date calculations
 
     """
 
     # time and date that the recording started
     trans_start_date = date(
-        int(raw_timedate[:4]), int(raw_timedate[4:6]), int(raw_timedate[6:8])
+        int(raw_timedate_start[:4]),
+        int(raw_timedate_start[4:6]),
+        int(raw_timedate_start[6:8]),
     )
     trans_start_time = time(
-        int(raw_timedate[8:10]), int(raw_timedate[10:12]), int(raw_timedate[12:])
+        int(raw_timedate_start[8:10]),
+        int(raw_timedate_start[10:12]),
+        int(raw_timedate_start[12:]),
     )
 
-    return True
+    # time and date that the recording ended
+    trans_end_date = date(
+        int(raw_timedate_end[:4]),
+        int(raw_timedate_end[4:6]),
+        int(raw_timedate_end[6:8]),
+    )
+    trans_end_time = time(
+        int(raw_timedate_end[8:10]),
+        int(raw_timedate_end[10:12]),
+        int(raw_timedate_end[12:]),
+    )
+
+    trans_start = datetime.combine(trans_start_date, trans_start_time)
+    trans_end = datetime.combine(trans_end_date, trans_end_time)
+
+    trans_delta = trans_end - trans_start
+
+    suf_logger.info(trans_delta)
+
+    # state dict
+    time_date_dict = {
+        "TransmissionStart": {
+            "date": str(trans_start_date),
+            "time": str(trans_start_time),
+        },
+        "TransmissionEnd": {"date": str(trans_end_date), "time": str(trans_end_time)},
+        "PodcastDuration": trans_delta.seconds,
+    }
+
+    return time_date_dict
 
 
 if __name__ == "__main__":
