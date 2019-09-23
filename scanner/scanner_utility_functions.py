@@ -203,7 +203,11 @@ def get_wav_meta(wav_source, chunk_dict=None):
     else:
         # use Chunk method to get the chunk name
         chunk_name = wav_source.getname()
-        chunk_size = wav_source.getsize()
+
+        # the file size is riff bytes plus the 8 bytes of chunk data just read
+        if chunk_name == b"RIFF" and chunk_dict.get("FileSize") is None:
+            chunk_dict["FileSize"] = wav_source.getsize() + 8
+
         try:
             meta_chunk = chunk.Chunk(
                 wav_source, align=False, bigendian=False, inclheader=False
