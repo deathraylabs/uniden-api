@@ -25,7 +25,7 @@ source_path = Path("/Volumes/iMac HDD/uniden_scanner_audio/Ch2Alternate/")
 
 wavedata = []
 
-# todo: need to match get_wav_metadata to dict style used while reading scanner
+# todo: need to generate the post path
 for wave in source_path.iterdir():
     # grab metadata from the wave file
     meta = get_wav_meta(str(wave))
