@@ -21,7 +21,9 @@ from scanner.constants import PODCAST
 destination_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/")
 podcast_post_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/")
 # temporary path
-source_path = Path("/Volumes/iMac HDD/uniden_scanner_audio/Ch2Alternate/")
+source_path = Path(
+    "/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/Ch2Alternate/"
+)
 
 wavedata = []
 
@@ -33,9 +35,18 @@ for wave in source_path.iterdir():
     rec_start = meta["TransmissionStart"]
     rec_end = meta["TransmissionEnd"]
 
+    # function provides separate "time" and "date" objects for start and end
     trans_datetime = parse_time(rec_start, rec_end)
 
     duration = trans_datetime["PodcastDuration"]
+    start_date = trans_datetime["TransmissionStart"]["date"]
+    start_time = trans_datetime["TransmissionStart"]["time"].replace(":", "-")
+
+    # todo: sanitize the TGID name so no spaces or periods
+    # podcast post name needs to include date, title, and time
+    post_name = f"{start_date}_{start_time}.md"
+
+    podcast_post_path = podcast_post_path.joinpath(post_name)
 
     podcast_string = (
         f"---\n"

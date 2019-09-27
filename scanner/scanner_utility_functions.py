@@ -585,6 +585,9 @@ def parse_time(raw_timedate_start, raw_timedate_end="20010101000448"):
 
     Returns:
         time_date_dict (dict): contains time and date calculations
+            TransmissionStart (dict): "date" and "time" objects for beginning of trans
+            TransmissionEnd (dict): "date" and "time" objects for end of transmission
+            PodcastDuration: difference between end and start times
 
     """
 
