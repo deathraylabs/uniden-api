@@ -21,10 +21,17 @@ from scanner.constants import PODCAST
 
 destination_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/")
 podcast_post_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/")
-# temporary path
-source_path = Path(
-    "/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/Ch2Alternate/"
-)
+
+# path to directory that contains the directories with audio you add
+source_path_root = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_site/scanner_audio/")
+
+# name of directory that contains audio of interest
+audio_directory = "Ch2Alternate"
+
+source_path = source_path_root.joinpath(audio_directory)
+
+if not source_path.is_dir():
+    raise NotADirectoryError
 
 wavedata = []
 
@@ -49,7 +56,6 @@ for wave in source_path.iterdir():
     tgid_name = tgid_name.replace(".", "")
     tgid_name = tgid_name.replace(" ", "-")
 
-    # todo: sanitize the TGID name so no spaces or periods
     # podcast post name needs to include date, title, and time
     post_name = f"{start_date}_{start_time}-{tgid_name}.md"
 
@@ -62,7 +68,7 @@ for wave in source_path.iterdir():
         f"categories: podcast\n"
         f"tags: {2}\n"
         f"permalink: \n"
-        f"podcast_link: {3}"
+        f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}"
         f"---"
     )
 
