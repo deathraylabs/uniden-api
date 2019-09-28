@@ -80,7 +80,7 @@ for wave in source_path.iterdir():
         f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
         f"podcast_file_size: \n"
         f'podcast_duration: "{str(duration)}"\n'
-        f"podcast_length: \n"
+        f"podcast_length: {meta['FileSize']}\n"
         f"---\n\n"
         f"{post_name}"
     )
