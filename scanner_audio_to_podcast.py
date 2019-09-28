@@ -40,7 +40,8 @@ wavedata = []
 
 for wave in source_path.iterdir():
 
-    # wav_href =
+    # location of audio file on jekyll web server
+    wav_href = f"{href_base}{audio_directory}/{wave.name}"
 
     # grab metadata from the wave file
     meta = get_wav_meta(str(wave))
@@ -77,7 +78,8 @@ for wave in source_path.iterdir():
         f"tags: \n"
         f"permalink: \n"
         f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
-        f"duration: {duration}"
+        f"duration: {str(duration)}\n"
+        f"wav: {str(wav_href)}\n"
         f"---"
     )
 
