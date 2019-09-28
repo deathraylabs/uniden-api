@@ -68,7 +68,7 @@ for wave in source_path.iterdir():
         f"categories: podcast\n"
         f"tags: {2}\n"
         f"permalink: \n"
-        f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}"
+        f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
         f"---"
     )
 
