@@ -35,7 +35,6 @@ if not source_path.is_dir():
 
 wavedata = []
 
-# todo: need to generate the post path
 for wave in source_path.iterdir():
     # grab metadata from the wave file
     meta = get_wav_meta(str(wave))
@@ -52,6 +51,7 @@ for wave in source_path.iterdir():
 
     # get the channel name (aka TGID name)
     tgid_name = meta["TGID:Name"]
+
     # replace characters that must be escaped in HTML
     tgid_name = tgid_name.replace(".", "")
     tgid_name = tgid_name.replace(" ", "-")
@@ -66,12 +66,16 @@ for wave in source_path.iterdir():
         f"title: {rec_start + '_' + tgid_name}\n"
         f"date: {trans_datetime['TransmissionStart']['date']}\n"
         f"categories: podcast\n"
-        f"tags: {2}\n"
+        f"tags: \n"
         f"permalink: \n"
         f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
         f"---"
     )
 
+    # todo: create post markdown file with podcast string added
+    with open(podcast_post_path, "w") as f:
+        f.write(podcast_string)
+
     print(podcast_string)
 
-    wavedata.append(podcast_string)
+    # wavedata.append(podcast_string)
