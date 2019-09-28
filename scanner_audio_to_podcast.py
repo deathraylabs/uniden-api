@@ -19,6 +19,9 @@ from scanner.constants import PODCAST
 # for arg in argv:
 #     print(f"arg: {arg}")
 
+# jekyll server path to audio files
+href_base = "http://localhost:4000/scanner_audio/"
+
 destination_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/")
 podcast_post_base_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/")
 
@@ -36,6 +39,9 @@ if not source_path.is_dir():
 wavedata = []
 
 for wave in source_path.iterdir():
+
+    # wav_href =
+
     # grab metadata from the wave file
     meta = get_wav_meta(str(wave))
 
@@ -61,14 +67,17 @@ for wave in source_path.iterdir():
 
     podcast_post_path = podcast_post_base_path.joinpath(post_name)
 
+    # todo: add the rest of the necessary yaml properties
     podcast_string = (
         f"---\n"
+        f"layout: post"
         f"title: {rec_start + '_' + tgid_name}\n"
         f"date: {trans_datetime['TransmissionStart']['date']}\n"
         f"categories: podcast\n"
         f"tags: \n"
         f"permalink: \n"
         f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
+        f"duration: {duration}"
         f"---"
     )
 
