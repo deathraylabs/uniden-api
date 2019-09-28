@@ -42,6 +42,12 @@ for wave in source_path.iterdir():
     start_date = trans_datetime["TransmissionStart"]["date"]
     start_time = trans_datetime["TransmissionStart"]["time"].replace(":", "-")
 
+    # get the channel name (aka TGID name)
+    tgid_name = meta["TGID:Name"]
+    # replace characters that must be escaped in HTML
+    tgid_name = tgid_name.replace(".", "")
+    tgid_name = tgid_name.replace(" ", "-")
+
     # todo: sanitize the TGID name so no spaces or periods
     # podcast post name needs to include date, title, and time
     post_name = f"{start_date}_{start_time}.md"
