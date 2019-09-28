@@ -68,10 +68,10 @@ for wave in source_path.iterdir():
 
     podcast_post_path = podcast_post_base_path.joinpath(post_name)
 
-    # todo: add the rest of the necessary yaml properties
+    # todo: get the file size
     podcast_string = (
         f"---\n"
-        f"layout: post"
+        f"layout: post\n"
         f"title: \"{rec_start + '_' + tgid_name}\"\n"
         f"date: {trans_datetime['TransmissionStart']['date']}\n"
         f"categories: podcast\n"
