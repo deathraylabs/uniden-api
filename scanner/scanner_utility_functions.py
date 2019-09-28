@@ -619,7 +619,7 @@ def parse_time(raw_timedate_start, raw_timedate_end="20010101000448"):
     trans_end = datetime.combine(trans_end_date, trans_end_time)
 
     trans_delta = trans_end - trans_start
-    duration = f"{trans_delta.min}:{trans_delta.seconds}"
+    duration = f"{trans_delta.seconds // 60 :02d}:{trans_delta.seconds % 60 :02d}"
 
     suf_logger.info(trans_delta)
 
