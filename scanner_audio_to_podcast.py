@@ -1,6 +1,7 @@
 """Group Uniden Scanner Audio by department and format to serve as local podcast using
 jekyll.
 
+Source wav files will be copied over to the podcast directory.
 
 """
 
@@ -50,13 +51,13 @@ for wave in source_path.iterdir():
 
     # todo: sanitize the TGID name so no spaces or periods
     # podcast post name needs to include date, title, and time
-    post_name = f"{start_date}_{start_time}.md"
+    post_name = f"{start_date}_{start_time}-{tgid_name}.md"
 
     podcast_post_path = podcast_post_path.joinpath(post_name)
 
     podcast_string = (
         f"---\n"
-        f"title: {1}\n"
+        f"title: {rec_start + '_' + tgid_name}\n"
         f"date: {trans_datetime['TransmissionStart']['date']}\n"
         f"categories: podcast\n"
         f"tags: {2}\n"
