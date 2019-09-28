@@ -20,7 +20,7 @@ from scanner.constants import PODCAST
 #     print(f"arg: {arg}")
 
 destination_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/")
-podcast_post_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/")
+podcast_post_base_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/")
 
 # path to directory that contains the directories with audio you add
 source_path_root = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_site/scanner_audio/")
@@ -59,7 +59,7 @@ for wave in source_path.iterdir():
     # podcast post name needs to include date, title, and time
     post_name = f"{start_date}_{start_time}-{tgid_name}.md"
 
-    podcast_post_path = podcast_post_path.joinpath(post_name)
+    podcast_post_path = podcast_post_base_path.joinpath(post_name)
 
     podcast_string = (
         f"---\n"
@@ -72,7 +72,7 @@ for wave in source_path.iterdir():
         f"---"
     )
 
-    # todo: create post markdown file with podcast string added
+    # save as markdown file to podcast posts
     with open(podcast_post_path, "w") as f:
         f.write(podcast_string)
 
