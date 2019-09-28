@@ -619,6 +619,7 @@ def parse_time(raw_timedate_start, raw_timedate_end="20010101000448"):
     trans_end = datetime.combine(trans_end_date, trans_end_time)
 
     trans_delta = trans_end - trans_start
+    duration = f"{trans_delta.min}:{trans_delta.seconds}"
 
     suf_logger.info(trans_delta)
 
@@ -629,7 +630,7 @@ def parse_time(raw_timedate_start, raw_timedate_end="20010101000448"):
             "time": str(trans_start_time),
         },
         "TransmissionEnd": {"date": str(trans_end_date), "time": str(trans_end_time)},
-        "PodcastDuration": trans_delta.seconds,
+        "PodcastDuration": duration,
     }
 
     return time_date_dict
