@@ -72,15 +72,15 @@ for wave in source_path.iterdir():
     podcast_string = (
         f"---\n"
         f"layout: post"
-        f"title: {rec_start + '_' + tgid_name}\n"
+        f"title: \"{rec_start + '_' + tgid_name}\"\n"
         f"date: {trans_datetime['TransmissionStart']['date']}\n"
         f"categories: podcast\n"
         f"tags: \n"
-        f"permalink: \n"
+        f"permalink: /scanner_audio/{audio_directory}/{wave.stem}\n"
         f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
-        f"duration: {str(duration)}\n"
-        f"wav: {str(wav_href)}\n"
-        f"---"
+        f"podcast_duration: {str(duration)}\n"
+        f"---\n\n"
+        f"{post_name}"
     )
 
     # save as markdown file to podcast posts
