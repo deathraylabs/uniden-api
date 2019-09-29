@@ -38,7 +38,12 @@ if not source_path.is_dir():
 
 wavedata = []
 
+# get the path for each wave file in the directory
 for wave in source_path.iterdir():
+
+    # wav file size and conversion
+    wav_file_size = os.path.getsize(wave)
+    wav_size = f"{wav_file_size // 1000} KB"
 
     # location of audio file on jekyll web server
     wav_href = f"{href_base}{audio_directory}/{wave.name}"
@@ -78,7 +83,7 @@ for wave in source_path.iterdir():
         f"tags: \n"
         f"permalink: /scanner_audio/{audio_directory}/{wave.stem}\n"
         f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
-        f"podcast_file_size: \n"
+        f"podcast_file_size: {wav_size}\n"
         f'podcast_duration: "{str(duration)}"\n'
         f"podcast_length: {meta['FileSize']}\n"
         f"---\n\n"
