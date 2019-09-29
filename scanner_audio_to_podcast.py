@@ -81,7 +81,7 @@ for wave in source_path.iterdir():
         f"date: {trans_datetime['TransmissionStart']['date']}\n"
         f"categories: podcast\n"
         f"tags: \n"
-        f"permalink: /scanner_audio/{audio_directory}/{wave.stem}\n"
+        f"permalink: /scanner_audio/{audio_directory}-{wave.stem}\n"
         f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
         f"podcast_file_size: {wav_size}\n"
         f'podcast_duration: "{str(duration)}"\n'
