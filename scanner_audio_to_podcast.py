@@ -69,6 +69,7 @@ for wave in source_path.iterdir():
     tgid_name = tgid_name.replace(" ", "-")
 
     # podcast post name needs to include date, title, and time
+    # there must be hyphens between the date items and title or it breaks
     post_name = f"{start_date}-{start_time}-{tgid_name}.md"
 
     podcast_post_path = podcast_post_base_path.joinpath(post_name)
