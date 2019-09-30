@@ -102,9 +102,10 @@
                     text: "Set\nUNID"
                     on_press: root.open_unid_menu()
 
-#                NumericKeypad:
-#                    id: _five
-#                    text: "5"
+                NumericKeypad:
+                    id: _avoid_key
+                    text: "AVOID"
+                    on_press: root.keypad_press(keypad_key="avoid")
 
 #                NumericKeypad:
 #                    id: _six

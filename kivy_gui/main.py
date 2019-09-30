@@ -280,6 +280,8 @@ class DataWindow(Screen):
             keypad_mode (str): see scanner.push_key docstring. defaults to simple press
 
         Returns:
+            True: if keypad press is successful
+            False: if scanner returns an error code
 
         """
 
