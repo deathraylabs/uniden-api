@@ -33,7 +33,7 @@ destination_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/
 podcast_post_base_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/")
 
 # path to directory that contains the directories with audio to be served
-source_path_root = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_site/scanner_audio/")
+source_path_root = Path("/Volumes/iMac HDD/scanner_audio/")
 
 # name of directory that contains audio of interest
 audio_directory = "Ch2Alternate"
