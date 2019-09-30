@@ -1,7 +1,13 @@
-"""Group Uniden Scanner Audio by department and format to serve as local podcast using
-jekyll.
+"""Create a local podcast feed from a directory containing individual wave files.
 
-Source wav files will be copied over to the podcast directory.
+Notes:
+    1. Requires Jekyll server in order to serve the podcast to itunes.
+    2. Steps to setup jekyll server using terminal:
+        a. `cd /Volumes/iMac HDD/uniden-scanner-podcast/`
+        b. `bundle exec jekyll serve`
+    3. Use the following symlink as directory for adding wav files to podcast:
+        `/Volumes/iMac HDD/scanner_audio/`
+
 
 """
 
@@ -26,7 +32,7 @@ href_base = "http://localhost:4000/scanner_audio/"
 destination_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/")
 podcast_post_base_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/")
 
-# path to directory that contains the directories with audio you add
+# path to directory that contains the directories with audio to be served
 source_path_root = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_site/scanner_audio/")
 
 # name of directory that contains audio of interest
