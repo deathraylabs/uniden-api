@@ -229,7 +229,7 @@ def test_parse_time():
     assert ptimedate["TransmissionStart"]["time"] == "00:02:24"
     assert ptimedate["TransmissionEnd"]["date"] == "2001-01-01"
     assert ptimedate["TransmissionEnd"]["time"] == "00:04:48"
-    assert ptimedate["PodcastDuration"] == 144
+    assert ptimedate["PodcastDuration"] == "02:24"
 
 
 # if __name__ == "__main__":

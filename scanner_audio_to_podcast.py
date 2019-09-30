@@ -36,7 +36,7 @@ podcast_post_base_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/"
 source_path_root = Path("/Volumes/iMac HDD/scanner_audio/")
 
 # name of directory that contains audio of interest
-audio_directory = "Ch2Alternate"
+audio_directory = "0_HPD-NW"
 
 source_path = source_path_root.joinpath(audio_directory)
 
