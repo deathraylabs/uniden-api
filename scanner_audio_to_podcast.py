@@ -19,8 +19,9 @@ from scanner.constants import PODCAST
 # for arg in argv:
 #     print(f"arg: {arg}")
 
-# jekyll server path to audio files
+# jekyll server href base path to scanner files
 href_base = "http://localhost:4000/scanner_audio/"
+
 
 destination_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/scanner_audio/")
 podcast_post_base_path = Path("/Volumes/iMac HDD/uniden-scanner-podcast/_posts/")
@@ -43,7 +44,7 @@ for wave in source_path.iterdir():
 
     # wav file size and conversion
     wav_file_size = os.path.getsize(wave)
-    wav_size = f"{wav_file_size // 1000} KB"
+    wav_size = f"{wav_file_size // 1000} KB"  # converts bytes to KB
 
     # location of audio file on jekyll web server
     wav_href = f"{href_base}{audio_directory}/{wave.name}"
@@ -82,7 +83,7 @@ for wave in source_path.iterdir():
         f"date: {trans_datetime['TransmissionStart']['date']}\n"
         f"categories: podcast\n"
         f"tags: \n"
-        f"permalink: /scanner_audio/{audio_directory}-{wave.stem}\n"
+        f"permalink: /podcasts/{audio_directory}-{wave.stem}\n"
         f"podcast_link: http://localhost:4000/scanner_audio/{audio_directory}/{wave.name}\n"
         f"podcast_file_size: {wav_size}\n"
         f'podcast_duration: "{str(duration)}"\n'
