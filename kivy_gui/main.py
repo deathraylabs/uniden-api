@@ -461,6 +461,15 @@ class PlaybackScreen(Screen):
         # self.cmd_input_box.focus = True
 
 
+class SelectionOverlayScreen(Screen):
+    """This class handles scanner events that cause an overlay screen to appear.
+    Overlay screens have to be handled before the scanner returns to normal operation
+    and usually involve a Y/N response.
+    """
+
+    pass
+
+
 # class ModeScreen(Screen):
 #     """
 #     Present the option to change keyboard mode and warn of system-wide
