@@ -440,7 +440,7 @@ def get_string_at_offset(start, length, directory):
 
 def group_audio_by_department(
     source_dir="/Volumes/SDS100/BCDx36HP/audio/user_rec/",
-    save_dir="/Users/peej/Downloads/uniden_audio2/",
+    save_dir="/Volumes/iMac HDD/scanner_audio/",
 ):
     """Function takes directories as exported from scanner and groups the
     audio recordings into new directories based on department name.
@@ -457,10 +457,10 @@ def group_audio_by_department(
     # Path object for the root of our folder tree
     basepath = Path(source_dir).expanduser()
 
-    # source_dir where the grouped data will end up
+    # source_dir where the grouped files will end up
     savepath = Path(save_dir)
 
-    parent_dir = None
+    # parent_dir = None
 
     for file_or_folder in basepath.iterdir():
         # if you find a wav file, use its parent directory
@@ -479,10 +479,14 @@ def group_audio_by_department(
             ttag = TinyTag.get(file)
             # get the department name, which is stored under title
             department = ttag.title
-            # forward slashes are not allowed in path names,
-            # this will convert them to space instead
+
+            # get rid of formatting that is illegal in href string
             try:
-                department = department.replace("/", " ")
+                department = department.replace("/", "_")  # no forward slashes
+                department = department.replace(" ", "_")  # no spaces
+                department = department.replace(".", "_")  # no periods
+                department = department.replace("(", "-")
+                department = department.replace(")", "-")
             except AttributeError:
                 logging.error("Encountered file without department tag.")
                 break
@@ -653,12 +657,12 @@ if __name__ == "__main__":
     # input(help_statement)
 
     # get contents of clipboard
-    clipboard = cb.paste()
+    # clipboard = cb.paste()
     # source_path = "/Users/peej/Desktop/user_rec/4F18187C/"
     # save_path = "/Users/peej/Downloads/uniden audio/1 HPD-N"
 
-    source_path = clipboard
-    group_audio_by_department(source_path)
+    # source_path = clipboard
+    # group_audio_by_department(source_path)
 
     # matching tag
     # tag = "Red"
