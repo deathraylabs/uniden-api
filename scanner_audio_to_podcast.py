@@ -102,6 +102,6 @@ for wave in source_path.iterdir():
     with open(podcast_post_path, "w") as f:
         f.write(podcast_string)
 
-    print(podcast_string)
+    # print(podcast_string)
 
     # wavedata.append(podcast_string)
