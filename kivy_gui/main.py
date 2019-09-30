@@ -272,6 +272,32 @@ class DataWindow(Screen):
 
         return True
 
+    def keypad_press(self, keypad_key, keypad_mode="P"):
+        """Method to pass keypad press command to scanner.
+
+        Args:
+            keypad_key (str): see scanner.push_key docstring
+            keypad_mode (str): see scanner.push_key docstring. defaults to simple press
+
+        Returns:
+
+        """
+
+        # check for connection
+        if self.scanner is None:
+            Logger.error("No connection to scanner.")
+            return False
+
+        res = self.scanner.push_key(keypad_mode, keypad_key)
+
+        if res == 0:
+            Logger.error(
+                f"Scanner responded with error code to keypad input {keypad_key}"
+            )
+            return False
+
+        return True
+
     def update_screen(self, dt):
         """Handles updates.
         Args:
