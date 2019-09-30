@@ -34,6 +34,8 @@ Builder.load_file("datawindow_screens.kv")
 Builder.load_file("playback_screen.kv")
 # contains formatting instructions for individual widgets
 Builder.load_file("widget_formatting.kv")
+# contains formatting instructions for the overlay screen
+Builder.load_file("selection_overlay_screen.kv")
 
 
 # class MyKeyboardListener(Widget):
