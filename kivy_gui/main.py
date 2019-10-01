@@ -154,7 +154,7 @@ class DataWindow(Screen):
 
     # todo: replace with root object
     # initialize variable to store scanner data
-    scanner = None  # trying this
+    # scanner = None  # trying this
 
     # time interval to refresh data
     refresh_data_dt = 0.1
@@ -190,16 +190,16 @@ class DataWindow(Screen):
 
         # todo: replace with root object
         # check to see if scanner instance has been created
-        if self.scanner is None:
-            Logger.info("Scanner is not initialized.")
-
-            Logger.info("Trying to initialize scanner...")
-            self.scanner = UnidenScanner()
-            Logger.info("Scanner is initialized. Checking port connection...")
+        # if scanner is None:
+        #     Logger.info("Scanner is not initialized.")
+        #
+        #     Logger.info("Trying to initialize scanner...")
+        #     scanner = UnidenScanner()
+        #     Logger.info("Scanner is initialized. Checking port connection...")
 
         # todo: replace with root object
-        if not self.scanner.port_is_open():
-            port_open = self.scanner.open()
+        if not scanner.port_is_open():
+            port_open = scanner.open()
 
             if not port_open:
                 Logger.info(
@@ -210,12 +210,12 @@ class DataWindow(Screen):
         Logger.info("The scanner port is open.")
 
         Logger.info("clearing the buffer")
-        self.scanner.reset_port()
+        scanner.reset_port()
 
         self.scan_status_button.text = "Pull Startup"
 
         # start the scanner push updates
-        # self.scanner.start_push_updates(interval=250)
+        # scanner.start_push_updates(interval=250)
 
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
@@ -226,10 +226,9 @@ class DataWindow(Screen):
     def scanner_disconnect_btn(self):
         """Closes connection to scanner."""
 
-        # todo: replace with root class
         # make sure the port is open and connected to scanner
         try:
-            if not self.scanner.port_is_open():
+            if not scanner.port_is_open():
                 Logger.info("Port is already closed.")
                 return False
         except AttributeError:
@@ -240,10 +239,9 @@ class DataWindow(Screen):
         # stop updating screen with clock
         Clock.unschedule(self.update_screen)
 
-        # todo: replace with root class
         try:
             # stop the scanner push updates
-            self.scanner.stop_push_updates()
+            scanner.stop_push_updates()
             Logger.info("Stop update command sent to scanner.")
         except AttributeError:
             Logger.exception(
@@ -251,8 +249,7 @@ class DataWindow(Screen):
             )
             return False
 
-        # todo: replace with root class
-        self.scanner.close()
+        scanner.close()
         Logger.info("Scanner Connection Closed.")
 
         # update button label
@@ -274,16 +271,14 @@ class DataWindow(Screen):
         """
         Logger.debug("trying to hold channel")
 
-        if self.scanner is None:
+        if scanner is None:
             Logger.error("No connection to scanner.")
             return False
 
-        Logger.debug(f"bytes waiting: {self.scanner.serial.in_waiting}")
-        res = self.scanner.push_key("press", hold_key)
+        Logger.debug(f"bytes waiting: {scanner.serial.in_waiting}")
+        res = scanner.push_key("press", hold_key)
         Logger.debug(f"hold button response: {res}")
-        Logger.debug(
-            f"bytes waiting after push_key(): {self.scanner.serial.in_waiting}"
-        )
+        Logger.debug(f"bytes waiting after push_key(): {scanner.serial.in_waiting}")
 
         return res
 
@@ -291,13 +286,13 @@ class DataWindow(Screen):
         """Method to hold/release site."""
         Logger.debug("trying to hold channel")
 
-        if self.scanner is None:
+        if scanner is None:
             Logger.error("No connection to scanner.")
             return False
 
-        res1 = self.scanner.push_key("press", "func")
+        res1 = scanner.push_key("press", "func")
 
-        res2 = self.scanner.push_key("press", "dept")
+        res2 = scanner.push_key("press", "dept")
         Logger.debug(f"responses: {res1}, {res2}")
 
     def print_data(self):
@@ -305,13 +300,13 @@ class DataWindow(Screen):
         the scanner state variable."""
 
         try:
-            self.scanner.port_is_open()
+            scanner.port_is_open()
         except AttributeError:
             return
 
         print("\n\nNew data\n\n")
 
-        scanner_state = self.scanner.get_scanner_state()
+        scanner_state = scanner.get_scanner_state()
 
         for item in scanner_state.items():
             # print(item)
@@ -326,16 +321,16 @@ class DataWindow(Screen):
 
         print(f"unit ID name: {value.text}")
 
-        self.scanner.set_unid_id_from_menu(value.text)
+        scanner.set_unid_id_from_menu(value.text)
 
     def open_unid_menu(self):
         """experimental"""
 
-        if self.scanner is None:
+        if scanner is None:
             Logger.error("scanner isn't connected")
             return False
 
-        current_view = self.scanner.open_unid_set_menu()
+        current_view = scanner.open_unid_set_menu()
 
         if isinstance(current_view, bool):
             Logger.error("You are not in menu state.")
@@ -365,11 +360,11 @@ class DataWindow(Screen):
         """
 
         # check for connection
-        if self.scanner is None:
+        if scanner is None:
             Logger.error("No connection to scanner.")
             return False
 
-        res = self.scanner.push_key(keypad_mode, keypad_key)
+        res = scanner.push_key(keypad_mode, keypad_key)
 
         if res == 0:
             Logger.error(
@@ -388,7 +383,7 @@ class DataWindow(Screen):
             None
         """
         # update the scanner state variable first
-        wav_meta = self.scanner.update_scanner_state()
+        wav_meta = scanner.update_scanner_state()
 
         # check to ensure data is present
         if isinstance(wav_meta, bool):
@@ -513,17 +508,17 @@ class PlaybackScreen(Screen):
         Logger.info("scanner status button was pressed")
 
         # check to see if scanner instance has been created
-        # if self.scanner is None:
+        # if scanner is None:
         #     Logger.info("Scanner is not initialized.")
         #
         #     Logger.info("Trying to initialize scanner...")
-        #     self.scanner = UnidenScanner()
+        #     scanner = UnidenScanner()
         #     Logger.info("Scanner is initialized. Checking port connection...")
 
         scanner.open_connection()
 
-        # if not self.scanner.port_is_open():
-        #     port_open = self.scanner.open()
+        # if not scanner.port_is_open():
+        #     port_open = scanner.open()
         #
         #     if not port_open:
         #         Logger.info(
@@ -542,7 +537,7 @@ class PlaybackScreen(Screen):
 
         # make sure the port is open and connected to scanner
         # try:
-        #     if not self.scanner.port_is_open():
+        #     if not scanner.port_is_open():
         #         Logger.info("Port is already closed.")
         #         return False
         # except AttributeError:
