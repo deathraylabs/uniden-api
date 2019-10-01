@@ -76,14 +76,14 @@ class DataWindow(Screen):
     """
 
     # initialize id reference to kv file using variable name
-    fav_list_name = ObjectProperty()
-    sys_name = ObjectProperty()
-    dept_name = ObjectProperty()
-    site_name = ObjectProperty()
-    unit_ids = ObjectProperty()
-    unit_ids_name_tag = ObjectProperty()
-    transmission_start = ObjectProperty()
-    transmission_end = ObjectProperty()
+    # fav_list_name = ObjectProperty()
+    # sys_name = ObjectProperty()
+    # dept_name = ObjectProperty()
+    # site_name = ObjectProperty()
+    # unit_ids = ObjectProperty()
+    # unit_ids_name_tag = ObjectProperty()
+    # transmission_start = ObjectProperty()
+    # transmission_end = ObjectProperty()
     total_time = ObjectProperty()
     command_input = ObjectProperty()
 
@@ -103,6 +103,15 @@ class DataWindow(Screen):
         # color for hold highlight
         self.highlight_color = (0.8, 0.8, 0, 0.8)
         self.transparent_color = (1, 1, 1, 0)
+
+        # dict correlates scanner tags to variable names
+        self.data_tags = {
+            "MonitorList": "fav_list_name",
+            "System": "sys_name",
+            "Department": "dept_name",
+            "TGID": "tgid_hld",
+            "Site": "site_name",
+        }
 
         # self.v_keyboard = MyKeyboardListener()
 
@@ -333,12 +342,19 @@ class DataWindow(Screen):
             trans_end = "---"
 
         # update DataWindow with metadata
-        self.fav_list_name.text = wav_meta["MonitorList"]["Name"]
-        self.sys_name.text = wav_meta["System"]["Name"]
-        self.dept_name.text = wav_meta["Department"]["Name"]
-        # self.tgid_name.text = wav_meta["TGID:Name"]
-        self.tgid_hld.text = wav_meta["TGID"]["Name"]
-        self.site_name.text = wav_meta["Site"]["Name"]
+        # self.fav_list_name.text = wav_meta["MonitorList"]["Name"]
+        # self.ids["fav_list_name"].text = wav_meta["MonitorList"]["Name"]
+        # self.sys_name.text = wav_meta["System"]["Name"]
+        # self.dept_name.text = wav_meta["Department"]["Name"]
+        # # self.tgid_name.text = wav_meta["TGID:Name"]
+        # self.tgid_hld.text = wav_meta["TGID"]["Name"]
+        # self.site_name.text = wav_meta["Site"]["Name"]
+
+        # replacement for above code
+        # update the DataWindow with metadata from scanner
+        for item in self.data_tags.items():
+            self.ids[item[1]].text = wav_meta[item[0]]["Name"]
+
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
 
@@ -358,6 +374,12 @@ class DataWindow(Screen):
             self.ids["sys_name"].background_color = self.highlight_color
         else:
             self.ids["sys_name"].background_color = self.transparent_color
+
+        # three states allowed are "Avoid", "T-Avoid", or "Off"
+        if wav_meta["TGID"]["Avoid"] == "Avoid":
+            self.ids["tgid_hld"].strikethrough = True
+        else:
+            self.ids["tgid_hld"].strikethrough = False
 
         if wav_meta["TGID"]["Hold"] == "On":
             # self.ids["tgid_name"].highlight_color = self.highlight_color
