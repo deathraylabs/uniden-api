@@ -20,7 +20,6 @@
 #                MyKeyboardListener:
 #                    id: _v_keyboard
 
-
                 ScrollView:
                     do_scroll: (False, True)
 
@@ -46,7 +45,12 @@
 
 
                     BoxLayout:
+                        id: "second_row"
                         orientation: 'horizontal'
+
+                        Button:
+                            id: "menu_view"
+                            text: "Get Menu View"
 
                         Button:
                             id: stop_play

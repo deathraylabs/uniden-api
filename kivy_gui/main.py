@@ -68,6 +68,14 @@ Builder.load_file("selection_overlay_screen.kv")
 #         return True
 
 
+class ScannerConnection:
+    """Object that handles communication with the scanner and is instantiated at the
+    root level."""
+
+    def __init__(self):
+        self.s = UnidenScanner()
+
+
 class DataWindow(Screen):
     """This is the main window for the app.
 
