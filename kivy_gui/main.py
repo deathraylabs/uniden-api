@@ -353,7 +353,19 @@ class DataWindow(Screen):
         # replacement for above code
         # update the DataWindow with metadata from scanner
         for item in self.data_tags.items():
-            self.ids[item[1]].text = wav_meta[item[0]]["Name"]
+            wav_meta_dict = wav_meta[item[0]]
+            kivy_id = self.ids[item[1]]
+
+            # populate screen text
+            kivy_id.text = wav_meta_dict["Name"]
+
+            # code to highlight held quantities
+            if item[0] == "MonitorList":  # favorites can't be held
+                continue
+            elif wav_meta_dict["Hold"] == "On":
+                kivy_id.background_color = self.highlight_color
+            else:
+                kivy_id.background_color = self.transparent_color
 
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
@@ -364,16 +376,16 @@ class DataWindow(Screen):
         self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
 
-        # code to highlight held quantities
-        if wav_meta["Department"]["Hold"] == "On":
-            self.ids["dept_name"].background_color = self.highlight_color
-        else:
-            self.ids["dept_name"].background_color = self.transparent_color
+        # # code to highlight held quantities
+        # if wav_meta["Department"]["Hold"] == "On":
+        #     self.ids["dept_name"].background_color = self.highlight_color
+        # else:
+        #     self.ids["dept_name"].background_color = self.transparent_color
 
-        if wav_meta["System"]["Hold"] == "On":
-            self.ids["sys_name"].background_color = self.highlight_color
-        else:
-            self.ids["sys_name"].background_color = self.transparent_color
+        # if wav_meta["System"]["Hold"] == "On":
+        #     self.ids["sys_name"].background_color = self.highlight_color
+        # else:
+        #     self.ids["sys_name"].background_color = self.transparent_color
 
         # three states allowed are "Avoid", "T-Avoid", or "Off"
         if wav_meta["TGID"]["Avoid"] == "Avoid":
@@ -381,19 +393,19 @@ class DataWindow(Screen):
         else:
             self.ids["tgid_hld"].strikethrough = False
 
-        if wav_meta["TGID"]["Hold"] == "On":
-            # self.ids["tgid_name"].highlight_color = self.highlight_color
-            self.ids["tgid_hld"].background_color = self.highlight_color
-            # self.ids["tgid_hold_btn"].text = "Holding"
-        else:
-            # self.ids["tgid_name"].highlight_color = self.transparent_color
-            self.ids["tgid_hld"].background_color = self.transparent_color
-            # self.ids["tgid_hold_btn"].text = "Channel\nHold"
+        # if wav_meta["TGID"]["Hold"] == "On":
+        #     # self.ids["tgid_name"].highlight_color = self.highlight_color
+        #     self.ids["tgid_hld"].background_color = self.highlight_color
+        #     # self.ids["tgid_hold_btn"].text = "Holding"
+        # else:
+        #     # self.ids["tgid_name"].highlight_color = self.transparent_color
+        #     self.ids["tgid_hld"].background_color = self.transparent_color
+        #     # self.ids["tgid_hold_btn"].text = "Channel\nHold"
 
-        if wav_meta["Site"]["Hold"] == "On":
-            self.ids["site_name"].background_color = self.highlight_color
-        else:
-            self.ids["site_name"].background_color = self.transparent_color
+        # if wav_meta["Site"]["Hold"] == "On":
+        #     self.ids["site_name"].background_color = self.highlight_color
+        # else:
+        #     self.ids["site_name"].background_color = self.transparent_color
 
         return
 
