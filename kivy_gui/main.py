@@ -311,6 +311,7 @@ class DataWindow(Screen):
         # update the scanner state variable first
         wav_meta = self.scanner.update_scanner_state()
 
+        # check to ensure data is present
         if isinstance(wav_meta, bool):
             Logger.error("No data returned by scanner.")
             return False
