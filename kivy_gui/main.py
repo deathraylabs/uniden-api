@@ -97,6 +97,32 @@ class ScannerConnection:
 
         return True
 
+    def close_connection(self):
+        """Close connection if needed
+        """
+
+        # make sure the port is open and connected to scanner
+        try:
+            if not self.s.port_is_open():
+                Logger.info("Port is already closed.")
+                return False
+        except AttributeError:
+            Logger.exception("No scanner connection", exc_info=False)
+            return False
+
+        try:
+            # stop the scanner push updates
+            self.s.stop_push_updates()
+            Logger.info("Stop update command sent to scanner.")
+        except AttributeError:
+            Logger.exception(
+                "No scanner instance available to disconnect.", exc_info=False
+            )
+            return False
+
+        self.s.close()
+        Logger.info("Scanner Connection Closed.")
+
 
 class DataWindow(Screen):
     """This is the main window for the app.
@@ -121,6 +147,8 @@ class DataWindow(Screen):
 
     # can I store the sound object here?
     sound = ObjectProperty()
+
+    # todo: replace with root object
     # initialize variable to store scanner data
     scanner = None  # trying this
 
@@ -156,6 +184,7 @@ class DataWindow(Screen):
         # Set the timer for redrawing the screen
         refresh_time = self.refresh_data_dt
 
+        # todo: replace with root object
         # check to see if scanner instance has been created
         if self.scanner is None:
             Logger.info("Scanner is not initialized.")
@@ -164,6 +193,7 @@ class DataWindow(Screen):
             self.scanner = UnidenScanner()
             Logger.info("Scanner is initialized. Checking port connection...")
 
+        # todo: replace with root object
         if not self.scanner.port_is_open():
             port_open = self.scanner.open()
 
@@ -192,6 +222,7 @@ class DataWindow(Screen):
     def scanner_disconnect_btn(self):
         """Closes connection to scanner."""
 
+        # todo: replace with root class
         # make sure the port is open and connected to scanner
         try:
             if not self.scanner.port_is_open():
@@ -205,6 +236,7 @@ class DataWindow(Screen):
         # stop updating screen with clock
         Clock.unschedule(self.update_screen)
 
+        # todo: replace with root class
         try:
             # stop the scanner push updates
             self.scanner.stop_push_updates()
@@ -215,6 +247,7 @@ class DataWindow(Screen):
             )
             return False
 
+        # todo: replace with root class
         self.scanner.close()
         Logger.info("Scanner Connection Closed.")
 
