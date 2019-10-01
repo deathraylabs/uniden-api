@@ -696,6 +696,9 @@ class DataWindowApp(App):
 
     """
 
+    # instantiate connection to the scanner
+    scanner = ScannerConnection()
+
     sm = None  # the root screen manager
 
     def build(self):
