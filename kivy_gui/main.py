@@ -73,7 +73,29 @@ class ScannerConnection:
     root level."""
 
     def __init__(self):
-        self.s = UnidenScanner()
+        self.s = UnidenScanner()  # will open a connection automatically
+
+    def open_connection(self):
+        """Handles connecting to the scanner should the connection need to be
+        reestablished
+
+        Returns:
+            True: if the scanner port is open
+            False: if the scanner port is unable to be opened
+        """
+
+        if not self.s.port_is_open():
+            port_open = self.s.open()
+
+            if not port_open:
+                Logger.info(
+                    "Cannot open port. Scanner is likely not connected to computer."
+                )
+                return False
+
+        Logger.info("The scanner port is open.")
+
+        return True
 
 
 class DataWindow(Screen):
