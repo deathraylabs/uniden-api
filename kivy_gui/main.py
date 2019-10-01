@@ -104,6 +104,9 @@ class DataWindow(Screen):
         self.highlight_color = (0.8, 0.8, 0, 0.8)
         self.transparent_color = (1, 1, 1, 0)
 
+        self.default_text_color = (1, 1, 1, 1)
+        self.permanent_avoid_color = (0.8, 0.8, 0.8, 0.9)
+
         # dict correlates scanner tags to variable names
         self.data_tags = {
             "MonitorList": "fav_list_name",
@@ -341,16 +344,6 @@ class DataWindow(Screen):
             # Logger.exception("No transmission end time.", exc_info=False)
             trans_end = "---"
 
-        # update DataWindow with metadata
-        # self.fav_list_name.text = wav_meta["MonitorList"]["Name"]
-        # self.ids["fav_list_name"].text = wav_meta["MonitorList"]["Name"]
-        # self.sys_name.text = wav_meta["System"]["Name"]
-        # self.dept_name.text = wav_meta["Department"]["Name"]
-        # # self.tgid_name.text = wav_meta["TGID:Name"]
-        # self.tgid_hld.text = wav_meta["TGID"]["Name"]
-        # self.site_name.text = wav_meta["Site"]["Name"]
-
-        # replacement for above code
         # update the DataWindow with metadata from scanner
         for item in self.data_tags.items():
             wav_meta_dict = wav_meta[item[0]]
@@ -367,6 +360,18 @@ class DataWindow(Screen):
             else:
                 kivy_id.background_color = self.transparent_color
 
+            # check to see if item is set to Avoid
+            # three states allowed are "Avoid", "T-Avoid", or "Off"
+            if wav_meta_dict["Avoid"] == "Avoid":
+                kivy_id.strikethrough = True
+                kivy_id.color = self.permanent_avoid_color
+            elif wav_meta_dict["Avoid"] == "T-Avoid":
+                kivy_id.strikethrough = True
+                kivy_id.color = self.default_text_color
+            else:
+                kivy_id.strikethrough = False
+                kivy_id.color = self.default_text_color
+
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
 
@@ -375,37 +380,6 @@ class DataWindow(Screen):
 
         self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
-
-        # # code to highlight held quantities
-        # if wav_meta["Department"]["Hold"] == "On":
-        #     self.ids["dept_name"].background_color = self.highlight_color
-        # else:
-        #     self.ids["dept_name"].background_color = self.transparent_color
-
-        # if wav_meta["System"]["Hold"] == "On":
-        #     self.ids["sys_name"].background_color = self.highlight_color
-        # else:
-        #     self.ids["sys_name"].background_color = self.transparent_color
-
-        # three states allowed are "Avoid", "T-Avoid", or "Off"
-        if wav_meta["TGID"]["Avoid"] == "Avoid":
-            self.ids["tgid_hld"].strikethrough = True
-        else:
-            self.ids["tgid_hld"].strikethrough = False
-
-        # if wav_meta["TGID"]["Hold"] == "On":
-        #     # self.ids["tgid_name"].highlight_color = self.highlight_color
-        #     self.ids["tgid_hld"].background_color = self.highlight_color
-        #     # self.ids["tgid_hold_btn"].text = "Holding"
-        # else:
-        #     # self.ids["tgid_name"].highlight_color = self.transparent_color
-        #     self.ids["tgid_hld"].background_color = self.transparent_color
-        #     # self.ids["tgid_hold_btn"].text = "Channel\nHold"
-
-        # if wav_meta["Site"]["Hold"] == "On":
-        #     self.ids["site_name"].background_color = self.highlight_color
-        # else:
-        #     self.ids["site_name"].background_color = self.transparent_color
 
         return
 
