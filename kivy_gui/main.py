@@ -554,23 +554,32 @@ class PlaybackScreen(Screen):
         scanner.close_connection()
         # Logger.info("Scanner Connection Closed.")
 
-    # todo: how can I share the scanner connection between pages?
     def command_input(self, value):
         """Method used to send raw commands to scanner and view the raw
         output. Used for experimentation.
         """
 
         try:
-            self.scanner.send_command(value.text)
+            scanner.send_command(value.text)
         except AttributeError:
             Logger.exception("Scanner port isn't open.", exc_info=False)
             return
-        res = self.scanner.get_response()
+        res = scanner.get_response()
 
         # display text response from scanner but pretty it up a bit
         self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
         # self.text_display.height = self.text_display.texture_size[1]
         # self.cmd_input_box.focus = True
+
+    def get_menu_view(self):
+        """Display the current menu xml data
+        """
+
+        ack = scanner.send_command("msi")
+        Logger.debug(ack)
+
+        res = scanner.get_response()
+        self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
 
 
 class SelectionOverlayScreen(Screen):
@@ -720,7 +729,7 @@ class DataWindowApp(App):
         self.sm.add_widget(PlaybackScreen(name="playback"))
         # self.sm.add_widget(ModeScreen(name="mode"))
         # self.sm.add_widget(KeyboardScreen(name="keyboard"))
-        # self.sm.current = "mode"
+        self.sm.current = "playback"
 
         return self.sm
 
