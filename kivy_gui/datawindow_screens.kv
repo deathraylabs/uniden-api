@@ -116,13 +116,15 @@
             MenuBar:
                 id: _third_row
 
-#                NumericKeypad:
-#                    id: _one
-#                    text: "1"
+                NumericKeypad:
+                    id: _prev
+                    text: "prev"
+                    on_press: root.keypad_press(keypad_key="vleft")
 
-#                NumericKeypad:
-#                    id: _two
-#                    text: "2"
+                NumericKeypad:
+                    id: _next
+                    text: "next"
+                    on_press: root.keypad_press(keypad_key="vright")
 
 #                NumericKeypad:
 #                    id: _three
