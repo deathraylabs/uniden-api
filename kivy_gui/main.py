@@ -740,6 +740,10 @@ class DataWindowApp(App):
         return self.sm
 
 
+# create a connection to scanner instance
+scanner = ScannerConnection()
+
+
 if __name__ == "__main__":
 
     # path to wav_source that contains the audio of interest
@@ -749,9 +753,6 @@ if __name__ == "__main__":
     # )
 
     Config.set("kivy", "log_level", "debug")
-
-    # create a connection to scanner instance
-    scanner = ScannerConnection()
 
     # run the GUI
     DataWindowApp().run()
