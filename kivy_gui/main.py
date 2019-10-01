@@ -68,11 +68,15 @@ Builder.load_file("selection_overlay_screen.kv")
 #         return True
 
 
-class ScannerConnection:
+class ScannerConnection(UnidenScanner):
     """Object that handles communication with the scanner and is instantiated at the
     root level."""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        # this should allow me access to the UnidenScanner methods directly from
+        # an instance of this class
+        super(ScannerConnection, self).__init__(**kwargs)
+
         self.s = UnidenScanner()  # will open a connection automatically
 
     def open_connection(self):
@@ -457,7 +461,7 @@ class PlaybackScreen(Screen):
     sound = ObjectProperty()
     # scanner = None
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(PlaybackScreen, self).__init__(**kwargs)
 
     def btn(self):
@@ -516,36 +520,39 @@ class PlaybackScreen(Screen):
         #     self.scanner = UnidenScanner()
         #     Logger.info("Scanner is initialized. Checking port connection...")
 
-        if not self.scanner.port_is_open():
-            port_open = self.scanner.open()
+        scanner.open_connection()
 
-            if not port_open:
-                Logger.info(
-                    "Cannot open port. Scanner is likely not connected to computer."
-                )
-                return False
+        # if not self.scanner.port_is_open():
+        #     port_open = self.scanner.open()
+        #
+        #     if not port_open:
+        #         Logger.info(
+        #             "Cannot open port. Scanner is likely not connected to computer."
+        #         )
+        #         return False
 
         Logger.info("The scanner port is open.")
 
         Logger.info("clearing the buffer")
-        self.scanner.reset_port()
+        res = scanner.reset_port()
+        Logger.info(f"port reset: {res}")
 
     def scanner_disconnect_btn(self):
         """Button used to close the port used by scanner."""
 
         # make sure the port is open and connected to scanner
-        try:
-            if not self.scanner.port_is_open():
-                Logger.info("Port is already closed.")
-                return False
-        except AttributeError:
-            Logger.exception("No scanner connection", exc_info=False)
-            return False
+        # try:
+        #     if not self.scanner.port_is_open():
+        #         Logger.info("Port is already closed.")
+        #         return False
+        # except AttributeError:
+        #     Logger.exception("No scanner connection", exc_info=False)
+        #     return False
 
         Logger.info("Disconnect button pushed.")
 
-        self.scanner.close()
-        Logger.info("Scanner Connection Closed.")
+        scanner.close_connection()
+        # Logger.info("Scanner Connection Closed.")
 
     # todo: how can I share the scanner connection between pages?
     def command_input(self, value):
@@ -699,9 +706,6 @@ class DataWindowApp(App):
 
     """
 
-    # instantiate connection to the scanner
-    scanner = ScannerConnection()
-
     sm = None  # the root screen manager
 
     def build(self):
@@ -730,6 +734,9 @@ if __name__ == "__main__":
     # )
 
     Config.set("kivy", "log_level", "debug")
+
+    # create a connection to scanner instance
+    scanner = ScannerConnection()
 
     # run the GUI
     DataWindowApp().run()
