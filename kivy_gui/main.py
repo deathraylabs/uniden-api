@@ -579,7 +579,13 @@ class PlaybackScreen(Screen):
         Logger.debug(ack)
 
         res = scanner.get_response()
+
+        # reset the text size so it fits properly in window
+        self.text_display.text_size[1] = None
+
         self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
+        # self.text_display.texture_update(self.text_display.texture_size)
+        self.text_display.height = self.text_display.texture_size[1]
 
 
 class SelectionOverlayScreen(Screen):
