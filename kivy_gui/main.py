@@ -455,7 +455,10 @@ class PlaybackScreen(Screen):
     cmd_input_box = ObjectProperty()
     # can I store the sound object here?
     sound = ObjectProperty()
-    scanner = None
+    # scanner = None
+
+    def __init__(self):
+        super(PlaybackScreen, self).__init__(**kwargs)
 
     def btn(self):
         """Method runs when Button object calls root.btn() 
@@ -506,12 +509,12 @@ class PlaybackScreen(Screen):
         Logger.info("scanner status button was pressed")
 
         # check to see if scanner instance has been created
-        if self.scanner is None:
-            Logger.info("Scanner is not initialized.")
-
-            Logger.info("Trying to initialize scanner...")
-            self.scanner = UnidenScanner()
-            Logger.info("Scanner is initialized. Checking port connection...")
+        # if self.scanner is None:
+        #     Logger.info("Scanner is not initialized.")
+        #
+        #     Logger.info("Trying to initialize scanner...")
+        #     self.scanner = UnidenScanner()
+        #     Logger.info("Scanner is initialized. Checking port connection...")
 
         if not self.scanner.port_is_open():
             port_open = self.scanner.open()
