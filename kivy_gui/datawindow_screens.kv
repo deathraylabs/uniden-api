@@ -96,7 +96,8 @@
 #                    text: "GLT,FL"
                     on_text_validate:
                         root.update_unid(args[0])
-#                        self.cancel_selection()  # gets rid of handles
+                        self.focus = False       # unfocus before cancel sel
+                        self.cancel_selection()  # gets rid of handles
 
             MenuBar:
                 id: _second_row
