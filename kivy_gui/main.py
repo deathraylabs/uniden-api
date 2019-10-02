@@ -566,27 +566,6 @@ class PlaybackScreen(Screen):
         # self.text_display.height = self.text_display.texture_size[1]
         # self.cmd_input_box.focus = True
 
-    def get_menu_view(self):
-        """Display the current menu xml data
-        """
-
-        ack = scanner.send_command("msi")
-        Logger.debug(ack)
-
-        res = scanner.get_response()
-
-        # reset the text size so it fits properly in window
-        self.text_display.text_size[1] = None
-
-        self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
-        # self.text_display.texture_update(self.text_display.texture_size)
-        self.text_display.height = self.text_display.texture_size[1]
-
-    # def get_gsi_output(self):
-    #     """Button logic to print out current scanner information
-    #     """
-    #     print("gsi view")
-
     def display_raw_scanner_output(self, command):
         """method to view raw output from a command
 
