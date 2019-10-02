@@ -582,15 +582,30 @@ class PlaybackScreen(Screen):
         # self.text_display.texture_update(self.text_display.texture_size)
         self.text_display.height = self.text_display.texture_size[1]
 
-    def get_gsi_output(self):
-        """Button logic to print out current scanner information
-        """
-        print("gsi view")
+    # def get_gsi_output(self):
+    #     """Button logic to print out current scanner information
+    #     """
+    #     print("gsi view")
 
-    def display_raw_scanner_output(self, command="GSI"):
+    def display_raw_scanner_output(self, command):
         """method to view raw output from a command
+
+        Args:
+            command (str): uniden scanner command string
+
         """
-        pass
+
+        ack = scanner.send_command(command)
+        Logger.debug(ack)
+
+        res = scanner.get_response()
+
+        # reset the text size so it fits properly in window
+        self.text_display.text_size[1] = None
+
+        # display text on left text panel
+        self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
+        self.text_display.height = self.text_display.texture_size[1]
 
 
 class SelectionOverlayScreen(Screen):
