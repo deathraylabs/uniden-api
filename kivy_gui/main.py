@@ -587,6 +587,11 @@ class PlaybackScreen(Screen):
         """
         print("gsi view")
 
+    def display_raw_scanner_output(self, command="GSI"):
+        """method to view raw output from a command
+        """
+        pass
+
 
 class SelectionOverlayScreen(Screen):
     """This class handles scanner events that cause an overlay screen to appear.
