@@ -44,7 +44,9 @@
                     CommandLine:
                         id: command_input
                         text: "GLT,FL"
-                        on_text_validate: root.command_input(args[0])
+                        on_text_validate:
+                            root.command_input(args[0])
+                            self.cancel_selection()  # gets rid of handles
 
                     # ------------ second row ------------- #
                     BoxLayout:
@@ -76,7 +78,6 @@
                     BoxLayout:
                         id: "third_row"
                         orientation: 'horizontal'
-
 
 
                     BoxLayout:

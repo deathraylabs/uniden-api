@@ -534,7 +534,7 @@ class PlaybackScreen(Screen):
         # display text response from scanner but pretty it up a bit
         self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
         # self.text_display.height = self.text_display.texture_size[1]
-        # self.cmd_input_box.focus = True
+        self.cmd_input_box.focus = False
 
     def display_raw_scanner_output(self, command):
         """method to view raw output from a command
