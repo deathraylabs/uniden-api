@@ -449,7 +449,7 @@ class DataWindow(Screen):
 class PlaybackScreen(Screen):
     """Screen to contain playback controls."""
 
-    play_stop_button = ObjectProperty()
+    # play_stop_button = ObjectProperty()
     text_display = ObjectProperty()
     cmd_input_box = ObjectProperty()
     # can I store the sound object here?

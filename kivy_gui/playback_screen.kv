@@ -37,14 +37,16 @@
                 id: "menu_layout"
 
                 BoxLayout:
+                    id: "button_row_container"
                     orientation: 'vertical'
 
+                    # ------------ first row ------------- #
                     CommandLine:
                         id: command_input
                         text: "GLT,FL"
                         on_text_validate: root.command_input(args[0])
 
-
+                    # ------------ second row ------------- #
                     BoxLayout:
                         id: "second_row"
                         orientation: 'horizontal'
