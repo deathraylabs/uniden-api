@@ -582,6 +582,11 @@ class PlaybackScreen(Screen):
         # self.text_display.texture_update(self.text_display.texture_size)
         self.text_display.height = self.text_display.texture_size[1]
 
+    def get_gsi_output(self):
+        """Button logic to print out current scanner information
+        """
+        print("gsi view")
+
 
 class SelectionOverlayScreen(Screen):
     """This class handles scanner events that cause an overlay screen to appear.
