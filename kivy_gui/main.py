@@ -453,7 +453,7 @@ class PlaybackScreen(Screen):
     text_display = ObjectProperty()
     cmd_input_box = ObjectProperty()
     # can I store the sound object here?
-    sound = ObjectProperty()
+    # sound = ObjectProperty()
     # scanner = None
 
     def __init__(self, **kwargs):
@@ -471,36 +471,6 @@ class PlaybackScreen(Screen):
         # Logger.debug("Updated screen with WAV metadata.")
         #
         # return
-
-    def play_stop_btn(self):
-        """Button used to both play and stop sound playing from wav file on
-        scanner. Currently disabled.
-        """
-        pass
-        # filepath = wav_dir_path
-        #
-        # if self.sound is None:
-        #     self.sound = SoundLoader.load(filepath)
-        #     self.sound.play()
-        #     self.play_stop_button.text = "STOP"
-        # elif self.sound and self.sound.state == "play":
-        #     position = self.sound.get_pos()
-        #     print(position)
-        #     self.sound.stop()
-        #     self.play_stop_button.text = "PLAY"
-        # else:
-        #     print("Sound found at %s" % sound.source)
-        #     print("Sound is %.3f seconds" % sound.length)
-        #     self.sound.play()
-        #     self.play_stop_button.text = "STOP"
-
-    def stop_btn(self):
-        """Button used to stop playback of sound. Currently disabled
-        """
-        pass
-        # if self.sound:
-        #     self.sound.stop()
-        #     self.play_stop_button.text = "PLAY"
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
@@ -585,6 +555,37 @@ class PlaybackScreen(Screen):
         # display text on left text panel
         self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
         self.text_display.height = self.text_display.texture_size[1]
+
+    # ---------- currently unused ---------- #
+    def play_stop_btn(self):
+        """Button used to both play and stop sound playing from wav file on
+        scanner. Currently disabled.
+        """
+        pass
+        # filepath = wav_dir_path
+        #
+        # if self.sound is None:
+        #     self.sound = SoundLoader.load(filepath)
+        #     self.sound.play()
+        #     self.play_stop_button.text = "STOP"
+        # elif self.sound and self.sound.state == "play":
+        #     position = self.sound.get_pos()
+        #     print(position)
+        #     self.sound.stop()
+        #     self.play_stop_button.text = "PLAY"
+        # else:
+        #     print("Sound found at %s" % sound.source)
+        #     print("Sound is %.3f seconds" % sound.length)
+        #     self.sound.play()
+        #     self.play_stop_button.text = "STOP"
+
+    def stop_btn(self):
+        """Button used to stop playback of sound. Currently disabled
+        """
+        pass
+        # if self.sound:
+        #     self.sound.stop()
+        #     self.play_stop_button.text = "PLAY"
 
 
 class SelectionOverlayScreen(Screen):

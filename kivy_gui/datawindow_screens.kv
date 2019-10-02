@@ -162,17 +162,16 @@
                     text: "Stop\nDisplay"
                     on_press: root.scanner_disconnect_btn()
 
-                Button:
-                    text: "->"
-                    on_press:
-                        root.manager.transition.direction = 'left'
-                        root.manager.current = 'playback'
+
 
             MenuBar:
                 id: _sixth_row
 
                 Button:
-                    id: _virtual_keyboard
+                    text: "Forward\n->"
+                    on_press:
+                        root.manager.transition.direction = 'left'
+                        root.manager.current = 'playback'
 
 #<KeyboardScreen>:
 #    display_label: _display_label

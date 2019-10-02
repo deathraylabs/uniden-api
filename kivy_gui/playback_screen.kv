@@ -71,6 +71,18 @@
                             on_press: root.display_raw_scanner_output("GSI")
 
                     BoxLayout:
+                        id: "third_row"
+                        orientation: 'horizontal'
+
+
+
+                    BoxLayout:
+                        id: "fourth_row"
+                        orientation: 'horizontal'
+
+
+                    BoxLayout:
+                        id: "fifth_row"
                         orientation: 'horizontal'
 
                         Button:
@@ -82,8 +94,14 @@
                             text: "Stop\nDisplay"
                             on_press: root.scanner_disconnect_btn()
 
+
+
+                    BoxLayout:
+                        id: "sixth_row"
+                        orientation: 'horizontal'
+
                         Button:
-                            text: 'Back to Menu'
+                            text: 'Back\n<-'
                             on_press:
                                 root.manager.transition.direction = 'right'
                                 root.manager.current = 'datawindow'
