@@ -5,15 +5,20 @@ import pprint
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.config import Config
-from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
-from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.textinput import TextInput
-from kivy.uix.vkeyboard import VKeyboard
-from kivy.uix.widget import Widget
+
+# from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+
+# from kivy.core.window import Window
+# from kivy.uix.textinput import TextInput
+# from kivy.uix.vkeyboard import VKeyboard
+# from kivy.uix.widget import Widget
 
 from functools import partial  # ???
 
@@ -592,13 +597,25 @@ class PlaybackScreen(Screen):
         #     self.play_stop_button.text = "PLAY"
 
 
-class SelectionOverlayScreen(Screen):
-    """This class handles scanner events that cause an overlay screen to appear.
-    Overlay screens have to be handled before the scanner returns to normal operation
-    and usually involve a Y/N response.
-    """
+# class P(FloatLayout):
+#     """layout for popover"""
+#
+#     pass
 
-    pass
+
+# class SelectionOverlayScreen(Popup):
+#     """This class handles scanner events that cause an overlay screen to appear.
+#     Overlay screens have to be handled before the scanner returns to normal operation
+#     and usually involve a Y/N response.
+#     """
+#
+#     show = P()
+#
+#     popover_window = Popup(
+#         title="popover", content=show, size_hint=(None, None), size=(400, 400)
+#     )
+#
+#     popover_window.open()
 
 
 # class ModeScreen(Screen):
