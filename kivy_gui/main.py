@@ -545,6 +545,8 @@ class PlaybackScreen(Screen):
             command (str): uniden scanner command string
 
         """
+        # remove focus on input box
+        self.cmd_input_box.focus = False
 
         ack = scanner.send_command(command)
         Logger.debug(ack)

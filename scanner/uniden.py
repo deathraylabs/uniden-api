@@ -229,6 +229,10 @@ class UnidenScanner:
         # command needs to be byte string with "\r" line terminator
         cmd_str = str.encode("".join([cmd, "\r"]))
 
+        if self.serial is None:
+            self.logger.error("expected port to be open but no serial instance")
+            self.open()
+
         try:
             # send command to scanner and note the ack
             self.logger.debug(f"write len: {len(cmd_str)}")
