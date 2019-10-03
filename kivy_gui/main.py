@@ -34,7 +34,7 @@ from scanner.uniden import UnidenScanner
 # from scanner.constants import GSI_OUTPUT
 
 # contains layout instructions for first screen
-Builder.load_file("datawindow_screens.kv")
+Builder.load_file("datawindow_screen.kv")
 # contains layout instructions for playback screen
 Builder.load_file("playback_screen.kv")
 # contains formatting instructions for individual widgets
