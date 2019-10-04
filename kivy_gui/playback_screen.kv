@@ -13,10 +13,6 @@
     text_display: text_display
     cmd_input_box: command_input
 
-
-
-
-
     GridLayout:
         cols: 2
         id: _main_container
@@ -31,15 +27,25 @@
                 size_hint: .8, .8
                 pos: (large_text_layout.width - self.width) / 2, (large_text_layout.height - self.height) / 2
 
-                canvas:
-                    Color:
-                        rgba: (1, 1, 1, .9)
-                    Rectangle:
-                        size: self.size
+#                canvas:
+#                    Color:
+#                        rgba: (1, 1, 1, .9)
+#                    Rectangle:
+#                        size: self.size
 
                 PopoverLabel:
                     id: _popover_label
                     text: "popover text"
+
+#                    size: self.size
+
+                    canvas.before:
+                        Color:
+                            rgba: (1,1,1,0.9)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
         #            pos: _popover_window.pos
 
             LargeTextDisplayPanel:
@@ -113,10 +119,15 @@
                         orientation: 'horizontal'
 
                         Button:
+#                            popover_window: _popover_window
+                            id: _hide_popover
+
                             text: "broken"
                             on_release:
-#                                _popover_label.text = "BROKEN!!!"
-                                _popover_window
+                                # moves whole window offscreen
+                                _popover_window.x = -root.width
+#                                _popover_window.size_hint_y = 0
+#                                _popover_label.color = rgba(1,1,1,0)
 
 
                     BoxLayout:

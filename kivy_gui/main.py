@@ -75,9 +75,15 @@ Builder.load_file("selection_overlay_screen.kv")
 
 
 class PopoverWindow(RelativeLayout):
-    "Display popover events sent from scanner"
+    """Display popover events sent from scanner"""
+
+    def __init__(self, **kwargs):
+        super(PopoverWindow, self).__init__(**kwargs)
 
     def hide_window(self):
+        # self.pos = (-self.width, -self.height)
+        # self._popover_window.size_hint = (0.1, 0.1)
+        # print(self.id)
         pass
 
     def show_window(self):
@@ -475,18 +481,12 @@ class PlaybackScreen(Screen):
     def __init__(self, **kwargs):
         super(PlaybackScreen, self).__init__(**kwargs)
 
+        self.popover_window = PopoverWindow()
+
     def btn(self):
         """Method runs when Button object calls root.btn() 
         from <DataWindow>"""
         pass
-        #
-        # wav_meta = get_wav_meta(wav_dir_path)
-        #
-        # # update the display
-        # self.update_screen(wav_meta)
-        # Logger.debug("Updated screen with WAV metadata.")
-        #
-        # return
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
