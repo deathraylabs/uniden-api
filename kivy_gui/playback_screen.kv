@@ -1,31 +1,63 @@
 #:kivy 1.11.1
 
+# Please note the root.manager.current: this is how
+# you can control the ScreenManager from kv. Each screen has by default a
+# property manager that gives you the instance of the ScreenManager used.
+
+#<PopoverWindow>:
+#    Label:
+#        text: "popover window"
+
 <PlaybackScreen>:
 #    play_stop_button: stop_play
     text_display: text_display
     cmd_input_box: command_input
 
+
+
+
+
     GridLayout:
         cols: 2
-        id: 'main_container'
+        id: _main_container
         width: root.width
         height: root.height
 
-        LargeTextDisplayPanel:
-            id: large_text_layout
+        # this relative layout allows popover to sit on top of box layout
+        RelativeLayout:
 
-            BoxLayout:
-                orientation: "vertical"
+            PopoverWindow:
+                id: _popover_window
+                size_hint: .8, .8
+                pos: (large_text_layout.width - self.width) / 2, (large_text_layout.height - self.height) / 2
 
-#                MyKeyboardListener:
-#                    id: _v_keyboard
+                canvas:
+                    Color:
+                        rgba: (1, 1, 1, .9)
+                    Rectangle:
+                        size: self.size
 
-                ScrollView:
-                    do_scroll: (False, True)
+                PopoverLabel:
+                    id: _popover_label
+                    text: "popover text"
+        #            pos: _popover_window.pos
 
-                    ScrollingTextDisplayPanel:
-                        id: text_display
-                        text: "Scanner response..."
+            LargeTextDisplayPanel:
+                id: large_text_layout
+
+
+                BoxLayout:
+                    orientation: "vertical"
+
+    #                MyKeyboardListener:
+    #                    id: _v_keyboard
+
+                    ScrollView:
+                        do_scroll: (False, True)
+
+                        ScrollingTextDisplayPanel:
+                            id: text_display
+                            text: "Scanner response..."
 
 
         BoxLayout:
@@ -82,6 +114,9 @@
 
                         Button:
                             text: "broken"
+                            on_release:
+#                                _popover_label.text = "BROKEN!!!"
+                                _popover_window
 
 
                     BoxLayout:

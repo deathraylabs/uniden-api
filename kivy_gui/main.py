@@ -9,11 +9,12 @@ from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 # from kivy.uix.button import Button
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
+# from kivy.uix.popup import Popup
+# from kivy.uix.label import Label
 
 # from kivy.core.window import Window
 # from kivy.uix.textinput import TextInput
@@ -71,6 +72,16 @@ Builder.load_file("selection_overlay_screen.kv")
 #         # Return True to accept the key. Otherwise, it will be used by
 #         # the system.
 #         return True
+
+
+class PopoverWindow(RelativeLayout):
+    "Display popover events sent from scanner"
+
+    def hide_window(self):
+        pass
+
+    def show_window(self):
+        pass
 
 
 class ScannerConnection(UnidenScanner):
