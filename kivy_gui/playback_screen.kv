@@ -27,17 +27,9 @@
                 size_hint: .8, .8
                 pos: (large_text_layout.width - self.width) / 2, (large_text_layout.height - self.height) / 2
 
-#                canvas:
-#                    Color:
-#                        rgba: (1, 1, 1, .9)
-#                    Rectangle:
-#                        size: self.size
-
                 PopoverLabel:
                     id: _popover_label
                     text: "popover text"
-
-#                    size: self.size
 
                     canvas.before:
                         Color:
@@ -45,8 +37,6 @@
                         Rectangle:
                             size: self.size
                             pos: self.pos
-
-        #            pos: _popover_window.pos
 
             LargeTextDisplayPanel:
                 id: large_text_layout
@@ -126,9 +116,6 @@
                             on_release:
                                 # moves whole window offscreen
                                 _popover_window.x = -root.width
-#                                _popover_window.size_hint_y = 0
-#                                _popover_label.color = rgba(1,1,1,0)
-
 
                     BoxLayout:
                         id: "fourth_row"

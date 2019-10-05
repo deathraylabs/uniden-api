@@ -211,15 +211,6 @@ class DataWindow(Screen):
         refresh_time = self.refresh_data_dt
 
         # todo: replace with root object
-        # check to see if scanner instance has been created
-        # if scanner is None:
-        #     Logger.info("Scanner is not initialized.")
-        #
-        #     Logger.info("Trying to initialize scanner...")
-        #     scanner = UnidenScanner()
-        #     Logger.info("Scanner is initialized. Checking port connection...")
-
-        # todo: replace with root object
         if not scanner.port_is_open():
             port_open = scanner.open()
 
@@ -235,9 +226,6 @@ class DataWindow(Screen):
         scanner.reset_port()
 
         self.scan_status_button.text = "Pull Startup"
-
-        # start the scanner push updates
-        # scanner.start_push_updates(interval=250)
 
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
