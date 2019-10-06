@@ -14,6 +14,9 @@
     total_time: tot_time
     command_input: _command_input
 
+    dw_popover_window: _dw_popover_window
+    dw_popover_label: _dw_popover_label
+
     scan_status_button: scanner_status
 #    tgid_hld: tgid_hld
 
@@ -23,67 +26,89 @@
         width: root.width
         height: root.height
 
-        LargeTextDisplayPanel:
-            id: _left_side
+        RelativeLayout:
+#            centered_x: _centered_x
 
-            BoxLayout:
-                id: _top_row
-                orientation: "horizontal"
+            PopoverWindow:
+                id: _dw_popover_window
+#                _centered_x: (_left_side.width - self.width) / 2, (_left_side.height - self.height) / 2
+                size_hint: .8, .8
+                pos: (_left_side.width - self.width) / 2, (_left_side.height - self.height) / 2
+
+#                pos: _centered_x
+
+                PopoverLabel:
+                    id: _dw_popover_label
+                    text: "popover text"
+
+                    canvas.before:
+                        Color:
+                            rgba: (1,1,1,0.9)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+            LargeTextDisplayPanel:
+                id: _left_side
+
+                BoxLayout:
+                    id: _top_row
+                    orientation: "horizontal"
+
+                    TouchArea:
+                        id: unit_ids_name_tag
+                        text: "UnitIds:NameTag"
+                        color: 1, 1, .1, .90
+                        size_hint_x: .5
+
+                    TouchArea:
+                        id: tgid_hld
+                        strikethrough: False
+                        text: "TGID:Name"
+                        on_press: root.scanner_hold("chan")
+
 
                 TouchArea:
-                    id: unit_ids_name_tag
-                    text: "UnitIds:NameTag"
-                    color: 1, 1, .1, .90
-                    size_hint_x: .5
+                    id: dept_name
+                    text: "Department:Name"
+                    on_press: root.scanner_hold("dept")
 
                 TouchArea:
-                    id: tgid_hld
-                    strikethrough: False
-                    text: "TGID:Name"
-                    on_press: root.scanner_hold("chan")
+                    id: sys_name
+                    text: "System:Name"
+                    on_press: root.scanner_hold("system")
 
-
-            TouchArea:
-                id: dept_name
-                text: "Department:Name"
-                on_press: root.scanner_hold("dept")
-
-            TouchArea:
-                id: sys_name
-                text: "System:Name"
-                on_press: root.scanner_hold("system")
-
-            TouchArea:
-                id: site_name
-                text: "Site:Name"
-                on_press: root.site_hold()
-
-            Label:
-                id: fav_list_name
-                text: "Favorites List"
-
-            Label:
-                id: unit_ids
-                text: "UnitIds"
-
-            BoxLayout:
-                id: _transmission_times
-                orientation: 'horizontal'
+                TouchArea:
+                    id: site_name
+                    text: "Site:Name"
+                    on_press: root.site_hold()
 
                 Label:
-                    id: trans_begins
-                    text: "Transmission Start Time"
-                    font_size: '15sp'
+                    id: fav_list_name
+                    text: "Favorites List"
 
                 Label:
-                    id: trans_ends
-                    text: "Transmission End Time"
-                    font_size: '15sp'
+                    id: unit_ids
+                    text: "UnitIds"
 
-                Label:
-                    id: tot_time
-                    text: "Total Time"
-                    font_size: '15sp'
+                BoxLayout:
+                    id: _transmission_times
+                    orientation: 'horizontal'
+
+                    Label:
+                        id: trans_begins
+                        text: "Transmission Start Time"
+                        font_size: '15sp'
+
+                    Label:
+                        id: trans_ends
+                        text: "Transmission End Time"
+                        font_size: '15sp'
+
+                    Label:
+                        id: tot_time
+                        text: "Total Time"
+                        font_size: '15sp'
 
         RightSidePanel:
             id: _right_side

@@ -169,6 +169,9 @@ class DataWindow(Screen):
     total_time = ObjectProperty()
     command_input = ObjectProperty()
 
+    dw_popover_window = ObjectProperty()
+    dw_popover_label = ObjectProperty()
+
     scan_status_button = ObjectProperty()
 
     # can I store the sound object here?
@@ -191,6 +194,9 @@ class DataWindow(Screen):
         self.default_text_color = (1, 1, 1, 1)
         self.permanent_avoid_color = (0.8, 0.8, 0.8, 0.9)
 
+        # popup screen instance
+        # self.popover_window = PopoverWindow()
+
         # dict correlates scanner tags to variable names
         self.data_tags = {
             "MonitorList": "fav_list_name",
@@ -210,7 +216,6 @@ class DataWindow(Screen):
         # Set the timer for redrawing the screen
         refresh_time = self.refresh_data_dt
 
-        # todo: replace with root object
         if not scanner.port_is_open():
             port_open = scanner.open()
 
@@ -394,6 +399,16 @@ class DataWindow(Screen):
         """
         # update the scanner state variable first
         wav_meta = scanner.update_scanner_state()
+
+        # check for a popup screen
+        popup_screen = wav_meta.get("PopupScreen")
+
+        # todo: this method of hiding popover is a cludge
+        if popup_screen != {}:
+            self.dw_popover_window.x = 20
+            self.dw_popover_label.text = pprint.pformat(popup_screen)
+        else:
+            self.dw_popover_window.x = -self.width
 
         # check to ensure data is present
         if isinstance(wav_meta, bool):
