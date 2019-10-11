@@ -75,35 +75,35 @@ Builder.load_file("popover_window.kv")
 #         return True
 
 
-class PopoverLabel(Label):
-    """tbc"""
-
-    def __init__(self, **kwargs):
-        super(PopoverLabel, self).__init__(**kwargs)
-
-    def show_window(self):
-        print(self.children)
-        self.color = (1, 0, 1, 1)
-        self.text = "hi"
-        with self.canvas.before:
-            Color(rgba=(1, 1, 1, 0.9))
-
-
-class PopoverWindow(RelativeLayout):
-    """Display popover events sent from scanner"""
-
-    def __init__(self, **kwargs):
-        super(PopoverWindow, self).__init__(**kwargs)
-
-    def hide_window(self):
-        pass
-
-    def show_window(self):
-        for index, child in enumerate(self.children):
-            print(f"[{index}] - {child}")
-        for index, child in enumerate(self.ids):
-            print(f"[{index}] - {child}")
-        print(self.ids["_popover_label"])
+# class PopoverLabel(Label):
+#     """tbc"""
+#
+#     def __init__(self, **kwargs):
+#         super(PopoverLabel, self).__init__(**kwargs)
+#
+#     def show_window(self):
+#         print(self.children)
+#         self.color = (1, 0, 1, 1)
+#         self.text = "hi"
+#         with self.canvas.before:
+#             Color(rgba=(1, 1, 1, 0.9))
+#
+#
+# class PopoverWindow(RelativeLayout):
+#     """Display popover events sent from scanner"""
+#
+#     def __init__(self, **kwargs):
+#         super(PopoverWindow, self).__init__(**kwargs)
+#
+#     def hide_window(self):
+#         pass
+#
+#     def show_window(self):
+#         for index, child in enumerate(self.children):
+#             print(f"[{index}] - {child}")
+#         for index, child in enumerate(self.ids):
+#             print(f"[{index}] - {child}")
+#         print(self.ids["_popover_label"])
 
 
 class ScannerConnection(UnidenScanner):
@@ -475,6 +475,13 @@ class DataWindow(Screen):
         return
 
 
+class PopoverScreen(Screen):
+    """Handles popover logic"""
+
+    def __init__(self, **kwargs):
+        super(PopoverScreen, self).__init__(**kwargs)
+
+
 class PlaybackScreen(Screen):
     """temporary debugging and experimentation screen"""
 
@@ -484,8 +491,8 @@ class PlaybackScreen(Screen):
     def __init__(self, **kwargs):
         super(PlaybackScreen, self).__init__(**kwargs)
 
-        self.popover_window = PopoverWindow()
-        self.popover_label = PopoverLabel()
+        # self.popover_window = PopoverWindow()
+        # self.popover_label = PopoverLabel()
 
         # get the current keyboard layout
         # layout = Config.get("kivy", "keyboard_layout")
@@ -506,7 +513,7 @@ class PlaybackScreen(Screen):
         get_child_names(self.popover_window.ids)
 
         self.popover_label.color = (1, 1, 1, 1)
-        with self.popover_label.canvas.before:
+        with self.popover_label.canvas:
             Color(rgba=(1, 1, 1, 1))
             Rectangle(size=left_display.size, pos=(-20, 0))
 
@@ -761,7 +768,7 @@ class DataWindowApp(App):
         self.sm = ScreenManager()
         self.sm.add_widget(DataWindow(name="datawindow"))
         self.sm.add_widget(PlaybackScreen(name="playback"))
-        # self.sm.add_widget(ModeScreen(name="mode"))
+        self.sm.add_widget(PopoverScreen(name="popover"))
         # self.sm.add_widget(KeyboardScreen(name="keyboard"))
         self.sm.current = "playback"
 
