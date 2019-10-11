@@ -2,7 +2,7 @@
   "title": "Scanner Keys",
   "description": "Keyboard layout of SDS-100 scanner.",
   "cols": 4,
-  "rows": 7,
+  "rows": 6,
   "normal_1": [
     ["SYSTEM", "system", "system", 1],
     ["DEPT", "dept", "dept", 1],
