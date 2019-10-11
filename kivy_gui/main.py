@@ -43,7 +43,7 @@ Builder.load_file("playback_screen.kv")
 # contains formatting instructions for individual widgets
 Builder.load_file("widget_formatting.kv")
 # contains formatting instructions for the overlay screen
-Builder.load_file("selection_overlay_screen.kv")
+Builder.load_file("popover_window.kv")
 
 # class MyKeyboardListener(Widget):
 #     def __init__(self, **kwargs):
@@ -484,16 +484,12 @@ class PlaybackScreen(Screen):
     def __init__(self, **kwargs):
         super(PlaybackScreen, self).__init__(**kwargs)
 
-        self.popover_label = PopoverWindow()
+        self.popover_window = PopoverWindow()
+        self.popover_label = PopoverLabel()
 
         # get the current keyboard layout
-        layout = Config.get("kivy", "keyboard_layout")
-        print(f"current keyboard layout: {layout}")
-
-        # change the current keyboard layout
-        new_layout = "scanner_buttons.json"
-        layout = Config.get("kivy", "keyboard_layout")
-        print(f"new keyboard layout: {layout}")
+        # layout = Config.get("kivy", "keyboard_layout")
+        # print(f"current keyboard layout: {layout}")
 
     def btn(self):
         """Method runs when Button object calls root.btn() 
@@ -501,16 +497,16 @@ class PlaybackScreen(Screen):
 
         get_child_names(self.ids)
 
-        popover_window = self.ids["_popover_window"]
-        popover_label = popover_window.ids["_popover_label"]
+        # popover_window = self.ids["_popover_window"]
+        # popover_label = popover_window.ids["_popover_label"]
         left_display = self.ids["_large_text_layout"]
 
         print("\n\n")
 
-        get_child_names(popover_window.ids)
+        get_child_names(self.popover_window.ids)
 
-        popover_label.color = (1, 1, 1, 1)
-        with popover_label.canvas.before:
+        self.popover_label.color = (1, 1, 1, 1)
+        with self.popover_label.canvas.before:
             Color(rgba=(1, 1, 1, 1))
             Rectangle(size=left_display.size, pos=(-20, 0))
 
