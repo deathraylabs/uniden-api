@@ -11,8 +11,10 @@
 
 <PlaybackScreen>:
 #    play_stop_button: stop_play
-    text_display: text_display
+    text_display: _text_display
     cmd_input_box: command_input
+
+#    popover_active: (0, 0)
 
     GridLayout:
         cols: 2
@@ -25,23 +27,11 @@
 
             PopoverWindow:
                 id: _popover_window
-                size_hint: .8, .8
-                pos: (large_text_layout.width - self.width) / 2, (large_text_layout.height - self.height) / 2
-
-                PopoverLabel:
-                    id: _popover_label
-                    text: "popover text"
-
-                    canvas.before:
-                        Color:
-                            rgba: (1,1,1,0.9)
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
+                large_text_layout: _large_text_layout
+                pos: (_large_text_layout.width - self.width) / 2, (_large_text_layout.height - self.height) / 2
 
             LargeTextDisplayPanel:
-                id: large_text_layout
-
+                id: _large_text_layout
 
                 BoxLayout:
                     orientation: "vertical"
@@ -53,7 +43,7 @@
                         do_scroll: (False, True)
 
                         ScrollingTextDisplayPanel:
-                            id: text_display
+                            id: _text_display
                             text: "Scanner response..."
 
 
@@ -88,15 +78,6 @@
                             text: "Get Menu View"
                             on_press: root.display_raw_scanner_output("MSI")
 
-#                        Button:
-#                            id: stop_play
-#                            on_press:
-#                                root.manager.transition.direction = 'right'
-#                                root.manager.current = 'mode'
-    #                        text: "Play Wav"
-    #                        on_press: root.play_stop_btn()
-    #                        on_press: app.sm.datawindow.zinger()
-
                         Button:
                             id: "gsi_output"
                             text: "View GSI Info"
@@ -116,7 +97,9 @@
                             text: "broken"
                             on_release:
                                 # moves whole window offscreen
-                                _popover_window.x = -root.width
+
+                                root.btn()
+
 
                     BoxLayout:
                         id: "fourth_row"

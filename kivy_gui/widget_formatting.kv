@@ -82,22 +82,24 @@
     size_hint_x: .4
 
 
-<PopoverLabel@Label>:
-    id: _popover_formatting
+<PopoverLabel>:
 
     font_size: "24sp"
+    # initially clear, make visible when needed
     color: 1,0,1,1
 
+    canvas.before:
+        # initially clear, make visible when text arrives
+        Color:
+            rgba: (.5,0.5,0.5,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
 
-#<P>:
-#    Label:
-#        text: "this is the home"
-#        size_hint: 0.6, 0.2
-#        pos_hint_x: 0.2
-#        pos_hint_y: 0.5
-#
-#    Button:
-#        text: "this is the home"
-#        size_hint: 0.8, 0.2
-#        pos_hint_x: 0.1
-#        pos_hint_y: 0.1
+<PopoverWindow>:
+    size_hint: 0.8, 0.8
+    popover_label: _popover_label
+
+    PopoverLabel:
+        id: _popover_label
+        text: "generic popover text"

@@ -16,7 +16,7 @@
     command_input: _command_input
 
     dw_popover_window: _dw_popover_window
-    dw_popover_label: _dw_popover_label
+#    dw_popover_label: _dw_popover_label
 
     scan_status_button: scanner_status
 #    tgid_hld: tgid_hld
@@ -32,22 +32,7 @@
 
             PopoverWindow:
                 id: _dw_popover_window
-#                _centered_x: (_left_side.width - self.width) / 2, (_left_side.height - self.height) / 2
-                size_hint: .8, .8
                 pos: (_left_side.width - self.width) / 2, (_left_side.height - self.height) / 2
-
-#                pos: _centered_x
-
-                PopoverLabel:
-                    id: _dw_popover_label
-                    text: "popover text"
-
-                    canvas.before:
-                        Color:
-                            rgba: (1,1,1,0.9)
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
 
             LargeTextDisplayPanel:
                 id: _left_side

@@ -5,6 +5,7 @@ import pprint
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.config import Config
+from kivy.graphics import *
 from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
@@ -12,13 +13,14 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 
+
 # from kivy.uix.button import Button
 # from kivy.uix.popup import Popup
-# from kivy.uix.label import Label
+from kivy.uix.label import Label
 
 # from kivy.core.window import Window
 # from kivy.uix.textinput import TextInput
-# from kivy.uix.vkeyboard import VKeyboard
+
 # from kivy.uix.widget import Widget
 
 from functools import partial  # ???
@@ -42,7 +44,6 @@ Builder.load_file("playback_screen.kv")
 Builder.load_file("widget_formatting.kv")
 # contains formatting instructions for the overlay screen
 Builder.load_file("selection_overlay_screen.kv")
-
 
 # class MyKeyboardListener(Widget):
 #     def __init__(self, **kwargs):
@@ -74,6 +75,20 @@ Builder.load_file("selection_overlay_screen.kv")
 #         return True
 
 
+class PopoverLabel(Label):
+    """tbc"""
+
+    def __init__(self, **kwargs):
+        super(PopoverLabel, self).__init__(**kwargs)
+
+    def show_window(self):
+        print(self.children)
+        self.color = (1, 0, 1, 1)
+        self.text = "hi"
+        with self.canvas.before:
+            Color(rgba=(1, 1, 1, 0.9))
+
+
 class PopoverWindow(RelativeLayout):
     """Display popover events sent from scanner"""
 
@@ -81,13 +96,14 @@ class PopoverWindow(RelativeLayout):
         super(PopoverWindow, self).__init__(**kwargs)
 
     def hide_window(self):
-        # self.pos = (-self.width, -self.height)
-        # self._popover_window.size_hint = (0.1, 0.1)
-        # print(self.id)
         pass
 
     def show_window(self):
-        pass
+        for index, child in enumerate(self.children):
+            print(f"[{index}] - {child}")
+        for index, child in enumerate(self.ids):
+            print(f"[{index}] - {child}")
+        print(self.ids["_popover_label"])
 
 
 class ScannerConnection(UnidenScanner):
@@ -158,28 +174,16 @@ class DataWindow(Screen):
     """
 
     # initialize id reference to kv file using variable name
-    # fav_list_name = ObjectProperty()
-    # sys_name = ObjectProperty()
-    # dept_name = ObjectProperty()
-    # site_name = ObjectProperty()
-    # unit_ids = ObjectProperty()
-    # unit_ids_name_tag = ObjectProperty()
-    # transmission_start = ObjectProperty()
-    # transmission_end = ObjectProperty()
     total_time = ObjectProperty()
     command_input = ObjectProperty()
 
     dw_popover_window = ObjectProperty()
-    dw_popover_label = ObjectProperty()
+    # dw_popover_label = ObjectProperty()
 
     scan_status_button = ObjectProperty()
 
     # can I store the sound object here?
     sound = ObjectProperty()
-
-    # todo: replace with root object
-    # initialize variable to store scanner data
-    # scanner = None  # trying this
 
     # time interval to refresh data
     refresh_data_dt = 0.1
@@ -404,11 +408,11 @@ class DataWindow(Screen):
         popup_screen = wav_meta.get("PopupScreen")
 
         # todo: this method of hiding popover is a cludge
-        if popup_screen != {}:
-            self.dw_popover_window.x = 20
-            self.dw_popover_label.text = pprint.pformat(popup_screen)
-        else:
-            self.dw_popover_window.x = -self.width
+        # if popup_screen != {}:
+        #     self.dw_popover_window.x = 20
+        #     self.dw_popover_label.text = pprint.pformat(popup_screen)
+        # else:
+        #     self.dw_popover_window.x = -self.width
 
         # check to ensure data is present
         if isinstance(wav_meta, bool):
@@ -472,48 +476,41 @@ class DataWindow(Screen):
 
 
 class PlaybackScreen(Screen):
-    """Screen to contain playback controls."""
+    """temporary debugging and experimentation screen"""
 
-    # play_stop_button = ObjectProperty()
     text_display = ObjectProperty()
     cmd_input_box = ObjectProperty()
-    # can I store the sound object here?
-    # sound = ObjectProperty()
-    # scanner = None
 
     def __init__(self, **kwargs):
         super(PlaybackScreen, self).__init__(**kwargs)
 
-        self.popover_window = PopoverWindow()
+        self.popover_label = PopoverWindow()
 
     def btn(self):
         """Method runs when Button object calls root.btn() 
         from <DataWindow>"""
-        pass
+
+        get_child_names(self.ids)
+
+        popover_window = self.ids["_popover_window"]
+        popover_label = popover_window.ids["_popover_label"]
+        left_display = self.ids["_large_text_layout"]
+
+        print("\n\n")
+
+        get_child_names(popover_window.ids)
+
+        popover_label.color = (1, 1, 1, 1)
+        with popover_label.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            Rectangle(size=left_display.size, pos=(-20, 0))
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
 
         Logger.info("scanner status button was pressed")
 
-        # check to see if scanner instance has been created
-        # if scanner is None:
-        #     Logger.info("Scanner is not initialized.")
-        #
-        #     Logger.info("Trying to initialize scanner...")
-        #     scanner = UnidenScanner()
-        #     Logger.info("Scanner is initialized. Checking port connection...")
-
         scanner.open_connection()
-
-        # if not scanner.port_is_open():
-        #     port_open = scanner.open()
-        #
-        #     if not port_open:
-        #         Logger.info(
-        #             "Cannot open port. Scanner is likely not connected to computer."
-        #         )
-        #         return False
 
         Logger.info("The scanner port is open.")
 
@@ -523,15 +520,6 @@ class PlaybackScreen(Screen):
 
     def scanner_disconnect_btn(self):
         """Button used to close the port used by scanner."""
-
-        # make sure the port is open and connected to scanner
-        # try:
-        #     if not scanner.port_is_open():
-        #         Logger.info("Port is already closed.")
-        #         return False
-        # except AttributeError:
-        #     Logger.exception("No scanner connection", exc_info=False)
-        #     return False
 
         Logger.info("Disconnect button pushed.")
 
@@ -788,6 +776,10 @@ if __name__ == "__main__":
     # )
 
     Config.set("kivy", "log_level", "debug")
+
+    def get_child_names(ids):
+        for index, child in enumerate(ids):
+            print(f"[{index}] - {child}")
 
     # run the GUI
     DataWindowApp().run()
