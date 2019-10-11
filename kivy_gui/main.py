@@ -486,6 +486,15 @@ class PlaybackScreen(Screen):
 
         self.popover_label = PopoverWindow()
 
+        # get the current keyboard layout
+        layout = Config.get("kivy", "keyboard_layout")
+        print(f"current keyboard layout: {layout}")
+
+        # change the current keyboard layout
+        new_layout = "scanner_buttons.json"
+        layout = Config.get("kivy", "keyboard_layout")
+        print(f"new keyboard layout: {layout}")
+
     def btn(self):
         """Method runs when Button object calls root.btn() 
         from <DataWindow>"""
