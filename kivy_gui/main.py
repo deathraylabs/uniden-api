@@ -43,7 +43,7 @@ Builder.load_file("playback_screen.kv")
 # contains formatting instructions for individual widgets
 Builder.load_file("widget_formatting.kv")
 # contains formatting instructions for the overlay screen
-Builder.load_file("popover_screen.kv")
+Builder.load_file("popup_screen.kv")
 
 # class MyKeyboardListener(Widget):
 #     def __init__(self, **kwargs):
@@ -75,11 +75,11 @@ Builder.load_file("popover_screen.kv")
 #         return True
 
 
-# class PopoverLabel(Label):
+# class PopupLabel(Label):
 #     """tbc"""
 #
 #     def __init__(self, **kwargs):
-#         super(PopoverLabel, self).__init__(**kwargs)
+#         super(PopupLabel, self).__init__(**kwargs)
 #
 #     def show_window(self):
 #         print(self.children)
@@ -89,11 +89,11 @@ Builder.load_file("popover_screen.kv")
 #             Color(rgba=(1, 1, 1, 0.9))
 #
 #
-# class PopoverWindow(RelativeLayout):
-#     """Display popover events sent from scanner"""
+# class PopupWindow(RelativeLayout):
+#     """Display popup events sent from scanner"""
 #
 #     def __init__(self, **kwargs):
-#         super(PopoverWindow, self).__init__(**kwargs)
+#         super(PopupWindow, self).__init__(**kwargs)
 #
 #     def hide_window(self):
 #         pass
@@ -103,7 +103,7 @@ Builder.load_file("popover_screen.kv")
 #             print(f"[{index}] - {child}")
 #         for index, child in enumerate(self.ids):
 #             print(f"[{index}] - {child}")
-#         print(self.ids["_popover_label"])
+#         print(self.ids["_popup_label"])
 
 
 class ScannerConnection(UnidenScanner):
@@ -177,8 +177,8 @@ class DataWindow(Screen):
     total_time = ObjectProperty()
     command_input = ObjectProperty()
 
-    dw_popover_window = ObjectProperty()
-    # dw_popover_label = ObjectProperty()
+    dw_popup_window = ObjectProperty()
+    # dw_popup_label = ObjectProperty()
 
     scan_status_button = ObjectProperty()
 
@@ -463,11 +463,11 @@ class DataWindow(Screen):
         return
 
 
-class PopoverScreen(Screen):
-    """Handles popover logic"""
+class PopupScreen(Screen):
+    """Handles popup logic"""
 
     def __init__(self, **kwargs):
-        super(PopoverScreen, self).__init__(**kwargs)
+        super(PopupScreen, self).__init__(**kwargs)
 
 
 class PlaybackScreen(Screen):
@@ -479,8 +479,8 @@ class PlaybackScreen(Screen):
     def __init__(self, **kwargs):
         super(PlaybackScreen, self).__init__(**kwargs)
 
-        # self.popover_window = PopoverWindow()
-        # self.popover_label = PopoverLabel()
+        # self.popup_window = PopupWindow()
+        # self.popup_label = PopupLabel()
 
         # get the current keyboard layout
         # layout = Config.get("kivy", "keyboard_layout")
@@ -492,16 +492,16 @@ class PlaybackScreen(Screen):
 
         get_child_names(self.ids)
 
-        # popover_window = self.ids["_popover_window"]
-        # popover_label = popover_window.ids["_popover_label"]
+        # popup_window = self.ids["_popup_window"]
+        # popup_label = popup_window.ids["_popup_label"]
         left_display = self.ids["_large_text_layout"]
 
         print("\n\n")
 
-        get_child_names(self.popover_window.ids)
+        get_child_names(self.popup_window.ids)
 
-        self.popover_label.color = (1, 1, 1, 1)
-        with self.popover_label.canvas:
+        self.popup_label.color = (1, 1, 1, 1)
+        with self.popup_label.canvas:
             Color(rgba=(1, 1, 1, 1))
             Rectangle(size=left_display.size, pos=(-20, 0))
 
@@ -600,7 +600,7 @@ class PlaybackScreen(Screen):
 
 
 # class P(FloatLayout):
-#     """layout for popover"""
+#     """layout for popup"""
 #
 #     pass
 
@@ -613,11 +613,11 @@ class PlaybackScreen(Screen):
 #
 #     show = P()
 #
-#     popover_window = Popup(
-#         title="popover", content=show, size_hint=(None, None), size=(400, 400)
+#     popup_window = Popup(
+#         title="popup", content=show, size_hint=(None, None), size=(400, 400)
 #     )
 #
-#     popover_window.open()
+#     popup_window.open()
 
 
 # class ModeScreen(Screen):
@@ -756,7 +756,7 @@ class DataWindowApp(App):
         self.sm = ScreenManager()
         self.sm.add_widget(DataWindow(name="datawindow"))
         self.sm.add_widget(PlaybackScreen(name="playback"))
-        self.sm.add_widget(PopoverScreen(name="popover"))
+        self.sm.add_widget(PopupScreen(name="popup"))
         # self.sm.add_widget(KeyboardScreen(name="keyboard"))
         self.sm.current = "playback"
 

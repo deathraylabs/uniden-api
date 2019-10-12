@@ -76,8 +76,8 @@
                         orientation: 'horizontal'
 
                         Button:
-#                            popover_window: _popover_window
-                            id: _hide_popover
+#                            popup_window: _popup_window
+                            id: _hide_popup
 
                             text: "broken"
                             on_release:
@@ -120,4 +120,4 @@
                             text: 'Next\n->'
                             on_press:
                                 root.manager.transition.direction = 'left'
-                                root.manager.current = 'popover'
+                                root.manager.current = 'popup'

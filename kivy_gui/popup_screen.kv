@@ -5,21 +5,21 @@
 # you can control the ScreenManager from kv. Each screen has by default a
 # property manager that gives you the instance of the ScreenManager used.
 
-<PopoverScreen>:
+<PopupScreen>:
 #    play_stop_button: stop_play
 #    text_display: _text_display
 #    cmd_input_box: command_input
 
     GridLayout:
         cols: 2
-        id: _main_container_popover
+        id: _main_container_popup
         width: root.width
         height: root.height
 
 #        RelativeLayout:
 
         LargeTextDisplayPanel:
-            id: _large_text_layout_popover
+            id: _large_text_layout_popup
 
             BoxLayout:
                 orientation: "vertical"
@@ -28,7 +28,7 @@
                     do_scroll: (False, True)
 
                     ScrollingTextDisplayPanel:
-                        id: _text_display_popover
+                        id: _text_display_popup
                         text: "Scanner response..."
 
 
@@ -76,8 +76,8 @@
                         orientation: 'horizontal'
 
                         Button:
-#                            popover_window: _popover_window
-                            id: _hide_popover
+#                            popup_window: _popup_window
+                            id: _hide_popup
 
                             text: "broken"
 #                            on_release:
@@ -120,4 +120,4 @@
                             text: 'Next\n->'
                             on_press:
                                 root.manager.transition.direction = 'left'
-                                root.manager.current = 'popover'
+                                root.manager.current = 'popup'
