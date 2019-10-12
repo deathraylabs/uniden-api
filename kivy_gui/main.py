@@ -176,14 +176,7 @@ class DataWindow(Screen):
     # initialize id reference to kv file using variable name
     total_time = ObjectProperty()
     command_input = ObjectProperty()
-
-    dw_popup_window = ObjectProperty()
-    # dw_popup_label = ObjectProperty()
-
     scan_status_button = ObjectProperty()
-
-    # can I store the sound object here?
-    sound = ObjectProperty()
 
     # time interval to refresh data
     refresh_data_dt = 0.1
@@ -460,7 +453,7 @@ class DataWindow(Screen):
         self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
 
-        return
+        return True
 
 
 class PopupScreen(Screen):
@@ -490,20 +483,20 @@ class PlaybackScreen(Screen):
         """Method runs when Button object calls root.btn() 
         from <DataWindow>"""
 
+        # debugging
         get_child_names(self.ids)
 
-        # popup_window = self.ids["_popup_window"]
-        # popup_label = popup_window.ids["_popup_label"]
         left_display = self.ids["_large_text_layout"]
 
         print("\n\n")
 
+        # debugging
         get_child_names(self.popup_window.ids)
 
-        self.popup_label.color = (1, 1, 1, 1)
-        with self.popup_label.canvas:
-            Color(rgba=(1, 1, 1, 1))
-            Rectangle(size=left_display.size, pos=(-20, 0))
+        # self.popup_label.color = (1, 1, 1, 1)
+        # with self.popup_label.canvas:
+        #     Color(rgba=(1, 1, 1, 1))
+        #     Rectangle(size=left_display.size, pos=(-20, 0))
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
