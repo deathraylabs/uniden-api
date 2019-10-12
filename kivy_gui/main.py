@@ -387,6 +387,8 @@ class DataWindow(Screen):
 
         # check for a popup screen
         popup_screen = wav_meta.get("PopupScreen")
+        if popup_screen["Text"] != "":
+            print(popup_screen)
 
         try:
             trans_start = wav_meta["transmission_start"]
@@ -606,7 +608,7 @@ class DataWindowApp(App):
         self.sm.add_widget(PlaybackScreen(name="playback"))
         self.sm.add_widget(PopupScreen(name="popup"))
         # self.sm.add_widget(KeyboardScreen(name="keyboard"))
-        self.sm.current = "playback"
+        # self.sm.current = "playback"
 
         return self.sm
 

@@ -294,6 +294,9 @@ class UnidenScanner:
 
         Notes:
             - only tested against GSI and PSI style data
+                - these types of data have unique xml tags
+            - MSI data does not use unique tags, so multiple data points can have
+                the same tag.
 
         Args:
             cmd (str): three letter string scanner command.
@@ -326,7 +329,7 @@ class UnidenScanner:
         # ---- parse xml using non-blocking parser ---- #
 
         # this produces nested dicts instead of a flat format like above
-        sub_list = []
+        # sub_list = []
 
         while not at_xml_end:
 
@@ -400,8 +403,6 @@ class UnidenScanner:
             False: if there is an error communicating with scanner
 
         """
-        # clear the method dict
-        # self.scan_state.clear()
         # get a copy of the empty state, so scanner refreshes properly.
         self.scan_state = deepcopy(GSI_OUTPUT_2)  # updated
 
