@@ -193,7 +193,7 @@ class UnidenScanner:
 
     def _read_and_decode_line(self):
         """helper method, reads buffer until it gets to a \r character, then
-        provices a decoded string with \r replaced by \n characters
+        provides a decoded string with \r replaced by \n characters
 
         Returns:
             str: proper UTF8 decoded string with \n characters
@@ -350,9 +350,11 @@ class UnidenScanner:
                 if current_tag == "Footer" and element.attrib["EOT"] == "1":
                     continue
                 elif current_tag == "Footer" and element.attrib["EOT"] == "0":
+                    # eat up bytes until you get to start of next block of data
                     self.serial.read_until(b'<?xml version="1.0" encoding="utf-8"?>\r')
                     continue
                 elif current_tag == root_tag:
+                    # once you encounter the root tag again you're done
                     at_xml_end = True
 
                 for item in element.attrib.items():

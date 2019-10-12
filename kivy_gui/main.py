@@ -387,7 +387,7 @@ class DataWindow(Screen):
 
         # check for a popup screen
         popup_screen = wav_meta.get("PopupScreen")
-        if popup_screen["Text"] != "":
+        if popup_screen != {}:
             print(popup_screen)
 
         try:
