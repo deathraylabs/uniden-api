@@ -10,18 +10,9 @@ from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.label import Label
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
-
-
-# from kivy.uix.button import Button
-# from kivy.uix.popup import Popup
-from kivy.uix.label import Label
-
-# from kivy.core.window import Window
-# from kivy.uix.textinput import TextInput
-
-# from kivy.uix.widget import Widget
 
 from functools import partial  # ???
 
@@ -33,16 +24,13 @@ print("Checked if on RPi")
 
 from scanner.uniden import UnidenScanner
 
-# from scanner.scanner_utility_functions import get_wav_meta
-# from scanner.constants import GSI_OUTPUT
-
 # contains layout instructions for first screen
 Builder.load_file("datawindow_screen.kv")
 # contains layout instructions for playback screen
 Builder.load_file("playback_screen.kv")
 # contains formatting instructions for individual widgets
 Builder.load_file("widget_formatting.kv")
-# contains formatting instructions for the overlay screen
+# contains formatting instructions for the popup screen
 Builder.load_file("popup_screen.kv")
 
 # class MyKeyboardListener(Widget):
