@@ -43,7 +43,7 @@ Builder.load_file("playback_screen.kv")
 # contains formatting instructions for individual widgets
 Builder.load_file("widget_formatting.kv")
 # contains formatting instructions for the overlay screen
-Builder.load_file("popover_window.kv")
+Builder.load_file("popover_screen.kv")
 
 # class MyKeyboardListener(Widget):
 #     def __init__(self, **kwargs):
@@ -198,9 +198,6 @@ class DataWindow(Screen):
         self.default_text_color = (1, 1, 1, 1)
         self.permanent_avoid_color = (0.8, 0.8, 0.8, 0.9)
 
-        # popup screen instance
-        # self.popover_window = PopoverWindow()
-
         # dict correlates scanner tags to variable names
         self.data_tags = {
             "MonitorList": "fav_list_name",
@@ -209,8 +206,6 @@ class DataWindow(Screen):
             "TGID": "tgid_hld",
             "Site": "site_name",
         }
-
-        # self.v_keyboard = MyKeyboardListener()
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
@@ -404,20 +399,13 @@ class DataWindow(Screen):
         # update the scanner state variable first
         wav_meta = scanner.update_scanner_state()
 
-        # check for a popup screen
-        popup_screen = wav_meta.get("PopupScreen")
-
-        # todo: this method of hiding popover is a cludge
-        # if popup_screen != {}:
-        #     self.dw_popover_window.x = 20
-        #     self.dw_popover_label.text = pprint.pformat(popup_screen)
-        # else:
-        #     self.dw_popover_window.x = -self.width
-
         # check to ensure data is present
         if isinstance(wav_meta, bool):
             Logger.error("No data returned by scanner.")
             return False
+
+        # check for a popup screen
+        popup_screen = wav_meta.get("PopupScreen")
 
         try:
             trans_start = wav_meta["transmission_start"]

@@ -7,19 +7,19 @@
 
 <PopoverScreen>:
 #    play_stop_button: stop_play
-    text_display: _text_display
-    cmd_input_box: command_input
+#    text_display: _text_display
+#    cmd_input_box: command_input
 
     GridLayout:
         cols: 2
-        id: _main_container
+        id: _main_container_popover
         width: root.width
         height: root.height
 
 #        RelativeLayout:
 
         LargeTextDisplayPanel:
-            id: _large_text_layout
+            id: _large_text_layout_popover
 
             BoxLayout:
                 orientation: "vertical"
@@ -28,7 +28,7 @@
                     do_scroll: (False, True)
 
                     ScrollingTextDisplayPanel:
-                        id: _text_display
+                        id: _text_display_popover
                         text: "Scanner response..."
 
 
@@ -48,8 +48,8 @@
                     CommandLine:
                         id: command_input
                         text: "GLT,FL"
-                        on_text_validate:
-                            root.command_input(args[0])
+#                        on_text_validate:
+#                            root.command_input(args[0])
 #                            self.cancel_selection()  # gets rid of handles
 
 
@@ -61,12 +61,12 @@
                         Button:
                             id: "menu_view"
                             text: "Get Menu View"
-                            on_press: root.display_raw_scanner_output("MSI")
+#                            on_press: root.display_raw_scanner_output("MSI")
 
                         Button:
                             id: "gsi_output"
                             text: "View GSI Info"
-                            on_press: root.display_raw_scanner_output("GSI")
+#                            on_press: root.display_raw_scanner_output("GSI")
 
                         Button:
 
@@ -80,10 +80,10 @@
                             id: _hide_popover
 
                             text: "broken"
-                            on_release:
-                                # moves whole window offscreen
-
-                                root.btn()
+#                            on_release:
+#                                # moves whole window offscreen
+#
+#                                root.btn()
 
 
                     BoxLayout:
@@ -98,11 +98,11 @@
                         Button:
                             id: scanner_status
                             text: "Connect to Scanner"
-                            on_press: root.scanner_status_btn()
+#                            on_press: root.scanner_status_btn()
 
                         Button:
                             text: "Stop\nDisplay"
-                            on_press: root.scanner_disconnect_btn()
+#                            on_press: root.scanner_disconnect_btn()
 
 
 
