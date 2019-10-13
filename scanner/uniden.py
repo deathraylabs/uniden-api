@@ -124,7 +124,7 @@ class UnidenScanner:
         self.default_band_coverage = ()
 
         # initialize empty scanner state OrderedDict
-        self.scan_state = GSI_OUTPUT.copy()
+        self.scan_state = GSI_OUTPUT_2.copy()
 
         # ------ initialization methods ------- #
         self.open()
@@ -731,6 +731,16 @@ class UnidenScanner:
         # send us back to main screen if it worked
         if resp == "OK":
             self.push_key("press", "system")
+
+    def is_menu_screen(self):
+        """Check to see if the scanner was displaying a menu screen
+        the last time the scanner state was updated.
+
+        Returns:
+            true: if displaying menu screen
+            false: if not displaying menu screen
+        """
+        pass
 
     # todo: method needs error catching
     def set_menu_value(self, cmd, menu_type=""):
