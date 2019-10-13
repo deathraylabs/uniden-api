@@ -18,7 +18,7 @@
     halign: "center"
 
 <NumericKeypad@Button>:
-#    color: 1, 1, .1, .90
+
 
 <TouchArea@Button>:
     halign: 'left'
@@ -45,17 +45,14 @@
             pos: self.pos
 
 <MenuBar@BoxLayout>:
-#    id: "menu_layout"
-#    size_hint_x: .5
+
 
 <CommandLine@TextInput>:
     multiline: False
     valign: "center"
-#    size_hint_y: .2
+
     write_tab: False
     on_focus: self.select_all()
-    # this is such a hack
-#    on_focus: self.focus = True
     on_touch_up: self.select_all()
 
 # todo: the textture size doesn't work after updating text from scanner
@@ -80,20 +77,5 @@
 <RightSidePanel@BoxLayout>:
     orientation: 'vertical'
     size_hint_x: .4
-
-
-#<PopoverLabel>:
-#
-#    font_size: "24sp"
-#    # initially clear, make visible when needed
-#    color: 1,0,1,1
-#
-#    canvas.before:
-#        # initially clear, make visible when text arrives
-#        Color:
-#            rgba: (.5,0.5,0.5,1)
-#        Rectangle:
-#            size: self.size
-#            pos: self.pos
 
 
