@@ -149,8 +149,22 @@
             MenuBar:
                 id: _sixth_row
 
-                Button:
-                    text: "Forward\n->"
-                    on_press:
-                        root.manager.transition.direction = 'left'
-                        root.manager.current = 'playback'
+                BoxLayout:
+                    id: "sixth_row"
+                    orientation: 'horizontal'
+
+                    Button:
+                        text: 'Main'
+                        on_press:
+#                                root.manager.transition.direction = 'right'
+                            root.manager.current = 'datawindow'
+
+                    Button:
+                        text: 'Info'
+                        on_press:
+#                                root.manager.transition.direction = 'right'
+                            root.manager.current = 'playback'
+
+                    Button:
+                        text: "menu"
+                        on_press: root.manager.current = 'popup'

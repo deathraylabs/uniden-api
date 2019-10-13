@@ -111,13 +111,17 @@
                         orientation: 'horizontal'
 
                         Button:
-                            text: 'Back\n<-'
+                            text: 'Main'
                             on_press:
-                                root.manager.transition.direction = 'right'
+#                                root.manager.transition.direction = 'right'
                                 root.manager.current = 'datawindow'
 
                         Button:
-                            text: 'Next\n->'
+                            text: 'Info'
                             on_press:
-                                root.manager.transition.direction = 'left'
-                                root.manager.current = 'popup'
+#                                root.manager.transition.direction = 'right'
+                                root.manager.current = 'playback'
+
+                        Button:
+                            text: "menu"
+                            on_press: root.manager.current = 'popup'

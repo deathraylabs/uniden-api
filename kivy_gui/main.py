@@ -12,7 +12,7 @@ from kivy.properties import ObjectProperty  # ref name in kv file
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.uix.relativelayout import RelativeLayout
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 
 from functools import partial  # ???
 
@@ -605,7 +605,7 @@ class DataWindowApp(App):
         # Config.read("datawindow.ini")
 
         # create the screen manager
-        self.sm = ScreenManager()
+        self.sm = ScreenManager(transition=NoTransition())
         self.sm.add_widget(DataWindow(name="datawindow"))
         self.sm.add_widget(PlaybackScreen(name="playback"))
         self.sm.add_widget(PopupScreen(name="popup"))
