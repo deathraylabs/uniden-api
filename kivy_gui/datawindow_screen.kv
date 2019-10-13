@@ -14,12 +14,7 @@
     transmission_end: trans_ends
     total_time: tot_time
     command_input: _command_input
-
-#    dw_popup_window: _dw_popup_window
-#    dw_popup_label: _dw_popup_label
-
     scan_status_button: scanner_status
-#    tgid_hld: tgid_hld
 
     GridLayout:
         id: 'main_container'
@@ -28,11 +23,6 @@
         height: root.height
 
         RelativeLayout:
-#            centered_x: _centered_x
-
-#            PopoverWindow:
-#                id: _dw_popup_window
-#                pos: (_left_side.width - self.width) / 2, (_left_side.height - self.height) / 2
 
             LargeTextDisplayPanel:
                 id: _left_side
@@ -104,7 +94,6 @@
 
                 CommandLine:
                     id: _command_input
-#                    text: "GLT,FL"
                     on_text_validate:
                         root.update_unid(args[0])
                         self.focus = False       # unfocus before cancel sel
@@ -147,23 +136,6 @@
             MenuBar:
                 id: _fourth_row
 
-#                NumericKeypad:
-#                    id: _zero
-##                    text: "0"
-#
-#                NumericKeypad:
-#                    id: _period
-##                    text: "."
-#
-#                NumericKeypad:
-#                    id: _enter
-##                    text: "enter"
-
-#                Button:
-#                    id: print_data
-#                    text: "print GSI data"
-#                    on_press: root.print_data()
-
             MenuBar:
                 id: _fifth_row
 
@@ -176,8 +148,6 @@
                     text: "Stop\nDisplay"
                     on_press: root.scanner_disconnect_btn()
 
-
-
             MenuBar:
                 id: _sixth_row
 
@@ -186,82 +156,3 @@
                     on_press:
                         root.manager.transition.direction = 'left'
                         root.manager.current = 'playback'
-
-#<KeyboardScreen>:
-#    display_label: _display_label
-#    kb_container: _kb_container
-#
-#    BoxLayout:
-#        orientation: 'vertical'
-#        Label:
-#            size_hint_y: 0.15
-#            text: "Available Keyboard Layouts"
-#        BoxLayout:
-#            id: _kb_container
-#            size_hint_y: 0.2
-#            orientation: "horizontal"
-#            padding: 10
-#        Label:
-#            id: _display_label
-#            size_hint_y: 0.15
-#            markup: True
-#            text: "[b]Key pressed[/b] - None"
-#            halign: "center"
-#        Button:
-#            text: "Back"
-#            size_hint_y: 0.1
-#            on_release: root.manager.current = "mode"
-#        Widget:
-#            # Just a space taker to allow for the popup keyboard
-#            size_hint_y: 0.5
-#
-#<ModeScreen>:
-#    center_label: _center_label
-#    mode_spinner: _mode_spinner
-#    FloatLayout:
-#        BoxLayout:
-#            orientation: "vertical"
-#            size_hint: 0.8, 0.8
-#            pos_hint: {"x": 0.1, "y": 0.1}
-#            padding: "5sp"
-#            spacing: "5sp"
-#            Label:
-#                canvas:
-#                    Color:
-#                        rgba: 0, 0, 1, 0.3
-#                    Rectangle:
-#                        pos: self.pos
-#                        size: self.size
-#                text: "Custom Keyboard Demo"
-#                size_hint_y: 0.1
-#            Label:
-#                id: _center_label
-#                markup: True
-#                size_hint_y: 0.6
-#            BoxLayout:
-#                orientation: "horizontal"
-#                size_hint_y: 0.1
-#                padding: "5sp"
-#                Widget:
-#                    size_hint_x: 0.2
-#                Label:
-#                    text: "Current keyboard mode :"
-#                Spinner:
-#                    id: _mode_spinner
-#                    values: "''", "'dock'", "'system'", "'systemanddock'", "'systemandmulti'"
-#                Button:
-#                    text: "Set"
-#                    on_release: root.set_mode(_mode_spinner.text)
-#                Widget:
-#                    size_hint_x: 0.2
-#            Widget:
-#                size_hint_y: 0.1
-#            BoxLayout:
-#                orientation: "horizontal"
-#                size_hint_y: 0.1
-#                Button:
-#                    text: "Exit"
-#                    on_release: exit()
-#                Button:
-#                    text: "Continue"
-#                    on_release: root.next()
