@@ -287,7 +287,6 @@ class UnidenScanner:
 
         return res_dict
 
-    # todo: change MSI return so that it's a dict with no list
     def get_xml_response(self, cmd):
         """Method to parse xml serial data line-by line and
         return a formatted dict with information returned by the scanner.
