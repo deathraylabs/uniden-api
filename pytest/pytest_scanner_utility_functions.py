@@ -232,5 +232,20 @@ def test_parse_time():
     assert ptimedate["PodcastDuration"] == "02:24"
 
 
+def test_is_menu_screen():
+    """Should show true or false depending on scanner state.
+
+    Notes:
+        - scanner must be connected to computer for this test.
+    """
+    s = UnidenScanner()
+    s.update_scanner_state()
+
+    menu_test = s.is_menu_screen()
+
+    if s.scan_state["ScannerInfo"]["Mode"] == "Menu tree":
+        assert menu_test is True
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()

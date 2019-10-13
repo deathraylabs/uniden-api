@@ -740,7 +740,14 @@ class UnidenScanner:
             true: if displaying menu screen
             false: if not displaying menu screen
         """
-        pass
+        scan_mode = self.scan_state["ScannerInfo"]["Mode"]
+
+        if scan_mode == "Menu tree":
+            return True
+        else:
+            self.logger.debug(f"scan mode: {scan_mode}")
+
+            return False
 
     # todo: method needs error catching
     def set_menu_value(self, cmd, menu_type=""):
