@@ -52,13 +52,15 @@
   ["\u21ea", null, "capslock", 1],
   [".", ".", ".", 1],
   ["0", "0", "0", 1],
-  ["enter", null, "enter", 1]
+  ["enter", null, "enter", 1],
+  ["\u2a2f", null, "escape", 1]
 ],
 "shift_4": [
   ["-F-","-F-","-F-",1],
   ["\u21ea", null, "capslock", 1],
   [".", ".", ".", 1],
   ["0", "0", "0", 1],
-  ["enter", null, "enter", 1]
+  ["enter", null, "enter", 1],
+  ["\u2a2f", null, "escape", 1]
   ]
 }

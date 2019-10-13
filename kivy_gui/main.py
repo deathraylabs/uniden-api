@@ -596,6 +596,8 @@ class DataWindowApp(App):
 
     sm = None  # the root screen manager
 
+    print(f"kivy data: {App.user_data_dir}")
+
     def build(self):
         """Handles something..."""
 

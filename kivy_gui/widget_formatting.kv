@@ -12,6 +12,7 @@
     text: ""
     color: 1,1,1,1
 
+
 <Button>:
     # Formats all 'Button' tags.
     font_size: '15sp'
@@ -44,6 +45,7 @@
             size: self.size
             pos: self.pos
 
+
 <MenuBar@BoxLayout>:
 
 
@@ -55,7 +57,7 @@
     on_focus: self.select_all()
     on_touch_up: self.select_all()
 
-# todo: the textture size doesn't work after updating text from scanner
+
 <ScrollingTextDisplayPanel@Label>:
     id: "scroll_base_formatting"
     font_size: "12sp"
@@ -65,11 +67,12 @@
     height: self.texture_size[1]
     padding: 10, 10
 
+
 <LargeTextDisplayPanel@BoxLayout>:
     orientation: 'vertical'
     canvas:
         Color:
-            rgba: (1, 1, 1, 0.15)
+            rgba: (.15, .15, .15, 1)
         Rectangle:
             size: self.size
             pos: self.pos
