@@ -94,6 +94,12 @@ class ScannerConnection(UnidenScanner):
         Logger.info("Scanner Connection Closed.")
 
 
+class UpdateScreen:
+    """Class used to handle distributing data to appropriate screen"""
+
+    pass
+
+
 class DataWindow(Screen):
     """This is the main window for the app.
 
