@@ -101,9 +101,6 @@ class UpdateScreen:
         # time interval to refresh screen data
         self.refresh_data_dt = 0.1
 
-        # todo: is this how you get an instance of the datawindow class???
-        # self.datawindow = DataWindow.
-
     def start_auto_refresh(self):
         """Begin automatically refreshing screen data"""
 
@@ -129,6 +126,25 @@ class UpdateScreen:
         # todo: the screen updater is not working properly
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
+
+    def stop_auto_refresh(self):
+        """method to stop auto updating"""
+        Logger.info("Disconnect button pushed.")
+
+        # stop updating screen with clock
+        Clock.unschedule(self.update_screen)
+
+        # make sure the port is open and connected to scanner
+        try:
+            if not scanner.port_is_open():
+                Logger.info("Port is already closed.")
+                return False
+        except AttributeError:
+            Logger.exception("No scanner connection", exc_info=False)
+            return False
+
+        scanner.close()
+        Logger.info("Scanner Connection Closed.")
 
     def update_screen(self):
         """When called this method updates the internal scanner state and then
@@ -210,43 +226,23 @@ class DataWindow(Screen):
         Logger.info("scanner status button was pressed")
 
         # call the screen updater method of UpdateScreen()
-        self.screen_updater.update_screen()
+        self.screen_updater.start_auto_refresh()
 
         self.scan_status_button.text = "Pull Mode"
         self.scan_status_button.color = (1, 1, 1, 0.5)
 
+        return True
+
     def scanner_disconnect_btn(self):
         """Closes connection to scanner."""
 
-        # make sure the port is open and connected to scanner
-        try:
-            if not scanner.port_is_open():
-                Logger.info("Port is already closed.")
-                return False
-        except AttributeError:
-            Logger.exception("No scanner connection", exc_info=False)
-            return False
-
-        Logger.info("Disconnect button pushed.")
-        # stop updating screen with clock
-        Clock.unschedule(self.update_screen)
-
-        try:
-            # stop the scanner push updates
-            scanner.stop_push_updates()
-            Logger.info("Stop update command sent to scanner.")
-        except AttributeError:
-            Logger.exception(
-                "No scanner instance available to disconnect.", exc_info=False
-            )
-            return False
-
-        scanner.close()
-        Logger.info("Scanner Connection Closed.")
+        self.screen_updater.stop_auto_refresh()
 
         # update button label
         self.scan_status_button.text = "Mirron\nScanner"
         self.scan_status_button.color = (1, 1, 1, 1)
+
+        return True
 
     def scanner_hold(self, hold_key):
         """Method to hold/release a given system, department, or channel.
