@@ -262,6 +262,8 @@ def test_get_volume():
 
     vol = s.get_volume()
 
+    s.close()
+
     assert vol == "1"
 
 

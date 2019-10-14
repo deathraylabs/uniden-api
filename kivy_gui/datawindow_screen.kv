@@ -97,9 +97,6 @@
                         self.focus = False       # unfocus before cancel sel
                         self.cancel_selection()  # gets rid of handles
 
-            MenuBar:
-                id: _second_row
-
                 NumericKeypad:
                     id: _set_unid
                     text: "Set\nUNID"
@@ -110,12 +107,13 @@
                     text: "AVOID"
                     on_press: root.keypad_press(keypad_key="avoid")
 
-#                NumericKeypad:
-#                    id: _six
-#                    text: "6"
 
             MenuBar:
-                id: _third_row
+                id: _second_row
+
+                NumericKeypad:
+                    id: _vol_up
+                    text: "vol\nup"
 
                 NumericKeypad:
                     id: _prev
@@ -126,6 +124,25 @@
                     id: _next
                     text: "next"
                     on_press: root.keypad_press(keypad_key="vright")
+
+            MenuBar:
+                id: _third_row
+
+                NumericKeypad:
+                    id: _vol_down
+                    text: "vol\ndown"
+                    on_press:
+                        root.keypad_press(keypad_key="vpush")
+                        root.keypad_press(keypad_key="vleft")
+                        root.keypad_press(keypad_key="vpush")
+
+                NumericKeypad:
+                    id: _six
+                    text: "6"
+
+                NumericKeypad:
+                    id: _seven
+                    text: "7"
 
 #                NumericKeypad:
 #                    id: _three

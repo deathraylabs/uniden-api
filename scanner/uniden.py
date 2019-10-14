@@ -546,34 +546,7 @@ class UnidenScanner:
     def push_key(self, mode, key):
         """push_key method is used to push keys on the scanner
 
-        Notes:
-
-            Keys:
-             M : menu
-             F : func
-             L : avoid
-             1 : 1
-             2 : 2
-             3 : 3
-             4 : 4
-             5 : 5
-             6 : 6
-             7 : 7
-             8 : 8
-             9 : 9
-             0 : 0
-             .(dot) : dot/no/pri
-             E : E/yes
-             > : vright * Set "P" to KEY_MODE.
-             < : vleft * Set "P" to KEY_MODE.
-             ^ : vpush
-             V : backlight
-             Y : replay
-             A : system
-             B : dept
-             C : chan
-             Z : zip
-             P : pwr/light
+        Notes: see dicts below
 
             Modes:
              P : press
@@ -870,22 +843,35 @@ class UnidenScanner:
         return vol
 
     def set_volume(self, vol):
-        """Set Volume Level Settings
+        """Set Volume Level directly.
 
         LEVEL		Volume Level ( 0 - 15 )
-        :returns 1 if success, 0 if fail
+
+        Args:
+            vol (str/int): volume level between 0 and 15
+
+        Returns:
+            True: success
+            False: error
         """
+
+        # double check that volume is within the correct range
+        if int(vol) < 0 or int(vol) > 15:
+            self.logger.error(f"{vol} is not in the range of 0 to 15")
+            return False
 
         cmd = ",".join(["VOL", str(vol)])
 
         try:
-            self.raw(cmd)
-
+            self.send_command(cmd)
         except CommandError:
             self.logger.error("set_volume(): cmd %s" % cmd)
-            return 0
+            return False
 
-        return 1
+        # clear the response buffer
+        self.get_response()
+
+        return True
 
     # --------------- Older Code ------------------- #
 
