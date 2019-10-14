@@ -152,7 +152,6 @@ class UpdateScreen:
         if v_screen["Mode"] == "Trunk Scan":
             # todo: debug call to main window
             Logger.debug("update_screen: calling datawindow class")
-            self.datawindow.update_datawindow_screen(wav_meta)
 
         elif v_screen["Mode"] == "Menu tree":
             # todo: call menu window
@@ -560,6 +559,12 @@ class PlaybackScreen(Screen):
         #     self.play_stop_button.text = "PLAY"
 
 
+sm = ScreenManager(transition=NoTransition())
+sm.add_widget(DataWindow(name="datawindow"))
+sm.add_widget(PlaybackScreen(name="playback"))
+sm.add_widget(PopupScreen(name="popup"))
+
+
 class DataWindowApp(App):
     """App class is called 'DataWindow', which means the 'kv' file should
     have the same name. As long as it's in the same wav_source as the main.py
@@ -572,7 +577,7 @@ class DataWindowApp(App):
 
     """
 
-    sm = None  # the root screen manager
+    # sm = None  # the root screen manager
 
     # print(f"kivy data: {App.user_data_dir}")
 
@@ -583,14 +588,15 @@ class DataWindowApp(App):
         # Config.read("datawindow.ini")
 
         # create the screen manager
-        self.sm = ScreenManager(transition=NoTransition())
-        self.sm.add_widget(DataWindow(name="datawindow"))
-        self.sm.add_widget(PlaybackScreen(name="playback"))
-        self.sm.add_widget(PopupScreen(name="popup"))
+        # self.sm = ScreenManager(transition=NoTransition())
+        # self.sm.add_widget(DataWindow(name="datawindow"))
+        # self.sm.add_widget(PlaybackScreen(name="playback"))
+        # self.sm.add_widget(PopupScreen(name="popup"))
         # self.sm.add_widget(KeyboardScreen(name="keyboard"))
         # self.sm.current = "playback"
 
-        return self.sm
+        # return self.sm
+        return sm
 
 
 # create a connection to scanner instance
