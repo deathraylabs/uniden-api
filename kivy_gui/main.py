@@ -55,6 +55,7 @@ class ScannerConnection(UnidenScanner):
         """
 
         if not self.s.port_is_open():
+            Logger.debug(f"open_connection: scanner port is not open")
             port_open = self.s.open()
 
             if not port_open:
@@ -63,7 +64,7 @@ class ScannerConnection(UnidenScanner):
                 )
                 return False
 
-        Logger.info("The scanner port is open.")
+        Logger.info("open_connection: The scanner port is open.")
 
         return True
 
@@ -123,7 +124,6 @@ class UpdateScreen:
         Logger.info("clearing the buffer")
         scanner.reset_port()
 
-        # todo: the screen updater is not working properly
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
 
@@ -446,9 +446,6 @@ class PlaybackScreen(Screen):
     def __init__(self, **kwargs):
         super(PlaybackScreen, self).__init__(**kwargs)
 
-        # self.popup_window = PopupWindow()
-        # self.popup_label = PopupLabel()
-
         # get the current keyboard layout
         # layout = Config.get("kivy", "keyboard_layout")
         # print(f"current keyboard layout: {layout}")
@@ -472,6 +469,7 @@ class PlaybackScreen(Screen):
         #     Color(rgba=(1, 1, 1, 1))
         #     Rectangle(size=left_display.size, pos=(-20, 0))
 
+    # todo: this current setup will not reopen the port if it's already closed
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
 
@@ -479,7 +477,12 @@ class PlaybackScreen(Screen):
 
         scanner.open_connection()
 
-        Logger.info("The scanner port is open.")
+        port_is_open = scanner.port_is_open()
+
+        if port_is_open:
+            Logger.info("scanner.open_connection: The scanner port is open.")
+        else:
+            Logger.info("scanner_status_btn: The port is still closed.")
 
         Logger.info("clearing the buffer")
         res = scanner.reset_port()
@@ -618,7 +621,7 @@ if __name__ == "__main__":
     #     "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
     # )
 
-    Config.set("kivy", "log_level", "debug")
+    Config.set("kivy", "log_level", "info")
 
     def get_child_names(ids):
         for index, child in enumerate(ids):
