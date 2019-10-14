@@ -146,9 +146,13 @@ class UpdateScreen:
         scanner.close()
         Logger.info("Scanner Connection Closed.")
 
-    def update_screen(self):
+    def update_screen(self, dt):
         """When called this method updates the internal scanner state and then
         dispatches data to the appropriate window handler.
+
+        Notes:
+            - dt is an internal variable used by kivy.
+
         """
 
         # update the scanner state variable first
@@ -183,7 +187,7 @@ class UpdateScreen:
             Logger.error(f"unknown screen: {v_screen}")
             return False
 
-        return True
+        # return self
 
 
 class DataWindow(Screen):
