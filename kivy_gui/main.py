@@ -33,66 +33,6 @@ Builder.load_file("widget_formatting.kv")
 # contains formatting instructions for the popup screen
 Builder.load_file("popup_screen.kv")
 
-# class MyKeyboardListener(Widget):
-#     def __init__(self, **kwargs):
-#         super(MyKeyboardListener, self).__init__(**kwargs)
-#         self._keyboard = Window.request_keyboard(self._keyboard_closed, self, "text")
-#         if self._keyboard.widget:
-#             # If it exists, this widget is a VKeyboard object which you can use
-#             # to change the keyboard layout.
-#             pass
-#         self._keyboard.bind(on_key_down=self._on_keyboard_down)
-#
-#     def _keyboard_closed(self):
-#         print("My keyboard have been closed!")
-#         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
-#         self._keyboard = None
-#
-#     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-#         print("The key", keycode, "have been pressed")
-#         print(" - text is %r" % text)
-#         print(" - modifiers are %r" % modifiers)
-#
-#         # Keycode is composed of an integer + a string
-#         # If we hit escape, release the keyboard
-#         if keycode[1] == "escape":
-#             keyboard.release()
-#
-#         # Return True to accept the key. Otherwise, it will be used by
-#         # the system.
-#         return True
-
-
-# class PopupLabel(Label):
-#     """tbc"""
-#
-#     def __init__(self, **kwargs):
-#         super(PopupLabel, self).__init__(**kwargs)
-#
-#     def show_window(self):
-#         print(self.children)
-#         self.color = (1, 0, 1, 1)
-#         self.text = "hi"
-#         with self.canvas.before:
-#             Color(rgba=(1, 1, 1, 0.9))
-#
-#
-# class PopupWindow(RelativeLayout):
-#     """Display popup events sent from scanner"""
-#
-#     def __init__(self, **kwargs):
-#         super(PopupWindow, self).__init__(**kwargs)
-#
-#     def hide_window(self):
-#         pass
-#
-#     def show_window(self):
-#         for index, child in enumerate(self.children):
-#             print(f"[{index}] - {child}")
-#         for index, child in enumerate(self.ids):
-#             print(f"[{index}] - {child}")
-#         print(self.ids["_popup_label"])
-
 
 class ScannerConnection(UnidenScanner):
     """Object that handles communication with the scanner and is instantiated at the
@@ -166,9 +106,6 @@ class DataWindow(Screen):
     command_input = ObjectProperty()
     scan_status_button = ObjectProperty()
 
-    # time interval to refresh data
-    refresh_data_dt = 0.1
-
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
 
@@ -178,6 +115,9 @@ class DataWindow(Screen):
 
         self.default_text_color = (1, 1, 1, 1)
         self.permanent_avoid_color = (0.8, 0.8, 0.8, 0.9)
+
+        # time interval to refresh data
+        self.refresh_data_dt = 0.1
 
         # dict correlates scanner tags to variable names
         self.data_tags = {
