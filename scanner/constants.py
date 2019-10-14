@@ -700,6 +700,9 @@ GSI_OUTPUT_2 = {
     "FileSize": "---",
 }
 
+# MSI output template
+MSI_OUTPUT = {}
+
 # human readable metadata names and their corresponding tag/location in WAV
 # header metadata
 WAV_METADATA = OrderedDict(

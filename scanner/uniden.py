@@ -327,9 +327,6 @@ class UnidenScanner:
 
         # ---- parse xml using non-blocking parser ---- #
 
-        # this produces nested dicts instead of a flat format like above
-        # sub_list = []
-
         while not at_xml_end:
 
             # data we will feed the parser
@@ -522,7 +519,7 @@ class UnidenScanner:
         return self.scan_state
 
     def get_menu_view(self):
-        """Show the curernt menu state.
+        """Get the current menu state from scanner.
 
         Returns:
             dict: menu response dict

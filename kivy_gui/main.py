@@ -468,11 +468,7 @@ class PopupScreen(Screen):
             res (dict): scanner MSI response in dict format
         """
 
-        # sends the MSI command to scanner which will return a dict
-        ack = scanner.send_command("MSI")
-        Logger.debug(ack)
-
-        res = scanner.get_response()
+        res = scanner.get_menu_view()
 
         return res
 
