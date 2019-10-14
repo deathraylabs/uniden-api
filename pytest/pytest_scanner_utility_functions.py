@@ -246,6 +246,24 @@ def test_is_menu_screen():
     if s.scan_state["ScannerInfo"]["Mode"] == "Menu tree":
         assert menu_test is True
 
+    s.close()
+
+
+def test_get_volume():
+    """Will pass test if scanner is setup according to proper configuration.
+
+    Notes:
+        Scanner Configuration:
+        - volume: 1
+
+    """
+    s = UnidenScanner()
+    s.update_scanner_state()
+
+    vol = s.get_volume()
+
+    assert vol == "1"
+
 
 # if __name__ == "__main__":
 #     test_get_wav_meta()
