@@ -181,9 +181,9 @@ class UpdateScreen:
             # switch to the popup screen and update it
             Logger.debug("update_screen: calling popup class")
             sm.current = "popup"
-            # todo: create update screen for popup screen
-            sm.current_screen.update_popup_screen(wav_meta)
+            sm.current_screen.update_popup_screen()
         else:
+            # todo: need a strategy to handle popup text provided by scanner
             Logger.error(f"unknown screen: {v_screen}")
             return False
 
@@ -431,10 +431,50 @@ class DataWindow(Screen):
 
 
 class PopupScreen(Screen):
-    """Handles popup logic"""
+    """Handles popup logic
+
+    Notes:
+        - [ ] needs a method to handle getting menu view information
+    """
+
+    text_display_popup = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(PopupScreen, self).__init__(**kwargs)
+
+    # todo: format this popup screen so the information is actually useful
+    def update_popup_screen(self):
+        """display menu data when scanner is in menu mode
+
+        Notes:
+            - [ ] need some way to interact with menu structure in this view
+        """
+
+        menu_information = self.get_menu_view()
+
+        # reset the text size so it fits in window
+        self.text_display_popup.text_size[1] = None
+
+        self.text_display_popup.text = pprint.pformat(
+            menu_information, compact=True, width=100, indent=3
+        )
+        self.text_display_popup.height = self.text_display_popup.texture_size[1]
+
+    def get_menu_view(self):
+        """Uses the uniden scanner api to request menu view information from the
+        scanner.
+
+        Returns:
+            res (dict): scanner MSI response in dict format
+        """
+
+        # sends the MSI command to scanner which will return a dict
+        ack = scanner.send_command("MSI")
+        Logger.debug(ack)
+
+        res = scanner.get_response()
+
+        return res
 
 
 class PlaybackScreen(Screen):
