@@ -843,9 +843,7 @@ class UnidenScanner:
         return vol
 
     def set_volume(self, vol=-1, delta=0):
-        """Set Volume Level directly.
-
-        LEVEL		Volume Level ( 0 - 15 )
+        """Set Volume Level directly or incrementally.
 
         Args:
             vol (str/int):
@@ -881,6 +879,9 @@ class UnidenScanner:
 
         # clear the response buffer
         self.get_response()
+
+        # update scanner state to match new value
+        self.update_scanner_state()
 
         return True
 
