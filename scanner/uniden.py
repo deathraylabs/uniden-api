@@ -864,6 +864,11 @@ class UnidenScanner:
         if int(vol) == -1:
             # we wish to increment the volume
             vol = int(self.get_volume()) + delta
+            # don't accidentally overshoot bounds using incremental change
+            if vol > 15:
+                vol = 15
+            elif vol < 0:
+                vol = 0
         # double check that volume is within the correct range
         elif int(vol) < 0 or int(vol) > 15:
             self.logger.error(f"{vol} is not in the range of 0 to 15")

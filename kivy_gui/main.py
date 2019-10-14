@@ -366,6 +366,29 @@ class DataWindow(Screen):
 
         return True
 
+    def change_vol(self, cmd):
+        """raise or lower volume
+
+        Args:
+            cmd (str): up or down
+
+        """
+
+        if cmd == "up":
+            scanner.set_volume(delta=1)
+        elif cmd == "down":
+            scanner.set_volume(delta=-1)
+        elif isinstance(cmd, int):
+            scanner.set_volume(vol=cmd)
+        else:
+            Logger.error("invalid volume command")
+            return False
+
+        # this will "push" the volume knob to make volume graph disappear
+        scanner.push_key(mode="press", key="vpush")
+
+        return True
+
     def update_datawindow_screen(self, wav_meta):
         """Handles updates.
         Args:

@@ -114,6 +114,8 @@
                 NumericKeypad:
                     id: _vol_up
                     text: "vol\nup"
+                    on_press:
+                        root.change_vol("up")
 
                 NumericKeypad:
                     id: _prev
@@ -132,13 +134,13 @@
                     id: _vol_down
                     text: "vol\ndown"
                     on_press:
-                        root.keypad_press(keypad_key="vpush")
-                        root.keypad_press(keypad_key="vleft")
-                        root.keypad_press(keypad_key="vpush")
+                        root.change_vol("down")
 
                 NumericKeypad:
                     id: _six
                     text: "6"
+                    on_press:
+                        root.change_vol(6)
 
                 NumericKeypad:
                     id: _seven
