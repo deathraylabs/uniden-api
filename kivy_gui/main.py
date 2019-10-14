@@ -126,6 +126,7 @@ class UpdateScreen:
         Logger.info("clearing the buffer")
         scanner.reset_port()
 
+        # todo: the screen updater is not working properly
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
 
@@ -150,12 +151,18 @@ class UpdateScreen:
         # determine if screen is a menu or scan screen
         v_screen = wav_meta.get("ScannerInfo")
         if v_screen["Mode"] == "Trunk Scan":
-            # todo: debug call to main window
+            # switch to the main screen and update it
             Logger.debug("update_screen: calling datawindow class")
-
+            # switch over to datawindow screen
+            sm.current = "datawindow"
+            Logger.debug("update screen: switched over to datawindow")
+            sm.current_screen.update_datawindow_screen(wav_meta)
         elif v_screen["Mode"] == "Menu tree":
-            # todo: call menu window
-            print("menu tree")
+            # switch to the popup screen and update it
+            Logger.debug("update_screen: calling popup class")
+            sm.current = "popup"
+            # todo: create update screen for popup screen
+            sm.current_screen.update_popup_screen(wav_meta)
         else:
             Logger.error(f"unknown screen: {v_screen}")
             return False
