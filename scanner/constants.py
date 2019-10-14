@@ -667,7 +667,7 @@ GSI_OUTPUT_2 = {
     "File": {"Index": ""},
     "Property": {
         "F": "---",
-        "VOL": "---",
+        "VOL": "0-15",
         "SQL": "---",
         "Sig": "---",
         "Att": "---",
@@ -677,7 +677,7 @@ GSI_OUTPUT_2 = {
         "Mute": "---",
         "Backlight": "---",
         "A_Led": "---",
-        "Dir": "---",
+        "Dir": "scanning up or down",
         "Rssi": "---",
     },
     "InfoArea1": {},

@@ -357,7 +357,6 @@ class UnidenScanner:
                 for item in element.attrib.items():
                     sub_dict[item[0]] = item[1]
 
-                # todo: create a dict to hold sub dicts if not unique
                 # some commands return non-unique tag names, use name attribute instead
                 if not unique_tag_names:
                     # current_tag will be repeated, this is first entry
@@ -848,6 +847,46 @@ class UnidenScanner:
 
         return res
 
+    def get_volume(self):
+        """Get volume level from last time scanner state was updated.
+
+        Notes:
+            - This method grabs the volume level from the saved scanner state, so it's
+                only as recent as the last time the scanner state was updated. You'll
+                want to update the scanner state before calling this method if you
+                want to ensure you have the most recent volume level.
+
+        Returns:
+            LEVEL (str): Volume Level ( 0 - 15 )
+        """
+
+        vol = self.scan_state["Property"]["VOL"]
+
+        # check to see if the default value has been modified by scanner state update
+        if vol == "0-15":
+            self.logger.debug("get_volume: scan state needs to be updated first")
+            return False
+
+        return vol
+
+    def set_volume(self, vol):
+        """Set Volume Level Settings
+
+        LEVEL		Volume Level ( 0 - 15 )
+        :returns 1 if success, 0 if fail
+        """
+
+        cmd = ",".join(["VOL", str(vol)])
+
+        try:
+            self.raw(cmd)
+
+        except CommandError:
+            self.logger.error("set_volume(): cmd %s" % cmd)
+            return 0
+
+        return 1
+
     # --------------- Older Code ------------------- #
 
     # todo: migrate everything to use "process command" method instead.
@@ -1154,40 +1193,6 @@ class UnidenScanner:
         (cmd, rssi, frq, sql) = res.split(",")
 
         return rssi, frq, sql
-
-    def get_volume(self):
-
-        """Get Volume Level Settings
-
-        LEVEL		Volume Level ( 0 - 15 )"""
-
-        try:
-            res = self.raw("VOL")
-
-        except CommandError:
-            self.logger.error("get_volume()")
-            return 0
-
-        (cmd, vol) = res.split(",")
-        return vol
-
-    def set_volume(self, vol):
-        """Set Volume Level Settings
-
-        LEVEL		Volume Level ( 0 - 15 )
-        :returns 1 if success, 0 if fail
-        """
-
-        cmd = ",".join(["VOL", str(vol)])
-
-        try:
-            self.raw(cmd)
-
-        except CommandError:
-            self.logger.error("set_volume(): cmd %s" % cmd)
-            return 0
-
-        return 1
 
     def get_squelch(self):
 
