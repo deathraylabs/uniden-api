@@ -613,6 +613,7 @@ GSI_OUTPUT = OrderedDict(
 )
 
 # reformatted GSI output template using nested dicts instead of flat dict
+# also includes MSI output
 GSI_OUTPUT_2 = {
     "ScannerInfo": {"Mode": "---", "V_Screen": "---"},
     "MonitorList": {
@@ -698,6 +699,11 @@ GSI_OUTPUT_2 = {
     "TransmissionStart": "---",
     "TransmissionEnd": "---",
     "FileSize": "---",
+    "MSI": {"Name": "", "Index": "", "MenuType": "", "Value": "", "Selected": ""},
+    "MenuItem": {},
+    "MenuInput": {},
+    "MenuLocation": {},
+    "MenuErrorMsg": {},
 }
 
 # MSI output template

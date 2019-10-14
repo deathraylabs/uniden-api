@@ -343,6 +343,7 @@ class UnidenScanner:
                 current_tag = element.tag
                 sub_dict = {}
 
+                # checking to see if we're at end of transmission or just end of block
                 if current_tag == "Footer" and element.attrib["EOT"] == "1":
                     continue
                 elif current_tag == "Footer" and element.attrib["EOT"] == "0":
@@ -356,14 +357,26 @@ class UnidenScanner:
                 for item in element.attrib.items():
                     sub_dict[item[0]] = item[1]
 
+                # todo: create a dict to hold sub dicts if not unique
                 # some commands return non-unique tag names, use name attribute instead
                 if not unique_tag_names:
-                    try:
-                        xml_dict[sub_dict["Name"]] = sub_dict
-                    except KeyError:
-                        self.logger.exception(
-                            "Key error building non-unique tag names."
-                        )
+                    # current_tag will be repeated, this is first entry
+                    if not current_tag in xml_dict:
+                        try:
+                            xml_dict[current_tag] = {sub_dict["Name"]: sub_dict}
+                        except KeyError:
+                            self.logger.exception("xml parse key error.")
+                            continue
+                    # add sub dicts under the repeated current tag
+                    else:
+                        xml_dict[current_tag][sub_dict["Name"]] = sub_dict
+                    # try:
+                    #     xml_dict[sub_dict["Name"]] = sub_dict
+                    #     # xml_dict[current_tag][sub_dict["Name"]] = sub_dict
+                    # except KeyError:
+                    #     self.logger.exception(
+                    #         "Key error building non-unique tag names."
+                    #     )
                     continue
 
                 xml_dict[current_tag] = sub_dict
