@@ -97,47 +97,17 @@ class ScannerConnection(UnidenScanner):
 class UpdateScreen:
     """Class used to handle distributing data to appropriate screen"""
 
-    pass
-
-
-class DataWindow(Screen):
-    """This is the main window for the app.
-
-    Notes: creating an initialization method causes python to crash. I'm not
-    sure why.
-    """
-
-    # initialize id reference to kv file using variable name
-    total_time = ObjectProperty()
-    command_input = ObjectProperty()
-    scan_status_button = ObjectProperty()
-
-    def __init__(self, **kwargs):
-        super(DataWindow, self).__init__(**kwargs)
-
-        # color for hold highlight
-        self.highlight_color = (0.8, 0.8, 0, 0.8)
-        self.transparent_color = (1, 1, 1, 0)
-
-        self.default_text_color = (1, 1, 1, 1)
-        self.permanent_avoid_color = (0.8, 0.8, 0.8, 0.9)
-
-        # time interval to refresh data
+    def __init__(self):
+        # time interval to refresh screen data
         self.refresh_data_dt = 0.1
 
-        # dict correlates scanner tags to variable names
-        self.data_tags = {
-            "MonitorList": "fav_list_name",
-            "System": "sys_name",
-            "Department": "dept_name",
-            "TGID": "tgid_hld",
-            "Site": "site_name",
-        }
+        # todo: is this how you get an instance of the datawindow class???
+        # self.datawindow = DataWindow.
 
-    def scanner_status_btn(self):
-        """Start pulling scanner display data."""
+    def start_auto_refresh(self):
+        """Begin automatically refreshing screen data"""
 
-        Logger.info("scanner status button was pressed")
+        Logger.info(f"Auto refresh screen every {self.refresh_data_dt} sec requested")
 
         # Set the timer for redrawing the screen
         refresh_time = self.refresh_data_dt
@@ -156,10 +126,85 @@ class DataWindow(Screen):
         Logger.info("clearing the buffer")
         scanner.reset_port()
 
-        self.scan_status_button.text = "Pull Startup"
-
         # start the screen update process
         Clock.schedule_interval(self.update_screen, refresh_time)
+
+    def update_screen(self):
+        """When called this method updates the internal scanner state and then
+        dispatches data to the appropriate window handler.
+        """
+
+        # update the scanner state variable first
+        wav_meta = scanner.update_scanner_state()
+
+        # check to ensure data is present
+        if isinstance(wav_meta, bool):
+            Logger.error("No data returned by scanner.")
+            return False
+
+        # check for a popup screen
+        popup_screen = wav_meta.get("PopupScreen")
+        if popup_screen != {}:
+            print(popup_screen)
+
+        # determine if screen is a menu or scan screen
+        v_screen = wav_meta.get("ScannerInfo")
+        if v_screen["Mode"] == "Trunk Scan":
+            # todo: debug call to main window
+            Logger.debug("update_screen: calling datawindow class")
+            self.datawindow.update_datawindow_screen(wav_meta)
+
+        elif v_screen["Mode"] == "Menu tree":
+            # todo: call menu window
+            print("menu tree")
+        else:
+            Logger.error(f"unknown screen: {v_screen}")
+            return False
+
+        return True
+
+
+class DataWindow(Screen):
+    """This is the main window for the app.
+
+    Notes: creating an initialization method causes python to crash. I'm not
+    sure why.
+    """
+
+    # initialize id reference to kv file using variable name
+    total_time = ObjectProperty()
+    command_input = ObjectProperty()
+    scan_status_button = ObjectProperty()
+
+    def __init__(self, **kwargs):
+        super(DataWindow, self).__init__(**kwargs)
+
+        # update_screen instance to handle updating screen data
+        self.screen_updater = UpdateScreen()
+
+        # color for hold highlight
+        self.highlight_color = (0.8, 0.8, 0, 0.8)
+        self.transparent_color = (1, 1, 1, 0)
+
+        self.default_text_color = (1, 1, 1, 1)
+        self.permanent_avoid_color = (0.8, 0.8, 0.8, 0.9)
+
+        # dict correlates scanner tags to variable names
+        self.data_tags = {
+            "MonitorList": "fav_list_name",
+            "System": "sys_name",
+            "Department": "dept_name",
+            "TGID": "tgid_hld",
+            "Site": "site_name",
+        }
+
+    def scanner_status_btn(self):
+        """Start pulling scanner display data."""
+
+        Logger.info("scanner status button was pressed")
+
+        # call the screen updater method of UpdateScreen()
+        self.screen_updater.update_screen()
 
         self.scan_status_button.text = "Pull Mode"
         self.scan_status_button.color = (1, 1, 1, 0.5)
@@ -315,27 +360,14 @@ class DataWindow(Screen):
 
         return True
 
-    def update_screen(self, dt):
+    def update_datawindow_screen(self, wav_meta):
         """Handles updates.
         Args:
-            dt: argument used internally by kivy
+            wav_meta (dict): metadata read from scanner
 
         Returns:
             None
         """
-        # update the scanner state variable first
-        wav_meta = scanner.update_scanner_state()
-
-        # check to ensure data is present
-        if isinstance(wav_meta, bool):
-            Logger.error("No data returned by scanner.")
-            return False
-
-        # check for a popup screen
-        popup_screen = wav_meta.get("PopupScreen")
-        if popup_screen != {}:
-            print(popup_screen)
-
         try:
             trans_start = wav_meta["transmission_start"]
         except KeyError:
