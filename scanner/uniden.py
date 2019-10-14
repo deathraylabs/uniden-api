@@ -842,21 +842,32 @@ class UnidenScanner:
 
         return vol
 
-    def set_volume(self, vol):
+    def set_volume(self, vol=-1, delta=0):
         """Set Volume Level directly.
 
         LEVEL		Volume Level ( 0 - 15 )
 
         Args:
-            vol (str/int): volume level between 0 and 15
+            vol (str/int):
+                - volume level between 0 and 15
+                - -1 if you are going to increment
+            delta (int): volume change increment (sign determines direction)
 
         Returns:
-            True: success
             False: error
+            True: if successful
+
+        Examples:
+            raise volume by one
+            >>> self.set_volume(delta=1)
+            True
         """
 
+        if int(vol) == -1:
+            # we wish to increment the volume
+            vol = int(self.get_volume()) + delta
         # double check that volume is within the correct range
-        if int(vol) < 0 or int(vol) > 15:
+        elif int(vol) < 0 or int(vol) > 15:
             self.logger.error(f"{vol} is not in the range of 0 to 15")
             return False
 
