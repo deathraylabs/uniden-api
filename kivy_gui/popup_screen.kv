@@ -10,6 +10,7 @@
 #    text_display: _text_display
 #    cmd_input_box: command_input
     text_display_popup: _text_display_popup
+#    menu_items: _menu_items
 
     GridLayout:
         cols: 2
@@ -22,18 +23,23 @@
         LargeTextDisplayPanel:
             id: _large_text_layout_popup
 
-            BoxLayout:
-                orientation: "vertical"
+#            BoxLayout:
+#                orientation: "vertical"
 
 #                Label:
 #                    text: "Menu Screen"
 
-                ScrollView:
-                    do_scroll: (False, True)
+            ScrollView:
+                do_scroll: (False, True)
 
-                    ScrollingTextDisplayPanel:
-                        id: _text_display_popup
-                        text: "I'm the menu screen!"
+#                BoxLayout:
+#                    id: _menu_items
+#                    orientation: "vertical"
+#                    size: self.width, self.height
+
+                ScrollingTextDisplayPanel:
+                    id: _text_display_popup
+                    text: "I'm the menu"
 
 
         BoxLayout:

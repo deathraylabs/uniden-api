@@ -11,6 +11,7 @@ from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
+from kivy.uix.recycleview import RecycleView
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 
@@ -32,6 +33,10 @@ Builder.load_file("playback_screen.kv")
 Builder.load_file("widget_formatting.kv")
 # contains formatting instructions for the popup screen
 Builder.load_file("popup_screen.kv")
+
+
+# class ScrollingTextDisplayPanel(Label):
+#     pass
 
 
 class ScannerConnection(UnidenScanner):
@@ -463,6 +468,7 @@ class PopupScreen(Screen):
     """
 
     text_display_popup = ObjectProperty()
+    # menu_items = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(PopupScreen, self).__init__(**kwargs)
@@ -475,14 +481,40 @@ class PopupScreen(Screen):
             - [ ] need some way to interact with menu structure in this view
         """
 
+        # container for scrolling display
+        scrolling_container = self.text_display_popup
+
+        # this is the container where we want to generate the labels
+        # layout = self.menu_items
+
         menu_information = self.get_menu_view()
 
-        # reset the text size so it fits in window
-        self.text_display_popup.text_size[1] = None
+        # todo: this dict item is not generally applicable to all menu items
+        # this gets us the currently selected item
+        selected_item = menu_information["MSI"]["    --- M E N U ---    "]["Selected"]
 
-        self.text_display_popup.text = pprint.pformat(
-            menu_information, compact=True, width=100, indent=3
-        )
+        # dictionary of menu items
+        menu_items = menu_information["MenuItem"]
+
+        # list the key values in order they were added
+        menu_item_list = list(menu_items)
+
+        # format the data so it makes sense to a human
+        text_out = ""
+        for item in menu_item_list:
+            item_index = menu_items[item]["Index"]
+            if selected_item == item_index:
+                text_out += f"{item} <---\n"
+            else:
+                text_out += f"{item}\n"
+
+        # reset the text size so it fits in window
+        scrolling_container.text_size[1] = None
+
+        # self.text_display_popup.text = pprint.pformat(
+        #     menu_item_list, compact=True, width=100, indent=3
+        # )
+        self.text_display_popup.text = text_out
         self.text_display_popup.height = self.text_display_popup.texture_size[1]
 
     def get_menu_view(self):
@@ -591,6 +623,9 @@ class PlaybackScreen(Screen):
 
         res = scanner.get_response()
 
+        pprint.pprint(res)
+
+        # format response with pretty print so it is more readable
         formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)
 
         # reset the text size so it fits properly in window
