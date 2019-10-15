@@ -135,22 +135,14 @@
                 NumericKeypad:
                     id: _vol_down
                     text: "vol\ndown"
+
                     on_press:
                         root.change_vol("down")
 
-                NumericKeypad:
-                    id: _six
-                    text: "6"
-                    on_press:
-                        root.change_vol(6)
+                BlankLabel:
 
-                NumericKeypad:
-                    id: _seven
-                    text: "7"
+                BlankLabel:
 
-#                NumericKeypad:
-#                    id: _three
-#                    text: "3"
 
             MenuBar:
                 id: _fourth_row
@@ -160,9 +152,9 @@
                     text: "mute"
                     on_press: root.change_vol("mute")
 
-                NumericKeypad:
+                BlankLabel:
 
-                NumericKeypad:
+                BlankLabel:
 
             MenuBar:
                 id: _fifth_row
