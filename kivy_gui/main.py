@@ -378,6 +378,8 @@ class DataWindow(Screen):
             scanner.set_volume(delta=1)
         elif cmd == "down":
             scanner.set_volume(delta=-1)
+        elif cmd == "mute":
+            scanner.set_volume(vol=0)
         elif isinstance(cmd, int):
             scanner.set_volume(vol=cmd)
         else:
@@ -589,11 +591,13 @@ class PlaybackScreen(Screen):
 
         res = scanner.get_response()
 
+        formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)
+
         # reset the text size so it fits properly in window
         self.text_display.text_size[1] = None
 
         # display text on left text panel
-        self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
+        self.text_display.text = formatted_response
         self.text_display.height = self.text_display.texture_size[1]
 
     # ---------- currently unused ---------- #
