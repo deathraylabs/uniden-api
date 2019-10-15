@@ -489,9 +489,18 @@ class PopupScreen(Screen):
 
         menu_information = self.get_menu_view()
 
-        # todo: this dict item is not generally applicable to all menu items
+        # dict that contains information on menu and selection
+        msi_dict = menu_information.get("MSI")
+
         # this gets us the currently selected item
-        selected_item = menu_information["MSI"]["    --- M E N U ---    "]["Selected"]
+        # make sure there is actually a menu item present
+        if msi_dict is not None:
+            for k, v in msi_dict.items():
+                menu_name = k
+                selected_item = v["Selected"]
+        else:
+            Logger.error("Unusual menu structure encountered")
+            return False
 
         # dictionary of menu items
         menu_items = menu_information["MenuItem"]
@@ -500,13 +509,13 @@ class PopupScreen(Screen):
         menu_item_list = list(menu_items)
 
         # format the data so it makes sense to a human
-        text_out = ""
+        text_out = f"{menu_name}\n\n"
         for item in menu_item_list:
             item_index = menu_items[item]["Index"]
             if selected_item == item_index:
-                text_out += f"{item} <---\n"
+                text_out += f"---> {item}\n"
             else:
-                text_out += f"{item}\n"
+                text_out += f"      {item}\n"
 
         # reset the text size so it fits in window
         scrolling_container.text_size[1] = None
