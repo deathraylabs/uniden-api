@@ -127,6 +127,8 @@
                     text: "next"
                     on_press: root.keypad_press(keypad_key="vright")
 
+            # ----- Third row ----- #
+
             MenuBar:
                 id: _third_row
 
@@ -195,4 +197,4 @@
 
                     Button:
                         text: "menu"
-                        on_press: root.manager.current = 'popup'
+                        on_press: root.keypad_press("menu")

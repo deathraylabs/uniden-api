@@ -55,9 +55,9 @@
                     orientation: 'vertical'
 
                     # ------------ first row ------------- #
-                    CommandLine:
-                        id: command_input
-                        text: "GLT,FL"
+                    Label:
+#                        id: command_input
+                        text: "empty"
 #                        on_text_validate:
 #                            root.command_input(args[0])
 #                            self.cancel_selection()  # gets rid of handles
@@ -68,33 +68,34 @@
                         id: "second_row"
                         orientation: 'horizontal'
 
-                        Button:
-                            id: "menu_view"
-                            text: "Get Menu View"
-#                            on_press: root.display_raw_scanner_output("MSI")
+                        NumericKeypad:
+                            id: _up
+                            text: "up"
+                            on_press: root.keypad_press(keypad_key="vleft")
 
-                        Button:
-                            id: "gsi_output"
-                            text: "View GSI Info"
-#                            on_press: root.display_raw_scanner_output("GSI")
+                        NumericKeypad:
+                            id: _back
+                            text: "back"
+                            on_press: root.keypad_press("menu")
 
-                        Button:
+                        NumericKeypad:
+                            id: _enter_button
+                            text: "enter"
+                            on_press: root.keypad_press("E")
 
                     # ---------- third row ---------- #
                     BoxLayout:
                         id: "third_row"
                         orientation: 'horizontal'
 
-                        Button:
-#                            popup_window: _popup_window
-                            id: _hide_popup
+                        NumericKeypad:
+                            id: _down
+                            text: "down"
+                            on_press: root.keypad_press(keypad_key="vright")
 
-                            text: "broken"
-#                            on_release:
-#                                # moves whole window offscreen
-#
-#                                root.btn()
+                        NumericKeypad:
 
+                        NumericKeypad:
 
                     BoxLayout:
                         id: "fourth_row"
@@ -134,4 +135,4 @@
 
                         Button:
                             text: "menu"
-                            on_press: root.manager.current = 'popup'
+                            on_press: root.keypad_press("menu")

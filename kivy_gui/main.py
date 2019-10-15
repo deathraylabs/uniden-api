@@ -538,6 +538,34 @@ class PopupScreen(Screen):
 
         return res
 
+    def keypad_press(self, keypad_key, keypad_mode="press"):
+        """Method to pass keypad press command to scanner.
+
+        Args:
+            keypad_key (str): see scanner.push_key docstring
+            keypad_mode (str): see scanner.push_key docstring. defaults to simple press
+
+        Returns:
+            True: if keypad press is successful
+            False: if scanner returns an error code
+
+        """
+
+        # check for connection
+        if scanner is None:
+            Logger.error("No connection to scanner.")
+            return False
+
+        res = scanner.push_key(keypad_mode, keypad_key)
+
+        if res == 0:
+            Logger.error(
+                f"Scanner responded with error code to keypad input {keypad_key}"
+            )
+            return False
+
+        return True
+
 
 class PlaybackScreen(Screen):
     """temporary debugging and experimentation screen"""
