@@ -100,6 +100,10 @@ class ScannerConnection(UnidenScanner):
         Logger.info("Scanner Connection Closed.")
 
 
+# create a connection to scanner instance
+scanner = ScannerConnection()
+
+
 class UpdateScreen:
     """Class used to handle distributing data to appropriate screen"""
 
@@ -744,10 +748,6 @@ class DataWindowApp(App):
 
         # return self.sm
         return sm
-
-
-# create a connection to scanner instance
-scanner = ScannerConnection()
 
 
 if __name__ == "__main__":
