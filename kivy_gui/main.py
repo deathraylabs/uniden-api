@@ -213,12 +213,16 @@ class DataWindow(Screen):
     volume_level = ObjectProperty()
     command_input = ObjectProperty()
     scan_status_button = ObjectProperty()
+    # mute = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
 
         # update_screen instance to handle updating screen data
         self.screen_updater = UpdateScreen()
+
+        self.red_text_color = (1, 0, 0, 1)
+        self.white_text_color = (1, 1, 1, 1)
 
         # color for hold highlight
         self.highlight_color = (0.8, 0.8, 0, 0.8)
@@ -235,6 +239,9 @@ class DataWindow(Screen):
             "TGID": "tgid_hld",
             "Site": "site_name",
         }
+
+        # variable to store last volume level before mute
+        self.vol_last = 0
 
         # begin communicating with scanner
         # self.scanner_status_btn()
@@ -384,17 +391,33 @@ class DataWindow(Screen):
     def change_vol(self, cmd):
         """raise or lower volume
 
+        Notes:
+            - Passing an integer from 0 to 15 will change the volume to that level
+                directly.
+            - Passing "up", "down", or "mute" will change volume incrementally or to zero
+
         Args:
-            cmd (str): up or down
+            cmd (str): "up", "down", "mute"
+            cmd (int): value between 0-15
 
         """
+        current_vol = scanner.get_volume()
+
+        if current_vol is False:
+            # no current volume is set
+            return False
 
         if cmd == "up":
             scanner.set_volume(delta=1)
         elif cmd == "down":
             scanner.set_volume(delta=-1)
-        elif cmd == "mute":
+        elif cmd == "mute" and current_vol != "0":
+            # save the current volume level before muting
+            self.vol_last = current_vol
             scanner.set_volume(vol=0)
+        # reset the previous volume level
+        elif cmd == "mute" and current_vol == "0":
+            scanner.set_volume(vol=self.vol_last)
         elif isinstance(cmd, int):
             scanner.set_volume(vol=cmd)
         else:
