@@ -160,8 +160,10 @@ class UpdateScreen:
         dispatches data to the appropriate window handler.
 
         Notes:
-            - dt is an internal variable used by kivy.
+            - dt is an internal variable used by kivy, not by my code
 
+        Args:
+            dt: kivy passes interval data through this variable
         """
 
         # update the scanner state variable first
@@ -178,21 +180,25 @@ class UpdateScreen:
             print(popup_screen)
 
         # determine if screen is a menu or scan screen
-        v_screen = wav_meta.get("ScannerInfo")
-        if v_screen["Mode"] == "Trunk Scan":
+        scanner_info = wav_meta.get("ScannerInfo")
+        mode = scanner_info.get("Mode")
+        v_screen = scanner_info.get("V_Screen")
+
+        # scanner mode can be "Trunk Scan" or "Trunk Scan Hold", so use v_screen here
+        if v_screen == "trunk_scan":
             # switch to the main screen and update it
             Logger.debug("update_screen: calling datawindow class")
             # switch over to datawindow screen
             sm.current = "datawindow"
             Logger.debug("update screen: switched over to datawindow")
             sm.current_screen.update_datawindow_screen(wav_meta)
-        elif v_screen["Mode"] == "Menu tree":
+        elif mode == "Menu tree":
             # switch to the popup screen and update it
             Logger.debug("update_screen: calling popup class")
             sm.current = "popup"
             sm.current_screen.update_popup_screen()
         else:
-            Logger.error(f"unknown screen: {v_screen}")
+            Logger.error(f"update_screen: unknown screen: {v_screen}")
             return False
 
         # return self
@@ -201,8 +207,6 @@ class UpdateScreen:
 class DataWindow(Screen):
     """This is the main window for the app.
 
-    Notes: creating an initialization method causes python to crash. I'm not
-    sure why.
     """
 
     # initialize id reference to kv file using variable name
@@ -233,7 +237,7 @@ class DataWindow(Screen):
         }
 
         # begin communicating with scanner
-        self.scanner_status_btn()
+        # self.scanner_status_btn()
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
@@ -267,7 +271,7 @@ class DataWindow(Screen):
             command names.
 
         Args:
-            hold_key (str): key press command
+            hold_key (str): key press command for specific scanner button
 
         Returns:
             res (str): push_key response string
@@ -758,7 +762,7 @@ if __name__ == "__main__":
     #     "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
     # )
 
-    Config.set("kivy", "log_level", "info")
+    Config.set("kivy", "log_level", "debug")
 
     # def get_child_names(ids):
     #     for index, child in enumerate(ids):

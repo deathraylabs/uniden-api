@@ -353,6 +353,8 @@ class UnidenScanner:
                 elif current_tag == root_tag:
                     # once you encounter the root tag again you're done
                     at_xml_end = True
+                elif current_tag == "MenuErrorMsg":
+                    at_xml_end = True
 
                 for item in element.attrib.items():
                     sub_dict[item[0]] = item[1]
