@@ -188,7 +188,6 @@ class UpdateScreen:
             sm.current = "popup"
             sm.current_screen.update_popup_screen()
         else:
-            # todo: need a strategy to handle popup text provided by scanner
             Logger.error(f"unknown screen: {v_screen}")
             return False
 
@@ -228,6 +227,9 @@ class DataWindow(Screen):
             "TGID": "tgid_hld",
             "Site": "site_name",
         }
+
+        # begin communicating with scanner
+        self.scanner_status_btn()
 
     def scanner_status_btn(self):
         """Start pulling scanner display data."""
