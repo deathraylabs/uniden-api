@@ -461,8 +461,7 @@ class DataWindow(Screen):
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
 
-        # todo: calculate elapsed time in seconds using datetime
-        self.volume_level.text = "placeholder"
+        self.volume_level.text = f'vol: {wav_meta["Property"]["VOL"]}'
 
         self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
