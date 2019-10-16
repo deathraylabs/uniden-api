@@ -210,7 +210,7 @@ class DataWindow(Screen):
     """
 
     # initialize id reference to kv file using variable name
-    total_time = ObjectProperty()
+    volume_level = ObjectProperty()
     command_input = ObjectProperty()
     scan_status_button = ObjectProperty()
 
@@ -462,7 +462,7 @@ class DataWindow(Screen):
         self.transmission_end.text = trans_end
 
         # todo: calculate elapsed time in seconds using datetime
-        self.total_time.text = "placeholder"
+        self.volume_level.text = "placeholder"
 
         self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
