@@ -499,6 +499,13 @@ class PopupScreen(Screen):
 
         menu_information = self.get_menu_view()
 
+        menu_error = menu_information.get("MenuErrorMsg")
+
+        # catch menu error message
+        if menu_error is not None:
+            Logger.error(f"menu error message: {menu_error['Text']}")
+            return False
+
         # dict that contains information on menu and selection
         msi_dict = menu_information.get("MSI")
 
@@ -507,13 +514,42 @@ class PopupScreen(Screen):
         if msi_dict is not None:
             for k, v in msi_dict.items():
                 menu_name = k
-                selected_item = v["Selected"]
+
+                # check the type of menu we're looking at
+                menu_type = v["MenuType"]
+
+                if menu_type == "TypeSelect":
+                    selected_item = v["Selected"]
+                    # dictionary of menu items
+                    menu_items = menu_information["MenuItem"]
+
+                    # process the menu selections with this method
+                    text_out = self.menu_selector(
+                        menu_name=menu_name,
+                        selected_item=selected_item,
+                        menu_items=menu_items,
+                    )
+                # handle numeric input types
+                elif menu_type == "TypeInput":
+                    text_out = f"{menu_name}\n\n"
+                    text_out += f"value: {v['Value']}"
+                else:
+                    text_out = "No Menu Output"
         else:
             Logger.error("Unusual menu structure encountered")
             return False
 
-        # dictionary of menu items
-        menu_items = menu_information["MenuItem"]
+        # reset the text size so it fits in window
+        scrolling_container.text_size[1] = None
+
+        # self.text_display_popup.text = pprint.pformat(
+        #     menu_item_list, compact=True, width=100, indent=3
+        # )
+        self.text_display_popup.text = text_out
+        self.text_display_popup.height = self.text_display_popup.texture_size[1]
+
+    def menu_selector(self, menu_name, selected_item, menu_items):
+        """Method to select a menu item."""
 
         # list the key values in order they were added
         menu_item_list = list(menu_items)
@@ -527,14 +563,7 @@ class PopupScreen(Screen):
             else:
                 text_out += f"      {item}\n"
 
-        # reset the text size so it fits in window
-        scrolling_container.text_size[1] = None
-
-        # self.text_display_popup.text = pprint.pformat(
-        #     menu_item_list, compact=True, width=100, indent=3
-        # )
-        self.text_display_popup.text = text_out
-        self.text_display_popup.height = self.text_display_popup.texture_size[1]
+        return text_out
 
     def get_menu_view(self):
         """Uses the uniden scanner api to request menu view information from the
@@ -762,7 +791,7 @@ if __name__ == "__main__":
     #     "scripts/uniden-api/kivy_gui/2019-07-17_15-04-13.wav"
     # )
 
-    Config.set("kivy", "log_level", "debug")
+    Config.set("kivy", "log_level", "info")
 
     # def get_child_names(ids):
     #     for index, child in enumerate(ids):
