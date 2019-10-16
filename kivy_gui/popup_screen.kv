@@ -13,29 +13,16 @@
 #    menu_items: _menu_items
 
     GridLayout:
-        cols: 2
         id: _main_container_popup
+        cols: 2
         width: root.width
         height: root.height
-
-#        RelativeLayout:
 
         LargeTextDisplayPanel:
             id: _large_text_layout_popup
 
-#            BoxLayout:
-#                orientation: "vertical"
-
-#                Label:
-#                    text: "Menu Screen"
-
             ScrollView:
                 do_scroll: (False, True)
-
-#                BoxLayout:
-#                    id: _menu_items
-#                    orientation: "vertical"
-#                    size: self.width, self.height
 
                 ScrollingTextDisplayPanel:
                     id: _text_display_popup
@@ -85,7 +72,7 @@
 
                     # ---------- third row ---------- #
                     BoxLayout:
-                        id: "third_row"
+                        id: _third_row
                         orientation: 'horizontal'
 
                         NumericKeypad:

@@ -758,9 +758,9 @@ if __name__ == "__main__":
 
     Config.set("kivy", "log_level", "info")
 
-    def get_child_names(ids):
-        for index, child in enumerate(ids):
-            print(f"[{index}] - {child}")
+    # def get_child_names(ids):
+    #     for index, child in enumerate(ids):
+    #         print(f"[{index}] - {child}")
 
     # run the GUI
     DataWindowApp().run()
