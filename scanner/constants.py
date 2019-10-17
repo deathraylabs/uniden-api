@@ -682,7 +682,7 @@ GSI_OUTPUT_2 = {
     },
     "InfoArea1": {},
     "InfoArea2": {},
-    "OverWrite": {},
+    "OverWrite": {"Text": ""},
     "PopupScreen": {},
     "PlainText": {},
     "ViewDescription:": {

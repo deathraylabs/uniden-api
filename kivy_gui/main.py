@@ -437,6 +437,13 @@ class DataWindow(Screen):
         Returns:
             None
         """
+        # get the scanner overwrite text
+        overwrite = wav_meta["OverWrite"]["Text"]
+
+        if overwrite == "ID Scanning...":
+            self._scanning.text = overwrite
+        else:
+            self._scanning.text = ""
 
         vol = wav_meta["Property"]["VOL"]
         if vol == "0":

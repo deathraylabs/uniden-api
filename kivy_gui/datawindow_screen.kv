@@ -16,6 +16,7 @@
     command_input: _command_input
     scan_status_button: scanner_status
     _mute: _mute
+    _scanning: _scanning
 
     GridLayout:
         id: 'main_container'
@@ -81,9 +82,14 @@
                     font_size: '15sp'
 
                 Label:
+                    id: _scanning
+                    text: "-----"
+                    font_size: "15sp"
+
+                Label:
                     id: _volume_level
                     halign: "right"
-                    text: "Total Time"
+                    text: "VOL"
                     font_size: '15sp'
 
         RightSidePanel:
