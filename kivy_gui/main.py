@@ -437,6 +437,13 @@ class DataWindow(Screen):
         Returns:
             None
         """
+
+        vol = wav_meta["Property"]["VOL"]
+        if vol == "0":
+            self._mute.color = self.red_text_color
+        else:
+            self._mute.color = self.white_text_color
+
         try:
             trans_start = wav_meta["transmission_start"]
         except KeyError:
