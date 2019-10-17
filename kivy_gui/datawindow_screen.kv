@@ -178,6 +178,13 @@
                     text: "Stop\nDisplay"
                     on_press: root.scanner_disconnect_btn()
 
+                Button:
+                    id: _function_button
+                    text: "func"
+                    on_press: root.keypad_press(keypad_key="func")
+
+            # ----- sixth row ----- #
+
             MenuBar:
                 id: _sixth_row
 
