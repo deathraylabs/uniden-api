@@ -688,7 +688,7 @@ GSI_OUTPUT_2 = {
     "ViewDescription:": {
         "InfoArea1": {"Text": "---"},
         "InfoArea2": {"Text": "---"},
-        "OverWrite": {"Text": "---"},
+        "OverWrite": {"Text": ""},
         "PopupScreen": {},
         "PlainText": {"Text": "---"},
     },

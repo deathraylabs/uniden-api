@@ -437,13 +437,6 @@ class DataWindow(Screen):
         Returns:
             None
         """
-        # get the scanner overwrite text
-        overwrite = wav_meta["OverWrite"]["Text"]
-
-        if overwrite == "ID Scanning...":
-            self._scanning.text = overwrite
-        else:
-            self._scanning.text = ""
 
         vol = wav_meta["Property"]["VOL"]
         if vol == "0":
@@ -502,6 +495,16 @@ class DataWindow(Screen):
 
         self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
+
+        # get the scanner overwrite text
+        overwrite = wav_meta["OverWrite"]["Text"]
+
+        # if scanner provides overwrite text, display it over the tgid area
+        if overwrite != "":
+            self.tgid_hld.text = overwrite
+            self.tgid_hld.color = (0.2, 1, 1, 0.8)
+        # else:
+        #     self._scanning.text = ""
 
         return True
 
