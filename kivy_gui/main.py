@@ -360,6 +360,7 @@ class DataWindow(Screen):
 
         return True
 
+    # todo: update buttons for case when function button is pressed
     def keypad_press(self, keypad_key, keypad_mode="press"):
         """Method to pass keypad press command to scanner.
 
