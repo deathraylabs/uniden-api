@@ -508,6 +508,13 @@ class DataWindow(Screen):
         # else:
         #     self._scanning.text = ""
 
+        # change the function key display if it's active
+        func_key = wav_meta["Property"]["F"]
+        if func_key == "On":
+            self._function_button.color = self.red_text_color
+        else:
+            self._function_button.color = self.white_text_color
+
         return True
 
 
