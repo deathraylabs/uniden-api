@@ -956,3 +956,39 @@ PODCAST = {
     "podcast_duration:": r"\"0:0:0\"",
     "podcast_length:": 000,
 }
+
+# scanner push key commands (human: scanner)
+SCANNER_KEYS = {
+    "menu": "M",
+    "func": "F",
+    "avoid": "L",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
+    "0": "0",
+    "dot": ".",
+    "no": ".",
+    "pri": ".",
+    "E": "E",
+    "yes": "E",
+    "vright": ">",
+    "vleft": "<",
+    "vpush": "^",
+    "backlight": "V",
+    "sq": "Q",  # acts like 0
+    "replay": "Y",
+    "system": "A",
+    "dept": "B",
+    "chan": "C",
+    "zip": "Z",
+    "srev": "T",  # acts like 0
+    "rang": "R",  # acts like 0
+    "light": "P",
+    "pwr": "P",
+}

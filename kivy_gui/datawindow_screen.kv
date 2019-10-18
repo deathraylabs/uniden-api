@@ -166,24 +166,35 @@
 
                 BlankLabel:
 
+            # ----- Fifth Row ----- #
+
             MenuBar:
                 id: _fifth_row
 
-                Button:
-                    id: scanner_status
-                    text: "Mirror\nScanner"
-                    on_press: root.scanner_status_btn()
+                BoxLayout:
+                    id: _mirror_scanner
+                    orientation: "vertical"
+
+                    Button:
+                        id: scanner_status
+                        text: "Start"
+                        on_press: root.scanner_status_btn()
+
+                    Button:
+                        text: "Stop\nDisplay"
+                        on_press: root.scanner_disconnect_btn()
 
                 Button:
-                    text: "Stop\nDisplay"
-                    on_press: root.scanner_disconnect_btn()
+                    id: _begin_end_recording
+                    text: "Rec"
+                    on_release: self.text = "ZZZ"
 
                 Button:
                     id: _function_button
                     text: "func"
                     on_press: root.keypad_press(keypad_key="func")
 
-            # ----- sixth row ----- #
+            # ----- sixth row, last row ----- #
 
             MenuBar:
                 id: _sixth_row
