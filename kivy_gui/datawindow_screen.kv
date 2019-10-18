@@ -42,23 +42,23 @@
                     id: tgid_hld
                     strikethrough: False
                     text: "TGID:Name"
-                    on_press: root.scanner_hold("chan")
+                    on_release: root.scanner_hold("chan")
 
 
             TouchArea:
                 id: dept_name
                 text: "Department:Name"
-                on_press: root.scanner_hold("dept")
+                on_release: root.scanner_hold("dept")
 
             TouchArea:
                 id: sys_name
                 text: "System:Name"
-                on_press: root.scanner_hold("system")
+                on_release: root.scanner_hold("system")
 
             TouchArea:
                 id: site_name
                 text: "Site:Name"
-                on_press: root.site_hold()
+                on_release: root.site_hold()
 
             Label:
                 id: fav_list_name
@@ -109,12 +109,12 @@
                 NumericKeypad:
                     id: _set_unid
                     text: "Set\nUNID"
-                    on_press: root.open_unid_menu()
+                    on_release: root.open_unid_menu()
 
                 NumericKeypad:
                     id: _avoid_key
                     text: "AVOID"
-                    on_press: root.keypad_press(keypad_key="avoid")
+                    on_release: root.keypad_press(keypad_key="avoid")
 
             # ----- second row ----- #
 
@@ -124,18 +124,18 @@
                 NumericKeypad:
                     id: _vol_up
                     text: "vol\nup"
-                    on_press:
+                    on_release:
                         root.change_vol("up")
 
                 NumericKeypad:
                     id: _prev
                     text: "prev"
-                    on_press: root.keypad_press(keypad_key="vleft")
+                    on_release: root.keypad_press(keypad_key="vleft")
 
                 NumericKeypad:
                     id: _next
                     text: "next"
-                    on_press: root.keypad_press(keypad_key="vright")
+                    on_release: root.keypad_press(keypad_key="vright")
 
             # ----- Third row ----- #
 
@@ -146,7 +146,7 @@
                     id: _vol_down
                     text: "vol\ndown"
 
-                    on_press:
+                    on_release:
                         root.change_vol("down")
 
                 BlankLabel:
@@ -160,7 +160,7 @@
                 NumericKeypad:
                     id: _mute
                     text: "mute"
-                    on_press: root.change_vol("mute")
+                    on_release: root.change_vol("mute")
 
                 BlankLabel:
 
@@ -178,21 +178,21 @@
                     Button:
                         id: scanner_status
                         text: "Start"
-                        on_press: root.scanner_status_btn()
+                        on_release: root.scanner_status_btn()
 
                     Button:
                         text: "Stop\nDisplay"
-                        on_press: root.scanner_disconnect_btn()
+                        on_release: root.scanner_disconnect_btn()
 
                 Button:
                     id: _begin_end_recording
                     text: "Rec"
-                    on_release: self.text = "ZZZ"
+                    on_release: root.keypad_press(keypad_key="replay")
 
                 Button:
                     id: _function_button
                     text: "func"
-                    on_press: root.keypad_press(keypad_key="func")
+                    on_release: root.keypad_press(keypad_key="func")
 
             # ----- sixth row, last row ----- #
 
@@ -205,7 +205,7 @@
 
                     Button:
                         text: 'Main'
-                        on_press:
+                        on_release:
 #                                root.manager.transition.direction = 'right'
                             root.manager.current = 'datawindow'
 
@@ -215,7 +215,7 @@
 
                         Button:
                             text: 'Info'
-                            on_press:
+                            on_release:
     #                                root.manager.transition.direction = 'right'
                                 root.manager.current = 'playback'
 
@@ -226,4 +226,4 @@
 
                     Button:
                         text: "menu"
-                        on_press: root.keypad_press("menu")
+                        on_release: root.keypad_press("menu")
