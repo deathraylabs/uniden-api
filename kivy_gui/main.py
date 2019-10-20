@@ -9,6 +9,7 @@ from kivy.graphics import *
 from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.uix.recycleview import RecycleView
@@ -105,7 +106,10 @@ scanner = ScannerConnection()
 
 
 class UpdateScreen:
-    """Class used to handle distributing data to appropriate screen"""
+    """Class used to handle distributing data to appropriate screen at a set
+    refresh rate.
+
+    """
 
     def __init__(self):
         # time interval to refresh screen data
@@ -161,6 +165,9 @@ class UpdateScreen:
 
         Notes:
             - dt is an internal variable used by kivy, not by my code
+            - use this method to handle updating scanner state instead of grabbing state
+                from other methods or classes. That will ensure the last state seen
+                by user is the same data that you are working with.
 
         Args:
             dt: kivy passes interval data through this variable
@@ -192,6 +199,8 @@ class UpdateScreen:
             sm.current = "datawindow"
             Logger.debug("update screen: switched over to datawindow")
             sm.current_screen.update_datawindow_screen(wav_meta)
+            RightSidePanel().update_rightsidepanel(wav_meta)
+        # todo: update the right side panel for this screen too
         elif mode == "Menu tree":
             # switch to the popup screen and update it
             Logger.debug("update_screen: calling popup class")
@@ -202,6 +211,140 @@ class UpdateScreen:
             return False
 
         # return self
+
+
+class RightSidePanel(BoxLayout):
+    """Panel that contains the user interface buttons"""
+
+    # initialize id reference to kv file using variable name
+    # volume_level = ObjectProperty()
+    command_input = ObjectProperty()
+    scan_status_button = ObjectProperty()
+
+    def __init__(self, **kwargs):
+        super(RightSidePanel, self).__init__(**kwargs)
+
+        # update_screen instance to handle updating screen data
+        # self.screen_updater = UpdateScreen()
+
+        self.red_text_color = (1, 0, 0, 1)
+        self.white_text_color = (1, 1, 1, 1)
+
+        # variable to store last volume level before mute
+        self.vol_last = 0
+
+    def scanner_disp_start_btn(self):
+        """Start pulling scanner display data."""
+
+        Logger.info("scanner status button was pressed")
+
+        # call the screen updater method of UpdateScreen()
+        update_screen.start_auto_refresh()
+
+        self.scan_status_button.text = "Pulling"
+        self.scan_status_button.color = (1, 1, 1, 0.5)
+
+        return True
+
+    def scanner_disp_stop_btn(self):
+        """Closes connection to scanner."""
+
+        update_screen.stop_auto_refresh()
+
+        # update button label
+        self.scan_status_button.text = "Mirron\nScanner"
+        self.scan_status_button.color = (1, 1, 1, 1)
+
+        return True
+
+    def keypad_press(self, keypad_key, keypad_mode="press"):
+        """Method to pass keypad press command to scanner.
+
+        Args:
+            keypad_key (str): see scanner.push_key docstring
+            keypad_mode (str): see scanner.push_key docstring. defaults to simple press
+
+        Returns:
+            True: if keypad press is successful
+            False: if scanner returns an error code
+
+        """
+
+        # check for connection
+        if scanner is None:
+            Logger.error("No connection to scanner.")
+            return False
+
+        res = scanner.push_key(keypad_mode, keypad_key)
+
+        if res == 0:
+            Logger.error(
+                f"Scanner responded with error code to keypad input {keypad_key}"
+            )
+            return False
+
+        return True
+
+    def change_vol(self, cmd):
+        """raise or lower volume
+
+        Notes:
+            - Passing an integer from 0 to 15 will change the volume to that level
+                directly.
+            - Passing "up", "down", or "mute" will change volume incrementally or to zero
+
+        Args:
+            cmd (str): "up", "down", "mute"
+            cmd (int): value between 0-15
+
+        """
+        current_vol = scanner.get_volume()
+
+        if current_vol is False:
+            # no current volume is set
+            return False
+
+        if cmd == "up":
+            scanner.set_volume(delta=1)
+        elif cmd == "down":
+            scanner.set_volume(delta=-1)
+        elif cmd == "mute" and current_vol != "0":
+            # save the current volume level before muting
+            self.vol_last = current_vol
+            scanner.set_volume(vol=0)
+        # reset the previous volume level
+        elif cmd == "mute" and current_vol == "0":
+            scanner.set_volume(vol=self.vol_last)
+        elif isinstance(cmd, int):
+            scanner.set_volume(vol=cmd)
+        else:
+            Logger.error("invalid volume command")
+            return False
+
+        # this will "push" the volume knob to make volume graph disappear
+        scanner.push_key(mode="press", key="vpush")
+
+        return True
+
+    def update_rightsidepanel(self, wav_meta):
+        """Method to update the button states on right side panel"""
+
+        vol = wav_meta["Property"]["VOL"]
+        if vol == "0":
+            self._mute.color = self.red_text_color
+        else:
+            self._mute.color = self.white_text_color
+
+        # self.volume_level.text = f'vol: {wav_meta["Property"]["VOL"]}'
+
+        # change the function key display if it's active
+        func_key = wav_meta["Property"]["F"]
+        if func_key == "On":
+            self._function_button.color = self.red_text_color
+        else:
+            self._function_button.color = self.white_text_color
+
+        return True
 
 
 class DataWindow(Screen):
@@ -217,9 +360,6 @@ class DataWindow(Screen):
 
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
-
-        # update_screen instance to handle updating screen data
-        self.screen_updater = UpdateScreen()
 
         self.red_text_color = (1, 0, 0, 1)
         self.white_text_color = (1, 1, 1, 1)
@@ -246,29 +386,29 @@ class DataWindow(Screen):
         # begin communicating with scanner
         # self.scanner_status_btn()
 
-    def scanner_status_btn(self):
-        """Start pulling scanner display data."""
+    # def scanner_status_btn(self):
+    #     """Start pulling scanner display data."""
+    #
+    #     Logger.info("scanner status button was pressed")
+    #
+    #     # call the screen updater method of UpdateScreen()
+    #     update_screen.start_auto_refresh()
+    #
+    #     self.scan_status_button.text = "Pull Mode"
+    #     self.scan_status_button.color = (1, 1, 1, 0.5)
+    #
+    #     return True
 
-        Logger.info("scanner status button was pressed")
-
-        # call the screen updater method of UpdateScreen()
-        self.screen_updater.start_auto_refresh()
-
-        self.scan_status_button.text = "Pull Mode"
-        self.scan_status_button.color = (1, 1, 1, 0.5)
-
-        return True
-
-    def scanner_disconnect_btn(self):
-        """Closes connection to scanner."""
-
-        self.screen_updater.stop_auto_refresh()
-
-        # update button label
-        self.scan_status_button.text = "Mirron\nScanner"
-        self.scan_status_button.color = (1, 1, 1, 1)
-
-        return True
+    # def scanner_disconnect_btn(self):
+    #     """Closes connection to scanner."""
+    #
+    #     update_screen.stop_auto_refresh()
+    #
+    #     # update button label
+    #     self.scan_status_button.text = "Mirron\nScanner"
+    #     self.scan_status_button.color = (1, 1, 1, 1)
+    #
+    #     return True
 
     def scanner_hold(self, hold_key):
         """Method to hold/release a given system, department, or channel.
@@ -440,11 +580,11 @@ class DataWindow(Screen):
             None
         """
 
-        vol = wav_meta["Property"]["VOL"]
-        if vol == "0":
-            self._mute.color = self.red_text_color
-        else:
-            self._mute.color = self.white_text_color
+        # vol = wav_meta["Property"]["VOL"]
+        # if vol == "0":
+        #     self._mute.color = self.red_text_color
+        # else:
+        #     self._mute.color = self.white_text_color
 
         try:
             trans_start = wav_meta["transmission_start"]
@@ -508,18 +648,19 @@ class DataWindow(Screen):
         # else:
         #     self._scanning.text = ""
 
-        # change the function key display if it's active
-        func_key = wav_meta["Property"]["F"]
-        if func_key == "On":
-            self._function_button.color = self.red_text_color
-        else:
-            self._function_button.color = self.white_text_color
+        # # change the function key display if it's active
+        # func_key = wav_meta["Property"]["F"]
+        # if func_key == "On":
+        #     self._function_button.color = self.red_text_color
+        # else:
+        #     self._function_button.color = self.white_text_color
 
         return True
 
 
 class PopupScreen(Screen):
-    """Handles popup logic
+    """Used to display menu items and other information that pops up in the course
+    of using a mode other than scanning.
 
     Notes:
         - [ ] needs a method to handle getting menu view information
@@ -795,6 +936,9 @@ sm = ScreenManager(transition=NoTransition())
 sm.add_widget(DataWindow(name="datawindow"))
 sm.add_widget(PlaybackScreen(name="playback"))
 sm.add_widget(PopupScreen(name="popup"))
+
+# create update screen instance that other classes can access
+update_screen = UpdateScreen()
 
 
 class DataWindowApp(App):

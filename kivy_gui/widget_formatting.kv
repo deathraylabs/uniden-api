@@ -1,5 +1,5 @@
 #:kivy 1.11.1
-#:import main main
+
 
 <Label>:
     # this is how you apply generic formatting to everything tagged Label
@@ -76,8 +76,145 @@
             size: self.size
             pos: self.pos
 
-<RightSidePanel@BoxLayout>:
+<RightSidePanel>:
     orientation: 'vertical'
     size_hint_x: .4
+    id: _right_side
+
+#    command_input: _command_input
+    scan_status_button: _start_disp_btn
+    _mute: _mute
+    _function_button: _function_button
+
+    MenuBar:
+        id: _first_row
+
+        CommandLine:
+            id: _command_input
+            on_text_validate:
+                root.update_unid(args[0])
+                self.focus = False       # unfocus before cancel sel
+                self.cancel_selection()  # gets rid of handles
+
+        NumericKeypad:
+            id: _set_unid
+            text: "Set\nUNID"
+            on_release: root.open_unid_menu()
+
+        NumericKeypad:
+            id: _avoid_key
+            text: "AVOID"
+            on_release: root.keypad_press(keypad_key="avoid")
+
+    # ----- second row ----- #
+
+    MenuBar:
+        id: _second_row
+
+        NumericKeypad:
+            id: _vol_up
+            text: "vol\nup"
+            on_release:
+                root.change_vol("up")
+
+        NumericKeypad:
+            id: _prev
+            text: "prev"
+            on_release: root.keypad_press(keypad_key="vleft")
+
+        NumericKeypad:
+            id: _next
+            text: "next"
+            on_release: root.keypad_press(keypad_key="vright")
+
+    # ----- Third row ----- #
+
+    MenuBar:
+        id: _third_row
+
+        NumericKeypad:
+            id: _vol_down
+            text: "vol\ndown"
+
+            on_release:
+                root.change_vol("down")
+
+        BlankLabel:
+
+        BlankLabel:
+
+
+    MenuBar:
+        id: _fourth_row
+
+        NumericKeypad:
+            id: _mute
+            text: "mute"
+            on_release: root.change_vol("mute")
+
+        BlankLabel:
+
+        BlankLabel:
+
+    # ----- Fifth Row ----- #
+
+    MenuBar:
+        id: _fifth_row
+
+        BoxLayout:
+            id: _start_stop_box
+            orientation: "vertical"
+
+            Button:
+                id: _start_disp_btn
+                text: "Start"
+                on_release: root.scanner_disp_start_btn()
+
+            Button:
+                id: _stop_disp_btn
+                text: "Stop"
+                on_release: root.scanner_disp_stop_btn()
+
+        Button:
+            id: _begin_end_recording
+            text: "Rec"
+            on_release: root.keypad_press(keypad_key="replay")
+
+        Button:
+            id: _function_button
+            text: "func"
+            on_release: root.keypad_press(keypad_key="func")
+
+    # ----- sixth row, last row ----- #
+
+    MenuBar:
+        id: _sixth_row
+
+        BoxLayout:
+            id: "sixth_row"
+            orientation: 'horizontal'
+
+            Button:
+                text: 'Main'
+                on_release:
+#                    root.sm.current = 'datawindow'
+
+            BoxLayout:
+                id: _split_button
+                orientation: "vertical"
+
+                Button:
+                    text: 'Info'
+                    on_release:
+                        root.manager.current = 'playback'
+
+                Button:
+                    id: _quit_app
+                    text: "Quit"
+                    on_release: app.stop()
+
+            Button:
+                text: "menu"
+                on_release: root.keypad_press("menu")
 
 
