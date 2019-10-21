@@ -7,7 +7,6 @@
 
 <PopupScreen>:
     text_display_popup: _text_display_popup
-#    menu_items: _menu_items
 
     GridLayout:
         id: _main_container_popup
@@ -26,95 +25,4 @@
                     text: "I'm the menu"
 
         RightSidePanel:
-
-#        BoxLayout:
-#            id: "right_side"
-#            orientation: "vertical"
-#            size_hint_x: .4
-#
-#            MenuBar:
-#                id: "menu_layout"
-#
-#                BoxLayout:
-#                    id: "button_row_container"
-#                    orientation: 'vertical'
-#
-#                    # ------------ first row ------------- #
-#                    Label:
-##                        id: command_input
-#                        text: "empty"
-##                        on_text_validate:
-##                            root.command_input(args[0])
-##                            self.cancel_selection()  # gets rid of handles
-#
-#
-#                    # ------------ second row ------------- #
-#                    BoxLayout:
-#                        id: "second_row"
-#                        orientation: 'horizontal'
-#
-#                        NumericKeypad:
-#                            id: _up
-#                            text: "up"
-#                            on_press: root.keypad_press(keypad_key="vleft")
-#
-#                        NumericKeypad:
-#                            id: _back
-#                            text: "back"
-#                            on_press: root.keypad_press("menu")
-#
-#
-#
-#                    # ---------- third row ---------- #
-#                    BoxLayout:
-#                        id: _third_row
-#                        orientation: 'horizontal'
-#
-#                        NumericKeypad:
-#                            id: _down
-#                            text: "down"
-#                            on_press: root.keypad_press(keypad_key="vright")
-#
-#                        BlankLabel:
-#
-#                        BlankLabel:
-#
-#                    BoxLayout:
-#                        id: "fourth_row"
-#                        orientation: 'horizontal'
-#
-#
-#                    BoxLayout:
-#                        id: "fifth_row"
-#                        orientation: 'horizontal'
-#
-#                        Button:
-#                            id: scanner_status
-#                            text: "Connect to Scanner"
-##                            on_press: root.scanner_status_btn()
-#
-#                        Button:
-#                            text: "Stop\nDisplay"
-##                            on_press: root.scanner_disconnect_btn()
-#
-#
-#
-#                    BoxLayout:
-#                        id: "sixth_row"
-#                        orientation: 'horizontal'
-#
-#                        Button:
-#                            text: 'Main'
-#                            on_press:
-##                                root.manager.transition.direction = 'right'
-#                                root.manager.current = 'datawindow'
-#
-#                        Button:
-#                            text: 'Info'
-#                            on_press:
-##                                root.manager.transition.direction = 'right'
-#                                root.manager.current = 'playback'
-#
-#                        Button:
-#                            text: "menu"
-#                            on_press: root.keypad_press("menu")
+            id: _right_side

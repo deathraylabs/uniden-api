@@ -83,7 +83,7 @@
 
 #    command_input: _command_input
     scan_status_button: _start_disp_btn
-    _mute: _mute
+    mute_btn: _mute_btn
     _function_button: _function_button
 
     MenuBar:
@@ -159,8 +159,8 @@
     MenuBar:
         id: _fourth_row
 
-        NumericKeypad:
-            id: _mute
+        Button:
+            id: _mute_btn
             text: "mute"
             on_release: root.change_vol("mute")
 

@@ -191,6 +191,9 @@ class UpdateScreen:
         mode = scanner_info.get("Mode")
         v_screen = scanner_info.get("V_Screen")
 
+        # update the side button panel
+        # side_panel.update_rightsidepanel(wav_meta)
+
         # scanner mode can be "Trunk Scan" or "Trunk Scan Hold", so use v_screen here
         if v_screen == "trunk_scan":
             # switch to the main screen and update it
@@ -198,18 +201,16 @@ class UpdateScreen:
             # switch over to datawindow screen
             sm.current = "datawindow"
             Logger.debug("update screen: switched over to datawindow")
+            # side_panel.update_rightsidepanel(wav_meta)
             sm.current_screen.update_datawindow_screen(wav_meta)
-
         elif mode == "Menu tree":
             # switch to the popup screen and update it
             Logger.debug("update_screen: calling popup class")
             sm.current = "popup"
-            sm.current_screen.update_popup_screen()
+            sm.current_screen.update_popup_screen(wav_meta)
         else:
             Logger.error(f"update_screen: unknown screen: {v_screen}")
             return False
-
-        RightSidePanel().update_rightsidepanel(wav_meta)
 
         return True
 
@@ -222,13 +223,10 @@ class RightSidePanel(BoxLayout):
     # volume_level = ObjectProperty()
     command_input = ObjectProperty()
     scan_status_button = ObjectProperty()
-    _mute = ObjectProperty()
+    mute_btn = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(RightSidePanel, self).__init__(**kwargs)
-
-        # update_screen instance to handle updating screen data
-        # self.screen_updater = UpdateScreen()
 
         self.red_text_color = (1, 0, 0, 1)
         self.white_text_color = (1, 1, 1, 1)
@@ -245,7 +243,8 @@ class RightSidePanel(BoxLayout):
         update_screen.start_auto_refresh()
 
         self.scan_status_button.text = "Pulling"
-        self.scan_status_button.color = (1, 1, 1, 0.5)
+        # self.scan_status_button.color = (1, 1, 1, 0.5)
+        self.scan_status_button.color = self.red_text_color
 
         return True
 
@@ -289,7 +288,7 @@ class RightSidePanel(BoxLayout):
         return True
 
     def change_vol(self, cmd):
-        """raise or lower volume
+        """raise or lower the volume
 
         Notes:
             - Passing an integer from 0 to 15 will change the volume to that level
@@ -334,9 +333,10 @@ class RightSidePanel(BoxLayout):
 
         vol = wav_meta["Property"]["VOL"]
         if vol == "0":
-            self._mute.color = self.red_text_color
+            self.mute_btn.text = "muted"
+            self.mute_btn.color = self.red_text_color
         else:
-            self._mute.color = self.white_text_color
+            self.mute_btn.color = self.white_text_color
 
         # self.volume_level.text = f'vol: {wav_meta["Property"]["VOL"]}'
 
@@ -351,7 +351,7 @@ class RightSidePanel(BoxLayout):
 
 
 class DataWindow(Screen):
-    """This is the main window for the app.
+    """Screen used to display scanner data while scanning.
 
     """
 
@@ -363,8 +363,8 @@ class DataWindow(Screen):
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
 
-        self.red_text_color = (1, 0, 0, 1)
-        self.white_text_color = (1, 1, 1, 1)
+        # self.red_text_color = (1, 0, 0, 1)
+        # self.white_text_color = (1, 1, 1, 1)
 
         # color for hold highlight
         self.highlight_color = (0.8, 0.8, 0, 0.8)
@@ -383,7 +383,7 @@ class DataWindow(Screen):
         }
 
         # variable to store last volume level before mute
-        self.vol_last = 0
+        # self.vol_last = 0
 
         # begin communicating with scanner
         # self.scanner_status_btn()
@@ -508,46 +508,46 @@ class DataWindow(Screen):
 
         return True
 
-    def change_vol(self, cmd):
-        """raise or lower volume
-
-        Notes:
-            - Passing an integer from 0 to 15 will change the volume to that level
-                directly.
-            - Passing "up", "down", or "mute" will change volume incrementally or to zero
-
-        Args:
-            cmd (str): "up", "down", "mute"
-            cmd (int): value between 0-15
-
-        """
-        current_vol = scanner.get_volume()
-
-        if current_vol is False:
-            # no current volume is set
-            return False
-
-        if cmd == "up":
-            scanner.set_volume(delta=1)
-        elif cmd == "down":
-            scanner.set_volume(delta=-1)
-        elif cmd == "mute" and current_vol != "0":
-            # save the current volume level before muting
-            self.vol_last = current_vol
-            scanner.set_volume(vol=0)
-        # reset the previous volume level
-        elif cmd == "mute" and current_vol == "0":
-            scanner.set_volume(vol=self.vol_last)
-        elif isinstance(cmd, int):
-            scanner.set_volume(vol=cmd)
-        else:
-            Logger.error("invalid volume command")
-            return False
-
-        # this will "push" the volume knob to make volume graph disappear
-        scanner.push_key(mode="press", key="vpush")
-
-        return True
+    # def change_vol(self, cmd):
+    #     """raise or lower volume
+    #
+    #     Notes:
+    #         - Passing an integer from 0 to 15 will change the volume to that level
+    #             directly.
+    #         - Passing "up", "down", or "mute" will change volume incrementally or to zero
+    #
+    #     Args:
+    #         cmd (str): "up", "down", "mute"
+    #         cmd (int): value between 0-15
+    #
+    #     """
+    #     current_vol = scanner.get_volume()
+    #
+    #     if current_vol is False:
+    #         # no current volume is set
+    #         return False
+    #
+    #     if cmd == "up":
+    #         scanner.set_volume(delta=1)
+    #     elif cmd == "down":
+    #         scanner.set_volume(delta=-1)
+    #     elif cmd == "mute" and current_vol != "0":
+    #         # save the current volume level before muting
+    #         self.vol_last = current_vol
+    #         scanner.set_volume(vol=0)
+    #     # reset the previous volume level
+    #     elif cmd == "mute" and current_vol == "0":
+    #         scanner.set_volume(vol=self.vol_last)
+    #     elif isinstance(cmd, int):
+    #         scanner.set_volume(vol=cmd)
+    #     else:
+    #         Logger.error("invalid volume command")
+    #         return False
+    #
+    #     # this will "push" the volume knob to make volume graph disappear
+    #     scanner.push_key(mode="press", key="vpush")
+    #
+    #     return True
 
     def update_datawindow_screen(self, wav_meta):
         """Handles updates.
@@ -620,6 +620,8 @@ class DataWindow(Screen):
         # else:
         #     self._scanning.text = ""
 
+        side_panel.update_rightsidepanel(wav_meta)
+
         return True
 
 
@@ -637,7 +639,7 @@ class PopupScreen(Screen):
     def __init__(self, **kwargs):
         super(PopupScreen, self).__init__(**kwargs)
 
-    def update_popup_screen(self):
+    def update_popup_screen(self, wav_meta):
         """display menu data when scanner is in menu mode
 
         Notes:
@@ -903,6 +905,8 @@ sm.add_widget(PopupScreen(name="popup"))
 
 # create update screen instance that other classes can access
 update_screen = UpdateScreen()
+
+side_panel = RightSidePanel()
 
 
 class DataWindowApp(App):
