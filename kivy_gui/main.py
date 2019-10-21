@@ -210,7 +210,7 @@ class UpdateScreen:
             Logger.error(f"update_screen: unknown screen: {v_screen}")
             return False
 
-        # return self
+        return True
 
 
 class RightSidePanel(BoxLayout):
@@ -220,6 +220,7 @@ class RightSidePanel(BoxLayout):
     # volume_level = ObjectProperty()
     command_input = ObjectProperty()
     scan_status_button = ObjectProperty()
+    _mute = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(RightSidePanel, self).__init__(**kwargs)
@@ -356,7 +357,6 @@ class DataWindow(Screen):
     volume_level = ObjectProperty()
     command_input = ObjectProperty()
     scan_status_button = ObjectProperty()
-    # mute = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
@@ -385,30 +385,6 @@ class DataWindow(Screen):
 
         # begin communicating with scanner
         # self.scanner_status_btn()
-
-    # def scanner_status_btn(self):
-    #     """Start pulling scanner display data."""
-    #
-    #     Logger.info("scanner status button was pressed")
-    #
-    #     # call the screen updater method of UpdateScreen()
-    #     update_screen.start_auto_refresh()
-    #
-    #     self.scan_status_button.text = "Pull Mode"
-    #     self.scan_status_button.color = (1, 1, 1, 0.5)
-    #
-    #     return True
-
-    # def scanner_disconnect_btn(self):
-    #     """Closes connection to scanner."""
-    #
-    #     update_screen.stop_auto_refresh()
-    #
-    #     # update button label
-    #     self.scan_status_button.text = "Mirron\nScanner"
-    #     self.scan_status_button.color = (1, 1, 1, 1)
-    #
-    #     return True
 
     def scanner_hold(self, hold_key):
         """Method to hold/release a given system, department, or channel.
@@ -672,7 +648,6 @@ class PopupScreen(Screen):
     def __init__(self, **kwargs):
         super(PopupScreen, self).__init__(**kwargs)
 
-    # todo: format this popup screen so the information is actually useful
     def update_popup_screen(self):
         """display menu data when scanner is in menu mode
 
