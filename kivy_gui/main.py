@@ -10,10 +10,6 @@ from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.label import Label
-from kivy.uix.recycleview import RecycleView
-from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 
 from functools import partial  # ???
@@ -192,7 +188,7 @@ class UpdateScreen:
         v_screen = scanner_info.get("V_Screen")
 
         # update the side button panel
-        # side_panel.update_rightsidepanel(wav_meta)
+        side_panel.update_rightsidepanel(wav_meta)
 
         # scanner mode can be "Trunk Scan" or "Trunk Scan Hold", so use v_screen here
         if v_screen == "trunk_scan":
@@ -211,6 +207,9 @@ class UpdateScreen:
         else:
             Logger.error(f"update_screen: unknown screen: {v_screen}")
             return False
+
+        # update the right side panel
+        side_panel.update_rightsidepanel(wav_meta)
 
         return True
 
@@ -314,11 +313,9 @@ class RightSidePanel(BoxLayout):
             # save the current volume level before muting
             self.vol_last = current_vol
             scanner.set_volume(vol=0)
-            self.mute_btn.color = self.red_text_color
         # reset the previous volume level
         elif cmd == "mute" and current_vol == "0":
             scanner.set_volume(vol=self.vol_last)
-            self.mute_btn.color = self.white_text_color
         elif isinstance(cmd, int):
             scanner.set_volume(vol=cmd)
         else:
@@ -333,21 +330,27 @@ class RightSidePanel(BoxLayout):
     def update_rightsidepanel(self, wav_meta):
         """Method to update the button states on right side panel"""
 
+        # print(f"parent: {self.parent}")
+        # print(f"screen manager IDs \n{sm.ids}")
+
+        # get the currently active screen
+        current_screen = sm.get_screen(sm.current)
+        right_screen = current_screen.right_screen
+
         vol = wav_meta["Property"]["VOL"]
         if vol == "0":
-            self.mute_btn.text = "muted"
-            self.mute_btn.color = self.red_text_color
+            right_screen.mute_btn.color = self.red_text_color
         else:
-            self.mute_btn.color = self.white_text_color
+            right_screen.mute_btn.color = self.white_text_color
 
         # self.volume_level.text = f'vol: {wav_meta["Property"]["VOL"]}'
 
         # change the function key display if it's active
         func_key = wav_meta["Property"]["F"]
         if func_key == "On":
-            self._function_button.color = self.red_text_color
+            right_screen._function_button.color = self.red_text_color
         else:
-            self._function_button.color = self.white_text_color
+            right_screen._function_button.color = self.white_text_color
 
         return True
 
@@ -361,6 +364,8 @@ class DataWindow(Screen):
     volume_level = ObjectProperty()
     command_input = ObjectProperty()
     scan_status_button = ObjectProperty()
+    right_screen = ObjectProperty()
+    # main_container = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
@@ -633,7 +638,11 @@ class PopupScreen(Screen):
         - [ ] needs a method to handle getting menu view information
     """
 
+    # object properties automatically provide access to instances..
+    # created in a kv file
     text_display_popup = ObjectProperty()
+    # give the RightSidePanel updater access to this screen's instance
+    right_screen = ObjectProperty()
     # menu_items = ObjectProperty()
 
     def __init__(self, **kwargs):
@@ -854,7 +863,7 @@ class PlaybackScreen(Screen):
 
         res = scanner.get_response()
 
-        pprint.pprint(res)
+        # pprint.pprint(res)
 
         # format response with pretty print so it is more readable
         formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)

@@ -7,6 +7,7 @@
 
 <PopupScreen>:
     text_display_popup: _text_display_popup
+    right_screen: _right_side
 
     GridLayout:
         id: _main_container_popup
@@ -25,4 +26,5 @@
                     text: "I'm the menu"
 
         RightSidePanel:
+            # this id needs to be consistent between screens
             id: _right_side
