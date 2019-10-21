@@ -314,9 +314,11 @@ class RightSidePanel(BoxLayout):
             # save the current volume level before muting
             self.vol_last = current_vol
             scanner.set_volume(vol=0)
+            self.mute_btn.color = self.red_text_color
         # reset the previous volume level
         elif cmd == "mute" and current_vol == "0":
             scanner.set_volume(vol=self.vol_last)
+            self.mute_btn.color = self.white_text_color
         elif isinstance(cmd, int):
             scanner.set_volume(vol=cmd)
         else:
@@ -363,8 +365,8 @@ class DataWindow(Screen):
     def __init__(self, **kwargs):
         super(DataWindow, self).__init__(**kwargs)
 
-        # self.red_text_color = (1, 0, 0, 1)
-        # self.white_text_color = (1, 1, 1, 1)
+        self.red_text_color = (1, 0, 0, 1)
+        self.white_text_color = (1, 1, 1, 1)
 
         # color for hold highlight
         self.highlight_color = (0.8, 0.8, 0, 0.8)
@@ -619,8 +621,6 @@ class DataWindow(Screen):
             self.tgid_hld.color = (0.2, 1, 1, 0.8)
         # else:
         #     self._scanning.text = ""
-
-        side_panel.update_rightsidepanel(wav_meta)
 
         return True
 
