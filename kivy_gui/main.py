@@ -199,8 +199,7 @@ class UpdateScreen:
             sm.current = "datawindow"
             Logger.debug("update screen: switched over to datawindow")
             sm.current_screen.update_datawindow_screen(wav_meta)
-            RightSidePanel().update_rightsidepanel(wav_meta)
-        # todo: update the right side panel for this screen too
+
         elif mode == "Menu tree":
             # switch to the popup screen and update it
             Logger.debug("update_screen: calling popup class")
@@ -210,9 +209,12 @@ class UpdateScreen:
             Logger.error(f"update_screen: unknown screen: {v_screen}")
             return False
 
+        RightSidePanel().update_rightsidepanel(wav_meta)
+
         return True
 
 
+# todo: fix setup to change unit id name
 class RightSidePanel(BoxLayout):
     """Panel that contains the user interface buttons"""
 
@@ -553,14 +555,8 @@ class DataWindow(Screen):
             wav_meta (dict): metadata read from scanner
 
         Returns:
-            None
+            True: if no errors
         """
-
-        # vol = wav_meta["Property"]["VOL"]
-        # if vol == "0":
-        #     self._mute.color = self.red_text_color
-        # else:
-        #     self._mute.color = self.white_text_color
 
         try:
             trans_start = wav_meta["transmission_start"]
@@ -623,13 +619,6 @@ class DataWindow(Screen):
             self.tgid_hld.color = (0.2, 1, 1, 0.8)
         # else:
         #     self._scanning.text = ""
-
-        # # change the function key display if it's active
-        # func_key = wav_meta["Property"]["F"]
-        # if func_key == "On":
-        #     self._function_button.color = self.red_text_color
-        # else:
-        #     self._function_button.color = self.white_text_color
 
         return True
 

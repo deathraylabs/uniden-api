@@ -89,22 +89,34 @@
     MenuBar:
         id: _first_row
 
-        CommandLine:
-            id: _command_input
-            on_text_validate:
-                root.update_unid(args[0])
-                self.focus = False       # unfocus before cancel sel
-                self.cancel_selection()  # gets rid of handles
+#        CommandLine:
+#            id: _command_input
+#            on_text_validate:
+#                root.update_unid(args[0])
+#                self.focus = False       # unfocus before cancel sel
+#                self.cancel_selection()  # gets rid of handles
+
+#        NumericKeypad:
+#            id: _set_unid
+#            text: "Set\nUNID"
+#            on_release: root.open_unid_menu()
 
         NumericKeypad:
-            id: _set_unid
-            text: "Set\nUNID"
-            on_release: root.open_unid_menu()
+            id: _system_softkey
+            text: "SYSTEM"
+            padding: 0, 0
+            on_release: root.keypad_press(keypad_key="system")
 
         NumericKeypad:
-            id: _avoid_key
-            text: "AVOID"
-            on_release: root.keypad_press(keypad_key="avoid")
+            id: _dept_softkey
+            text: "DEPT"
+            on_release: root.keypad_press(keypad_key="dept")
+
+        NumericKeypad:
+            id: _chan_sofkey
+            text: "CHAN"
+            on_release: root.keypad_press(keypad_key="chan")
+
 
     # ----- second row ----- #
 
@@ -139,9 +151,9 @@
             on_release:
                 root.change_vol("down")
 
-        BlankLabel:
+        NumericKeypad:
 
-        BlankLabel:
+        NumericKeypad:
 
 
     MenuBar:
@@ -151,15 +163,6 @@
             id: _mute
             text: "mute"
             on_release: root.change_vol("mute")
-
-        BlankLabel:
-
-        BlankLabel:
-
-    # ----- Fifth Row ----- #
-
-    MenuBar:
-        id: _fifth_row
 
         BoxLayout:
             id: _start_stop_box
@@ -175,15 +178,19 @@
                 text: "Stop"
                 on_release: root.scanner_disp_stop_btn()
 
-        Button:
-            id: _begin_end_recording
-            text: "Rec"
-            on_release: root.keypad_press(keypad_key="replay")
+        BoxLayout:
+            id: _split_button
+            orientation: "vertical"
 
-        Button:
-            id: _function_button
-            text: "func"
-            on_release: root.keypad_press(keypad_key="func")
+            Button:
+                text: 'Info'
+                on_release:
+                    root.manager.current = 'playback'
+
+            Button:
+                id: _quit_app
+                text: "Quit"
+                on_release: app.stop()
 
     # ----- sixth row, last row ----- #
 
@@ -199,22 +206,33 @@
                 on_release:
 #                    root.sm.current = 'datawindow'
 
-            BoxLayout:
-                id: _split_button
-                orientation: "vertical"
-
-                Button:
-                    text: 'Info'
-                    on_release:
-                        root.manager.current = 'playback'
-
-                Button:
-                    id: _quit_app
-                    text: "Quit"
-                    on_release: app.stop()
+            NumericKeypad:
+                id: _function_button
+                text: "func"
+                on_release: root.keypad_press(keypad_key="func")
 
             Button:
                 text: "menu"
                 on_release: root.keypad_press("menu")
 
+    MenuBar:
+        id: _seventh_row
 
+        BoxLayout:
+#            id: "sixth_row"
+            orientation: 'horizontal'
+
+            NumericKeypad:
+                id: _avoid_key
+                text: "AVOID"
+                on_release: root.keypad_press(keypad_key="avoid")
+
+            NumericKeypad:
+                id: _begin_end_recording
+                text: "Replay\n(Rec)"
+                on_release: root.keypad_press(keypad_key="replay")
+
+            NumericKeypad:
+                id: _enter_button
+                text: "enter"
+                on_press: root.keypad_press("E")
