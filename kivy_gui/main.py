@@ -616,6 +616,7 @@ class DataWindow(Screen):
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
 
+        # Property values provided by scanner
         property_dict = wav_meta["Property"]
 
         self.volume_level.text = f'vol: {property_dict["VOL"]}'
@@ -631,8 +632,11 @@ class DataWindow(Screen):
             self.tgid_hld.text = overwrite
             self.tgid_hld.color = (0.2, 1, 1, 0.8)
 
-        self.voice.text = wav_meta["Property"]["Mute"]
-        self.ids["_status"].text = ""
+        self.voice.text = property_dict["Mute"]
+        self.ids["_status"].text = property_dict["P25Status"]
+        self.ids["_squelch"].text = f'SQL:{property_dict["SQL"]}'
+        self.ids["_signal"].text = f'sig: {property_dict["Sig"]}'
+        self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
 
         return True
 
@@ -728,10 +732,17 @@ class PopupScreen(Screen):
         text_out = f"{menu_name}\n\n"
         for item in menu_item_list:
             item_index = menu_items[item]["Index"]
-            if selected_item == item_index:
-                text_out += f"---> {item}\n"
+            # not all items will have a value
+            item_value = menu_items[item].get("Value")
+            if item_value is None:
+                item_value = ""
             else:
-                text_out += f"      {item}\n"
+                item_value = f"{item_value} :"
+
+            if selected_item == item_index:
+                text_out += f"---> {item_value} {item}\n"
+            else:
+                text_out += f"     {item_value} {item}\n"
 
         return text_out
 
