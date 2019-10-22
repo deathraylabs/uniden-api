@@ -947,9 +947,34 @@ class UnidenScanner:
         """Future implementation to set the system quick key status"""
         pass
 
-    def get_dept_list_qk_status(self):
-        """Future implementation to get the department quick key status"""
-        pass
+    def get_dept_list_qk_status(self, fav_qk, sys_qk):
+        """Return the department quick key status for a given favorites list
+        quick key number.
+
+        Notes:
+            0: QK does NOT exist
+            1: QK exists and is disabled
+            2: QK exists and is enabled
+
+        Args:
+            fav_qk (str): favorites list quick key
+            sys_qk (str): system quick key
+
+        Returns:
+            response (dict):
+                'cmd': (str) command sent to scanner
+                'data': (list) quick key state codes
+        """
+
+        cmd = "DQK".join((",", fav_qk, sys_qk))
+
+        cmd_resp = self.send_command(cmd)
+
+        self.logger.info(f"DQK Ack: {cmd_resp}")
+
+        # todo: need to add an error handler to this
+
+        return self.get_response()
 
     def set_dept_list_qk_status(self):
         """Future implementation to set the department quick key status"""

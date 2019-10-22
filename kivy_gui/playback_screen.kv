@@ -92,6 +92,12 @@
                             text: "View SQK Status"
                             on_release: root.display_raw_scanner_output("SQK,0")
 
+                        Button:
+                            id: _dqk_status
+                            text: "View DQK Status"
+                            on_release:
+                                root.display_raw_scanner_output("DQK,0,0")
+
                     BoxLayout:
                         id: "fourth_row"
                         orientation: 'horizontal'
