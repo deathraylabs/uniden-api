@@ -66,9 +66,12 @@
                         Button:
                             id: "gsi_output"
                             text: "View GSI Info"
-                            on_press: root.display_raw_scanner_output("GSI")
+                            on_release: root.display_raw_scanner_output("GSI")
 
                         Button:
+                            id: _fqk_status
+                            text: "View FQK Status"
+                            on_release: root.display_raw_scanner_output("FQK")
 
 
                     # ---------- third row ---------- #

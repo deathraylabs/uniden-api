@@ -893,6 +893,45 @@ class UnidenScanner:
 
         return True
 
+    # todo: fill in future implementation
+    def get_fav_list_qk_status(self):
+        """Return the favorites list quick key status
+
+        Notes:
+            0: QK does NOT exist
+            1: QK exists and is disabled
+            2: QK exists and is enabled
+
+        Returns:
+            (list):
+        """
+
+        cmd_resp = self.send_command("FQK")
+
+        self.logger.info(f"FQK Ack: {cmd_resp}")
+
+        return self.get_response()
+
+    def set_fav_list_qk_status(self):
+        """Future implementation to set the favorites list quick key status"""
+        pass
+
+    def get_sys_list_qk_status(self):
+        """Future implementation to get the system quick key status"""
+        pass
+
+    def set_sys_list_qk_status(self):
+        """Future implementation to set the system quick key status"""
+        pass
+
+    def get_dept_list_qk_status(self):
+        """Future implementation to get the department quick key status"""
+        pass
+
+    def set_dept_list_qk_status(self):
+        """Future implementation to set the department quick key status"""
+        pass
+
     # --------------- Older Code ------------------- #
 
     # todo: migrate everything to use "process command" method instead.
@@ -1582,11 +1621,11 @@ class UnidenScanner:
 
         return 1
 
-    # def get_location_settings(self):
-    #     pass
-    #
-    # def get_weather_settings(self):
-    #     pass
+    def get_location_settings(self):
+        pass
+
+    def get_weather_settings(self):
+        pass
 
     # ---- Methods don't appear to work with SDS-100 ------- #
 

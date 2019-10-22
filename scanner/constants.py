@@ -793,6 +793,13 @@ WAV_METADATA = OrderedDict(
 # dict that defines what each of the tuples in XML_TAGS describes
 HUMAN_TAG_HANDLER = {"root_tag": 0, "max_depth": 1, "unique_tag_names": 2}
 
+# convert quick key status to human readable explanation
+HUMAN_QK_STATUS = {
+    "0": "QK does NOT exist",
+    "1": "QK exists and is disabled",
+    "2": "QK exists and is enabled",
+}
+
 # max_depth: maximum number of branches from root
 XML_TAG_HANDLER = {
     "Footer": ("Footer", 0, True),
