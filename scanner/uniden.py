@@ -895,7 +895,7 @@ class UnidenScanner:
 
     # todo: fill in future implementation
     def get_fav_list_qk_status(self):
-        """Return the favorites list quick key status
+        """Return the favorites list quick key status.
 
         Notes:
             0: QK does NOT exist
@@ -903,7 +903,9 @@ class UnidenScanner:
             2: QK exists and is enabled
 
         Returns:
-            (list):
+            response (dict):
+                'cmd': (str) command sent to scanner
+                'data': (list) quick key state codes
         """
 
         cmd_resp = self.send_command("FQK")
@@ -916,9 +918,30 @@ class UnidenScanner:
         """Future implementation to set the favorites list quick key status"""
         pass
 
-    def get_sys_list_qk_status(self):
-        """Future implementation to get the system quick key status"""
-        pass
+    def get_sys_list_qk_status(self, fav_qk):
+        """Return the system quick key status for a given favorites list quick key number.
+
+        Notes:
+            0: QK does NOT exist
+            1: QK exists and is disabled
+            2: QK exists and is enabled
+
+        Args:
+            fav_qk (str): favorites list quick key
+
+        Returns:
+            response (dict):
+                'cmd': (str) command sent to scanner
+                'data': (list) quick key state codes
+        """
+
+        cmd = "SQK".join((",", fav_qk))
+
+        cmd_resp = self.send_command(cmd)
+
+        self.logger.info(f"SQK Ack: {cmd_resp}")
+
+        return self.get_response()
 
     def set_sys_list_qk_status(self):
         """Future implementation to set the system quick key status"""

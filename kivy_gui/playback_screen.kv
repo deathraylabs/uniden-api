@@ -87,6 +87,10 @@
                                 # moves whole window offscreen
                                 root.btn()
 
+                        Button:
+                            id: _sqk_status
+                            text: "View SQK Status"
+                            on_release: root.display_raw_scanner_output("SQK,0")
 
                     BoxLayout:
                         id: "fourth_row"
