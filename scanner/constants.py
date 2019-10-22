@@ -674,7 +674,7 @@ GSI_OUTPUT_2 = {
         "Rec": "---",
         "KeyLock": "---",
         "P25Status": "---",
-        "Mute": "---",
+        "Mute": "Mute and Unmute",
         "Backlight": "---",
         "A_Led": "---",
         "Dir": "scanning up or down",

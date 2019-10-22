@@ -616,7 +616,9 @@ class DataWindow(Screen):
         self.transmission_start.text = trans_start
         self.transmission_end.text = trans_end
 
-        self.volume_level.text = f'vol: {wav_meta["Property"]["VOL"]}'
+        property_dict = wav_meta["Property"]
+
+        self.volume_level.text = f'vol: {property_dict["VOL"]}'
 
         self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
@@ -628,8 +630,9 @@ class DataWindow(Screen):
         if overwrite != "":
             self.tgid_hld.text = overwrite
             self.tgid_hld.color = (0.2, 1, 1, 0.8)
-        # else:
-        #     self._scanning.text = ""
+
+        self.voice.text = wav_meta["Property"]["Mute"]
+        self.ids["_status"].text = ""
 
         return True
 
@@ -869,6 +872,8 @@ class PlaybackScreen(Screen):
 
         # format response with pretty print so it is more readable
         formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)
+
+        print(f"formatted {command} response:\n\n{formatted_response}")
 
         # reset the text size so it fits properly in window
         self.text_display.text_size[1] = None

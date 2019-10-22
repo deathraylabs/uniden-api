@@ -13,7 +13,8 @@
     transmission_start: trans_begins
     transmission_end: trans_ends
     volume_level: _volume_level
-    _scanning: _scanning
+#    _scanning: _scanning
+    voice: _voice
 #    _function_button: _function_button
     tgid_hld: tgid_hld
     right_screen: _right_side
@@ -83,15 +84,26 @@
                     font_size: '15sp'
 
                 Label:
-                    id: _scanning
-                    text: "-----"
+                    id: _voice
+                    text: "voice"
                     font_size: "15sp"
+
+                Label:
+                    id: _status
+                    text: "P25Status"
 
                 Label:
                     id: _volume_level
                     halign: "right"
                     text: "VOL"
-                    font_size: '15sp'
+                    font_size: '20sp'
 
         RightSidePanel:
             id: _right_side
+
+#    RelativeLayout:
+#        Label:
+#            text: "bobo"
+#            color: 1, 1, 1, 1
+#            x: 400
+#            y: 220
