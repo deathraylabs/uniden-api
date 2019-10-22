@@ -807,8 +807,8 @@ class PlaybackScreen(Screen):
         super(PlaybackScreen, self).__init__(**kwargs)
 
         # get the current keyboard layout
-        # layout = Config.get("kivy", "keyboard_layout")
-        # print(f"current keyboard layout: {layout}")
+        layout = Config.get("kivy", "keyboard_layout")
+        print(f"current keyboard layout: {layout}")
 
     def btn(self):
         """Method runs when Button object calls root.btn() 

@@ -896,6 +896,40 @@ class UnidenScanner:
     # --------------- Older Code ------------------- #
 
     # todo: migrate everything to use "process command" method instead.
+    def get_squelch(self):
+
+        """Get Squelch Level Settings
+
+        LEVEL	Squelch Level (0:OPEN / 1-14 / 15:CLOSE)"""
+
+        try:
+            res = self.raw("SQL")
+
+        except CommandError:
+            self.logger.error("get_squelch()")
+            return 0
+
+        (cmd, sql) = res.split(",")
+
+        return sql
+
+    def set_squelch(self, sql):
+
+        """Set Squelch Level Settings
+
+        LEVEL	Squelch Level (0:OPEN / 1-14 / 15:CLOSE)"""
+
+        cmd = ",".join(["SQL", str(sql)])
+
+        try:
+            self.raw(cmd)
+
+        except CommandError:
+            self.logger.error("set_squelch(): cmd %s" % cmd)
+            return 0
+
+        return 1
+
     def raw(self, cmd):
         """Accepts scanner commands as UTF-8 strings and handles all the
         encoding and decoding required to communicate with the scanner.
@@ -1200,40 +1234,6 @@ class UnidenScanner:
 
         return rssi, frq, sql
 
-    def get_squelch(self):
-
-        """Get Squelch Level Settings
-
-        LEVEL	Squelch Level (0:OPEN / 1-14 / 15:CLOSE)"""
-
-        try:
-            res = self.raw("SQL")
-
-        except CommandError:
-            self.logger.error("get_squelch()")
-            return 0
-
-        (cmd, sql) = res.split(",")
-
-        return sql
-
-    def set_squelch(self, sql):
-
-        """Set Squelch Level Settings
-
-        LEVEL	Squelch Level (0:OPEN / 1-14 / 15:CLOSE)"""
-
-        cmd = ",".join(["SQL", str(sql)])
-
-        try:
-            self.raw(cmd)
-
-        except CommandError:
-            self.logger.error("set_squelch(): cmd %s" % cmd)
-            return 0
-
-        return 1
-
     def get_window_voltage(self):
 
         """A/D Value (0-255)
@@ -1270,23 +1270,6 @@ class UnidenScanner:
             return 0
 
         self.isProgramMode = True
-
-        return 1
-
-    # doesn't appear to work correctly
-    def exit_program_mode(self):
-
-        """The scanner exits from Program Mode.
-        Then the scanner goes to Scan Hold Mode."""
-
-        try:
-            res = self.raw("EPG")
-
-        except CommandError:
-            self.logger.error("exit_program_mode()")
-            return 0
-
-        self.isProgramMode = False
 
         return 1
 
