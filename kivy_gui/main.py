@@ -143,17 +143,17 @@ class UpdateScreen:
         # stop updating screen with clock
         Clock.unschedule(self.update_screen)
 
-        # make sure the port is open and connected to scanner
-        try:
-            if not scanner.port_is_open():
-                Logger.info("Port is already closed.")
-                return False
-        except AttributeError:
-            Logger.exception("No scanner connection", exc_info=False)
-            return False
-
-        scanner.close()
-        Logger.info("Scanner Connection Closed.")
+        # # make sure the port is open and connected to scanner
+        # try:
+        #     if not scanner.port_is_open():
+        #         Logger.info("Port is already closed.")
+        #         return False
+        # except AttributeError:
+        #     Logger.exception("No scanner connection", exc_info=False)
+        #     return False
+        #
+        # scanner.close()
+        # Logger.info("Scanner Connection Closed.")
 
     def update_screen(self, dt):
         """When called this method updates the internal scanner state and then
@@ -327,11 +327,15 @@ class RightSidePanel(BoxLayout):
 
         return True
 
+    def set_current_screen(self, screen):
+        """Change the currently displayed screen"""
+
+        sm.current = screen
+
+        return True
+
     def update_rightsidepanel(self, wav_meta):
         """Method to update the button states on right side panel"""
-
-        # print(f"parent: {self.parent}")
-        # print(f"screen manager IDs \n{sm.ids}")
 
         # get the currently active screen
         current_screen = sm.get_screen(sm.current)
@@ -665,17 +669,16 @@ class PopupScreen(Screen):
 
         menu_error = menu_information.get("MenuErrorMsg")
 
-        # catch menu error message
-        if menu_error is not None:
-            Logger.error(f"menu error message: {menu_error['Text']}")
-            return False
-
         # dict that contains information on menu and selection
         msi_dict = menu_information.get("MSI")
 
+        # catch menu error message and display it
+        if menu_error is not None:
+            Logger.error(f"menu error message: {menu_error['Text']}")
+            text_out = menu_error["Text"]
         # this gets us the currently selected item
         # make sure there is actually a menu item present
-        if msi_dict is not None:
+        elif msi_dict is not None:
             for k, v in msi_dict.items():
                 menu_name = k
 
