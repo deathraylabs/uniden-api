@@ -335,11 +335,25 @@ class RightSidePanel(BoxLayout):
         return True
 
     def update_rightsidepanel(self, wav_meta):
-        """Method to update the button states on right side panel"""
+        """Method to handle updating the button states on right side panel.
+
+        Args:
+            wav_meta (dict): standard dict formatted according to constants.py
+                GSI_OUTPUT_2
+
+        Returns:
+            True: if executed without issue
+            False: if screen doesn't use the right window control
+        """
 
         # get the currently active screen
         current_screen = sm.get_screen(sm.current)
-        right_screen = current_screen.right_screen
+
+        try:
+            right_screen = current_screen.right_screen
+        except AttributeError:
+            Logger.exception("screen doesn't use standard right window")
+            return False
 
         vol = wav_meta["Property"]["VOL"]
         if vol == "0":
@@ -359,6 +373,7 @@ class RightSidePanel(BoxLayout):
         return True
 
 
+# todo: window doesn't display conventional frequency data correctly, freezes screen
 class DataWindow(Screen):
     """Screen used to display scanner data while scanning.
 
@@ -392,12 +407,6 @@ class DataWindow(Screen):
             "TGID": "tgid_hld",
             "Site": "site_name",
         }
-
-        # variable to store last volume level before mute
-        # self.vol_last = 0
-
-        # begin communicating with scanner
-        # self.scanner_status_btn()
 
     def scanner_hold(self, hold_key):
         """Method to hold/release a given system, department, or channel.
