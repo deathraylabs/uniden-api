@@ -805,32 +805,31 @@ class PlaybackScreen(Screen):
         #     Color(rgba=(1, 1, 1, 1))
         #     Rectangle(size=left_display.size, pos=(-20, 0))
 
-    # todo: this current setup will not reopen the port if it's already closed
-    def scanner_status_btn(self):
-        """Start pulling scanner display data."""
+    # def scanner_status_btn(self):
+    #     """Start pulling scanner display data."""
+    #
+    #     Logger.info("scanner status button was pressed")
+    #
+    #     scanner.open_connection()
+    #
+    #     port_is_open = scanner.port_is_open()
+    #
+    #     if port_is_open:
+    #         Logger.info("scanner.open_connection: The scanner port is open.")
+    #     else:
+    #         Logger.info("scanner_status_btn: The port is still closed.")
+    #
+    #     Logger.info("clearing the buffer")
+    #     res = scanner.reset_port()
+    #     Logger.info(f"port reset: {res}")
 
-        Logger.info("scanner status button was pressed")
-
-        scanner.open_connection()
-
-        port_is_open = scanner.port_is_open()
-
-        if port_is_open:
-            Logger.info("scanner.open_connection: The scanner port is open.")
-        else:
-            Logger.info("scanner_status_btn: The port is still closed.")
-
-        Logger.info("clearing the buffer")
-        res = scanner.reset_port()
-        Logger.info(f"port reset: {res}")
-
-    def scanner_disconnect_btn(self):
-        """Button used to close the port used by scanner."""
-
-        Logger.info("Disconnect button pushed.")
-
-        scanner.close_connection()
-        # Logger.info("Scanner Connection Closed.")
+    # def scanner_disconnect_btn(self):
+    #     """Button used to close the port used by scanner."""
+    #
+    #     Logger.info("Disconnect button pushed.")
+    #
+    #     scanner.close_connection()
+    #     # Logger.info("Scanner Connection Closed.")
 
     def command_input(self, value):
         """Method used to send raw commands to scanner and view the raw
