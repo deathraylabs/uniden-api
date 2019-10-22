@@ -189,6 +189,8 @@
             Button:
                 text: "Info"
                 on_release:
+                    # stop auto refresh before switching screens
+                    root.scanner_disp_stop_btn()
                     root.set_current_screen('playback')
 
             Button:

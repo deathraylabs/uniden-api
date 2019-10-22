@@ -248,12 +248,13 @@ class RightSidePanel(BoxLayout):
         return True
 
     def scanner_disp_stop_btn(self):
-        """Closes connection to scanner."""
+        """Stops the auto-refresh routine but connection is still maintained with
+        the scanner"""
 
         update_screen.stop_auto_refresh()
 
         # update button label
-        self.scan_status_button.text = "Mirron\nScanner"
+        self.scan_status_button.text = "Start"
         self.scan_status_button.color = (1, 1, 1, 1)
 
         return True
