@@ -911,7 +911,6 @@ class UnidenScanner:
 
         return f"command sent: {cmd}\n\n{response}"
 
-    # todo: fill in future implementation
     def get_fav_list_qk_status(self):
         """Return the favorites list quick key status.
 
@@ -932,6 +931,7 @@ class UnidenScanner:
 
         return self.get_response()
 
+    # todo: finish set fl qk status method
     def set_fav_list_qk_status(self):
         """Future implementation to set the favorites list quick key status"""
         pass
@@ -961,6 +961,7 @@ class UnidenScanner:
 
         return self.get_response()
 
+    # todo: finish set sys qk status method
     def set_sys_list_qk_status(self):
         """Future implementation to set the system quick key status"""
         pass
@@ -994,8 +995,26 @@ class UnidenScanner:
 
         return self.get_response()
 
+    # todo: finish dept sys qk status method
     def set_dept_list_qk_status(self):
         """Future implementation to set the department quick key status"""
+        pass
+
+    # todo: finish human readable qk status method
+    def get_human_readable_qk_status(self, qk_status, qk_list):
+        """This method combines the Quick Key list stored on the scanner with
+        the current Quick Key status codes to produce a human-readable status list.
+
+        Args:
+            qk_status (dict): dict that contains the QK status list (output of the
+                get_xxx_list_qk_status() methods above)
+            qk_list (dict): dict containing the quick key names and their respective
+                indices to match up against the qk_status
+
+        Returns:
+            hr_qk_status (dict): dict where keys: qk names and values: status number
+
+        """
         pass
 
     # --------------- Older Code ------------------- #

@@ -356,20 +356,24 @@ class RightSidePanel(BoxLayout):
             Logger.exception("screen doesn't use standard right window")
             return False
 
-        vol = wav_meta["Property"]["VOL"]
+        # properties dict from scanner
+        get_property = wav_meta["Property"]
+
+        # set the mute button formatting
+        vol = get_property["VOL"]
         if vol == "0":
             right_screen.mute_btn.color = self.red_text_color
         else:
             right_screen.mute_btn.color = self.white_text_color
 
-        # self.volume_level.text = f'vol: {wav_meta["Property"]["VOL"]}'
-
         # change the function key display if it's active
-        func_key = wav_meta["Property"]["F"]
+        func_key = get_property["F"]
         if func_key == "On":
             right_screen._function_button.color = self.red_text_color
         else:
             right_screen._function_button.color = self.white_text_color
+
+        # change the text display of menu button
 
         return True
 
