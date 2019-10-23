@@ -88,6 +88,8 @@
 #    command_input: _command_input
     scan_status_button: _start_disp_btn
     mute_btn: _mute_btn
+    menu_btn: _menu
+    sys_softkey: _system_softkey
     _function_button: _function_button
 
     MenuBar:
@@ -218,6 +220,7 @@
                 on_release: root.keypad_press(keypad_key="func")
 
             Button:
+                id: _menu
                 text: "menu"
                 on_release: root.keypad_press("menu")
 

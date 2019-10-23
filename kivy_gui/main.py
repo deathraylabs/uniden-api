@@ -356,6 +356,13 @@ class RightSidePanel(BoxLayout):
             Logger.exception("screen doesn't use standard right window")
             return False
 
+        # change the text display of menu button
+        if current_screen.name == "popup":
+            right_screen.menu_btn.text = "back\n(menu)"
+
+            # change system key label to current usage
+            right_screen.sys_softkey.text = "Back to\nScan"
+
         # properties dict from scanner
         get_property = wav_meta["Property"]
 
@@ -372,8 +379,6 @@ class RightSidePanel(BoxLayout):
             right_screen._function_button.color = self.red_text_color
         else:
             right_screen._function_button.color = self.white_text_color
-
-        # change the text display of menu button
 
         return True
 
