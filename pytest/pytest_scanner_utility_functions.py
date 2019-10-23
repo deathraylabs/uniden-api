@@ -298,9 +298,7 @@ def test_human_readable_qk_status():
     fl_qk = s.get_fav_list_qk_status()
     qk_list = s.get_list("favorites list")
 
-    s.close()
-
-    assert False
+    assert s.get_human_readable_qk_status(qk_list, fl_qk)
 
 
 # if __name__ == "__main__":

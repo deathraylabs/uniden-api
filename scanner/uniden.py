@@ -800,7 +800,6 @@ class UnidenScanner:
 
         return res
 
-    # todo: method is currently incomplete
     def get_list(self, list_type, index_value=""):
         """Gets specified list from scanner.
 
@@ -828,7 +827,10 @@ class UnidenScanner:
             )
             return
 
-        cmd = ",".join([str(glt_cmd), str(index_value)])
+        # get the type of list
+        list_abbriv = GLT_COMMAND[list_type][1]
+
+        cmd = ",".join([str(glt_cmd), str(list_abbriv), str(index_value)])
 
         # todo: xml parser doesn't work correctly for GLT commands
         try:
@@ -1039,7 +1041,7 @@ class UnidenScanner:
             hr_qk_status (dict): dict where keys: qk names and values: status number
 
         """
-        pass
+        return False
 
     # --------------- Older Code ------------------- #
 
