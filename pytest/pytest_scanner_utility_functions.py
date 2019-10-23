@@ -265,6 +265,31 @@ def test_get_volume():
     assert vol == "1"
 
 
+def test_get_list():
+    """Test get_list method."""
+
+    s = UnidenScanner()
+
+    # this is an incorrect command, should be "favorites list"
+    qk_list = s.get_list("favorites")
+
+    assert qk_list is None
+
+    qk_list = s.get_list("favorites list")
+    assert isinstance(qk_list, dict)
+
+    # test case with missing argument, should be "system", "0" for instance
+    qk_list = s.get_list("system")
+    assert qk_list is None
+
+    qk_list = s.get_list("system", "8")
+    assert isinstance(qk_list, dict)
+
+    s.close()
+
+    assert True
+
+
 def test_human_readable_qk_status():
     """Test human readable quick key status code"""
 
@@ -272,6 +297,8 @@ def test_human_readable_qk_status():
 
     fl_qk = s.get_fav_list_qk_status()
     qk_list = s.get_list("favorites list")
+
+    s.close()
 
     assert False
 

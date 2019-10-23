@@ -946,7 +946,7 @@ UNID_UNITID_DATA = [
 # todo: 12 more commands to write out
 GLT_COMMAND = {
     "favorites list": ("GLT,FL", ""),
-    "system": ("GLT,SYS,", "fl_index"),
+    "system": ("GLT,SYS", "fl_index"),
     "department": ("GLT,DEPT,", "system_index"),
     "site": ("GLT,SITE,", "system_index"),
     "tgid": ("GLT,TGID,", "dept_index"),

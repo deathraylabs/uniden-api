@@ -810,7 +810,8 @@ class UnidenScanner:
 
         Returns:
             res (dict): dict containing data entries outlined in GTL command
-                reference.
+                reference or under constants.py GLT_COMMAND
+            None: if the command list type or index value throws error
 
         Notes:
             - GTL command reference can be found in the
@@ -820,12 +821,12 @@ class UnidenScanner:
         try:
             # make sure the command is available by checking commands
             glt_cmd = GLT_COMMAND[list_type][0]
-            self.logger.debug(f"list name and proper format: {glt_cmd}")
+            self.logger.debug(f"list name and proper format: {GLT_COMMAND[list_type]}")
         except KeyError:
             self.logger.exception(
-                f"{list_type} is not a known list type", exc_info=False
+                f"'{list_type}' is not a known list type", exc_info=False
             )
-            return False
+            return
 
         cmd = ",".join([str(glt_cmd), str(index_value)])
 
@@ -833,10 +834,17 @@ class UnidenScanner:
         try:
             ack = self.send_command(cmd)
             res = self.get_response()
-
         except CommandError:
             self.logger.error(f"get_list(): {cmd}")
-            return 0
+            return
+
+        # if the "data" value is "ERR", the scanner didn't accept the command
+        res_data = res.get("data")
+
+        # erroneous commands lead to "ERR" or the scanner just returning GLT
+        if (not res_data is None and res_data[0] == "ERR") or len(res) == 1:
+            self.logger.error(f"scanner returned ERR for command '{cmd}'")
+            return
 
         return res
 
