@@ -815,6 +815,7 @@ class UnidenScanner:
         Notes:
             - GTL command reference can be found in the
                 SDSx00_RemoteCommand_Specifications PDF file.
+            - get the abbreviation for the requested list key is "requested list abbrev"
         """
 
         try:
@@ -827,10 +828,10 @@ class UnidenScanner:
             )
             return
 
-        # get the type of list
-        list_abbriv = GLT_COMMAND[list_type][1]
+        # get the abbreviation for the type of list we want
+        list_abbrev = GLT_COMMAND[list_type][1]
 
-        cmd = ",".join([str(glt_cmd), str(list_abbriv), str(index_value)])
+        cmd = ",".join([str(glt_cmd), str(list_abbrev), str(index_value)])
 
         # todo: xml parser doesn't work correctly for GLT commands
         try:
@@ -847,6 +848,9 @@ class UnidenScanner:
         if (not res_data is None and res_data[0] == "ERR") or len(res) == 1:
             self.logger.error(f"scanner returned ERR for command '{cmd}'")
             return
+
+        # add the requested list abbreviation for use in other methods
+        res["requested list abbrev"] = str(list_abbrev)
 
         return res
 

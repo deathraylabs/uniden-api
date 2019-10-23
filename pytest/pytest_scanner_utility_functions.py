@@ -278,12 +278,19 @@ def test_get_list():
     qk_list = s.get_list("favorites list")
     assert isinstance(qk_list, dict)
 
+    # test whether we get the correct list abbreviation
+    assert qk_list["requested list abbrev"] == "FL"
+
     # test case with missing argument, should be "system", "0" for instance
     qk_list = s.get_list("system")
     assert qk_list is None
 
+    # test case with correct argument structure
     qk_list = s.get_list("system", "8")
     assert isinstance(qk_list, dict)
+
+    # test whether we get the correct list abbreviation
+    assert qk_list["requested list abbrev"] == "SYS"
 
     s.close()
 
