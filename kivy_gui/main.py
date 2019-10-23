@@ -809,6 +809,9 @@ class PlaybackScreen(Screen):
         # get the current keyboard layout
         layout = Config.get("kivy", "keyboard_layout")
         print(f"current keyboard layout: {layout}")
+        Config.set("kivy", "keyboard_layout", "qwerty")
+        layout = Config.get("kivy", "keyboard_layout")
+        print(f"current keyboard layout: {layout}")
 
     def btn(self):
         """Method runs when Button object calls root.btn() 
@@ -868,11 +871,17 @@ class PlaybackScreen(Screen):
         res = scanner.get_response()
 
         # display text response from scanner but pretty it up a bit
-        self.text_display.text = pprint.pformat(res, compact=True, width=100, indent=3)
+        formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)
+        self.text_display.text = formatted_response
+
+        # append formatted response to the log file
+        log_output(formatted_response)
 
         # you must remove focus before you can cancel the selection handles
         self.cmd_input_box.focus = False
         self.cmd_input_box.cancel_selection()
+
+        return formatted_response
 
     def display_raw_scanner_output(self, command):
         """method to view raw output from a command
@@ -944,6 +953,21 @@ sm.add_widget(PopupScreen(name="popup"))
 update_screen = UpdateScreen()
 
 side_panel = RightSidePanel()
+
+
+def log_output(log_string):
+    """Helper function to quickly save scanner output to file
+
+    Returns
+        True: if no errors thrown
+    """
+
+    log_path = "scanner_log.txt"
+
+    with open(log_path, "a") as log_file:
+        log_file.write(log_string)
+
+    return True
 
 
 class DataWindowApp(App):

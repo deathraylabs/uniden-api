@@ -296,6 +296,7 @@ class UnidenScanner:
                 - these types of data have unique xml tags
             - MSI data does not use unique tags, so multiple data points can have
                 the same tag.
+            - GLT data does not use unique tags either
 
         Args:
             cmd (str): three letter string scanner command.
@@ -892,6 +893,23 @@ class UnidenScanner:
         self.update_scanner_state()
 
         return True
+
+    def send_cmd_get_raw_xml(self, cmd):
+        """Method for testing. Get the raw xml response to command.
+
+        Args:
+            cmd (str): scanner command (doesn't need end of line CR)
+
+        Returns:
+            raw_xml (str): scanner response
+
+        """
+
+        self.send_command(cmd)
+
+        response = self.get_serial_buffer()
+
+        return f"command sent: {cmd}\n\n{response}"
 
     # todo: fill in future implementation
     def get_fav_list_qk_status(self):
