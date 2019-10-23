@@ -804,14 +804,15 @@ class UnidenScanner:
 
         try:
             # make sure the command is available by checking commands
-            glt_cmd = GLT_COMMANDS[list_type][0]
+            glt_cmd = GLT_COMMAND[list_type][0]
+            self.logger.debug(f"list name and proper format: {glt_cmd}")
         except KeyError:
             self.logger.exception(
                 f"{list_type} is not a known list type", exc_info=False
             )
             return False
 
-        cmd = ",".join(["GLT", str(glt_cmd), str(index_value)])
+        cmd = ",".join([str(glt_cmd), str(index_value)])
 
         # todo: xml parser doesn't work correctly for GLT commands
         try:

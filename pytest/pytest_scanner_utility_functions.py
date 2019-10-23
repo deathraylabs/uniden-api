@@ -267,5 +267,16 @@ def test_get_volume():
     assert vol == "1"
 
 
+def test_human_readable_qk_status():
+    """Test human readable quick key status code"""
+
+    s = UnidenScanner()
+
+    fl_qk = s.get_fav_list_qk_status()
+    qk_list = s.get_list("favorites list")
+
+    assert False
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()
