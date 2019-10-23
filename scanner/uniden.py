@@ -805,12 +805,12 @@ class UnidenScanner:
         """Gets specified list from scanner.
 
         Args:
-            list_type (str): plain english list name (see GLT command spec)
+            list_type (str): plain english list name (see constants.py GLT_COMMAND)
             index_value (int or str): optional index, depending on list desired
 
         Returns:
             res (dict): dict containing data entries outlined in GTL command
-                reference or under constants.py GLT_COMMAND
+                reference
             None: if the command list type or index value throws error
 
         Notes:
