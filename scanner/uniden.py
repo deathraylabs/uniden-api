@@ -247,7 +247,13 @@ class UnidenScanner:
 
     def get_response(self):
         """Method reads data on the serial buffer, finds components,
-        and returns a dict containing raw organized data."""
+        and returns a dict containing raw organized data.
+
+        Returns:
+            err_res (str): if scanner throws an error
+            xml_dict (dict): if scanner responds with xml data
+            res_dict (dict): dict of simple response if no xml data provided by scanner
+        """
 
         # first response line contains command and data or format note
         res_line = self._read_and_decode_line()
@@ -256,23 +262,32 @@ class UnidenScanner:
 
         # the number of response items allows us to triage data
         num_res_items = len(res_list)
-        self.logger.debug(f"{num_res_items} items in first response line.")
+        self.logger.debug(
+            f"get_response(): {num_res_items} items in first response line."
+        )
 
-        # 3 letter command, or 3 letter error code
+        # 3 letter command or 3 letter error code
         cmd = res_list[0]
 
-        try:
+        if num_res_items > 1:
             # first response item
             res_1 = res_list[1]
-        except IndexError:
-            self.logger.exception(f"only cmd: {cmd} response.")
-            return
+        else:
+            err_res = cmd
+            if cmd in self.err_list:
+                self.logger.exception(f"scanner replied with error code.")
+
+            return err_res
+
+        # except IndexError:
+        #     self.logger.exception(f"Indexscanner response: {cmd}")
+        # return
 
         # check to see if error code passed instead of command code
-        if cmd in self.err_list:
-            self.logger.exception(f"scanner error response: {cmd}")
-            return cmd
-        elif res_1 == "<XML>":
+        # if cmd in self.err_list:
+        #     self.logger.exception(f"scanner error response: {cmd}")
+        #     return cmd
+        if res_1 == "<XML>":
             self.logger.debug(f"found xml data.")
 
             # xml parsing is handled by separate method

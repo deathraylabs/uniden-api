@@ -158,13 +158,11 @@ def test_get_response():
 
     # ridiculous writes should result in exception.
     s.serial.write(b"POO\r")
-
-    try:
-        s.get_response()
-    except CommandError as e:
-        assert type(CommandError()) == type(e)
+    response = s.get_response()
 
     s.close()
+
+    assert isinstance(response, str)
 
 
 def test_get_response_many_items():
