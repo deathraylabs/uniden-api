@@ -1039,7 +1039,6 @@ class UnidenScanner:
         """Future implementation to set the department quick key status"""
         pass
 
-    # todo: finish human readable qk status method
     def get_human_readable_qk_status(self, qk_status, qk_list):
         """This method combines the Quick Key list stored on the scanner with
         the current Quick Key status codes to produce a human-readable status list.

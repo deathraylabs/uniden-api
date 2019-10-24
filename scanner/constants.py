@@ -800,6 +800,18 @@ HUMAN_QK_STATUS = {
     "2": "QK exists and is enabled",
 }
 
+# get list commands
+# todo: 12 more commands to write out
+GLT_COMMAND = {
+    "favorites list": ("GLT", "FL", ""),
+    "system": ("GLT", "SYS", "fl_index"),
+    "department": ("GLT", "DEPT", "system_index"),
+    "site": ("GLT", "SITE", "system_index"),
+    "tgid": ("GLT", "TGID", "dept_index"),
+    "user record": ("GLT", "UREC", ""),
+    "user record file": ("GLT", "UREC_FILE", "folder_index"),
+}
+
 # max_depth: maximum number of branches from root
 XML_TAG_HANDLER = {
     "Footer": ("Footer", 0, True),
@@ -942,17 +954,6 @@ UNID_UNITID_DATA = [
     "UnitIds:AlertPattern",
 ]
 
-# get list commands
-# todo: 12 more commands to write out
-GLT_COMMAND = {
-    "favorites list": ("GLT", "FL", ""),
-    "system": ("GLT", "SYS", "fl_index"),
-    "department": ("GLT", "DEPT", "system_index"),
-    "site": ("GLT", "SITE", "system_index"),
-    "tgid": ("GLT", "TGID", "dept_index"),
-    "user record": ("GLT", "UREC", ""),
-    "user record file": ("GLT", "UREC_FILE", "folder_index"),
-}
 
 # podcast categories and corresponding get_wav_meta tags
 PODCAST = {

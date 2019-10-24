@@ -912,7 +912,7 @@ class PlaybackScreen(Screen):
         # format response with pretty print so it is more readable
         formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)
 
-        print(f"formatted {command} response:\n\n{formatted_response}")
+        # print(f"formatted {command} response:\n\n{formatted_response}")
 
         # reset the text size so it fits properly in window
         self.text_display.text_size[1] = None
@@ -921,7 +921,22 @@ class PlaybackScreen(Screen):
         self.text_display.text = formatted_response
         self.text_display.height = self.text_display.texture_size[1]
 
+    def fav_qk_status(self):
+        """Experimenting with new methods"""
+
+        # get raw quick key status
+        qk_status = scanner.get_fav_list_qk_status()
+        # get the quick key list for favorites
+        qk_list = scanner.get_list("favorites list")
+
+        # merge to make human-readable dict
+        hr_dict = scanner.get_human_readable_qk_status(qk_status, qk_list)
+        Logger.info(pprint.pformat(hr_dict))
+
+        return True
+
     # ---------- currently unused ---------- #
+
     def play_stop_btn(self):
         """Button used to both play and stop sound playing from wav file on
         scanner. Currently disabled.

@@ -44,7 +44,7 @@
                     id: "button_row_container"
                     orientation: 'vertical'
 
-                    # ------------ first row ------------- #
+                    # ------------ 1 first row ------------- #
                     CommandLine:
                         id: command_input
                         text: "GLT,FL"
@@ -53,7 +53,7 @@
                             self.cancel_selection()  # gets rid of handles
 
 
-                    # ------------ second row ------------- #
+                    # ------------ 2 second row ------------- #
                     BoxLayout:
                         id: "second_row"
                         orientation: 'horizontal'
@@ -71,7 +71,9 @@
                         Button:
                             id: _fqk_status
                             text: "View FQK Status"
-                            on_release: root.display_raw_scanner_output("FQK")
+                            on_release:
+                                root.display_raw_scanner_output("FQK")
+                                root.fav_qk_status()
 
 
                     # ---------- third row ---------- #
