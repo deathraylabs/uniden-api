@@ -951,15 +951,24 @@ class UnidenScanner:
 
         Returns:
             response (dict):
-                'cmd': (str) command sent to scanner
-                'data': (list) quick key state codes
+                'cmd': command sent to scanner
+                {index (int): status code (int)}
         """
 
         cmd_resp = self.send_command("FQK")
 
         self.logger.info(f"FQK Ack: {cmd_resp}")
 
-        return self.get_response()
+        res = self.get_response()
+
+        # new dict to store data list as dict instead of list
+        qk_status_dict = {"cmd": res["cmd"]}
+
+        # convert quick key state codes list into dict
+        for index, value in enumerate(res["data"]):
+            qk_status_dict[index] = value
+
+        return qk_status_dict
 
     # todo: finish set fl qk status method
     def set_fav_list_qk_status(self):
@@ -1042,10 +1051,32 @@ class UnidenScanner:
                 indices to match up against the qk_status
 
         Returns:
-            hr_qk_status (dict): dict where keys: qk names and values: status number
+            hr_qk_status (dict): dict where keys = list item names
+            and values = status number
 
         """
-        return False
+
+        # we need the list abbreviation to get the correct dict for list data
+        list_abbrev = qk_list["requested list abbrev"]
+        self.logger.debug(f"current list abbreviation: {list_abbrev}")
+
+        # names and ids of the quick key list items
+        qk_details = qk_list[list_abbrev]
+
+        # create a dict that relates list item name to status
+        hr_qk_status = {}
+
+        for k, v in qk_details.items():
+            # not all list items will have an assigned quick key, skip if not
+            if v["Q_Key"] == "None":
+                continue
+
+            # create a new dict item for the quick key status
+            qk_details[k]["Q_Key_Status"] = qk_status[int(v["Q_Key"])]
+
+            hr_qk_status[k] = qk_status[int(v["Q_Key"])]
+
+        return hr_qk_status
 
     # --------------- Older Code ------------------- #
 
@@ -5816,6 +5847,12 @@ if __name__ == "__main__":
     )
 
     s = UnidenScanner()
+
+    fl_qk = s.get_fav_list_qk_status()
+    qk_list = s.get_list("favorites list")
+
+    hr = s.get_human_readable_qk_status(fl_qk, qk_list)
+
     # state = s.update_scanner_state("pull")
 
     # while True:
