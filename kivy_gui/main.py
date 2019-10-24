@@ -10,6 +10,7 @@ from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 
 from functools import partial  # ???
@@ -910,7 +911,7 @@ class PlaybackScreen(Screen):
         # pprint.pprint(res)
 
         # call helper to display text
-        self.send_text_to_screen(res)
+        self.send_text_to_screen_as_labels(list(res))
 
     def fav_qk_status(self):
         """Experimenting with new methods"""
@@ -936,7 +937,7 @@ class PlaybackScreen(Screen):
             elif list_status == "2":
                 reformatted_text.append(f" {list_name} : On")
 
-        self.send_text_to_screen(reformatted_text)
+        self.send_text_to_screen_as_labels(reformatted_text)
 
         return True
 
@@ -955,6 +956,23 @@ class PlaybackScreen(Screen):
         # display text on left text panel
         self.text_display.text = formatted_response
         self.text_display.height = self.text_display.texture_size[1]
+
+    def send_text_to_screen_as_labels(self, text_list):
+        """another way to display text, this time as labels"""
+
+        labels = []
+
+        # create list of labels
+        for item in text_list:
+            labels.append(Label(text=str(item), height=40))
+
+        # self.large_text_layout.add_widget(Label(text=text_list))
+
+        # add label widgets to layout
+        for item in labels:
+            self.scroll_view_layout.add_widget(item)
+
+        return True
 
     # ---------- currently unused ---------- #
 

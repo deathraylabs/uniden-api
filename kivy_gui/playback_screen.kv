@@ -7,8 +7,10 @@
 
 <PlaybackScreen>:
 #    play_stop_button: stop_play
-    text_display: _text_display
+#    text_display: _text_display
     cmd_input_box: command_input
+    large_text_layout: _large_text_layout
+    scroll_view_layout: _scroll_view
 
     GridLayout:
         cols: 2
@@ -21,15 +23,24 @@
         LargeTextDisplayPanel:
             id: _large_text_layout
 
-            BoxLayout:
-                orientation: "vertical"
+#            BoxLayout:
+#                orientation: "vertical"
 
-                ScrollView:
-                    do_scroll: (False, True)
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
 
-                    ScrollingTextDisplayPanel:
-                        id: _text_display
-                        text: "Scanner response..."
+                GridLayout:
+                    id: _scroll_view
+                    cols: 1
+                    row_default_height: 100  # change to text size
+                    size_hint_x: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+
+#            ScrollingTextDisplayPanel:
+#                id: _text_display
+#                text: "Scanner response..."
 
 
         BoxLayout:
@@ -72,7 +83,7 @@
                             id: _fqk_status
                             text: "View FQK Status"
                             on_release:
-                                root.display_raw_scanner_output("FQK")
+#                                root.display_raw_scanner_output("FQK")
                                 root.fav_qk_status()
 
 
@@ -104,6 +115,10 @@
                         id: "fourth_row"
                         orientation: 'horizontal'
 
+#                        Button:
+#                            id: _add_label
+#                            text: "add a label"
+#                            on_release: root.send_text_to_screen_as_labels("janks")
 
                     BoxLayout:
                         id: "fifth_row"
