@@ -922,7 +922,21 @@ class PlaybackScreen(Screen):
 
         # merge to make human-readable dict
         hr_dict = scanner.get_human_readable_qk_status(qk_status, qk_list)
-        Logger.info(pprint.pformat(hr_dict))
+
+        # reformat text to display list of names and current state
+        reformatted_text = []
+        for list_name, list_meta in hr_dict.items():
+
+            list_status = list_meta.get("Q_Key_Status")
+
+            if list_status is None:
+                reformatted_text.append(f"{list_name} : Not Loaded")
+            elif list_status == "1":
+                reformatted_text.append(f"{list_name} : Off")
+            elif list_status == "2":
+                reformatted_text.append(f" {list_name} : On")
+
+        self.send_text_to_screen(reformatted_text)
 
         return True
 
@@ -930,7 +944,7 @@ class PlaybackScreen(Screen):
         """helper method to get text on screen"""
         # format response with pretty print so it is more readable
         formatted_response = pprint.pformat(
-            display_text, compact=True, width=100, indent=3
+            display_text, compact=False, width=100, indent=3
         )
 
         # print(f"formatted {command} response:\n\n{formatted_response}")
