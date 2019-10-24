@@ -909,17 +909,8 @@ class PlaybackScreen(Screen):
 
         # pprint.pprint(res)
 
-        # format response with pretty print so it is more readable
-        formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)
-
-        # print(f"formatted {command} response:\n\n{formatted_response}")
-
-        # reset the text size so it fits properly in window
-        self.text_display.text_size[1] = None
-
-        # display text on left text panel
-        self.text_display.text = formatted_response
-        self.text_display.height = self.text_display.texture_size[1]
+        # call helper to display text
+        self.send_text_to_screen(res)
 
     def fav_qk_status(self):
         """Experimenting with new methods"""
@@ -934,6 +925,22 @@ class PlaybackScreen(Screen):
         Logger.info(pprint.pformat(hr_dict))
 
         return True
+
+    def send_text_to_screen(self, display_text):
+        """helper method to get text on screen"""
+        # format response with pretty print so it is more readable
+        formatted_response = pprint.pformat(
+            display_text, compact=True, width=100, indent=3
+        )
+
+        # print(f"formatted {command} response:\n\n{formatted_response}")
+
+        # reset the text size so it fits properly in window
+        self.text_display.text_size[1] = None
+
+        # display text on left text panel
+        self.text_display.text = formatted_response
+        self.text_display.height = self.text_display.texture_size[1]
 
     # ---------- currently unused ---------- #
 
