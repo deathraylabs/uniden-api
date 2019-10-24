@@ -1051,9 +1051,20 @@ class UnidenScanner:
                 indices to match up against the qk_status
 
         Returns:
-            hr_qk_status (dict): dict where keys = list item names
-            and values = status number
+            qk_details (dict): GLT data with an added item {"Q_Key_Status": <stat code>}
+                appended to each key (GLT item) that is currently being used.
 
+        Notes:
+            status codes:
+                0: QK does NOT exist
+                1: QK exists and is disabled
+                2: QK exists and is enabled
+
+            - the GLT command reference sheet (pg 14 in SDS100 remote command spec)
+                details what tags are output for each type of list returned by scanner.
+            - If a particular list item is not loaded on the scanner, or does not have
+                an assigned quick key value, no Q_Key_Status key:value pair is added
+                to the dict.
         """
 
         # we need the list abbreviation to get the correct dict for list data
@@ -1064,7 +1075,7 @@ class UnidenScanner:
         qk_details = qk_list[list_abbrev]
 
         # create a dict that relates list item name to status
-        hr_qk_status = {}
+        # hr_qk_status = {}
 
         for k, v in qk_details.items():
             # not all list items will have an assigned quick key, skip if not
@@ -1074,9 +1085,9 @@ class UnidenScanner:
             # create a new dict item for the quick key status
             qk_details[k]["Q_Key_Status"] = qk_status[int(v["Q_Key"])]
 
-            hr_qk_status[k] = qk_status[int(v["Q_Key"])]
+            # hr_qk_status[k] = qk_status[int(v["Q_Key"])]
 
-        return hr_qk_status
+        return qk_details
 
     # --------------- Older Code ------------------- #
 
