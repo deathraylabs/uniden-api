@@ -911,7 +911,8 @@ class PlaybackScreen(Screen):
         # pprint.pprint(res)
 
         # call helper to display text
-        self.send_text_to_screen_as_labels(list(res))
+        # self.send_text_to_screen_as_labels(list(res))
+        self.send_text_to_screen_as_labels(res)
 
     def fav_qk_status(self):
         """Experimenting with new methods"""
