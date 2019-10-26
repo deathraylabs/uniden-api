@@ -167,9 +167,9 @@ class UpdateScreen:
             return False
 
         # check for a popup screen
-        popup_screen = wav_meta.get("PopupScreen")
-        if popup_screen != {}:
-            print(popup_screen)
+        # popup_screen = wav_meta.get("PopupScreen")
+        # if popup_screen != {}:
+        #     print(popup_screen)
 
         # determine if screen is a menu or scan screen
         scanner_info = wav_meta.get("ScannerInfo")
@@ -645,6 +645,20 @@ class DataWindow(Screen):
         self.ids["_squelch"].text = f'SQL:{property_dict["SQL"]}'
         self.ids["_signal"].text = f'sig: {property_dict["Sig"]}'
         self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
+
+        # check for a popup screen and grab the text
+        popup_screen = wav_meta.get("PopupScreen")
+        if popup_screen != {}:
+            self.ids["_popup_text"].color = (1, 1, 1, 1)
+            self.ids["_popup_text"].text = str(popup_screen["Text"])
+            with self.popup_text.canvas.before:
+                Color(rgba=(0, 1, 0, 1))
+                Rectangle(size=self.popup_text.size, pos=self.pos)
+        else:
+            self.popup_text.color = (1, 1, 1, 0)
+            self.popup_text.canvas.before.clear()
+
+            # self.popup_text.canvas.ask_update()
 
         return True
 

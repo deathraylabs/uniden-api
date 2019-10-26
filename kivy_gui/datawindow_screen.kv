@@ -19,6 +19,7 @@
     tgid_hld: tgid_hld
     right_screen: _right_side
 #    main_container: _main_container
+    popup_text: _popup_text
 
     GridLayout:
         id: _main_container
@@ -116,7 +117,9 @@
 
     PopupOverlay:
         id: _popup_overlay
+        # this definition allows us to get properties of other widget
         _left_side: _left_side
+        # constant definition
         size_scale: 0.6
 
         # disable size hint so we can specify manual width and height
@@ -127,17 +130,21 @@
         x: (_left_side.width - self.width) / 2
         y: (_left_side.height - self.height) / 2
 
-        canvas.before:
-            Rectangle:
-                size: self.size
-#                    (_left_side.width * self.size_scale,
-#                    _left_side.height * self.size_scale)
-#                pos: self.pos
-#                    ((_left_side.width - _left_side.width * self.size_scale)/2,
-#                    (_left_side.height - _left_side.height * self.size_scale)/2)
+#        canvas.before:
+#            Rectangle:
+#                # set the size to that of the container
+#                size: self.size
 
         Label:
-#            overlay: _overlay
+            id: _popup_text
+#            _popup_overlay: _popup_overlay
             text: "bobo"
             valign: "top"
-            color: 1, 1, 1, 1
+            color: 1, 1, 1, 0
+
+#            canvas.before:
+##                Color:
+##                    rgba: (1, 0, 0, 1)
+#                Rectangle:
+#                    size: _popup_overlay.size
+#                    pos: self.pos

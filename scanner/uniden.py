@@ -360,10 +360,6 @@ class UnidenScanner:
                 current_tag = element.tag
                 sub_dict = {}
 
-                # todo: delete this debugging code
-                if current_tag == "PopupScreen":
-                    print(current_tag)
-
                 # checking to see if we're at end of transmission or just end of block
                 if current_tag == "Footer" and element.attrib["EOT"] == "1":
                     continue
