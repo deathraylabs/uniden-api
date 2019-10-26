@@ -72,6 +72,7 @@
     padding: 10, 10
 
 <LargeTextDisplayPanel@BoxLayout>:
+    id: _left_side_container
     orientation: 'vertical'
     canvas:
         Color:
@@ -79,6 +80,15 @@
         Rectangle:
             size: self.size
             pos: self.pos
+
+<PopupOverlay@RelativeLayout>:
+    id: _popup_formatting
+    canvas.before:
+        Color:
+            rgba: (1, 0, 0, 1)
+#        Rectangle:
+#            size: (self.width * .4, self.height * .4)
+#            pos: (root.width/2, 0)
 
 <RightSidePanel>:
     orientation: 'vertical'

@@ -114,9 +114,30 @@
         RightSidePanel:
             id: _right_side
 
-#    RelativeLayout:
-#        Label:
-#            text: "bobo"
-#            color: 1, 1, 1, 1
-#            x: 400
-#            y: 220
+    PopupOverlay:
+        id: _popup_overlay
+        _left_side: _left_side
+        size_scale: 0.6
+
+        # disable size hint so we can specify manual width and height
+        size_hint: None, None
+        width: _left_side.width * self.size_scale
+        height: _left_side.height * self.size_scale
+
+        x: (_left_side.width - self.width) / 2
+        y: (_left_side.height - self.height) / 2
+
+        canvas.before:
+            Rectangle:
+                size: self.size
+#                    (_left_side.width * self.size_scale,
+#                    _left_side.height * self.size_scale)
+#                pos: self.pos
+#                    ((_left_side.width - _left_side.width * self.size_scale)/2,
+#                    (_left_side.height - _left_side.height * self.size_scale)/2)
+
+        Label:
+#            overlay: _overlay
+            text: "bobo"
+            valign: "top"
+            color: 1, 1, 1, 1

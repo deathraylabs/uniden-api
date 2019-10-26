@@ -204,10 +204,10 @@ class UnidenScanner:
             return
 
         res_line = self.serial.read_until(b"\r").decode()
-        self.logger.debug(f"parser feed data: {res_line}")
+        # self.logger.debug(f"parser feed data: {res_line}")
 
         res_line = res_line.replace("\r", "\n")
-        self.logger.debug(f"returned string: {res_line}")
+        self.logger.debug(f"raw xml: {res_line}")
 
         return res_line
 
@@ -309,6 +309,7 @@ class UnidenScanner:
         Notes:
             - only tested against GSI and PSI style data
                 - these types of data have unique xml tags
+                - some tag attributes don't have unique names, like PlainText
             - MSI data does not use unique tags, so multiple data points can have
                 the same tag.
             - GLT data does not use unique tags either
@@ -358,6 +359,10 @@ class UnidenScanner:
                 element = event[1]
                 current_tag = element.tag
                 sub_dict = {}
+
+                # todo: delete this debugging code
+                if current_tag == "PopupScreen":
+                    print(current_tag)
 
                 # checking to see if we're at end of transmission or just end of block
                 if current_tag == "Footer" and element.attrib["EOT"] == "1":
@@ -5858,10 +5863,13 @@ if __name__ == "__main__":
 
     s = UnidenScanner()
 
-    fl_qk = s.get_fav_list_qk_status()
-    qk_list = s.get_list("favorites list")
+    s.send_command("GSI")
+    s.get_response()
 
-    hr = s.get_human_readable_qk_status(fl_qk, qk_list)
+    # fl_qk = s.get_fav_list_qk_status()
+    # qk_list = s.get_list("favorites list")
+    #
+    # hr = s.get_human_readable_qk_status(fl_qk, qk_list)
 
     # state = s.update_scanner_state("pull")
 

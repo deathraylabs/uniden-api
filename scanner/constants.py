@@ -707,9 +707,12 @@ GSI_OUTPUT_2 = {
     "ViewDescription:": {
         "InfoArea1": {"Text": "---"},
         "InfoArea2": {"Text": "---"},
-        "OverWrite": {"Text": ""},
-        "PopupScreen": {},
-        "PlainText": {"Text": "---"},
+        "OverWrite": {"Text": "message in channel area during scan"},
+        "PopupScreen": {
+            "Text": "like a dialog box",
+            "Button": {"Text": "can have more than one button", "KeyCode": ""},
+        },
+        "PlainText": {"Text": "view mode in main screen, multiple text entries"},
     },
     "ReplayDescription": {"File": "---", "Index": "---", "ReplayMode": {}},
     "ReplayMode": {"Mode": "---"},

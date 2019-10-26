@@ -144,18 +144,6 @@ class UpdateScreen:
         # stop updating screen with clock
         Clock.unschedule(self.update_screen)
 
-        # # make sure the port is open and connected to scanner
-        # try:
-        #     if not scanner.port_is_open():
-        #         Logger.info("Port is already closed.")
-        #         return False
-        # except AttributeError:
-        #     Logger.exception("No scanner connection", exc_info=False)
-        #     return False
-        #
-        # scanner.close()
-        # Logger.info("Scanner Connection Closed.")
-
     def update_screen(self, dt):
         """When called this method updates the internal scanner state and then
         dispatches data to the appropriate window handler.
@@ -674,7 +662,6 @@ class PopupScreen(Screen):
     text_display_popup = ObjectProperty()
     # give the RightSidePanel updater access to this screen's instance
     right_screen = ObjectProperty()
-    # menu_items = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(PopupScreen, self).__init__(**kwargs)
@@ -908,11 +895,11 @@ class PlaybackScreen(Screen):
 
         res = scanner.get_response()
 
-        # pprint.pprint(res)
+        pprint.pprint(res)
 
         # call helper to display text
-        # self.send_text_to_screen_as_labels(list(res))
-        self.send_text_to_screen_as_labels(res)
+        self.send_text_to_screen_as_labels(list(res))
+        # self.send_text_to_screen_as_labels(res)
 
     def fav_qk_status(self):
         """Experimenting with new methods"""
