@@ -476,6 +476,10 @@ class UnidenScanner:
         if state_dict is None:
             self.logger.error("No response from scanner. Trying to reset the port...")
             return self.reset_port()
+        # check to see if scanner is returning string and exit method if so
+        elif isinstance(state_dict, str):
+            self.logger.error(f"state_dict string: {state_dict}")
+            return False
 
         # todo: set this to parse the sub dicts too
         # save new states to dict
