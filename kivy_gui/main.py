@@ -165,7 +165,9 @@ class UpdateScreen:
         # check to ensure data is present
         if isinstance(wav_meta, bool):
             Logger.error("No data returned by scanner.")
-            return False
+
+            # note: returning false will kill the auto screen update
+            return
 
         # check for a popup screen
         # popup_screen = wav_meta.get("PopupScreen")
@@ -178,7 +180,7 @@ class UpdateScreen:
         v_screen = scanner_info.get("V_Screen")
 
         # update the side button panel
-        side_panel.update_rightsidepanel(wav_meta)
+        # side_panel.update_rightsidepanel(wav_meta)
 
         # scanner mode can be "Trunk Scan" or "Trunk Scan Hold", so use v_screen here
         if v_screen == "trunk_scan":
@@ -199,9 +201,11 @@ class UpdateScreen:
             Logger.debug("update_screen: calling conventional_scan")
             sm.current = "conventional"
             Logger.debug("update screen: switched over to conventional")
+        elif v_screen == "plain_text":
+            Logger.debug("update_screen: plain_text")
         else:
             Logger.error(f"update_screen: unknown screen: {v_screen}")
-            return False
+            # return False
 
         # update the right side panel
         side_panel.update_rightsidepanel(wav_meta)
