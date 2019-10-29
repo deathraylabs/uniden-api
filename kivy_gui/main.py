@@ -970,6 +970,9 @@ class PlaybackScreen(Screen):
 
         # self.large_text_layout.add_widget(Label(text=text_list))
 
+        # clear all the child widgets to make room for new ones
+        self.scroll_view_layout.clear_widgets()
+
         # add label widgets to layout
         for item in labels:
             self.scroll_view_layout.add_widget(item)
