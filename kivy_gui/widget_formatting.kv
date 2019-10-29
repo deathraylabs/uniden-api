@@ -241,15 +241,23 @@
 #            id: "sixth_row"
             orientation: 'horizontal'
 
-            NumericKeypad:
-                id: _avoid_key
-                text: "AVOID"
-                on_release: root.keypad_press(keypad_key="avoid")
+            BoxLayout:
+                id: _sub_row
 
-            NumericKeypad:
-                id: _begin_end_recording
-                text: "Replay\n(Rec)"
-                on_release: root.keypad_press(keypad_key="replay")
+                NumericKeypad:
+                    id: _avoid_key
+                    text: "AVOID"
+                    on_release: root.keypad_press(keypad_key="avoid")
+
+                NumericKeypad:
+                    id: _begin_end_recording
+                    text: "Replay\n(Rec)"
+                    on_release: root.keypad_press(keypad_key="replay")
+
+                NumericKeypad:
+                    id: _zip_services
+                    text: "Zip\nSvs"
+                    on_release: root.keypad_press(keypad_key="zip")
 
             NumericKeypad:
                 id: _enter_button

@@ -1033,6 +1033,12 @@ class PlaybackScreen(Screen):
         #     self.play_stop_button.text = "PLAY"
 
 
+class ConventionalScreen(Screen):
+    """Class to display conventional radio information"""
+
+    pass
+
+
 sm = ScreenManager(transition=NoTransition())
 sm.add_widget(DataWindow(name="datawindow"))
 sm.add_widget(PlaybackScreen(name="playback"))
