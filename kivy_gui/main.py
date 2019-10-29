@@ -194,6 +194,11 @@ class UpdateScreen:
             Logger.debug("update_screen: calling popup class")
             sm.current = "popup"
             sm.current_screen.update_popup_screen(wav_meta)
+        elif v_screen == "conventional_scan":
+            # switch to main screen and update it
+            Logger.debug("update_screen: calling conventional_scan")
+            sm.current = "conventional"
+            Logger.debug("update screen: switched over to conventional")
         else:
             Logger.error(f"update_screen: unknown screen: {v_screen}")
             return False
@@ -1032,6 +1037,7 @@ sm = ScreenManager(transition=NoTransition())
 sm.add_widget(DataWindow(name="datawindow"))
 sm.add_widget(PlaybackScreen(name="playback"))
 sm.add_widget(PopupScreen(name="popup"))
+sm.add_widget(PopupScreen(name="conventional"))
 
 # create update screen instance that other classes can access
 update_screen = UpdateScreen()
