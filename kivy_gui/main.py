@@ -167,7 +167,7 @@ class UpdateScreen:
             Logger.error("No data returned by scanner.")
 
             # note: returning false will kill the auto screen update
-            return
+            return False
 
         # check for a popup screen
         # popup_screen = wav_meta.get("PopupScreen")
@@ -205,7 +205,7 @@ class UpdateScreen:
             Logger.debug("update_screen: plain_text")
         else:
             Logger.error(f"update_screen: unknown screen: {v_screen}")
-            # return False
+            return False
 
         # update the right side panel
         side_panel.update_rightsidepanel(wav_meta)
