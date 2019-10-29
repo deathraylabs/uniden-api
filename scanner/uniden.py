@@ -275,7 +275,7 @@ class UnidenScanner:
         else:
             err_res = cmd
             if cmd in self.err_list:
-                self.logger.exception(f"scanner replied with error code.")
+                self.logger.exception(f"scanner replied with error code:\n{err_res}")
 
             return err_res
 
