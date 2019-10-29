@@ -975,7 +975,14 @@ class PlaybackScreen(Screen):
 
         # create list of labels
         for item in text_list:
-            labels.append(Label(text=str(item), height=40))
+            labels.append(
+                Label(
+                    text=str(item),
+                    font_size="18sp",
+                    # size="self.texture_size",
+                    padding=("5sp", "0sp"),
+                )
+            )
 
         # self.large_text_layout.add_widget(Label(text=text_list))
 
