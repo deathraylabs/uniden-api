@@ -640,6 +640,23 @@ def parse_time(raw_timedate_start, raw_timedate_end="20010101000448"):
     return time_date_dict
 
 
+def flatten_nested_dict(nested_dict):
+    """Helper function returns iterator to get all key value pairs
+
+    Args:
+        nested_dict (dict): dict containing more than one nested dicts
+
+    Yields:
+        key, value (tuple): key value pairs in order they were parsed
+    """
+
+    for key, value in nested_dict.items():
+        if isinstance(value, dict):
+            yield from flatten_nested_dict(value)
+        else:
+            yield (key, value)
+
+
 if __name__ == "__main__":
 
     logger = logging.getLogger()

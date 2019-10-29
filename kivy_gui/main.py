@@ -22,6 +22,7 @@ if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
 print("Checked if on RPi")
 
 from scanner.uniden import UnidenScanner
+from scanner.scanner_utility_functions import *
 
 # contains layout instructions for first screen
 Builder.load_file("datawindow_screen.kv")
@@ -909,11 +910,19 @@ class PlaybackScreen(Screen):
 
         res = scanner.get_response()
 
+        # testing output
         pprint.pprint(res)
 
+        # response in flattened list form
+        res_list = []
+
+        # flatten nested dict into list
+        for key_val_tuple in flatten_nested_dict(res):
+            res_list.append(key_val_tuple)
+
         # call helper to display text
-        self.send_text_to_screen_as_labels(list(res))
-        # self.send_text_to_screen_as_labels(res)
+        # self.send_text_to_screen_as_labels(list(res))
+        self.send_text_to_screen_as_labels(res_list)
 
     def fav_qk_status(self):
         """Experimenting with new methods"""
