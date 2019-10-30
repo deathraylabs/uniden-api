@@ -740,6 +740,9 @@ class PopupScreen(Screen):
                     text_out += f"value: {v['Value']}"
                 else:
                     text_out = "No Menu Output"
+        elif msi_dict is None:
+            Logger.info("MSI Response is None, is there a popup?")
+            return False
         else:
             Logger.error("Unusual menu structure encountered")
             return False

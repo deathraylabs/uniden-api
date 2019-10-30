@@ -207,7 +207,8 @@ class UnidenScanner:
         # self.logger.debug(f"parser feed data: {res_line}")
 
         res_line = res_line.replace("\r", "\n")
-        self.logger.debug(f"raw xml: {res_line}")
+        self.logger.debug(f"read_and_decode_line: {res_line}")
+        print(res_line)
 
         return res_line
 
@@ -302,14 +303,19 @@ class UnidenScanner:
 
         return res_dict
 
+    def get_gsi_response(self, cmd):
+        """Method converts xml scanner data from gsi command to json style dict"""
+        pass
+
     def get_xml_response(self, cmd):
         """Method to parse xml serial data line-by line and
         return a formatted dict with information returned by the scanner.
 
         Notes:
             - only tested against GSI and PSI style data
-                - these types of data have unique xml tags
-                - some tag attributes don't have unique names, like PlainText
+                - these types of data mostly use unique xml tags
+                - some tag attributes don't use unique names, like PlainText
+                and Button
             - MSI data does not use unique tags, so multiple data points can have
                 the same tag.
             - GLT data does not use unique tags either
@@ -373,6 +379,10 @@ class UnidenScanner:
                 elif current_tag == "MenuErrorMsg":
                     # this skips the extra code that is required to process menu items
                     unique_tag_names = True
+                elif current_tag == "Button":
+                    self.logger.debug("'Button' tag is not unique")
+                elif current_tag == "PlainText":
+                    self.logger.debug("'PlainText' tag is not unique")
 
                 for item in element.attrib.items():
                     sub_dict[item[0]] = item[1]
@@ -5848,9 +5858,9 @@ if __name__ == "__main__":
 
     # start logging the session
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    ch.setLevel(logging.INFO)
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - " "%(levelname)s - %(message)s"
     )
