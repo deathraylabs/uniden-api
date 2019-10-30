@@ -303,9 +303,85 @@ class UnidenScanner:
 
         return res_dict
 
-    def get_gsi_response(self, cmd):
+    def get_gsi_response(self, cmd="GSI"):
         """Method converts xml scanner data from gsi command to json style dict"""
-        pass
+        # get a clean copy of template xml file
+        xml_dict = deepcopy(GSI_OUTPUT_2)
+
+        # root tag for this command
+        root_tag = cmd
+
+        at_xml_end = False  # initialize end of xml flag
+
+        # initialize parser
+        parser = ET.XMLPullParser(
+            events=["start", "end"]
+        )  # only returns if event is 'end'
+
+        # read the xml header line (essentially useless except for check)
+        header_line = self._read_and_decode_line()
+        self.logger.debug(f"xml header line: {header_line}")
+
+        if header_line != '<?xml version="1.0" encoding="utf-8"?>\n':
+            self.logger.error(f"{header_line} is not a valid xml line.")
+
+        # ---- parse xml using non-blocking parser ---- #
+
+        depth = 0
+
+        while not at_xml_end:
+
+            # data we will feed the parser
+            read_line = self._read_and_decode_line()
+            parser.feed(read_line)
+
+            # skip read_events() if none are enqueued
+            if type(parser.read_events()) is None:
+                continue
+
+            depth += 1
+
+            # parser is a generator and events are popped internally
+            # for event in parser.read_events():
+            #     depth -= 1
+            #
+            #     element = event[1]
+            #     current_tag = element.tag
+            #     current_attribs = element.attrib
+            #     sub_dict = {}
+            #
+            #     # checking to see if we're at end of transmission or just end of block
+            #     if current_tag == "Footer" and current_attribs["EOT"] == "1":
+            #         continue
+            #     elif current_tag == "Footer" and current_attribs["EOT"] == "0":
+            #         # eat up bytes until you get to start of next block of data
+            #         self.serial.read_until(b'<?xml version="1.0" encoding="utf-8"?>\r')
+            #         continue
+            #     elif current_tag == root_tag:
+            #         # once you encounter the root tag again you're done
+            #         at_xml_end = True
+            #
+            #     for attrib, value in current_attribs.items():
+            #         print(f"{attrib}: {value}")
+            #         sub_dict[attrib] = value
+            #
+            #     # # some commands return non-unique tag names, use name attribute instead
+            #     # if not unique_tag_names:
+            #     #     # current_tag will be repeated, this is first entry
+            #     #     if not current_tag in xml_dict:
+            #     #         try:
+            #     #             xml_dict[current_tag] = {sub_dict["Name"]: sub_dict}
+            #     #         except KeyError:
+            #     #             self.logger.exception("xml parse key error.")
+            #     #             continue
+            #     #     # add sub dicts under the repeated current tag
+            #     #     else:
+            #     #         xml_dict[current_tag][sub_dict["Name"]] = sub_dict
+            #     #     continue
+            #
+            #     xml_dict[current_tag] = sub_dict
+
+        return
 
     def get_xml_response(self, cmd):
         """Method to parse xml serial data line-by line and
@@ -5874,7 +5950,7 @@ if __name__ == "__main__":
     s = UnidenScanner()
 
     s.send_command("GSI")
-    s.get_response()
+    s.get_gsi_response()
 
     # fl_qk = s.get_fav_list_qk_status()
     # qk_list = s.get_list("favorites list")

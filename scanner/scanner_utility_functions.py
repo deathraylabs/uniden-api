@@ -657,6 +657,13 @@ def flatten_nested_dict(nested_dict):
             yield (key, value)
 
 
+def write_to_nested_dict(key, value, nested_dict):
+    """Helper function will insert the value into the appropriate branch of nested
+    dict passed to it."""
+
+    pass
+
+
 if __name__ == "__main__":
 
     logger = logging.getLogger()
