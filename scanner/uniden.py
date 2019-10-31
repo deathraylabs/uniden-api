@@ -553,7 +553,7 @@ class UnidenScanner:
 
         """
         # get a copy of the empty state, so scanner refreshes properly.
-        self.scan_state = deepcopy(GSI_OUTPUT_2)  # updated
+        self.scan_state = deepcopy(GSI_OUTPUT)  # updated
 
         if not self.port_is_open():
             self.logger.error("Serial port is closed.")

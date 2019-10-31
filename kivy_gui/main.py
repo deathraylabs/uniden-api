@@ -363,7 +363,7 @@ class RightSidePanel(BoxLayout):
             right_screen.sys_softkey.text = "Back to\nScan"
 
         # properties dict from scanner
-        get_property = wav_meta["Property"]
+        get_property = wav_meta["ScannerInfo"]["Property"]
 
         # set the mute button formatting
         vol = get_property["VOL"]
