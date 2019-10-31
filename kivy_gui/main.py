@@ -603,9 +603,12 @@ class DataWindow(Screen):
             # Logger.exception("No transmission end time.", exc_info=False)
             trans_end = "---"
 
+        # the root dict is ScannerInfo
+        scanner_info_dict = wav_meta["ScannerInfo"]
+
         # update the DataWindow with metadata from scanner
         for item in self.data_tags.items():
-            wav_meta_dict = wav_meta[item[0]]
+            wav_meta_dict = scanner_info_dict[item[0]]
             kivy_id = self.ids[item[1]]
 
             # populate screen text
@@ -635,14 +638,14 @@ class DataWindow(Screen):
         self.transmission_end.text = trans_end
 
         # Property values provided by scanner
-        property_dict = wav_meta["Property"]
+        property_dict = scanner_info_dict["Property"]
 
         self.volume_level.text = f'vol: {property_dict["VOL"]}'
 
-        self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
-        self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
+        self.unit_ids.text = scanner_info_dict["UnitID"]["U_Id"]
+        self.unit_ids_name_tag.text = scanner_info_dict["UnitID"]["Name"]
 
-        view_description_dict = wav_meta["ViewDescription"]
+        view_description_dict = scanner_info_dict["ViewDescription"]
 
         # get the scanner overwrite text
         overwrite = view_description_dict["OverWrite"]["Text"]
