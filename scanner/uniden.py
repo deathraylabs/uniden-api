@@ -309,7 +309,7 @@ class UnidenScanner:
         xml_dict = deepcopy(GSI_OUTPUT)
 
         # root tag for this command
-        root_tag = "ScannerInfo"
+        root_tag = ""
 
         at_xml_end = False  # initialize end of xml flag
 
@@ -352,7 +352,28 @@ class UnidenScanner:
                 current_tag = element.tag
                 current_attribs = element.attrib
 
-                if event_trigger == "start":
+                # set the root_tag variable if it's empty
+                if root_tag == "":
+                    root_tag = current_tag
+
+                # checking to see if we're at end of transmission or just end of block
+                if current_tag == "Footer":
+                    if current_attribs["EOT"] == "1" and event_trigger == "end":
+                        continue
+                    elif current_attribs["EOT"] == "0" and event_trigger == "end":
+                        # eat up bytes until you get to start of next block of data
+                        self.serial.read_until(
+                            b'<?xml version="1.0" encoding="utf-8"?>\r'
+                        )
+                        # reset the element tree
+                        element_tree = []
+                        continue
+                    else:
+                        continue
+                elif current_tag == root_tag and event_trigger == "end":
+                    # once you encounter the root tag again you're done
+                    at_xml_end = True
+                elif event_trigger == "start":
                     depth += 1
                     element_tree.append(current_tag)
 
@@ -363,49 +384,14 @@ class UnidenScanner:
                     for attrib, value in current_attribs.items():
                         # if value is list attribute names are not unique
                         if isinstance(cur_lev_xml_dict, list):
-                            cur_lev_xml_dict.append(value)
+                            cur_lev_xml_dict.append({attrib: value})
                         # handles attributes that have unique names
                         else:
                             cur_lev_xml_dict[attrib] = value
-
-                    # # all base elements can be treated the same
-                    # for attrib, value in current_attribs.items():
-                    #     if depth <= 2 and cmd != "MSI":
-                    #         # todo: this causes error if sent "MSI" data
-                    #         xml_dict[current_tag][attrib] = value
-                    #     # todo: needs to catch instances where degenerate tags
-                    #     elif depth == 3:
-                    #         previous_tag = element_tree[-2]
-                    #
-                    #         # check for degenerate attributes
-                    #         current_value = xml_dict[previous_tag][current_tag]
-                    #         if isinstance(current_value, list):
-                    #             current_value.append(value)
-                    #         else:
-                    #             current_value[attrib] = value
-                    #     elif depth == 4:
-                    #         current_dict = xml_dict[element_tree[-3]][element_tree[-2]][
-                    #             current_tag
-                    #         ]
-                    #         current_dict.append(value)
-
                 # special checks when parser encounters closing tag
-                if event_trigger == "end":
+                elif event_trigger == "end":
                     depth -= 1
                     element_tree.pop(-1)
-
-                    # checking to see if we're at end of transmission or just end of block
-                    if current_tag == "Footer" and current_attribs["EOT"] == "1":
-                        continue
-                    elif current_tag == "Footer" and current_attribs["EOT"] == "0":
-                        # eat up bytes until you get to start of next block of data
-                        self.serial.read_until(
-                            b'<?xml version="1.0" encoding="utf-8"?>\r'
-                        )
-                        continue
-                    elif current_tag == root_tag:
-                        # once you encounter the root tag again you're done
-                        at_xml_end = True
 
                 # for attrib, value in current_attribs.items():
                 #     print(f"{attrib}: {value}")
@@ -5995,7 +5981,7 @@ if __name__ == "__main__":
 
     s = UnidenScanner()
 
-    s.send_command("GSI")
+    s.send_command("MSI")
     gsi_dict = s.get_gsi_response()
 
     pprint(gsi_dict)
