@@ -659,16 +659,22 @@ GSI_OUTPUT = {
         "Analyze": {},
         "UnitID": {"Name": "---", "U_Id": "---"},
         "File": {"Index": ""},
+        "MenuSummary": {"index": "---", "name": "---"},
     },
-    "MenuSummary": {"index": "---", "name": "---"},
     "TransmissionStart": "---",
     "TransmissionEnd": "---",
     "FileSize": "---",
-    "MSI": {"Name": "", "Index": "", "MenuType": "", "Value": "", "Selected": ""},
-    "MenuItem": [{"Name": "", "Index": "", "Value": ""}],
-    "MenuInput": {"MaxLength": "", "EnableKeys": "", "AddedInformation": ""},
-    "MenuLocation": {"MaxLength": "", "EnableKeys": "", "IsLatitude": ""},
-    "MenuErrorMsg": {"Text": "", "ScanButton": ""},
+    "MSI": {
+        "Name": "",
+        "Index": "",
+        "MenuType": "",
+        "Value": "",
+        "Selected": "",
+        "MenuItem": [{"Name": "", "Index": "", "Value": ""}],
+        "MenuInput": {"MaxLength": "", "EnableKeys": "", "AddedInformation": ""},
+        "MenuLocation": {"MaxLength": "", "EnableKeys": "", "IsLatitude": ""},
+        "MenuErrorMsg": {"Text": "", "ScanButton": ""},
+    },
 }
 
 

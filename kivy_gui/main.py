@@ -705,46 +705,42 @@ class PopupScreen(Screen):
         # container for scrolling display
         scrolling_container = self.text_display_popup
 
-        # this is the container where we want to generate the labels
-        # layout = self.menu_items
-
         menu_information = self.get_menu_view()
-
-        menu_error = menu_information.get("MenuErrorMsg")
 
         # dict that contains information on menu and selection
         msi_dict = menu_information.get("MSI")
+        menu_name = msi_dict["Name"]
+
+        menu_error = msi_dict.get("MenuErrorMsg")
 
         # catch menu error message and display it
-        if menu_error is not None:
+        if menu_error["Text"] != "":
             Logger.error(f"menu error message: {menu_error['Text']}")
             text_out = menu_error["Text"]
         # this gets us the currently selected item
         # make sure there is actually a menu item present
         elif msi_dict is not None:
-            for k, v in msi_dict.items():
-                menu_name = k
+            # check the type of menu we're looking at
+            menu_type = msi_dict["MenuType"]
 
-                # check the type of menu we're looking at
-                menu_type = v["MenuType"]
+            if menu_type == "TypeSelect":
+                selected_item = msi_dict["Selected"]
 
-                if menu_type == "TypeSelect":
-                    selected_item = v["Selected"]
-                    # dictionary of menu items
-                    menu_items = menu_information["MenuItem"]
+                # dictionary of menu items
+                menu_items = msi_dict["MenuItem"]
 
-                    # process the menu selections with this method
-                    text_out = self.menu_selector(
-                        menu_name=menu_name,
-                        selected_item=selected_item,
-                        menu_items=menu_items,
-                    )
-                # handle numeric input types
-                elif menu_type == "TypeInput":
-                    text_out = f"{menu_name}\n\n"
-                    text_out += f"value: {v['Value']}"
-                else:
-                    text_out = "No Menu Output"
+                # process the menu selections with this method
+                text_out = self.menu_selector(
+                    menu_name=menu_name,
+                    selected_item=selected_item,
+                    menu_items=menu_items,
+                )
+            # handle numeric input types
+            elif menu_type == "TypeInput":
+                text_out = f"{menu_name}\n\n"
+                text_out += f"value: {v['Value']}"
+            else:
+                text_out = "No Menu Output"
         elif msi_dict is None:
             Logger.info("MSI Response is None, is there a popup?")
             return False
@@ -770,9 +766,9 @@ class PopupScreen(Screen):
         # format the data so it makes sense to a human
         text_out = f"{menu_name}\n\n"
         for item in menu_item_list:
-            item_index = menu_items[item]["Index"]
+            item_index = item["Index"]
             # not all items will have a value
-            item_value = menu_items[item].get("Value")
+            item_value = item.get("Value")
             if item_value is None:
                 item_value = ""
             else:

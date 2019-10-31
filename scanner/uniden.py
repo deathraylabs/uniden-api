@@ -382,12 +382,13 @@ class UnidenScanner:
                     for tag in element_tree:
                         cur_lev_xml_dict = cur_lev_xml_dict[tag]
 
-                    for attrib, value in current_attribs.items():
-                        # if value is list attribute names are not unique
-                        if isinstance(cur_lev_xml_dict, list):
-                            cur_lev_xml_dict.append({attrib: value})
-                        # handles attributes that have unique names
-                        else:
+                    if isinstance(cur_lev_xml_dict, list):
+                        attrib_dict = {}
+                        for attrib, value in current_attribs.items():
+                            attrib_dict[attrib] = value
+                        cur_lev_xml_dict.append(attrib_dict)
+                    else:
+                        for attrib, value in current_attribs.items():
                             cur_lev_xml_dict[attrib] = value
                 # special checks when parser encounters closing tag
                 elif event_trigger == "end":
@@ -991,7 +992,7 @@ class UnidenScanner:
             LEVEL (str): Volume Level ( 0 - 15 )
         """
 
-        vol = self.scan_state["Property"]["VOL"]
+        vol = self.scan_state["ScannerInfo"]["Property"]["VOL"]
 
         # check to see if the default value has been modified by scanner state update
         if vol == "0-15":
