@@ -362,7 +362,18 @@ class UnidenScanner:
                         # todo: needs to catch instances where degenerate tags
                         elif depth == 3:
                             previous_tag = element_tree[-2]
-                            xml_dict[previous_tag][current_tag][attrib] = value
+
+                            # check for degenerate attributes
+                            current_value = xml_dict[previous_tag][current_tag]
+                            if isinstance(current_value, list):
+                                current_value.append(value)
+                            else:
+                                current_value[attrib] = value
+                        elif depth == 4:
+                            current_dict = xml_dict[element_tree[-3]][element_tree[-2]][
+                                current_tag
+                            ]
+                            current_dict.append(value)
 
                 # special checks when parser encounters closing tag
                 if event_trigger == "end":
@@ -5972,6 +5983,8 @@ if __name__ == "__main__":
 
     s.send_command("GSI")
     gsi_dict = s.get_gsi_response()
+
+    pprint(gsi_dict)
 
     # fl_qk = s.get_fav_list_qk_status()
     # qk_list = s.get_list("favorites list")
