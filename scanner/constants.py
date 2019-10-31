@@ -564,7 +564,7 @@ GSI_OUTPUT = {
     },
     "AGC": {},
     "DispFormat": {},
-    "ViewDescription:": {
+    "ViewDescription": {
         "InfoArea1": {"Text": "---"},
         "InfoArea2": {"Text": "---"},
         "OverWrite": {"Text": "message in channel area during scan"},
