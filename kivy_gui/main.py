@@ -642,8 +642,10 @@ class DataWindow(Screen):
         self.unit_ids.text = wav_meta["UnitID"]["U_Id"]
         self.unit_ids_name_tag.text = wav_meta["UnitID"]["Name"]
 
+        view_description_dict = wav_meta["ViewDescription"]
+
         # get the scanner overwrite text
-        overwrite = wav_meta["OverWrite"]["Text"]
+        overwrite = view_description_dict["OverWrite"]["Text"]
 
         # if scanner provides overwrite text, display it over the tgid area
         if overwrite != "":
@@ -657,8 +659,8 @@ class DataWindow(Screen):
         self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
 
         # check for a popup screen and grab the text
-        popup_screen = wav_meta.get("PopupScreen")
-        if popup_screen != {}:
+        popup_screen = view_description_dict["PopupScreen"]
+        if popup_screen["Text"] != "":
             self.ids["_popup_text"].color = (1, 1, 1, 1)
             self.ids["_popup_text"].text = str(popup_screen["Text"])
             with self.popup_text.canvas.before:

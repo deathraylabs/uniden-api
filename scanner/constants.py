@@ -568,10 +568,7 @@ GSI_OUTPUT = {
         "InfoArea1": {"Text": "---"},
         "InfoArea2": {"Text": "---"},
         "OverWrite": {"Text": "message in channel area during scan"},
-        "PopupScreen": {
-            "Text": "like a dialog box",
-            "Button": [{"KeyCode": "", "Text": ""}],
-        },
+        "PopupScreen": {"Text": "", "Button": [{"KeyCode": "", "Text": ""}]},
         "PlainText": [{"Text": ""}],
     },
     "ReplayDescription": {"File": "---", "Index": "---", "ReplayMode": {"Mode": "---"}},
@@ -827,7 +824,7 @@ GSI_OUTPUT_2 = {
     # "OverWrite": {"Text": ""},
     # "PopupScreen": {},
     # "PlainText": {},
-    "ViewDescription:": {
+    "ViewDescription": {
         "InfoArea1": {"Text": "---"},
         "InfoArea2": {"Text": "---"},
         "OverWrite": {"Text": "message in channel area during scan"},

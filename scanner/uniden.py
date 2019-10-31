@@ -208,7 +208,6 @@ class UnidenScanner:
 
         res_line = res_line.replace("\r", "\n")
         self.logger.debug(f"read_and_decode_line: {res_line}")
-        print(res_line)
 
         return res_line
 
@@ -280,15 +279,16 @@ class UnidenScanner:
 
             return err_res
 
-        # except IndexError:
-        #     self.logger.exception(f"Indexscanner response: {cmd}")
-        # return
+        if cmd == "GSI":
+            self.logger.debug(f"returned GSI or PSI data.")
 
-        # check to see if error code passed instead of command code
-        # if cmd in self.err_list:
-        #     self.logger.exception(f"scanner error response: {cmd}")
-        #     return cmd
-        if res_1 == "<XML>":
+            # parse xml using the GSI specific parser
+            xml_dict = self.get_gsi_response(cmd)
+            xml_dict["cmd"] = cmd
+
+            return xml_dict
+        # use the general xml response method for other commands
+        elif res_1 == "<XML>":
             self.logger.debug(f"found xml data.")
 
             # xml parsing is handled by separate method
@@ -349,7 +349,7 @@ class UnidenScanner:
                 element = event[1]
                 current_tag = element.tag
                 current_attribs = element.attrib
-                sub_dict = {}
+                # sub_dict = {}
 
                 if event_trigger == "start":
                     depth += 1

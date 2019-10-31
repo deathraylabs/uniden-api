@@ -147,6 +147,8 @@ def test_send_command():
 
 
 def test_get_response():
+    """Check whether the get_response method is working correctly"""
+
     s = UnidenScanner()
 
     s.serial.write(b"MDL\r")
@@ -192,6 +194,13 @@ def test_read_and_decode_line():
 
 
 def test_get_response_xml():
+    """Test GSI response
+
+    Notes:
+        setup:
+            - scanner must be set to home
+    """
+
     s = UnidenScanner()
 
     # get department quick key status for FL 0, Sys 0
