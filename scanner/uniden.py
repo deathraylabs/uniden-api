@@ -376,10 +376,11 @@ class UnidenScanner:
                 elif event_trigger == "start":
                     depth += 1
                     element_tree.append(current_tag)
+                    cur_lev_xml_dict = xml_dict
 
                     # get the xml_dict item corresponding to current branch
                     for tag in element_tree:
-                        cur_lev_xml_dict = xml_dict[tag]
+                        cur_lev_xml_dict = cur_lev_xml_dict[tag]
 
                     for attrib, value in current_attribs.items():
                         # if value is list attribute names are not unique
