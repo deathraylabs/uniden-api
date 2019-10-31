@@ -279,8 +279,8 @@ class UnidenScanner:
 
             return err_res
 
-        if cmd == "GSI":
-            self.logger.debug(f"returned GSI or PSI data.")
+        if cmd == "GSI" or cmd == "MSI":
+            self.logger.debug(f"returned GSI, PSI, or MSI data.")
 
             # parse xml using the GSI specific parser
             xml_dict = self.get_gsi_response(cmd)
@@ -355,9 +355,11 @@ class UnidenScanner:
                     depth += 1
                     element_tree.append(current_tag)
 
+                    # todo: figure out how to incorporate MSI data here
                     # all base elements can be treated the same
                     for attrib, value in current_attribs.items():
-                        if depth <= 2:
+                        if depth <= 2 and cmd != "MSI":
+                            # todo: this causes error if sent "MSI" data
                             xml_dict[current_tag][attrib] = value
                         # todo: needs to catch instances where degenerate tags
                         elif depth == 3:
