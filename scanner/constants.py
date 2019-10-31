@@ -567,7 +567,7 @@ GSI_OUTPUT = {
     "ViewDescription": {
         "InfoArea1": {"Text": "---"},
         "InfoArea2": {"Text": "---"},
-        "OverWrite": {"Text": "message in channel area during scan"},
+        "OverWrite": {"Text": ""},
         "PopupScreen": {"Text": "", "Button": [{"KeyCode": "", "Text": ""}]},
         "PlainText": [{"Text": ""}],
     },
@@ -658,7 +658,7 @@ GSI_OUTPUT = {
     "TransmissionEnd": "---",
     "FileSize": "---",
     "MSI": {"Name": "", "Index": "", "MenuType": "", "Value": "", "Selected": ""},
-    "MenuItem": {},
+    "MenuItem": [{"Name": "", "Index": ""}],
     "MenuInput": {},
     "MenuLocation": {},
     "MenuErrorMsg": {},
