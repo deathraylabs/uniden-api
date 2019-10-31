@@ -329,6 +329,8 @@ class UnidenScanner:
         depth = 0
         # list of elements in order of occurence
         element_tree = []
+        # placeholder for current level of xml dict we're working with
+        cur_lev_xml_dict = {}
 
         while not at_xml_end:
 
@@ -349,33 +351,43 @@ class UnidenScanner:
                 element = event[1]
                 current_tag = element.tag
                 current_attribs = element.attrib
-                # sub_dict = {}
 
                 if event_trigger == "start":
                     depth += 1
                     element_tree.append(current_tag)
 
-                    # todo: figure out how to incorporate MSI data here
-                    # all base elements can be treated the same
-                    for attrib, value in current_attribs.items():
-                        if depth <= 2 and cmd != "MSI":
-                            # todo: this causes error if sent "MSI" data
-                            xml_dict[current_tag][attrib] = value
-                        # todo: needs to catch instances where degenerate tags
-                        elif depth == 3:
-                            previous_tag = element_tree[-2]
+                    # get the xml_dict item corresponding to current branch
+                    for tag in element_tree:
+                        cur_lev_xml_dict = xml_dict[tag]
 
-                            # check for degenerate attributes
-                            current_value = xml_dict[previous_tag][current_tag]
-                            if isinstance(current_value, list):
-                                current_value.append(value)
-                            else:
-                                current_value[attrib] = value
-                        elif depth == 4:
-                            current_dict = xml_dict[element_tree[-3]][element_tree[-2]][
-                                current_tag
-                            ]
-                            current_dict.append(value)
+                    for attrib, value in current_attribs.items():
+                        # if value is list attribute names are not unique
+                        if isinstance(cur_lev_xml_dict, list):
+                            cur_lev_xml_dict.append(value)
+                        # handles attributes that have unique names
+                        else:
+                            cur_lev_xml_dict[attrib] = value
+
+                    # # all base elements can be treated the same
+                    # for attrib, value in current_attribs.items():
+                    #     if depth <= 2 and cmd != "MSI":
+                    #         # todo: this causes error if sent "MSI" data
+                    #         xml_dict[current_tag][attrib] = value
+                    #     # todo: needs to catch instances where degenerate tags
+                    #     elif depth == 3:
+                    #         previous_tag = element_tree[-2]
+                    #
+                    #         # check for degenerate attributes
+                    #         current_value = xml_dict[previous_tag][current_tag]
+                    #         if isinstance(current_value, list):
+                    #             current_value.append(value)
+                    #         else:
+                    #             current_value[attrib] = value
+                    #     elif depth == 4:
+                    #         current_dict = xml_dict[element_tree[-3]][element_tree[-2]][
+                    #             current_tag
+                    #         ]
+                    #         current_dict.append(value)
 
                 # special checks when parser encounters closing tag
                 if event_trigger == "end":

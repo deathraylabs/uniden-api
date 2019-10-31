@@ -658,10 +658,10 @@ GSI_OUTPUT = {
     "TransmissionEnd": "---",
     "FileSize": "---",
     "MSI": {"Name": "", "Index": "", "MenuType": "", "Value": "", "Selected": ""},
-    "MenuItem": [{"Name": "", "Index": ""}],
-    "MenuInput": {},
-    "MenuLocation": {},
-    "MenuErrorMsg": {},
+    "MenuItem": [{"Name": "", "Index": "", "Value": ""}],
+    "MenuInput": {"MaxLength": "", "EnableKeys": "", "AddedInformation": ""},
+    "MenuLocation": {"MaxLength": "", "EnableKeys": "", "IsLatitude": ""},
+    "MenuErrorMsg": {"Text": "", "ScanButton": ""},
 }
 
 
