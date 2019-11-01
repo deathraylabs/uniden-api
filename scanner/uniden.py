@@ -385,6 +385,12 @@ class UnidenScanner:
                     # todo: figure out way to get rid of prototype dict in list
                     if isinstance(cur_lev_xml_dict, list):
                         attrib_dict = {}
+
+                        # delete first item (dict) if it's just empty placeholder
+                        first_item = cur_lev_xml_dict[0]
+                        if first_item.get("Name") == "" or first_item.get("Text") == "":
+                            cur_lev_xml_dict.pop(0)
+
                         for attrib, value in current_attribs.items():
                             attrib_dict[attrib] = value
                         cur_lev_xml_dict.append(attrib_dict)

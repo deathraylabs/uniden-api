@@ -32,6 +32,7 @@ Builder.load_file("playback_screen.kv")
 Builder.load_file("widget_formatting.kv")
 # contains formatting instructions for the popup screen
 Builder.load_file("popup_screen.kv")
+Builder.load_file("plain_text_screen.kv")
 
 
 # class ScrollingTextDisplayPanel(Label):
@@ -191,6 +192,10 @@ class UpdateScreen:
             Logger.debug("update screen: switched over to datawindow")
             # side_panel.update_rightsidepanel(wav_meta)
             sm.current_screen.update_datawindow_screen(wav_meta)
+        elif v_screen == "plain_text":
+            Logger.debug("update_screen: plain_text")
+            sm.current = "plaintext"
+            sm.current_screen.update_plaintext_screen(wav_meta)
         elif mode == "Menu tree":
             # switch to the popup screen and update it
             Logger.debug("update_screen: calling popup class")
@@ -201,8 +206,6 @@ class UpdateScreen:
             Logger.debug("update_screen: calling conventional_scan")
             sm.current = "conventional"
             Logger.debug("update screen: switched over to conventional")
-        elif v_screen == "plain_text":
-            Logger.debug("update_screen: plain_text")
         else:
             Logger.error(f"update_screen: unknown screen: {v_screen}")
             return False
@@ -211,6 +214,35 @@ class UpdateScreen:
         side_panel.update_rightsidepanel(wav_meta)
 
         return True
+
+
+class PlainTextScreen(Screen):
+    """Handles the plain text view mode sent by scanner"""
+
+    # object properties automatically provide access to instances..
+    # created in a kv file
+    text_display_popup = ObjectProperty()
+    # give the RightSidePanel updater access to this screen's instance
+    right_screen = ObjectProperty()
+
+    def __init__(self, **kwargs):
+        super(PlainTextScreen, self).__init__(**kwargs)
+
+    def update_plaintext_screen(self, view_dict):
+
+        text_out = view_dict["ScannerInfo"]["ViewDescription"]["PlainText"]
+
+        # container for scrolling display
+        scrolling_container = self.text_display_popup
+
+        # reset the text size so it fits in window
+        scrolling_container.text_size[1] = None
+
+        # self.text_display_popup.text = pprint.pformat(
+        #     menu_item_list, compact=True, width=100, indent=3
+        # )
+        self.text_display_popup.text = str(text_out)
+        self.text_display_popup.height = self.text_display_popup.texture_size[1]
 
 
 # todo: fix setup to change unit id name
@@ -1052,6 +1084,7 @@ sm.add_widget(DataWindow(name="datawindow"))
 sm.add_widget(PlaybackScreen(name="playback"))
 sm.add_widget(PopupScreen(name="popup"))
 sm.add_widget(PopupScreen(name="conventional"))
+sm.add_widget(PlainTextScreen(name="plaintext"))
 
 # create update screen instance that other classes can access
 update_screen = UpdateScreen()
