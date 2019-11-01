@@ -381,7 +381,8 @@ class UnidenScanner:
                     # get the xml_dict item corresponding to current branch
                     for tag in element_tree:
                         cur_lev_xml_dict = cur_lev_xml_dict[tag]
-
+                    # attributes with identical keys are stored as a list of dicts
+                    # todo: figure out way to get rid of prototype dict in list
                     if isinstance(cur_lev_xml_dict, list):
                         attrib_dict = {}
                         for attrib, value in current_attribs.items():
