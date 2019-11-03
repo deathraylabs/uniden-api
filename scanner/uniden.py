@@ -279,8 +279,8 @@ class UnidenScanner:
 
             return err_res
 
-        if cmd == "GSI" or cmd == "MSI":
-            self.logger.debug(f"returned GSI, PSI, or MSI data.")
+        if cmd == "GSI" or cmd == "MSI" or cmd == "GLT":
+            self.logger.debug(f"returned GSI, PSI, MSI, or GLT data.")
 
             # parse xml using the GSI specific parser
             xml_dict = self.get_gsi_response(cmd)
@@ -5990,15 +5990,17 @@ if __name__ == "__main__":
 
     s = UnidenScanner()
 
-    s.send_command("MSI")
-    gsi_dict = s.get_gsi_response()
+    # s.send_command("MSI")
+    # gsi_dict = s.get_gsi_response()
+    #
+    # pprint(gsi_dict)
 
-    pprint(gsi_dict)
-
-    # fl_qk = s.get_fav_list_qk_status()
-    # qk_list = s.get_list("favorites list")
+    fl_qk = s.get_fav_list_qk_status()
+    qk_list = s.get_list("favorites list")
     #
     # hr = s.get_human_readable_qk_status(fl_qk, qk_list)
+    #
+    # pprint(hr)
 
     # state = s.update_scanner_state("pull")
 

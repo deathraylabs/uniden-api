@@ -675,6 +675,40 @@ GSI_OUTPUT = {
         "MenuLocation": {"MaxLength": "", "EnableKeys": "", "IsLatitude": ""},
         "MenuErrorMsg": {"Text": "", "ScanButton": ""},
     },
+    "GLT": {
+        "FL": [{"Index": "", "Name": "", "Monitor": "", "Q_Key": "", "N_Tag": ""}],
+        "SYS": [
+            {
+                "Index": "",
+                "MyId": "",
+                "Name": "",
+                "Avoid": "",
+                "Type": "",
+                "Q_Key": "",
+                "N_Tag": "",
+            }
+        ],
+        "DEPT": [{"Index": "", "MyId": "", "Name": "", "Avoid": "", "Q_Key": ""}],
+        "SITE": [{"Index": "", "MyId": "", "Name": "", "Avoid": "", "Q_Key": ""}],
+        "TGID": [
+            {
+                "Index": "",
+                "MyId": "",
+                "Name": "",
+                "Avoid": "",
+                "TGID": "",
+                "AudioType": "",
+                "SvcType": "",
+                "N_Tag": "",
+            }
+        ],
+        "CFREQ": [],
+        "SFREQ": [],
+        "AFREQ": [],
+        "UREC": [],
+        "IREC_FILE": [],
+        "UREC_FILE": [],
+    },
 }
 
 
