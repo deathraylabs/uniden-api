@@ -382,7 +382,6 @@ class UnidenScanner:
                     for tag in element_tree:
                         cur_lev_xml_dict = cur_lev_xml_dict[tag]
                     # attributes with identical keys are stored as a list of dicts
-                    # todo: figure out way to get rid of prototype dict in list
                     if isinstance(cur_lev_xml_dict, list):
                         attrib_dict = {}
 
@@ -401,26 +400,6 @@ class UnidenScanner:
                 elif event_trigger == "end":
                     depth -= 1
                     element_tree.pop(-1)
-
-                # for attrib, value in current_attribs.items():
-                #     print(f"{attrib}: {value}")
-                #     sub_dict[attrib] = value
-
-                # # some commands return non-unique tag names, use name attribute instead
-                # if not unique_tag_names:
-                #     # current_tag will be repeated, this is first entry
-                #     if not current_tag in xml_dict:
-                #         try:
-                #             xml_dict[current_tag] = {sub_dict["Name"]: sub_dict}
-                #         except KeyError:
-                #             self.logger.exception("xml parse key error.")
-                #             continue
-                #     # add sub dicts under the repeated current tag
-                #     else:
-                #         xml_dict[current_tag][sub_dict["Name"]] = sub_dict
-                #     continue
-
-                # xml_dict[current_tag] = sub_dict
 
         return xml_dict
 
