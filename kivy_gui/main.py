@@ -516,6 +516,13 @@ class DataWindow(Screen):
 
         scanner.set_unid_id_from_menu(value.text)
 
+    def grab_current_unid(self):
+        """Grab the current Unit ID if it is displayed on scanner.
+
+        Display saved value on main screen.
+        """
+        pass
+
     def open_unid_menu(self):
         """experimental"""
 

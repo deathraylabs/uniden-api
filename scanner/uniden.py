@@ -878,8 +878,13 @@ class UnidenScanner:
         cmd_resp = self.get_response()
         self.logger.info(f"MSV response: {cmd_resp}")
 
+        try:
+            data_ok = cmd_resp["data"][0]
+        except KeyError:
+            return print("Not Ok")
+
         # this should return 'OK'
-        return cmd_resp["data"][0]
+        return data_ok
 
     def jump_number_tag(self, fl_tag, sys_tag, chan_tag):
 
@@ -5976,6 +5981,61 @@ if __name__ == "__main__":
 
     fl_qk = s.get_fav_list_qk_status()
     qk_list = s.get_list("favorites list")
+
+    # update scanner state information
+    s.update_scanner_state()
+    state = s.get_scanner_state()
+
+    # current favorites list and corresponding index
+    fav_list = state["ScannerInfo"]["MonitorList"]
+    fav_list_idx = fav_list["Index"]
+
+    # current system index
+    sys_idx = state["ScannerInfo"]["System"]["Index"]
+
+    # open system menu screen
+    s.send_command(f"MNU,SCAN_SYSTEM,{sys_idx}")
+    s.get_response()
+
+    # open Edit Unit IDs menu
+    s.set_menu_value("4")
+
+    # get list of Unit IDs
+    unit_ids = s.get_menu_view()["MSI"]["MenuItem"]
+
+    # go to "New Unit ID" screen
+    s.set_menu_value("0")
+
+    # go to "Input Unit ID" screen
+    s.set_menu_value("3061610")
+
+    # check to see what screen we get (might already exist)
+    if not s.is_menu_screen():
+        s.update_scanner_state()
+        current_screen = s.get_scanner_state()
+
+        # if the TGID exists, accept that we want to modify it
+        if (
+            current_screen["ScannerInfo"]["ViewDescription"]["PlainText"][0]["Text"]
+            == "TGID Exists"
+        ):
+            s.push_key(mode="press", key="yes")
+
+    # Edit Name of the unit id (assumes index 0 is correct)
+    s.set_menu_value("0")
+
+    # get the current unit id name
+    cur_unit_id_name = s.get_menu_view()["MSI"]["Value"]
+
+    # new unit ID name
+    new_unit_id_name = "charles"
+
+    # set new name
+    s.set_menu_value(new_unit_id_name)
+
+    # if all went well the new name has been assigned. go back to scan
+    s.send_command("MSB,,RETURN_PREVOUS_MODE")
+
     #
     # hr = s.get_human_readable_qk_status(fl_qk, qk_list)
     #
