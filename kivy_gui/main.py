@@ -10,6 +10,7 @@ from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ObjectProperty  # ref name in kv file
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 
@@ -517,11 +518,30 @@ class DataWindow(Screen):
         scanner.set_unid_id_from_menu(value.text)
 
     def grab_current_unid(self):
-        """Grab the current Unit ID if it is displayed on scanner.
+        """Grab the current Unit ID as provided by scanner.
 
         Display saved value on main screen.
         """
-        pass
+
+        unit_id_name = scanner.get_scanner_state()["ScannerInfo"]["UnitID"]["Name"]
+        unit_id = scanner.get_scanner_state()["ScannerInfo"]["UnitID"]["U_Id"]
+
+        if unit_id_name[:4] == "UID:":
+            unit_id_name = unit_id_name[4:]
+
+        # udpate screen
+        self.saved_id.text = unit_id_name
+
+    # todo: figure out how to incorporate text input box here
+    def edit_unit_id(self):
+        """Edit the unit id saved on scanner"""
+
+        # get the currently saved unit ID
+        saved_id = self.saved_id.text
+
+        print(saved_id)
+
+        # self.unit_id_layout.remove_widget(text_input)
 
     def open_unid_menu(self):
         """experimental"""

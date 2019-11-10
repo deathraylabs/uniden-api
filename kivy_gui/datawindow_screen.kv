@@ -20,6 +20,8 @@
     right_screen: _right_side
 #    main_container: _main_container
     popup_text: _popup_text
+    saved_id: _saved_id
+    unit_id_layout: _unit_id_layout
 
     GridLayout:
         id: _main_container
@@ -39,7 +41,7 @@
                     text: "UnitIds:NameTag"
                     color: 1, 1, .1, .90
                     size_hint_x: .5
-
+                    on_release: root.grab_current_unid()
 
                 TouchArea:
                     id: tgid_hld
@@ -67,9 +69,19 @@
                 id: fav_list_name
                 text: "Favorites List"
 
-            Label:
-                id: unit_ids
-                text: "UnitIds"
+            BoxLayout:
+                id: _unit_id_layout
+                orientation: "horizontal"
+
+                Label:
+                    id: unit_ids
+                    text: "UnitIds"
+
+                TouchArea:
+                    id: _saved_id
+                    text: "SavedID"
+                    color: .5, 1, .5, 1
+                    on_release: root.edit_unit_id()
 
             BoxLayout:
                 id: _transmission_times
