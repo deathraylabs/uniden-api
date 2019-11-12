@@ -565,7 +565,8 @@ class DataWindow(Screen):
         # stop auto refresh while we input data
         update_screen.stop_auto_refresh()
 
-        textinput = TextInput(text="poopie", multiline=False, id="text_input")
+        # create text input box that will allow user to execute update
+        textinput = TextInput(text=saved_id, multiline=False)
         textinput.bind(on_text_validate=self.update_unit_id)
 
         # display text input screen in the main data window
