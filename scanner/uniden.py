@@ -92,9 +92,8 @@ class UnidenScanner:
 
     err_list = ("NG", "ORER", "FER", "ERR", "")
 
-    # todo: set code to automatically find correct port
     def __init__(self, model="SDS100", speed="115200"):
-        """
+        """Initialization
 
         Args:
             model (str): Model name of scanner used to open port.
@@ -587,7 +586,6 @@ class UnidenScanner:
             self.logger.error(f"state_dict string: {state_dict}")
             return False
 
-        # todo: set this to parse the sub dicts too
         # save new states to dict
         for key_parent, value_parent in state_dict.items():
             if len(value_parent) == 0:
@@ -5979,8 +5977,8 @@ if __name__ == "__main__":
     #
     # pprint(gsi_dict)
 
-    fl_qk = s.get_fav_list_qk_status()
-    qk_list = s.get_list("favorites list")
+    # fl_qk = s.get_fav_list_qk_status()
+    # qk_list = s.get_list("favorites list")
 
     # update scanner state information
     s.update_scanner_state()

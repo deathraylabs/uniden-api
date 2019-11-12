@@ -450,6 +450,9 @@ class DataWindow(Screen):
             "Site": "site_name",
         }
 
+        # storage for unit ids that are captured
+        self.unit_ids = []
+
     def scanner_hold(self, hold_key):
         """Method to hold/release a given system, department, or channel.
 
@@ -518,19 +521,37 @@ class DataWindow(Screen):
         scanner.set_unid_id_from_menu(value.text)
 
     def grab_current_unid(self):
-        """Grab the current Unit ID as provided by scanner.
+        """Grab the current Unit ID as displayed by scanner along with favorites
+        list, and system.
 
         Display saved value on main screen.
         """
+        # retrieve scan state
+        scan_info = scanner.get_scanner_state()["ScannerInfo"]
+        monitor_list = scan_info["MonitorList"]
 
-        unit_id_name = scanner.get_scanner_state()["ScannerInfo"]["UnitID"]["Name"]
-        unit_id = scanner.get_scanner_state()["ScannerInfo"]["UnitID"]["U_Id"]
+        sys_name = scan_info["System"]["Name"]
+        sys_idx = scan_info["System"]["Index"]
+
+        fav_list_name = monitor_list["Name"]
+        fav_list_idx = monitor_list["Index"]
+
+        unit_id_name = scan_info["UnitID"]["Name"]
+        unit_id = scan_info["UnitID"]["U_Id"]
 
         if unit_id_name[:4] == "UID:":
             unit_id_name = unit_id_name[4:]
 
         # udpate screen
         self.saved_id.text = unit_id_name
+
+        unid_dict = {
+            "System": {"Name": sys_name, "Index": sys_idx},
+            "MonitorList": {"Name": fav_list_name, "Index": fav_list_idx},
+            "UnitID": {"Name": unit_id_name, "U_Id": unit_id},
+        }
+
+        self.unit_ids.append(unid_dict)
 
     # todo: figure out how to incorporate text input box here
     def edit_unit_id(self):
