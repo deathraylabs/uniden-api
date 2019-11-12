@@ -207,7 +207,7 @@ def test_get_response_xml():
     s.serial.write(b"GSI\r")
     response = s.get_response()
     s.logger.debug(response)
-    data = response["MonitorList"]["Name"]
+    data = response["ScannerInfo"]["MonitorList"]["Name"]
 
     s.close()
 
@@ -222,6 +222,20 @@ def test_get_menu_view():
 
     assert isinstance(type(view), type(dict))
     assert view["cmd"] == "MSI"
+
+
+def test_open_menu():
+    """check open menu functionality"""
+
+    s = UnidenScanner()
+    open_top_menu = s.open_menu(menu_id="TOP")
+
+    # reset scanner view
+    s.send_command("MSB,,RETURN_PREVIOUS_MODE")
+
+    s.close()
+
+    assert open_top_menu
 
 
 def test_parse_time():

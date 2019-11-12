@@ -589,10 +589,20 @@ class DataWindow(Screen):
         print(f"unit ID data: {self.unit_id_list}")
 
         # grab first saved unit ID data from list of captured IDs
+        # make sure unit ID data has already been captured
+        if len(self.unit_id_list) == 0:
+            # return screen to prior state and restart updates
+            self.top_row.clear_widgets(children=[instance])
+            update_screen.start_auto_refresh()
+            return False
         unit_id_dict = self.unit_id_list[0]
 
+        # start working way through menu chain
         sys_idx = unit_id_dict["System"]["Index"]
-        scanner.send_command()
+        scanner.open_menu(menu_id="SCAN_SYSTEM", index=sys_idx)
+
+        # menu index 4 is Edit Unit IDs
+        scanner.set_menu_value("4")
 
         # return screen to prior state and restart updates
         self.top_row.clear_widgets(children=[instance])

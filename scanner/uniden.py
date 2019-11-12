@@ -859,6 +859,7 @@ class UnidenScanner:
 
             return False
 
+    # todo: update notes with complete reference
     def open_menu(self, menu_id, index=""):
         """Method opens scanner menu based on the menu id and index.
 
@@ -870,9 +871,27 @@ class UnidenScanner:
 
         Returns:
             true: if scanner response is ok
-        """
 
-        return True
+        Notes:
+            MENU_ID         | INDEX            | Menu Position
+            =====================================================
+            TOP             |                  | Top (main) Menu
+            MONITOR_LIST    |                  |
+            SCAN_SYSTEM     | System Index     | System Menu
+            SCAN_DEPARTMENT | Department Index |
+            SCAN_SITE       | Site Index       |
+            SCAN_CHANNEL    | Channel Index    |
+            ...
+
+        """
+        # todo: error catching for MNU command
+        self.send_command(f"MNU,{menu_id},{index}")
+        res = self.get_response()
+
+        if res == "MNU,OK":
+            return True
+        else:
+            return f"MNU response: {res}"
 
     # todo: method needs error catching
     def set_menu_value(self, cmd, menu_type=""):
@@ -6004,11 +6023,11 @@ if __name__ == "__main__":
     fav_list_idx = fav_list["Index"]
 
     # current system index
-    sys_idx = state["ScannerInfo"]["System"]["Index"]
+    # sys_idx = state["ScannerInfo"]["System"]["Index"]
 
     # open system menu screen
-    s.send_command(f"MNU,SCAN_SYSTEM,{sys_idx}")
-    s.get_response()
+    # s.send_command(f"MNU,SCAN_SYSTEM,{sys_idx}")
+    # s.get_response()
 
     # open Edit Unit IDs menu
     s.set_menu_value("4")

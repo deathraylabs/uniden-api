@@ -898,6 +898,10 @@ GSI_OUTPUT_2 = {
 # MSI output template
 MSI_OUTPUT = {}
 
+# menu mode id list and index labels
+# {MENU_ID: INDEX}
+MNU_COMMANDS = {}
+
 # human readable metadata names and their corresponding tag/location in WAV
 # header metadata
 WAV_METADATA = OrderedDict(
