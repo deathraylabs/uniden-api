@@ -635,7 +635,8 @@ class DataWindow(Screen):
         scanner.set_menu_value(new_unit_id_name)
 
         # if all went well the new name has been assigned. go back to scan
-        s.send_command("MSB,,RETURN_PREVOUS_MODE")
+        scanner.send_command("MSB,,RETURN_PREVOUS_MODE")
+        res = scanner.get_response()
 
         # return screen to prior state and restart updates
         self.top_row.clear_widgets(children=[instance])
