@@ -566,8 +566,11 @@ class DataWindow(Screen):
         update_screen.stop_auto_refresh()
 
         # create text input box that will allow user to execute update
-        textinput = TextInput(text=saved_id, multiline=False)
+        textinput = TextInput(multiline=False)
         textinput.bind(on_text_validate=self.update_unit_id)
+
+        # change keyboard to specialized version for unit id data
+        Config.set("kivy", "keyboard_layout", "numeric")
 
         # display text input screen in the main data window
         self.top_row.add_widget(widget=textinput)
@@ -583,7 +586,13 @@ class DataWindow(Screen):
             instance (object): instance of "textinput" passed to this function
 
         """
-        print(f"found the bound method: {instance.text}")
+        print(f"unit ID data: {self.unit_id_list}")
+
+        # grab first saved unit ID data from list of captured IDs
+        unit_id_dict = self.unit_id_list[0]
+
+        sys_idx = unit_id_dict["System"]["Index"]
+        scanner.send_command()
 
         # return screen to prior state and restart updates
         self.top_row.clear_widgets(children=[instance])

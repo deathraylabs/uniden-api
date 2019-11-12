@@ -859,6 +859,21 @@ class UnidenScanner:
 
             return False
 
+    def open_menu(self, menu_id, index=""):
+        """Method opens scanner menu based on the menu id and index.
+
+        Args:
+            menu_id (str): menu ID value from list of possible values given in
+                scanner command specification
+            index (str): numeric string corresponding to unique index of menu value
+                specified in menu_id
+
+        Returns:
+            true: if scanner response is ok
+        """
+
+        return True
+
     # todo: method needs error catching
     def set_menu_value(self, cmd, menu_type=""):
         """Method to choose from the possible menu values.
