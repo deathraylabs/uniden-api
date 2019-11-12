@@ -6030,31 +6030,31 @@ if __name__ == "__main__":
     # s.get_response()
 
     # open Edit Unit IDs menu
-    s.set_menu_value("4")
+    # s.set_menu_value("4")
 
     # get list of Unit IDs
     unit_ids = s.get_menu_view()["MSI"]["MenuItem"]
 
     # go to "New Unit ID" screen
-    s.set_menu_value("0")
+    # s.set_menu_value("0")
 
     # go to "Input Unit ID" screen
-    s.set_menu_value("3061610")
+    # s.set_menu_value("3061610")
 
     # check to see what screen we get (might already exist)
-    if not s.is_menu_screen():
-        s.update_scanner_state()
-        current_screen = s.get_scanner_state()
-
-        # if the TGID exists, accept that we want to modify it
-        if (
-            current_screen["ScannerInfo"]["ViewDescription"]["PlainText"][0]["Text"]
-            == "TGID Exists"
-        ):
-            s.push_key(mode="press", key="yes")
+    # if not s.is_menu_screen():
+    #     s.update_scanner_state()
+    #     current_screen = s.get_scanner_state()
+    #
+    #     # if the TGID exists, accept that we want to modify it
+    #     if (
+    #         current_screen["ScannerInfo"]["ViewDescription"]["PlainText"][0]["Text"]
+    #         == "TGID Exists"
+    #     ):
+    #         s.push_key(mode="press", key="yes")
 
     # Edit Name of the unit id (assumes index 0 is correct)
-    s.set_menu_value("0")
+    # s.set_menu_value("0")
 
     # get the current unit id name
     cur_unit_id_name = s.get_menu_view()["MSI"]["Value"]

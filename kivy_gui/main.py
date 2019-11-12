@@ -588,6 +588,8 @@ class DataWindow(Screen):
         """
         print(f"unit ID data: {self.unit_id_list}")
 
+        new_unit_id_name = instance.text
+
         # grab first saved unit ID data from list of captured IDs
         # make sure unit ID data has already been captured
         if len(self.unit_id_list) == 0:
@@ -595,6 +597,7 @@ class DataWindow(Screen):
             self.top_row.clear_widgets(children=[instance])
             update_screen.start_auto_refresh()
             return False
+
         unit_id_dict = self.unit_id_list[0]
 
         # start working way through menu chain
@@ -603,6 +606,36 @@ class DataWindow(Screen):
 
         # menu index 4 is Edit Unit IDs
         scanner.set_menu_value("4")
+
+        # next go to the "New Unit ID" screen which is first item
+        scanner.set_menu_value("0")
+
+        # we'll need the saved unit ID number (index) before we can name it
+        unid_idx = unit_id_dict["UnitID"]["U_Id"][4:]
+
+        # enter unit id value
+        scanner.set_menu_value(unid_idx)
+
+        # check to see what screen we get (might already exist)
+        if not scanner.is_menu_screen():
+            scanner.update_scanner_state()
+            current_screen = scanner.get_scanner_state()
+
+            # if the TGID exists, accept that we want to modify it
+            if (
+                current_screen["ScannerInfo"]["ViewDescription"]["PlainText"][0]["Text"]
+                == "TGID Exists"
+            ):
+                scanner.push_key(mode="press", key="yes")
+
+        # Edit Name of the unit id (assumes index 0 is correct)
+        scanner.set_menu_value("0")
+
+        # set new name
+        scanner.set_menu_value(new_unit_id_name)
+
+        # if all went well the new name has been assigned. go back to scan
+        s.send_command("MSB,,RETURN_PREVOUS_MODE")
 
         # return screen to prior state and restart updates
         self.top_row.clear_widgets(children=[instance])
