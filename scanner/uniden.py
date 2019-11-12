@@ -6041,6 +6041,8 @@ if __name__ == "__main__":
     fav_list = state["ScannerInfo"]["MonitorList"]
     fav_list_idx = fav_list["Index"]
 
+    # todo: create method using this prototype code
+
     s.open_menu("SETTINGS")
     # Battery Options
     s.set_menu_value(cmd="3")
@@ -6048,6 +6050,8 @@ if __name__ == "__main__":
     s.set_menu_value(cmd="2")
     # Enable 0, Disable 1 (not boolean, that's index order)
     s.set_menu_value(cmd="0")
+    # return to scan mode
+    s.return_to_scan_mode()
 
     #
     # hr = s.get_human_readable_qk_status(fl_qk, qk_list)

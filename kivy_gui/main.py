@@ -617,6 +617,7 @@ class DataWindow(Screen):
         scanner.set_menu_value(unid_idx)
 
         # check to see what screen we get (might already exist)
+        # todo: if unit id exists you'll need to edit the name, not add it
         if not scanner.is_menu_screen():
             scanner.update_scanner_state()
             current_screen = scanner.get_scanner_state()
@@ -635,8 +636,7 @@ class DataWindow(Screen):
         scanner.set_menu_value(new_unit_id_name)
 
         # if all went well the new name has been assigned. go back to scan
-        scanner.send_command("MSB,,RETURN_PREVOUS_MODE")
-        res = scanner.get_response()
+        scanner.return_to_scan_mode()
 
         # return screen to prior state and restart updates
         self.top_row.clear_widgets(children=[instance])
