@@ -562,9 +562,33 @@ class DataWindow(Screen):
         # get the currently saved unit ID
         saved_id = self.saved_id.text
 
-        print(saved_id)
+        # stop auto refresh while we input data
+        update_screen.stop_auto_refresh()
 
-        # self.unit_id_layout.remove_widget(text_input)
+        textinput = TextInput(text="poopie", multiline=False, id="text_input")
+        textinput.bind(on_text_validate=self.update_unit_id)
+
+        # display text input screen in the main data window
+        self.unit_id_layout.add_widget(widget=textinput)
+
+    def update_unit_id(self, instance):
+        """Bound method to execute the unit ID update process
+
+        Method runs when return button is pressed and takes user input data
+        along with the Unit ID data saved earlier, combining them and saving
+        to scanner memory.
+
+        Args:
+            instance (object): instance of "textinput" passed to this function
+
+        """
+        print(f"found the bound method: {instance.text}")
+
+        # return screen to prior state and restart updates
+        self.unit_id_layout.clear_widgets(children=[instance])
+        update_screen.start_auto_refresh()
+
+        return True
 
     def open_unid_menu(self):
         """experimental"""
