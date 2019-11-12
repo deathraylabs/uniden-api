@@ -570,7 +570,7 @@ class DataWindow(Screen):
         textinput.bind(on_text_validate=self.update_unit_id)
 
         # display text input screen in the main data window
-        self.unit_id_layout.add_widget(widget=textinput)
+        self.top_row.add_widget(widget=textinput)
 
     def update_unit_id(self, instance):
         """Bound method to execute the unit ID update process
@@ -586,7 +586,7 @@ class DataWindow(Screen):
         print(f"found the bound method: {instance.text}")
 
         # return screen to prior state and restart updates
-        self.unit_id_layout.clear_widgets(children=[instance])
+        self.top_row.clear_widgets(children=[instance])
         update_screen.start_auto_refresh()
 
         return True
