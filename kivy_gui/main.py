@@ -524,7 +524,9 @@ class DataWindow(Screen):
         """Grab the current Unit ID as displayed by scanner along with favorites
         list, and system.
 
-        Display saved value on main screen.
+        Notes:
+            - Displays saved value on main screen.
+            - appends relevant scan state to self.unit_id_list for later use
         """
         # retrieve scan state
         scan_info = scanner.get_scanner_state()["ScannerInfo"]
