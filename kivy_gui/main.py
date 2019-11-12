@@ -451,7 +451,7 @@ class DataWindow(Screen):
         }
 
         # storage for unit ids that are captured
-        self.unit_ids = []
+        self.unit_id_list = []
 
     def scanner_hold(self, hold_key):
         """Method to hold/release a given system, department, or channel.
@@ -551,7 +551,7 @@ class DataWindow(Screen):
             "UnitID": {"Name": unit_id_name, "U_Id": unit_id},
         }
 
-        self.unit_ids.append(unid_dict)
+        self.unit_id_list.append(unid_dict)
 
     # todo: figure out how to incorporate text input box here
     def edit_unit_id(self):
