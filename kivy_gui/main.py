@@ -526,7 +526,6 @@ class DataWindow(Screen):
 
         Notes:
             - Displays saved value on main screen.
-            - appends relevant scan state to self.unit_id_list for later use
         """
         # retrieve scan state
         scan_info = scanner.get_scanner_state()["ScannerInfo"]
@@ -553,7 +552,8 @@ class DataWindow(Screen):
             "UnitID": {"Name": unit_id_name, "U_Id": unit_id},
         }
 
-        self.unit_id_list.append(unid_dict)
+        # todo: should this remain a "list" variable to contain multiple dicts?
+        self.unit_id_list = [unid_dict]
 
     def edit_unit_id(self):
         """Edit the unit id saved on scanner"""
