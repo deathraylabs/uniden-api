@@ -587,6 +587,7 @@ class DataWindow(Screen):
         Notes:
             possible Plain Text messages:
             1. Bad Unit ID (Press Any Key)
+            2. TGID Exists (Accept?)
 
         """
         # print(f"unit ID data: {self.unit_id_list}")
@@ -609,6 +610,8 @@ class DataWindow(Screen):
 
         # menu index 4 is Edit Unit IDs
         scanner.set_menu_value("4")
+
+        # todo: insert code to parse list looking for duplicate UID Names
 
         # next go to the "New Unit ID" screen which is first item
         scanner.set_menu_value("0")
