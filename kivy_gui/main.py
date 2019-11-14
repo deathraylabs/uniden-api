@@ -555,7 +555,6 @@ class DataWindow(Screen):
 
         self.unit_id_list.append(unid_dict)
 
-    # todo: figure out how to incorporate text input box here
     def edit_unit_id(self):
         """Edit the unit id saved on scanner"""
 
@@ -585,8 +584,12 @@ class DataWindow(Screen):
         Args:
             instance (object): instance of "textinput" passed to this function
 
+        Notes:
+            possible Plain Text messages:
+            1. Bad Unit ID (Press Any Key)
+
         """
-        print(f"unit ID data: {self.unit_id_list}")
+        # print(f"unit ID data: {self.unit_id_list}")
 
         new_unit_id_name = instance.text
 
