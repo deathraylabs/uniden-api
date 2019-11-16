@@ -2056,6 +2056,30 @@ class UnidenMassStorage:
         return
 
 
+class UnidenLocalDatabase:
+    """Class handles CRUD operations for local database of scanner data and metadata.
+
+    Notes:
+        - This is a separate database from the .hpd file stored on the scanner SD card
+            and related file stored by the Uniden PC app.
+    """
+
+    def __init__(self):
+        """Empty"""
+        pass
+
+    def get_unit_id_name(self, unit_id):
+        """Method for looking up unit id name, given a unit id number if it exists.
+
+        Args:
+            unit_id (int): unit ID number used to look up unit ID name.
+
+        """
+        pass
+
+    pass
+
+
 class UnidenScannerError(Exception):
     pass
 
