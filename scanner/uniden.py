@@ -2077,7 +2077,16 @@ class UnidenLocalDatabase:
         """
         pass
 
-    pass
+    def pass_sql_to_db(self, sql_message):
+        """Method handles communication with database.
+
+        Args:
+            sql_message (str): sql message to be passed to sqlite database
+
+        Returns:
+            (str): response string
+        """
+        pass
 
 
 class UnidenScannerError(Exception):
