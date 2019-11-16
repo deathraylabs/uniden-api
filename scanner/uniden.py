@@ -2064,9 +2064,13 @@ class UnidenLocalDatabase:
             and related file stored by the Uniden PC app.
     """
 
-    def __init__(self):
-        """Empty"""
-        pass
+    def __init__(self, db_path="uniden.sqlite"):
+        """Establish connection to DB
+
+        Args:
+            db_path (str): relative path to sqlite database
+        """
+        self.conn = sqlite3.connect(db_path)
 
     def get_unit_id_name(self, unit_id):
         """Method for looking up unit id name, given a unit id number if it exists.
@@ -2077,16 +2081,26 @@ class UnidenLocalDatabase:
         """
         pass
 
-    def pass_sql_to_db(self, sql_message):
-        """Method handles communication with database.
-
-        Args:
-            sql_message (str): sql message to be passed to sqlite database
-
-        Returns:
-            (str): response string
-        """
-        pass
+    # def pass_sql_to_db(self, sql_message):
+    #     """Method handles communication with database.
+    #
+    #     Args:
+    #         sql_message (str): sql message to be passed to sqlite database
+    #
+    #     Returns:
+    #         (str): response string
+    #     """
+    #     db_path = "uniden.sqlite"
+    #
+    #     conn = sqlite3.connect(db_path)
+    #     cur = conn.cursor()
+    #
+    #     try:
+    #         cur.execute('INSERT INTO scan_hits ("date_code") VALUES (?)', (date_code,))
+    #         conn.commit()
+    #     except sqlite3.OperationalError as err:
+    #         print("some database thing went wrong")
+    #         print(err)
 
 
 class UnidenScannerError(Exception):
