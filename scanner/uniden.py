@@ -2108,9 +2108,23 @@ class UnidenLocalDatabase:
             unit_id_name (str): name associated with unit id number
 
         Returns:
-            
+            True: if method executed without error
         """
-        pass
+        cur = self.conn.cursor()
+
+        if self.get_unit_id_name(unit_id=unit_id) == "Unit ID Does Not Exist":
+            cur.execute(
+                'INSERT INTO UnitID (U_id, "Name") VALUES (?, ?)',
+                (str(unit_id), unit_id_name),
+            )
+        else:
+            cur.execute(
+                "UPDATE UnitID SET Name = ? WHERE U_id = ?", (unit_id_name, unit_id)
+            )
+
+        self.conn.commit()
+
+        return True
 
     # def pass_sql_to_db(self, sql_message):
     #     """Method handles communication with database.

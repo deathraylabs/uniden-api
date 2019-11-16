@@ -352,5 +352,25 @@ def test_get_unit_id_name():
     assert unit_id_name == "Unit ID Does Not Exist"
 
 
+def test_set_unit_id_name():
+    """Test setter method"""
+
+    db = UnidenLocalDatabase(
+        db_path="/Users/peej/dev/uniden scanner scripts/uniden-api/databases/uniden.sqlite"
+    )
+
+    # update name
+    db.set_unit_id_name(unit_id="04", unit_id_name="tammy")
+    assert db.get_unit_id_name("04") == "tammy"
+
+    # try updating to a different name
+    db.set_unit_id_name(unit_id="04", unit_id_name="jayden")
+    assert db.get_unit_id_name("04") == "jayden"
+
+    # try updating a unit ID that doesn't exist
+    db.set_unit_id_name(unit_id="05", unit_id_name="tara")
+    assert db.get_unit_id_name("05") == "tara"
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()
