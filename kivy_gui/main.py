@@ -572,13 +572,31 @@ class DataWindow(Screen):
 
         # create text input box that will allow user to execute update
         textinput = TextInput(multiline=False)
+        textinput.bind(focus=self.keyboard_close)
         textinput.bind(on_text_validate=self.update_unit_id)
+
+        # calls the handler function if vkeyboard is closed
+        # textinput.callback = self.keyboard_close()
 
         # change keyboard to specialized version for unit id data
         Config.set("kivy", "keyboard_layout", "numeric")
 
         # display text input screen in the main data window
         self.top_row.add_widget(widget=textinput)
+
+    def keyboard_close(self, instance, value):
+        """Method cleans up the main display by deleting text entry box and restarting
+        the screen refresh when the virtual keyboard is closed by user"""
+
+        Logger.debug(f"keyboard_close: value= {value}")
+
+        # value False means the keyboard is closing
+        if value is False:
+            # return screen to prior state and restart updates
+            self.top_row.clear_widgets(children=[instance])
+            update_screen.start_auto_refresh()
+
+        return True
 
     def update_unit_id(self, instance):
         """Bound method to execute the unit ID update process
@@ -599,6 +617,7 @@ class DataWindow(Screen):
         # print(f"unit ID data: {self.unit_id_list}")
 
         new_unit_id_name = instance.text
+        Logger.info(f"the new unit id name is: {new_unit_id_name}")
 
         # grab first saved unit ID data from list of captured IDs
         # make sure unit ID data has already been captured
