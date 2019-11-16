@@ -2100,6 +2100,18 @@ class UnidenLocalDatabase:
 
         return result
 
+    def set_unit_id_name(self, unit_id, unit_id_name):
+        """Setter method for unit id
+
+        Args:
+            unit_id (str): unit id nuimber
+            unit_id_name (str): name associated with unit id number
+
+        Returns:
+            
+        """
+        pass
+
     # def pass_sql_to_db(self, sql_message):
     #     """Method handles communication with database.
     #
