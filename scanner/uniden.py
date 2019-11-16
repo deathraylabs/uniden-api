@@ -394,7 +394,10 @@ class UnidenScanner:
                         cur_lev_xml_dict.append(attrib_dict)
                     else:
                         for attrib, value in current_attribs.items():
-                            cur_lev_xml_dict[attrib] = value
+                            try:
+                                cur_lev_xml_dict[attrib] = value
+                            except TypeError:
+                                self.logger.debug(f"{cur_lev_xml_dict} is a string")
                 # special checks when parser encounters closing tag
                 elif event_trigger == "end":
                     depth -= 1
@@ -2081,7 +2084,7 @@ class UnidenLocalDatabase:
         Returns:
             result (str): current name assigned to unit id number or empty string if
                 no name has been assigned
-            result (str): "Unit ID Does Not Exist" if no unit id number has been recorded
+            result (str): "-" if no unit id number has been recorded
         """
         # create cursor instance for passing messages to DB
         cur = self.conn.cursor()
