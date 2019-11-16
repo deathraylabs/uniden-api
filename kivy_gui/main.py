@@ -22,7 +22,7 @@ if os.environ.get("TEXTDOMAIN") == "Linux-PAM":
 
 print("Checked if on RPi")
 
-from scanner.uniden import UnidenScanner
+from scanner.uniden import UnidenScanner, UnidenLocalDatabase
 from scanner.scanner_utility_functions import *
 
 # contains layout instructions for first screen
@@ -103,6 +103,8 @@ class ScannerConnection(UnidenScanner):
 
 # create a connection to scanner instance
 scanner = ScannerConnection()
+# create a connection to database
+db = UnidenLocalDatabase()
 
 
 class UpdateScreen:
@@ -546,6 +548,9 @@ class DataWindow(Screen):
         # udpate screen
         self.saved_id.text = unit_id_name
 
+        # # update scanner database
+        # db.set_unit_id_name(unit_id=unit_id, unit_id_name=unit_id_name)
+
         unid_dict = {
             "System": {"Name": sys_name, "Index": sys_idx},
             "MonitorList": {"Name": fav_list_name, "Index": fav_list_idx},
@@ -596,53 +601,56 @@ class DataWindow(Screen):
 
         # grab first saved unit ID data from list of captured IDs
         # make sure unit ID data has already been captured
-        if len(self.unit_id_list) == 0:
-            # return screen to prior state and restart updates
-            self.top_row.clear_widgets(children=[instance])
-            update_screen.start_auto_refresh()
-            return False
+        # if len(self.unit_id_list) == 0:
+        #     # return screen to prior state and restart updates
+        #     self.top_row.clear_widgets(children=[instance])
+        #     update_screen.start_auto_refresh()
+        #     return False
 
         unit_id_dict = self.unit_id_list[0]
 
-        # start working way through menu chain
-        sys_idx = unit_id_dict["System"]["Index"]
-        scanner.open_menu(menu_id="SCAN_SYSTEM", index=sys_idx)
+        # # start working way through menu chain
+        # sys_idx = unit_id_dict["System"]["Index"]
+        # scanner.open_menu(menu_id="SCAN_SYSTEM", index=sys_idx)
 
-        # menu index 4 is Edit Unit IDs
-        scanner.set_menu_value("4")
+        # # menu index 4 is Edit Unit IDs
+        # scanner.set_menu_value("4")
 
         # todo: insert code to parse list looking for duplicate UID Names
 
-        # next go to the "New Unit ID" screen which is first item
-        scanner.set_menu_value("0")
+        # # next go to the "New Unit ID" screen which is first item
+        # scanner.set_menu_value("0")
 
         # we'll need the saved unit ID number (index) before we can name it
         unid_idx = unit_id_dict["UnitID"]["U_Id"][4:]
 
-        # enter unit id value
-        scanner.set_menu_value(unid_idx)
+        # # enter unit id value
+        # scanner.set_menu_value(unid_idx)
 
-        # check to see what screen we get (might already exist)
-        # todo: if unit id exists you'll need to edit the name, not add it
-        if not scanner.is_menu_screen():
-            scanner.update_scanner_state()
-            current_screen = scanner.get_scanner_state()
+        # # check to see what screen we get (might already exist)
+        #         # # todo: if unit id exists you'll need to edit the name, not add it
+        #         # if not scanner.is_menu_screen():
+        #         #     scanner.update_scanner_state()
+        #         #     current_screen = scanner.get_scanner_state()
+        #         #
+        #         #     # if the TGID exists, accept that we want to modify it
+        #         #     if (
+        #         #         current_screen["ScannerInfo"]["ViewDescription"]["PlainText"][0]["Text"]
+        #         #         == "TGID Exists"
+        #         #     ):
+        #         #         scanner.push_key(mode="press", key="yes")
 
-            # if the TGID exists, accept that we want to modify it
-            if (
-                current_screen["ScannerInfo"]["ViewDescription"]["PlainText"][0]["Text"]
-                == "TGID Exists"
-            ):
-                scanner.push_key(mode="press", key="yes")
+        # # Edit Name of the unit id (assumes index 0 is correct)
+        # scanner.set_menu_value("0")
 
-        # Edit Name of the unit id (assumes index 0 is correct)
-        scanner.set_menu_value("0")
+        # # set new name
+        # scanner.set_menu_value(new_unit_id_name)
 
-        # set new name
-        scanner.set_menu_value(new_unit_id_name)
+        # set database name and ID value
+        db.set_unit_id_name(unit_id=unid_idx, unit_id_name=new_unit_id_name)
 
-        # if all went well the new name has been assigned. go back to scan
-        scanner.return_to_scan_mode()
+        # # if all went well the new name has been assigned. go back to scan
+        # scanner.return_to_scan_mode()
 
         # return screen to prior state and restart updates
         self.top_row.clear_widgets(children=[instance])
@@ -809,7 +817,12 @@ class DataWindow(Screen):
         self.volume_level.text = f'vol: {property_dict["VOL"]}'
 
         self.unit_ids.text = scanner_info_dict["UnitID"]["U_Id"]
-        self.unit_ids_name_tag.text = scanner_info_dict["UnitID"]["Name"]
+
+        # get just the number text
+        unit_id = scanner_info_dict["UnitID"]["U_Id"][4:]
+        # self.unit_ids_name_tag.text = scanner_info_dict["UnitID"]["Name"]
+        # update name from local database
+        self.unit_ids_name_tag.text = db.get_unit_id_name(unit_id=unit_id)
 
         view_description_dict = scanner_info_dict["ViewDescription"]
 

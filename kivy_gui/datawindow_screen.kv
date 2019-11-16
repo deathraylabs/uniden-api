@@ -42,7 +42,7 @@
                     text: "UnitIds:NameTag"
                     color: 1, 1, .1, .90
                     size_hint_x: .5
-                    on_release: root.grab_current_unid()
+#                    on_release: root.grab_current_unid()
 
                 TouchArea:
                     id: tgid_hld
@@ -74,9 +74,10 @@
                 id: _unit_id_layout
                 orientation: "horizontal"
 
-                Label:
+                TouchArea:
                     id: unit_ids
                     text: "UnitIds"
+                    on_release: root.grab_current_unid()
 
                 TouchArea:
                     id: _saved_id

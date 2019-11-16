@@ -2090,7 +2090,7 @@ class UnidenLocalDatabase:
         result = cur.fetchone()
 
         if result == None:
-            result = "Unit ID Does Not Exist"
+            result = "-"
         elif result[0] == None:
             result = ""
         else:
@@ -2112,7 +2112,7 @@ class UnidenLocalDatabase:
         """
         cur = self.conn.cursor()
 
-        if self.get_unit_id_name(unit_id=unit_id) == "Unit ID Does Not Exist":
+        if self.get_unit_id_name(unit_id=unit_id) == "-":
             cur.execute(
                 'INSERT INTO UnitID (U_id, "Name") VALUES (?, ?)',
                 (str(unit_id), unit_id_name),
