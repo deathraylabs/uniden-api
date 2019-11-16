@@ -341,8 +341,15 @@ def test_get_unit_id_name():
 
     # unit ID for testing case with unit id name
     unit_id_name = db.get_unit_id_name("01")
-
     assert unit_id_name == "test_01"
+
+    # case where no name assigned to existing unit id number
+    unit_id_name = db.get_unit_id_name("02")
+    assert unit_id_name == ""
+
+    # case where no unit id exists
+    unit_id_name = db.get_unit_id_name("03")
+    assert unit_id_name == "Unit ID Does Not Exist"
 
 
 # if __name__ == "__main__":

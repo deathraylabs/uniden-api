@@ -2079,16 +2079,24 @@ class UnidenLocalDatabase:
             unit_id (int or str): unit ID number used to look up unit ID name.
 
         Returns:
-            result (str): current name assigned to unit id number
-            result (Null): null if no name has been assigned
+            result (str): current name assigned to unit id number or empty string if
+                no name has been assigned
+            result (str): "Unit ID Does Not Exist" if no unit id number has been recorded
         """
         # create cursor instance for passing messages to DB
         cur = self.conn.cursor()
 
         cur.execute('SELECT "Name" FROM UnitID WHERE "U_Id" = ?', (str(unit_id),))
-        result = cur.fetchone()[0]
+        result = cur.fetchone()
 
-        self.conn.commit()
+        if result == None:
+            result = "Unit ID Does Not Exist"
+        elif result[0] == None:
+            result = ""
+        else:
+            result = result[0]
+
+        # self.conn.commit()
 
         return result
 
