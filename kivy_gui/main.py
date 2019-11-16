@@ -561,7 +561,8 @@ class DataWindow(Screen):
         self.unit_id_list = [unid_dict]
 
     def edit_unit_id(self):
-        """Edit the unit id saved on scanner"""
+        """Method provides text entry box and popup keyboard to allow user to
+        change the unit ID name displayed on the screen."""
 
         # get the currently saved unit ID
         saved_id = self.saved_id.text
