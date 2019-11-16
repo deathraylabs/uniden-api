@@ -331,5 +331,19 @@ def test_human_readable_qk_status():
     assert s.get_human_readable_qk_status(fl_qk, qk_list)
 
 
+def test_get_unit_id_name():
+    """See if we can establish a connection to database"""
+
+    # create instance of class to test
+    db = UnidenLocalDatabase(
+        db_path="/Users/peej/dev/uniden scanner scripts/uniden-api/databases/uniden.sqlite"
+    )
+
+    # unit ID for testing case with unit id name
+    unit_id_name = db.get_unit_id_name("01")
+
+    assert unit_id_name == "test_01"
+
+
 # if __name__ == "__main__":
 #     test_get_wav_meta()

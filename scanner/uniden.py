@@ -2076,10 +2076,21 @@ class UnidenLocalDatabase:
         """Method for looking up unit id name, given a unit id number if it exists.
 
         Args:
-            unit_id (int): unit ID number used to look up unit ID name.
+            unit_id (int or str): unit ID number used to look up unit ID name.
 
+        Returns:
+            result (str): current name assigned to unit id number
+            result (Null): null if no name has been assigned
         """
-        pass
+        # create cursor instance for passing messages to DB
+        cur = self.conn.cursor()
+
+        cur.execute('SELECT "Name" FROM UnitID WHERE "U_Id" = ?', (str(unit_id),))
+        result = cur.fetchone()[0]
+
+        self.conn.commit()
+
+        return result
 
     # def pass_sql_to_db(self, sql_message):
     #     """Method handles communication with database.
