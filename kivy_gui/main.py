@@ -362,6 +362,26 @@ class RightSidePanel(BoxLayout):
 
         return True
 
+    def set_charge_while_scanning(self):
+        """Enable/Disable charge while scanning
+
+        Notes:
+            Uses the the button display text to store state.
+        """
+
+        if self.charge_while_scanning.text == "Charge":
+            scanner.set_charge_while_scanning(True)
+
+            # reset button label
+            self.charge_while_scanning.text = "Stop\nCharge"
+        else:
+            scanner.set_charge_while_scanning(False)
+
+            # reset button label
+            self.charge_while_scanning.text = "Charge"
+
+        return True
+
     def set_current_screen(self, screen):
         """Change the currently displayed screen"""
 

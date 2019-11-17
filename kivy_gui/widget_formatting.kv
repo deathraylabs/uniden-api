@@ -101,22 +101,11 @@
     menu_btn: _menu
     sys_softkey: _system_softkey
     _function_button: _function_button
+    charge_while_scanning: _charge_while_scanning
 
     MenuBar:
         id: _first_row
         size_hint_y: 0.66
-
-#        CommandLine:
-#            id: _command_input
-#            on_text_validate:
-#                root.update_unid(args[0])
-#                self.focus = False       # unfocus before cancel sel
-#                self.cancel_selection()  # gets rid of handles
-
-#        NumericKeypad:
-#            id: _set_unid
-#            text: "Set\nUNID"
-#            on_release: root.open_unid_menu()
 
         NumericKeypad:
             id: _system_softkey
@@ -164,13 +153,17 @@
         NumericKeypad:
             id: _vol_down
             text: "vol\ndown"
-
             on_release:
                 root.change_vol("down")
 
         NumericKeypad:
+            id: _no_button
+            text: "No"
 
         NumericKeypad:
+            id: _enter_button
+            text: "enter"
+            on_release: root.keypad_press("E")
 
 
     MenuBar:
@@ -180,6 +173,67 @@
             id: _mute_btn
             text: "mute"
             on_release: root.change_vol("mute")
+
+        NumericKeypad:
+
+        NumericKeypad:
+
+    # ----- sixth row ----- #
+
+    MenuBar:
+        id: _sixth_row
+
+        BoxLayout:
+            id: "sixth_row"
+            orientation: 'horizontal'
+
+            Button:
+                text: 'Main'
+                on_release:
+#                    root.sm.current = 'datawindow'
+
+            NumericKeypad:
+                id: _function_button
+                text: "func"
+                on_release: root.keypad_press(keypad_key="func")
+
+            Button:
+                id: _menu
+                text: "menu"
+                on_release: root.keypad_press("menu")
+
+# ---------- seventh row ------------- #
+
+    MenuBar:
+        id: _seventh_row
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            NumericKeypad:
+                id: _avoid_key
+                text: "AVD"
+                on_release: root.keypad_press(keypad_key="avoid")
+
+            NumericKeypad:
+                id: _begin_end_recording
+                text: "RPL\nREC"
+                on_release: root.keypad_press(keypad_key="replay")
+
+            NumericKeypad:
+                id: _zip_services
+                text: "Zip\nSvs"
+                on_release: root.keypad_press(keypad_key="zip")
+
+# --------- bottom row ------------ #
+
+    MenuBar:
+        id: _bottom_row
+
+        NumericKeypad:
+            id: _charge_while_scanning
+            text: "Charge"
+            on_release: root.set_charge_while_scanning()
 
         BoxLayout:
             id: _start_stop_box
@@ -210,58 +264,3 @@
                 id: _quit_app
                 text: "Quit"
                 on_release: app.stop()
-
-    # ----- sixth row, last row ----- #
-
-    MenuBar:
-        id: _sixth_row
-
-        BoxLayout:
-            id: "sixth_row"
-            orientation: 'horizontal'
-
-            Button:
-                text: 'Main'
-                on_release:
-#                    root.sm.current = 'datawindow'
-
-            NumericKeypad:
-                id: _function_button
-                text: "func"
-                on_release: root.keypad_press(keypad_key="func")
-
-            Button:
-                id: _menu
-                text: "menu"
-                on_release: root.keypad_press("menu")
-
-    MenuBar:
-        id: _seventh_row
-
-        BoxLayout:
-#            id: "sixth_row"
-            orientation: 'horizontal'
-
-#            BoxLayout:
-#                id: _sub_row
-#                orientation: "horizontal"
-
-            NumericKeypad:
-                id: _avoid_key
-                text: "AVD"
-                on_release: root.keypad_press(keypad_key="avoid")
-
-            NumericKeypad:
-                id: _begin_end_recording
-                text: "RPL\nREC"
-                on_release: root.keypad_press(keypad_key="replay")
-
-            NumericKeypad:
-                id: _zip_services
-                text: "Zip\nSvs"
-                on_release: root.keypad_press(keypad_key="zip")
-
-            NumericKeypad:
-                id: _enter_button
-                text: "enter"
-                on_press: root.keypad_press("E")
