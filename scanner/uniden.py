@@ -740,6 +740,7 @@ class UnidenScanner:
             self.logger.error("push_key(): %s" % cmd)
             return 0
 
+    # todo: this method doesn't work well
     def set_unid_id_name(self, new_unid=""):
         """Quickly set the unit ID name while a broadcast is in progress.
 
@@ -1257,6 +1258,36 @@ class UnidenScanner:
             # hr_qk_status[k] = qk_status[int(v["Q_Key"])]
 
         return qk_details
+
+    def set_charge_while_scanning(self, on_off):
+        """Quickly enable or disable charge while scanning
+
+        Args:
+            on_off (bool):
+                True: enable charge while scanning
+                False: disable charge while scanning
+
+        Returns:
+            None
+        """
+        self.open_menu("SETTINGS")
+
+        # Battery Options
+        self.set_menu_value(cmd="3")
+
+        # Set Charge While On menu
+        self.set_menu_value(cmd="2")
+
+        # Enable 0, Disable 1 (not boolean, that's index order)
+        if on_off == True:
+            self.set_menu_value(cmd="0")
+        else:
+            self.set_menu_value(cmd="1")
+
+        # return to scan mode
+        self.return_to_scan_mode()
+
+        return
 
     # --------------- Older Code ------------------- #
 
