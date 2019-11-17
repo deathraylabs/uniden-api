@@ -173,11 +173,6 @@ class UpdateScreen:
             # note: returning false will kill the auto screen update
             return False
 
-        # check for a popup screen
-        # popup_screen = wav_meta.get("PopupScreen")
-        # if popup_screen != {}:
-        #     print(popup_screen)
-
         # determine if screen is a menu or scan screen
         scanner_info = wav_meta.get("ScannerInfo")
         mode = scanner_info.get("Mode")
@@ -214,7 +209,7 @@ class UpdateScreen:
             return False
 
         # update the right side panel
-        side_panel.update_rightsidepanel(wav_meta)
+        side_panel.update_rightsidepanel(wav_meta, auto_update=True)
 
         return True
 
@@ -273,10 +268,6 @@ class RightSidePanel(BoxLayout):
 
         # call the screen updater method of UpdateScreen()
         update_screen.start_auto_refresh()
-
-        self.scan_status_button.text = "Pulling"
-        # self.scan_status_button.color = (1, 1, 1, 0.5)
-        self.scan_status_button.color = self.red_text_color
 
         return True
 
@@ -388,7 +379,7 @@ class RightSidePanel(BoxLayout):
 
         return True
 
-    def update_rightsidepanel(self, wav_meta):
+    def update_rightsidepanel(self, wav_meta, auto_update=False):
         """Method to handle updating the button states on right side panel.
 
         Args:
@@ -432,6 +423,15 @@ class RightSidePanel(BoxLayout):
             right_screen._function_button.color = self.red_text_color
         else:
             right_screen._function_button.color = self.white_text_color
+
+        if auto_update:
+            right_screen.scan_status_button.text = "Pulling"
+            # self.scan_status_button.color = (1, 1, 1, 0.5)
+            right_screen.scan_status_button.color = self.red_text_color
+        else:
+            # update button label
+            right_screen.scan_status_button.text = "Start"
+            right_screen.scan_status_button.color = (1, 1, 1, 1)
 
         return True
 
@@ -1040,7 +1040,7 @@ class PopupScreen(Screen):
         return True
 
 
-class PlaybackScreen(Screen):
+class PlaybackScreen(Screen, UpdateScreen):
     """temporary debugging and experimentation screen"""
 
     text_display = ObjectProperty()
@@ -1223,6 +1223,14 @@ class PlaybackScreen(Screen):
         # add label widgets to layout
         for item in labels:
             self.scroll_view_layout.add_widget(item)
+
+        return True
+
+    def back_to_main_screen(self):
+        """Method sends us back to the main screen."""
+
+        # start auto refresh will automatically cause the display to main
+        update_screen.start_auto_refresh()
 
         return True
 
