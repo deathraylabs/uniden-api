@@ -505,7 +505,7 @@ human_ch_logs = {"0": "off", "1": "on", "2": "extend"}
 
 # list of commands available via serial port and the first line of response
 # technically all responses end in "\r"
-# todo: finish adding to this list
+# todo: finish adding to SCANNER_COMMAND_RESPONSE dict
 SCANNER_COMMAND_RESPONSE = {
     # information
     "MDL": ("MDL", "MODEL_NAME"),

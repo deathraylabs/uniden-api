@@ -574,7 +574,6 @@ def select_from_list(selections):
     for index, option in enumerate(selections):
         print(f"{index:02d} : {option}")
 
-    # todo: need a try statement here
     selection = int(input("select item: "))
 
     return (selection, selections[selection])

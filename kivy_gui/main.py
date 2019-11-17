@@ -248,7 +248,6 @@ class PlainTextScreen(Screen):
         self.text_display_popup.height = self.text_display_popup.texture_size[1]
 
 
-# todo: fix setup to change unit id name
 class RightSidePanel(BoxLayout):
     """Panel that contains the user interface buttons"""
 
@@ -437,7 +436,7 @@ class RightSidePanel(BoxLayout):
         return True
 
 
-# todo: window doesn't display conventional frequency data correctly, freezes screen
+# todo: conventional frequency display, blank screen
 class DataWindow(Screen):
     """Screen used to display scanner data while scanning.
 
