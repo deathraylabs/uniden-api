@@ -711,6 +711,8 @@ GSI_OUTPUT = {
     },
 }
 
+# modes found under ScannerInfo:Mode attribute
+MODES = {"Audio Replay"}
 
 # GSI_OUTPUT = OrderedDict(
 #     [
