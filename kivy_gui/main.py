@@ -628,8 +628,6 @@ class DataWindow(Screen):
             instance (object): instance of "textinput" passed to this function
 
         """
-        # print(f"unit ID data: {self.unit_id_list}")
-
         new_unit_id_name = instance.text
         Logger.info(f"the new unit id name is: {new_unit_id_name}")
 
@@ -640,6 +638,9 @@ class DataWindow(Screen):
 
         # set database name and ID value
         db.set_unit_id_name(unit_id=unid_idx, unit_id_name=new_unit_id_name)
+
+        # clear the saved unit ID from display
+        self.saved_id.text = ""
 
         # return screen to prior state and restart updates
         self.top_row.clear_widgets(children=[instance])
