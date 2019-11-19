@@ -598,7 +598,7 @@ class DataWindow(Screen):
         # textinput.callback = self.keyboard_close()
 
         # change keyboard to specialized version for unit id data
-        Config.set("kivy", "keyboard_layout", "numeric")
+        Config.set("kivy", "keyboard_layout", "numeric.json")
 
         # display text input screen in the main data window
         self.top_row.add_widget(widget=textinput)
@@ -611,6 +611,9 @@ class DataWindow(Screen):
 
         # value False means the keyboard is closing
         if value is False:
+            # return keyboard to qwerty layout
+            Config.set("kivy", "keyboard_layout", "qwerty")
+
             # return screen to prior state and restart updates
             self.top_row.clear_widgets(children=[instance])
             update_screen.start_auto_refresh()
@@ -618,78 +621,29 @@ class DataWindow(Screen):
         return True
 
     def update_unit_id(self, instance):
-        """Bound method to execute the unit ID update process
+        """Bound method to save unit ID to sqlite database.
 
         Method runs when return button is pressed and takes user input data
         along with the Unit ID data saved earlier, combining them and saving
-        to scanner memory.
+        to database.
 
         Args:
             instance (object): instance of "textinput" passed to this function
 
-        Notes:
-            possible Plain Text messages:
-            1. Bad Unit ID (Press Any Key)
-            2. TGID Exists (Accept?)
-
         """
-        # print(f"unit ID data: {self.unit_id_list}")
-
         new_unit_id_name = instance.text
         Logger.info(f"the new unit id name is: {new_unit_id_name}")
 
-        # grab first saved unit ID data from list of captured IDs
-        # make sure unit ID data has already been captured
-        # if len(self.unit_id_list) == 0:
-        #     # return screen to prior state and restart updates
-        #     self.top_row.clear_widgets(children=[instance])
-        #     update_screen.start_auto_refresh()
-        #     return False
-
         unit_id_dict = self.unit_id_list[0]
-
-        # # start working way through menu chain
-        # sys_idx = unit_id_dict["System"]["Index"]
-        # scanner.open_menu(menu_id="SCAN_SYSTEM", index=sys_idx)
-
-        # # menu index 4 is Edit Unit IDs
-        # scanner.set_menu_value("4")
-
-        # todo: insert code to parse list looking for duplicate UID Names
-
-        # # next go to the "New Unit ID" screen which is first item
-        # scanner.set_menu_value("0")
 
         # we'll need the saved unit ID number (index) before we can name it
         unid_idx = unit_id_dict["UnitID"]["U_Id"][4:]
 
-        # # enter unit id value
-        # scanner.set_menu_value(unid_idx)
-
-        # # check to see what screen we get (might already exist)
-        #         # # todo: if unit id exists you'll need to edit the name, not add it
-        #         # if not scanner.is_menu_screen():
-        #         #     scanner.update_scanner_state()
-        #         #     current_screen = scanner.get_scanner_state()
-        #         #
-        #         #     # if the TGID exists, accept that we want to modify it
-        #         #     if (
-        #         #         current_screen["ScannerInfo"]["ViewDescription"]["PlainText"][0]["Text"]
-        #         #         == "TGID Exists"
-        #         #     ):
-        #         #         scanner.push_key(mode="press", key="yes")
-
-        # # Edit Name of the unit id (assumes index 0 is correct)
-        # scanner.set_menu_value("0")
-
-        # # set new name
-        # scanner.set_menu_value(new_unit_id_name)
-
         # set database name and ID value
         db.set_unit_id_name(unit_id=unid_idx, unit_id_name=new_unit_id_name)
 
-        # # if all went well the new name has been assigned. go back to scan
-        # scanner.return_to_scan_mode()
+        # clear the saved unit ID from display
+        self.saved_id.text = ""
 
         # return screen to prior state and restart updates
         self.top_row.clear_widgets(children=[instance])
@@ -859,7 +813,6 @@ class DataWindow(Screen):
 
         # get just the number text
         unit_id = scanner_info_dict["UnitID"]["U_Id"][4:]
-        # self.unit_ids_name_tag.text = scanner_info_dict["UnitID"]["Name"]
         # update name from local database
         self.unit_ids_name_tag.text = db.get_unit_id_name(unit_id=unit_id)
 
@@ -890,8 +843,6 @@ class DataWindow(Screen):
         else:
             self.popup_text.color = (1, 1, 1, 0)
             self.popup_text.canvas.before.clear()
-
-            # self.popup_text.canvas.ask_update()
 
         return True
 
@@ -933,7 +884,7 @@ class PopupScreen(Screen):
 
         # catch menu error message and display it
         if menu_error["Text"] != "":
-            Logger.error(f"menu error message: {menu_error['Text']}")
+            # Logger.error(f"menu error message: {menu_error['Text']}")
             text_out = menu_error["Text"]
         # this gets us the currently selected item
         # make sure there is actually a menu item present
