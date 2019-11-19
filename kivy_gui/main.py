@@ -598,7 +598,7 @@ class DataWindow(Screen):
         # textinput.callback = self.keyboard_close()
 
         # change keyboard to specialized version for unit id data
-        Config.set("kivy", "keyboard_layout", "numeric")
+        Config.set("kivy", "keyboard_layout", "numeric.json")
 
         # display text input screen in the main data window
         self.top_row.add_widget(widget=textinput)
@@ -611,6 +611,9 @@ class DataWindow(Screen):
 
         # value False means the keyboard is closing
         if value is False:
+            # return keyboard to qwerty layout
+            Config.set("kivy", "keyboard_layout", "qwerty")
+
             # return screen to prior state and restart updates
             self.top_row.clear_widgets(children=[instance])
             update_screen.start_auto_refresh()
