@@ -838,7 +838,7 @@ class UnidenScanner:
         """set the unit id name when already at the menu"""
 
         view = self.get_menu_view()
-        self.logger.debug(pprint(view))
+        self.logger.debug(f"pprint:\n{pprint(view)}")
 
         resp = self.set_menu_value(new_unid, menu_type=view["Edit Name"]["MenuType"])
 
@@ -6023,7 +6023,7 @@ def save_state_to_db(formatted_state, db_path="uniden.sqlite"):
     # if overwrite text is present, the unit is scanning or in another state
     try:
         over_text = formatted_state["OverWrite:Text"]
-        logger.debug(over_text)
+        logger.debug(f"overwrite text: {over_text}")
 
         return over_text
 

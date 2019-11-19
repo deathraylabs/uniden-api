@@ -859,7 +859,6 @@ class DataWindow(Screen):
 
         # get just the number text
         unit_id = scanner_info_dict["UnitID"]["U_Id"][4:]
-        # self.unit_ids_name_tag.text = scanner_info_dict["UnitID"]["Name"]
         # update name from local database
         self.unit_ids_name_tag.text = db.get_unit_id_name(unit_id=unit_id)
 
@@ -890,8 +889,6 @@ class DataWindow(Screen):
         else:
             self.popup_text.color = (1, 1, 1, 0)
             self.popup_text.canvas.before.clear()
-
-            # self.popup_text.canvas.ask_update()
 
         return True
 
@@ -933,7 +930,7 @@ class PopupScreen(Screen):
 
         # catch menu error message and display it
         if menu_error["Text"] != "":
-            Logger.error(f"menu error message: {menu_error['Text']}")
+            # Logger.error(f"menu error message: {menu_error['Text']}")
             text_out = menu_error["Text"]
         # this gets us the currently selected item
         # make sure there is actually a menu item present
