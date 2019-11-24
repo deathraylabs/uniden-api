@@ -1140,14 +1140,15 @@ class PlaybackScreen(Screen):
         # get the quick key list for favorites
         qk_list = scanner.get_list("favorites list")
 
-        # merge to make human-readable dict
-        hr_dict = scanner.get_human_readable_qk_status(qk_status, qk_list)
+        # merge to make human-readable list of dicts
+        hr_dict_list = scanner.get_human_readable_qk_status(qk_status, qk_list)
 
         # reformat text to display list of names and current state
         reformatted_text = []
-        for list_name, list_meta in hr_dict.items():
+        for list_meta in hr_dict_list:
 
             list_status = list_meta.get("Q_Key_Status")
+            list_name = list_meta.get("Name")
 
             if list_status is None:
                 reformatted_text.append(f"{list_name} : Not Loaded")

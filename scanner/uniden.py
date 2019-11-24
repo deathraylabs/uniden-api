@@ -1019,6 +1019,9 @@ class UnidenScanner:
             self.logger.error(f"scanner returned ERR for command '{cmd}'")
             return
 
+        # all we need is the GLT response, none of the other info
+        res = res.get("GLT")
+
         # add the requested list abbreviation for use in other methods
         res["requested list abbrev"] = str(list_abbrev)
 
@@ -1246,17 +1249,23 @@ class UnidenScanner:
         # create a dict that relates list item name to status
         # hr_qk_status = {}
 
-        for k, v in qk_details.items():
+        # new list with merged data
+        merged_details = []
+
+        # merge quick key details with status
+        for details_dict in qk_details:
             # not all list items will have an assigned quick key, skip if not
-            if v["Q_Key"] == "None":
+            if details_dict["Q_Key"] == "None":
                 continue
 
             # create a new dict item for the quick key status
-            qk_details[k]["Q_Key_Status"] = qk_status[int(v["Q_Key"])]
+            details_dict["Q_Key_Status"] = qk_status[int(details_dict["Q_Key"])]
+
+            merged_details.append(details_dict)
 
             # hr_qk_status[k] = qk_status[int(v["Q_Key"])]
 
-        return qk_details
+        return merged_details
 
     # --------------- Older Code ------------------- #
 
