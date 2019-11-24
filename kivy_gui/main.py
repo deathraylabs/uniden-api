@@ -1076,7 +1076,8 @@ class PlaybackScreen(Screen):
 
         # display text response from scanner but pretty it up a bit
         formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)
-        self.text_display.text = formatted_response
+        # self.text_display.text = formatted_response
+        self.send_text_to_screen(formatted_response)
 
         # append formatted response to the log file
         log_output(formatted_response)
@@ -1151,14 +1152,30 @@ class PlaybackScreen(Screen):
             display_text, compact=False, width=100, indent=3
         )
 
+        # clear all the child widgets to make room for new ones
+        self.scroll_view_layout.clear_widgets()
+
+        # create label widget
+        display_label = Label(
+            text=str(display_text),
+            font_size="18sp",
+            # size="self.texture_size",
+            padding=("5sp", "0sp"),
+        )
+
+        # add label widget to layout
+        self.scroll_view_layout.add_widget(display_label)
+
+        return True
+
         # print(f"formatted {command} response:\n\n{formatted_response}")
 
-        # reset the text size so it fits properly in window
-        self.text_display.text_size[1] = None
-
-        # display text on left text panel
-        self.text_display.text = formatted_response
-        self.text_display.height = self.text_display.texture_size[1]
+        # # reset the text size so it fits properly in window
+        # self.text_display.text_size[1] = None
+        #
+        # # display text on left text panel
+        # self.text_display.text = formatted_response
+        # self.text_display.height = self.text_display.texture_size[1]
 
     def send_text_to_screen_as_labels(self, text_list):
         """another way to display text, this time as labels"""
