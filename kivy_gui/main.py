@@ -1165,8 +1165,42 @@ class PlaybackScreen(Screen):
         return True
 
     def sys_qk_status(self, fav_list):
-        """Method displays human readable quick key status."""
-        pass
+        """Method displays human readable quick key status.
+
+        Args:
+            fav_list (str): index number from favorite list that contains systems of
+            interest.
+
+        Returns:
+            True: if method runs successfully
+
+        """
+
+        qk_status = scanner.get_sys_list_qk_status(fav_list)
+        qk_list = scanner.get_list("system")
+
+        # readable list version
+        hr_dict_list = scanner.get_human_readable_qk_status(qk_status, qk_list)
+
+        # reformat text to display list of names and current state
+        reformatted_text = []
+        for list_meta in hr_dict_list:
+
+            list_status = list_meta.get("Q_Key_Status")
+            list_name = list_meta.get("Name")
+
+            if list_status is None or list_status == "0":
+                reformatted_text.append(f"{list_name} : Not Loaded")
+            elif list_status == "1":
+                reformatted_text.append(f"{list_name} : Off")
+            elif list_status == "2":
+                reformatted_text.append(f"{list_name} : On")
+
+        self.send_text_to_screen_as_labels(reformatted_text)
+
+        pprint.pprint(reformatted_text)
+
+        return True
 
     def send_text_to_screen(self, display_text):
         """helper method to get text on screen"""
