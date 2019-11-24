@@ -307,6 +307,9 @@ class UnidenScanner:
         # get a clean copy of template xml file
         xml_dict = deepcopy(GSI_OUTPUT)
 
+        # version of xml dict that doesn't contain content from constant
+        clean_xml_dict = {}
+
         # root tag for this command
         root_tag = ""
 
@@ -377,12 +380,34 @@ class UnidenScanner:
                     element_tree.append(current_tag)
                     cur_lev_xml_dict = xml_dict
 
-                    # get the xml_dict item corresponding to current branch
+                    # clean xml, built ground up not from existing constant
+                    cur_clean_xml_dict = clean_xml_dict
+
+                    # drill down to current branch
                     for tag in element_tree:
                         cur_lev_xml_dict = cur_lev_xml_dict[tag]
+
+                        if isinstance(cur_clean_xml_dict, list):
+                            continue
+
+                        # clean dict might not have existing branch
+                        elif cur_clean_xml_dict.get(tag) is None:
+                            # initialize branch if it doesn't exist
+                            cur_clean_xml_dict[tag] = {}
+
+                        cur_clean_xml_dict = cur_clean_xml_dict[tag]
+
                     # attributes with identical keys are stored as a list of dicts
                     if isinstance(cur_lev_xml_dict, list):
                         attrib_dict = {}
+
+                        if not isinstance(cur_clean_xml_dict, list):
+                            # grab the parent dict and redefine the current tag item
+                            parent_clean_xml_dict = clean_xml_dict[element_tree[-2]]
+                            # this dict item has to be a list due to scanner output
+                            parent_clean_xml_dict[current_tag] = []
+                            # now reset so we're working with
+                            cur_clean_xml_dict = parent_clean_xml_dict[current_tag]
 
                         # delete first item (dict) if it's just empty placeholder
                         first_item = cur_lev_xml_dict[0]
@@ -392,12 +417,15 @@ class UnidenScanner:
                         for attrib, value in current_attribs.items():
                             attrib_dict[attrib] = value
                         cur_lev_xml_dict.append(attrib_dict)
+                        cur_clean_xml_dict.append(attrib_dict)
                     else:
                         for attrib, value in current_attribs.items():
                             try:
                                 cur_lev_xml_dict[attrib] = value
+                                cur_clean_xml_dict[attrib] = value
                             except TypeError:
                                 self.logger.debug(f"{cur_lev_xml_dict} is a string")
+
                 # special checks when parser encounters closing tag
                 elif event_trigger == "end":
                     depth -= 1
