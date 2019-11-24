@@ -1177,7 +1177,7 @@ class PlaybackScreen(Screen):
         """
 
         qk_status = scanner.get_sys_list_qk_status(fav_list)
-        qk_list = scanner.get_list("system")
+        qk_list = scanner.get_list("system", fav_list)
 
         # readable list version
         hr_dict_list = scanner.get_human_readable_qk_status(qk_status, qk_list)

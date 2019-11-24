@@ -1165,13 +1165,15 @@ class UnidenScanner:
                 'data': (list) quick key state codes
         """
 
-        cmd = "SQK".join((",", fav_qk))
+        cmd = f"SQK,{fav_qk}"
 
         cmd_resp = self.send_command(cmd)
 
         self.logger.info(f"SQK Ack: {cmd_resp}")
 
-        return self.get_response()
+        res = self.get_response()
+
+        return res
 
     # todo: finish set sys qk status method
     def set_sys_list_qk_status(self):
