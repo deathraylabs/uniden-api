@@ -1074,13 +1074,28 @@ class PlaybackScreen(Screen):
             return
         res = scanner.get_response()
 
+        cmd_split = value.text.split(",")
+
+        # three letter command code
+        cmd = cmd_split[0]
+
+        # response specific to command code
+        res = res.get(cmd)
+
+        # list code
+        lst = cmd_split[1]
+
+        # response specific to list code
+        res = res.get(lst)
+
         # display text response from scanner but pretty it up a bit
         formatted_response = pprint.pformat(res, compact=True, width=100, indent=3)
+        print(formatted_response)
         # self.text_display.text = formatted_response
-        self.send_text_to_screen(formatted_response)
+        self.send_text_to_screen_as_labels(res)
 
-        # append formatted response to the log file
-        log_output(formatted_response)
+        # # append formatted response to the log file
+        # log_output(formatted_response)
 
         # you must remove focus before you can cancel the selection handles
         self.cmd_input_box.focus = False
