@@ -786,7 +786,14 @@ class DataWindow(Screen):
             kivy_id = self.ids[item[1]]
 
             # populate screen text
-            kivy_id.text = wav_meta_dict["Name"]
+            # kivy_id.text = wav_meta_dict["Name"]
+            item_name = wav_meta_dict.get("Name")
+
+            # text fields cannot be None type
+            if item_name == None:
+                item_name = "==="
+
+            kivy_id.text = item_name
 
             # code to highlight held quantities
             if item[0] == "MonitorList":  # favorites can't be held
@@ -816,14 +823,21 @@ class DataWindow(Screen):
 
         self.volume_level.text = f'vol: {property_dict["VOL"]}'
 
-        self.unit_ids.text = scanner_info_dict["UnitID"]["U_Id"]
+        try:
+            raw_unit_id = scanner_info_dict["UnitID"]["U_Id"]
+        except KeyError:
+            Logger.debug("No Unit_ID key.")
+            raw_unit_id = "UID:------"
+
+        self.unit_ids.text = raw_unit_id
 
         # get just the number text
-        unit_id = scanner_info_dict["UnitID"]["U_Id"][4:]
+        unit_id = raw_unit_id[4:]
         # self.unit_ids_name_tag.text = scanner_info_dict["UnitID"]["Name"]
         # update name from local database
         self.unit_ids_name_tag.text = db.get_unit_id_name(unit_id=unit_id)
 
+        # todo: code below needs to be able to handle empty keywords
         view_description_dict = scanner_info_dict["ViewDescription"]
 
         # get the scanner overwrite text
