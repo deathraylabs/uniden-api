@@ -431,7 +431,8 @@ class UnidenScanner:
                     depth -= 1
                     element_tree.pop(-1)
 
-        return xml_dict
+        # return xml_dict
+        return clean_xml_dict
 
     def get_xml_response(self, cmd):
         """Method to parse xml serial data line-by line and
