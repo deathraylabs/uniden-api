@@ -756,8 +756,8 @@ class DataWindow(Screen):
                 item_name = wav_meta_dict.get("Name")
 
                 # text fields cannot be None type
-                # if item_name == None:
-                #     item_name = "==="
+                if item_name == None:
+                    item_name = "==="
 
                 # update kivy label text
                 kivy_id.text = item_name
@@ -807,33 +807,35 @@ class DataWindow(Screen):
             # todo: code below needs to be able to handle empty keywords
             view_description_dict = scanner_info_dict["ViewDescription"]
 
-            # get the scanner overwrite text
-            overwrite = view_description_dict["OverWrite"]["Text"]
+            # get the scanner overwrite state
+            overwrite_dict = view_description_dict.get("OverWrite")
+            if overwrite_dict not None:
+                overwrite_text = view_description_dict["OverWrite"]["Text"]
 
             # if scanner provides overwrite text, display it over the tgid area
-            if overwrite != "":
-                self.tgid_hld.text = overwrite
+            # if overwrite_text != "":
+                self.tgid_hld.text = overwrite_text
                 self.tgid_hld.color = (0.2, 1, 1, 0.8)
 
-        self.voice.text = property_dict["Mute"]
-        self.ids["_status"].text = property_dict["P25Status"]
-        self.ids["_squelch"].text = f'SQL:{property_dict["SQL"]}'
-        self.ids["_signal"].text = f'sig: {property_dict["Sig"]}'
-        self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
+            self.voice.text = property_dict["Mute"]
+            self.ids["_status"].text = property_dict["P25Status"]
+            self.ids["_squelch"].text = f'SQL:{property_dict["SQL"]}'
+            self.ids["_signal"].text = f'sig: {property_dict["Sig"]}'
+            self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
 
-        # check for a popup screen and grab the text
-        popup_screen = view_description_dict["PopupScreen"]
-        if popup_screen["Text"] != "":
-            self.ids["_popup_text"].color = (1, 1, 1, 1)
-            self.ids["_popup_text"].text = str(popup_screen["Text"])
-            with self.popup_text.canvas.before:
-                Color(rgba=(0, 1, 0, 1))
-                Rectangle(size=self.popup_text.size, pos=self.pos)
-        else:
-            self.popup_text.color = (1, 1, 1, 0)
-            self.popup_text.canvas.before.clear()
+            # check for a popup screen and grab the text
+            popup_screen = view_description_dict["PopupScreen"]
+            if popup_screen["Text"] != "":
+                self.ids["_popup_text"].color = (1, 1, 1, 1)
+                self.ids["_popup_text"].text = str(popup_screen["Text"])
+                with self.popup_text.canvas.before:
+                    Color(rgba=(0, 1, 0, 1))
+                    Rectangle(size=self.popup_text.size, pos=self.pos)
+            else:
+                self.popup_text.color = (1, 1, 1, 0)
+                self.popup_text.canvas.before.clear()
 
-            # self.popup_text.canvas.ask_update()
+                # self.popup_text.canvas.ask_update()
 
         return True
 
