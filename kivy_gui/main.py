@@ -731,93 +731,89 @@ class DataWindow(Screen):
         cmd = wav_meta["cmd"]
 
         if cmd == "GSI" or cmd == "PSI":
-            scanner_info = wav_meta["ScannerInfo"]
+            # root dict for scanner info
+            scanner_info_dict = wav_meta["ScannerInfo"]
 
             # depending on source of data there may be a transmission start time
             trans_start = wav_meta.get("transmission_start")
             if trans_start is None:
                 trans_start = "==="
 
-        # calculate starting time in seconds
-        # trans_start_sec = int(trans_start[-4:-2]) * 60 + int(trans_start[-2])
-        # print(trans_start_sec)
+            trans_end = wav_meta.get("transmission_end:1")
+            if trans_end is None:
+                trans_end = "==="
 
-        try:
-            trans_end = wav_meta["transmission_end:1"]
-        except KeyError:
-            # Logger.exception("No transmission end time.", exc_info=False)
-            trans_end = "---"
+            # calculate starting time in seconds
+            # trans_start_sec = int(trans_start[-4:-2]) * 60 + int(trans_start[-2])
+            # print(trans_start_sec)
 
-        # the root dict is ScannerInfo
-        scanner_info_dict = wav_meta["ScannerInfo"]
+            # loops over data tags defined in init and auto populates label text
+            # these all have tags called "Name" associated with them.
+            for item in self.data_tags.items():
+                wav_meta_dict = scanner_info_dict[item[0]]
+                kivy_id = self.ids[item[1]]
 
-        # update the DataWindow with metadata from scanner
-        for item in self.data_tags.items():
-            wav_meta_dict = scanner_info_dict[item[0]]
-            kivy_id = self.ids[item[1]]
+                item_name = wav_meta_dict.get("Name")
 
-            # populate screen text
-            # kivy_id.text = wav_meta_dict["Name"]
-            item_name = wav_meta_dict.get("Name")
+                # text fields cannot be None type
+                # if item_name == None:
+                #     item_name = "==="
 
-            # text fields cannot be None type
-            if item_name == None:
-                item_name = "==="
+                # update kivy label text
+                kivy_id.text = item_name
 
-            kivy_id.text = item_name
+                # code to highlight sites, systems, and talkgroups (channels)
+                if item[0] == "MonitorList":  # favorites can't be held
+                    continue
+                elif wav_meta_dict["Hold"] == "On":
+                    kivy_id.background_color = self.highlight_color
+                else:
+                    kivy_id.background_color = self.transparent_color
 
-            # code to highlight held quantities
-            if item[0] == "MonitorList":  # favorites can't be held
-                continue
-            elif wav_meta_dict["Hold"] == "On":
-                kivy_id.background_color = self.highlight_color
-            else:
-                kivy_id.background_color = self.transparent_color
+                # check to see if item is set to Avoid
+                # three states allowed are "Avoid", "T-Avoid", or "Off"
+                if wav_meta_dict["Avoid"] == "Avoid":
+                    kivy_id.strikethrough = True
+                    kivy_id.color = self.permanent_avoid_color
+                elif wav_meta_dict["Avoid"] == "T-Avoid":
+                    kivy_id.strikethrough = True
+                    kivy_id.color = self.default_text_color
+                else:
+                    kivy_id.strikethrough = False
+                    kivy_id.color = self.default_text_color
 
-            # check to see if item is set to Avoid
-            # three states allowed are "Avoid", "T-Avoid", or "Off"
-            if wav_meta_dict["Avoid"] == "Avoid":
-                kivy_id.strikethrough = True
-                kivy_id.color = self.permanent_avoid_color
-            elif wav_meta_dict["Avoid"] == "T-Avoid":
-                kivy_id.strikethrough = True
-                kivy_id.color = self.default_text_color
-            else:
-                kivy_id.strikethrough = False
-                kivy_id.color = self.default_text_color
+            self.transmission_start.text = trans_start
+            self.transmission_end.text = trans_end
 
-        self.transmission_start.text = trans_start
-        self.transmission_end.text = trans_end
+            # Property values provided by scanner
+            property_dict = scanner_info_dict["Property"]
 
-        # Property values provided by scanner
-        property_dict = scanner_info_dict["Property"]
+            self.volume_level.text = f'vol: {property_dict["VOL"]}'
 
-        self.volume_level.text = f'vol: {property_dict["VOL"]}'
+            try:
+                raw_unit_id = scanner_info_dict["UnitID"]["U_Id"]
+            except KeyError:
+                Logger.debug("No Unit_ID key.")
+                raw_unit_id = "UID:------"
 
-        try:
-            raw_unit_id = scanner_info_dict["UnitID"]["U_Id"]
-        except KeyError:
-            Logger.debug("No Unit_ID key.")
-            raw_unit_id = "UID:------"
+            self.unit_ids.text = raw_unit_id
 
-        self.unit_ids.text = raw_unit_id
+            # get just the number text
+            unit_id = raw_unit_id[4:]
+            # self.unit_ids_name_tag.text = scanner_info_dict["UnitID"]["Name"]
+            # update name from local database
+            self.unit_ids_name_tag.text = db.get_unit_id_name(unit_id=unit_id)
 
-        # get just the number text
-        unit_id = raw_unit_id[4:]
-        # self.unit_ids_name_tag.text = scanner_info_dict["UnitID"]["Name"]
-        # update name from local database
-        self.unit_ids_name_tag.text = db.get_unit_id_name(unit_id=unit_id)
+            # todo: code below needs to be able to handle empty keywords
+            view_description_dict = scanner_info_dict["ViewDescription"]
 
-        # todo: code below needs to be able to handle empty keywords
-        view_description_dict = scanner_info_dict["ViewDescription"]
+            # get the scanner overwrite text
+            overwrite = view_description_dict["OverWrite"]["Text"]
 
-        # get the scanner overwrite text
-        overwrite = view_description_dict["OverWrite"]["Text"]
-
-        # if scanner provides overwrite text, display it over the tgid area
-        if overwrite != "":
-            self.tgid_hld.text = overwrite
-            self.tgid_hld.color = (0.2, 1, 1, 0.8)
+            # if scanner provides overwrite text, display it over the tgid area
+            if overwrite != "":
+                self.tgid_hld.text = overwrite
+                self.tgid_hld.color = (0.2, 1, 1, 0.8)
 
         self.voice.text = property_dict["Mute"]
         self.ids["_status"].text = property_dict["P25Status"]
