@@ -1171,6 +1171,10 @@ class PlaybackScreen(Screen):
 
             list_status = list_meta.get("Q_Key_Status")
             list_name = list_meta.get("Name")
+            list_index = list_meta.get("Index")
+
+            # list name including index
+            list_name = f"{list_name} ({list_index})"
 
             if list_status is None or list_status == "0":
                 reformatted_text.append(f"{list_name} : Not Loaded")

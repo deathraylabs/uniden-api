@@ -1277,6 +1277,8 @@ class UnidenScanner:
         # names and ids of the quick key list items
         qk_details = qk_list[list_abbrev]
 
+        qk_status_list = qk_status["data"]
+
         # create a dict that relates list item name to status
         # hr_qk_status = {}
 
@@ -1286,11 +1288,12 @@ class UnidenScanner:
         # merge quick key details with status
         for details_dict in qk_details:
             # not all list items will have an assigned quick key, skip if not
-            if details_dict["Q_Key"] == "None":
+            quick_key = details_dict.get("Q_Key")
+            if quick_key is None:
                 continue
 
             # create a new dict item for the quick key status
-            details_dict["Q_Key_Status"] = qk_status[int(details_dict["Q_Key"])]
+            details_dict["Q_Key_Status"] = qk_status_list[int(quick_key)]
 
             merged_details.append(details_dict)
 
