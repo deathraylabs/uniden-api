@@ -804,16 +804,15 @@ class DataWindow(Screen):
             # update name from local database
             self.unit_ids_name_tag.text = db.get_unit_id_name(unit_id=unit_id)
 
-            # todo: code below needs to be able to handle empty keywords
             view_description_dict = scanner_info_dict["ViewDescription"]
 
             # get the scanner overwrite state
             overwrite_dict = view_description_dict.get("OverWrite")
-            if overwrite_dict not None:
+            if overwrite_dict is not None:
                 overwrite_text = view_description_dict["OverWrite"]["Text"]
 
-            # if scanner provides overwrite text, display it over the tgid area
-            # if overwrite_text != "":
+                # if scanner provides overwrite text, display it over the tgid area
+                # if overwrite_text != "":
                 self.tgid_hld.text = overwrite_text
                 self.tgid_hld.color = (0.2, 1, 1, 0.8)
 
@@ -824,8 +823,8 @@ class DataWindow(Screen):
             self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
 
             # check for a popup screen and grab the text
-            popup_screen = view_description_dict["PopupScreen"]
-            if popup_screen["Text"] != "":
+            popup_screen = view_description_dict.get("PopupScreen")
+            if popup_screen is not None:
                 self.ids["_popup_text"].color = (1, 1, 1, 1)
                 self.ids["_popup_text"].text = str(popup_screen["Text"])
                 with self.popup_text.canvas.before:
