@@ -870,12 +870,11 @@ class PopupScreen(Screen):
 
         # dict that contains information on menu and selection
         msi_dict = menu_information.get("MSI")
-        menu_name = msi_dict["Name"]
 
         menu_error = msi_dict.get("MenuErrorMsg")
 
         # catch menu error message and display it
-        if menu_error["Text"] != "":
+        if menu_error is not None:
             Logger.error(f"menu error message: {menu_error['Text']}")
             text_out = menu_error["Text"]
         # this gets us the currently selected item
@@ -883,6 +882,8 @@ class PopupScreen(Screen):
         elif msi_dict is not None:
             # check the type of menu we're looking at
             menu_type = msi_dict["MenuType"]
+
+            menu_name = msi_dict["Name"]
 
             if menu_type == "TypeSelect":
                 selected_item = msi_dict["Selected"]
