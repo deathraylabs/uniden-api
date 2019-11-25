@@ -711,47 +711,6 @@ class DataWindow(Screen):
 
         return True
 
-    # def change_vol(self, cmd):
-    #     """raise or lower volume
-    #
-    #     Notes:
-    #         - Passing an integer from 0 to 15 will change the volume to that level
-    #             directly.
-    #         - Passing "up", "down", or "mute" will change volume incrementally or to zero
-    #
-    #     Args:
-    #         cmd (str): "up", "down", "mute"
-    #         cmd (int): value between 0-15
-    #
-    #     """
-    #     current_vol = scanner.get_volume()
-    #
-    #     if current_vol is False:
-    #         # no current volume is set
-    #         return False
-    #
-    #     if cmd == "up":
-    #         scanner.set_volume(delta=1)
-    #     elif cmd == "down":
-    #         scanner.set_volume(delta=-1)
-    #     elif cmd == "mute" and current_vol != "0":
-    #         # save the current volume level before muting
-    #         self.vol_last = current_vol
-    #         scanner.set_volume(vol=0)
-    #     # reset the previous volume level
-    #     elif cmd == "mute" and current_vol == "0":
-    #         scanner.set_volume(vol=self.vol_last)
-    #     elif isinstance(cmd, int):
-    #         scanner.set_volume(vol=cmd)
-    #     else:
-    #         Logger.error("invalid volume command")
-    #         return False
-    #
-    #     # this will "push" the volume knob to make volume graph disappear
-    #     scanner.push_key(mode="press", key="vpush")
-    #
-    #     return True
-
     def update_datawindow_screen(self, wav_meta):
         """Handles updates.
         Args:
