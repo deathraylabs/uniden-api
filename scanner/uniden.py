@@ -1154,7 +1154,7 @@ class UnidenScanner:
         Returns:
             response (dict):
                 'cmd': command sent to scanner
-                {index (int): status code (int)}
+                'data': (list) quick key state codes
         """
 
         cmd_resp = self.send_command("FQK")
@@ -1163,14 +1163,14 @@ class UnidenScanner:
 
         res = self.get_response()
 
-        # new dict to store data list as dict instead of list
-        qk_status_dict = {"cmd": res["cmd"]}
+        # # new dict to store data list as dict instead of list
+        # qk_status_dict = {"cmd": res["cmd"]}
+        #
+        # # convert quick key state codes list into dict
+        # for index, value in enumerate(res["data"]):
+        #     qk_status_dict[index] = value
 
-        # convert quick key state codes list into dict
-        for index, value in enumerate(res["data"]):
-            qk_status_dict[index] = value
-
-        return qk_status_dict
+        return res
 
     # todo: finish set fl qk status method
     def set_fav_list_qk_status(self):
