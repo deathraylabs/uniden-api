@@ -1189,6 +1189,10 @@ class PlaybackScreen(Screen):
 
         return True
 
+    def dept_qk_status(self, fav_index, sys_index):
+        """Display human readable dept quick key"""
+        pass
+
     def send_text_to_screen(self, display_text):
         """helper method to get text on screen"""
         # format response with pretty print so it is more readable
