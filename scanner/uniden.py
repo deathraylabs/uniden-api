@@ -1228,7 +1228,8 @@ class UnidenScanner:
                 'data': (list) quick key state codes
         """
 
-        cmd = "DQK".join((",", fav_qk, sys_qk))
+        # cmd = "DQK".join((",", fav_qk, sys_qk))
+        cmd = f"DQK,{fav_qk},{sys_qk}"
 
         cmd_resp = self.send_command(cmd)
 

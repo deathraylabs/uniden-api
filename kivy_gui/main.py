@@ -1151,11 +1151,12 @@ class PlaybackScreen(Screen):
 
         return True
 
-    def sys_qk_status(self, fav_list):
+    # todo: needs both the index AND the quick key number, not just index
+    def display_qk_status(self, fav_index="", sys_index=""):
         """Method displays human readable quick key status.
 
         Args:
-            fav_list (str): index number from favorite list that contains systems of
+            fav_index (str): index number from favorite list that contains systems of
             interest.
 
         Returns:
@@ -1163,8 +1164,19 @@ class PlaybackScreen(Screen):
 
         """
 
-        qk_status = scanner.get_sys_list_qk_status(fav_list)
-        qk_list = scanner.get_list("system", fav_list)
+        if fav_index == "" and sys_index == "":
+            # get raw quick key status
+            qk_status = scanner.get_fav_list_qk_status()
+            # get the quick key list for favorites
+            qk_list = scanner.get_list("favorites list")
+        elif fav_index != "" and sys_index == "":
+            qk_status = scanner.get_sys_list_qk_status(fav_index)
+            qk_list = scanner.get_list("system", fav_index)
+        else:
+            qk_status = scanner.get_dept_list_qk_status(
+                fav_qk=fav_index, sys_qk=sys_index
+            )
+            qk_list = scanner.get_list("department", sys_index)
 
         # readable list version
         hr_dict_list = scanner.get_human_readable_qk_status(qk_status, qk_list)
