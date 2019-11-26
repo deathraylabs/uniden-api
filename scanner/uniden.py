@@ -1289,7 +1289,7 @@ class UnidenScanner:
         for details_dict in qk_details:
             # not all list items will have an assigned quick key, skip if not
             quick_key = details_dict.get("Q_Key")
-            if quick_key is None:
+            if quick_key is None or quick_key == "None":
                 continue
 
             # create a new dict item for the quick key status
