@@ -1133,6 +1133,10 @@ class PlaybackScreen(Screen):
 
             list_status = list_meta.get("Q_Key_Status")
             list_name = list_meta.get("Name")
+            list_index = list_meta.get("Index")
+
+            # list name including index
+            list_name = f"{list_name} ({list_index})"
 
             if list_status is None or list_status == "0":
                 reformatted_text.append(f"{list_name} : Not Loaded")
@@ -1143,7 +1147,7 @@ class PlaybackScreen(Screen):
 
         self.send_text_to_screen_as_labels(reformatted_text)
 
-        pprint.pprint(reformatted_text)
+        # pprint.pprint(reformatted_text)
 
         return True
 
@@ -1185,7 +1189,7 @@ class PlaybackScreen(Screen):
 
         self.send_text_to_screen_as_labels(reformatted_text)
 
-        pprint.pprint(reformatted_text)
+        # pprint.pprint(reformatted_text)
 
         return True
 
