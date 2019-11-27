@@ -1168,6 +1168,7 @@ class PlaybackScreen(Screen):
 
         """
 
+        # only get current scanner state if necessary
         if list_type == "favorites list":
             # get raw quick key status
             qk_status = scanner.get_fav_list_qk_status()
@@ -1179,16 +1180,18 @@ class PlaybackScreen(Screen):
             fav_index = fav_dict["Index"]
             fav_qk = fav_dict["Q_Key"]
 
-        if list_type == "system":
-            qk_status = scanner.get_sys_list_qk_status(fav_qk)
-            qk_list = scanner.get_list("system", fav_index)
-        elif list_type == "department":
-            sys_dict = state["System"]
-            sys_index = sys_dict["Index"]
-            sys_qk = sys_dict["Q_Key"]
+            if list_type == "system":
+                qk_status = scanner.get_sys_list_qk_status(fav_qk)
+                qk_list = scanner.get_list("system", fav_index)
+            elif list_type == "department":
+                sys_dict = state["System"]
+                sys_index = sys_dict["Index"]
+                sys_qk = sys_dict["Q_Key"]
 
-            qk_status = scanner.get_dept_list_qk_status(fav_qk=fav_qk, sys_qk=sys_qk)
-            qk_list = scanner.get_list("department", sys_index)
+                qk_status = scanner.get_dept_list_qk_status(
+                    fav_qk=fav_qk, sys_qk=sys_qk
+                )
+                qk_list = scanner.get_list("department", sys_index)
 
         # readable list version
         hr_dict_list = scanner.get_human_readable_qk_status(qk_status, qk_list)
