@@ -84,7 +84,7 @@
                             text: "View FQK Status"
                             on_release:
 #                                root.display_raw_scanner_output("FQK")
-                                root.display_qk_status()
+                                root.display_qk_status(list_type="favorites list")
 
 
                     # ---------- third row ---------- #
@@ -103,13 +103,13 @@
                         Button:
                             id: _sqk_status
                             text: "View SQK Status"
-                            on_release: root.display_qk_status(fav_index="0")
+                            on_release: root.display_qk_status(list_type="system")
 
                         Button:
                             id: _dqk_status
                             text: "View DQK Status"
                             on_release:
-                                root.display_qk_status(fav_index="0", sys_index="0")
+                                root.display_qk_status(list_type="department")
 
                     BoxLayout:
                         id: "fourth_row"

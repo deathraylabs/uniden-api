@@ -248,7 +248,6 @@ class PlainTextScreen(Screen):
         self.text_display_popup.height = self.text_display_popup.texture_size[1]
 
 
-# todo: fix setup to change unit id name
 class RightSidePanel(BoxLayout):
     """Panel that contains the user interface buttons"""
 
@@ -1152,30 +1151,44 @@ class PlaybackScreen(Screen):
         return True
 
     # todo: needs both the index AND the quick key number, not just index
-    def display_qk_status(self, fav_index="", sys_index=""):
+    def display_qk_status(self, list_type):
         """Method displays human readable quick key status.
 
+        Notes:
+            - The get_list method requires a list **index** value for some of the
+                commands. This is not the same thing as the **quick key** number, which
+                isn't always unique, while the index is.
+            - The methods for retreiving quick key status require the **quick key**
+                number, not the index number.
+
         Args:
-            fav_index (str): index number from favorite list that contains systems of
-            interest.
+            list_type (str): "favorites list", "system", or "department"
 
         Returns:
             True: if method runs successfully
 
         """
 
-        if fav_index == "" and sys_index == "":
+        if list_type == "favorites list":
             # get raw quick key status
             qk_status = scanner.get_fav_list_qk_status()
             # get the quick key list for favorites
             qk_list = scanner.get_list("favorites list")
-        elif fav_index != "" and sys_index == "":
-            qk_status = scanner.get_sys_list_qk_status(fav_index)
-            qk_list = scanner.get_list("system", fav_index)
         else:
-            qk_status = scanner.get_dept_list_qk_status(
-                fav_qk=fav_index, sys_qk=sys_index
-            )
+            state = scanner.update_scanner_state()["ScannerInfo"]
+            fav_dict = state["MonitorList"]
+            fav_index = fav_dict["Index"]
+            fav_qk = fav_dict["Q_Key"]
+
+        if list_type == "system":
+            qk_status = scanner.get_sys_list_qk_status(fav_qk)
+            qk_list = scanner.get_list("system", fav_index)
+        elif list_type == "department":
+            sys_dict = state["System"]
+            sys_index = sys_dict["Index"]
+            sys_qk = sys_dict["Q_Key"]
+
+            qk_status = scanner.get_dept_list_qk_status(fav_qk=fav_qk, sys_qk=sys_qk)
             qk_list = scanner.get_list("department", sys_index)
 
         # readable list version
