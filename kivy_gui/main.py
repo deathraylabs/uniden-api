@@ -1150,7 +1150,6 @@ class PlaybackScreen(Screen):
 
         return True
 
-    # todo: needs both the index AND the quick key number, not just index
     def display_qk_status(self, list_type):
         """Method displays human readable quick key status.
 
@@ -1217,10 +1216,6 @@ class PlaybackScreen(Screen):
         # pprint.pprint(reformatted_text)
 
         return True
-
-    def dept_qk_status(self, fav_index, sys_index):
-        """Display human readable dept quick key"""
-        pass
 
     def send_text_to_screen(self, display_text):
         """helper method to get text on screen"""
