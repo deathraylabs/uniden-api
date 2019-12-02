@@ -539,6 +539,7 @@ class DataWindow(Screen):
         except KeyError:
             Logger.exception("grab_current_unid: unit_id key error", exc_info=False)
             unit_id_name = "error"
+            unit_id = "error"
 
         if unit_id_name[:4] == "UID:":
             unit_id_name = unit_id_name[4:]
