@@ -303,7 +303,11 @@ class UnidenScanner:
         return res_dict
 
     def get_gsi_response(self, cmd="GSI"):
-        """Method converts xml scanner data from gsi command to json style dict"""
+        """Method converts xml scanner data from gsi command to json style dict
+
+        Notes:
+            - [ ] currently fails if Mode is "Menu tree" and yes/no selection view
+        """
         # get a clean copy of template xml file
         xml_dict = deepcopy(GSI_OUTPUT)
 
@@ -401,7 +405,11 @@ class UnidenScanner:
                     if isinstance(cur_lev_xml_dict, list):
                         attrib_dict = {}
 
-                        if not isinstance(cur_clean_xml_dict, list):
+                        # todo: is this code actually used in execution?
+                        if len(cur_clean_xml_dict) == 0:
+                            # instantiate a new list if it doesn't exist
+                            cur_clean_xml_dict = []
+                        elif not isinstance(cur_clean_xml_dict, list):
                             # grab the parent dict and redefine the current tag item
                             parent_clean_xml_dict = clean_xml_dict[element_tree[-2]]
                             # this dict item has to be a list due to scanner output
