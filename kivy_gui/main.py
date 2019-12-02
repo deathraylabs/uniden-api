@@ -817,6 +817,8 @@ class DataWindow(Screen):
                 else:
                     # show the current playcount where recording status would be
                     self.ids["_rec"].text = info_area.get("Text")
+
+                    self.right_screen.chan_softkey.text = "Pause"
             else:
                 # ensures this command doesn't overwrite previous command
                 self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
