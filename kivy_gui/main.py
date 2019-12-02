@@ -173,11 +173,6 @@ class UpdateScreen:
             # note: returning false will kill the auto screen update
             return False
 
-        # check for a popup screen
-        # popup_screen = wav_meta.get("PopupScreen")
-        # if popup_screen != {}:
-        #     print(popup_screen)
-
         # determine if screen is a menu or scan screen
         scanner_info = wav_meta.get("ScannerInfo")
         mode = scanner_info.get("Mode")
@@ -418,7 +413,7 @@ class RightSidePanel(BoxLayout):
 
 # todo: window doesn't display conventional frequency data correctly, freezes screen
 class DataWindow(Screen):
-    """Screen used to display scanner data while scanning.
+    """Screen used for displaying scanner data while scanning in Trunk mode.
 
     """
 
@@ -538,8 +533,12 @@ class DataWindow(Screen):
         fav_list_name = monitor_list["Name"]
         fav_list_idx = monitor_list["Index"]
 
-        unit_id_name = scan_info["UnitID"]["Name"]
-        unit_id = scan_info["UnitID"]["U_Id"]
+        try:
+            unit_id_name = scan_info["UnitID"]["Name"]
+            unit_id = scan_info["UnitID"]["U_Id"]
+        except KeyError:
+            Logger.exception("grab_current_unid: unit_id key error", exc_info=False)
+            unit_id_name = "error"
 
         if unit_id_name[:4] == "UID:":
             unit_id_name = unit_id_name[4:]
@@ -803,7 +802,24 @@ class DataWindow(Screen):
             # update name from local database
             self.unit_ids_name_tag.text = db.get_unit_id_name(unit_id=unit_id)
 
-            view_description_dict = scanner_info_dict["ViewDescription"]
+            view_description_dict = scanner_info_dict.get("ViewDescription")
+
+            scan_mode = scanner_info_dict.get("Mode")
+
+            # check to see if scanner is in 'Audio Replay' mode
+            if scan_mode == "Audio Replay":
+                # replay mode is either paused or displaying current number
+                info_area = view_description_dict.get("InfoArea1")
+
+                if info_area.get("Text") == "Pause On":
+                    self.right_screen.chan_softkey.text = "Resume"
+                    self.right_screen.sys_softkey.text = "to scan"
+                else:
+                    # show the current playcount where recording status would be
+                    self.ids["_rec"].text = info_area.get("Text")
+            else:
+                # ensures this command doesn't overwrite previous command
+                self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
 
             # get the scanner overwrite state
             overwrite_dict = view_description_dict.get("OverWrite")
@@ -819,7 +835,6 @@ class DataWindow(Screen):
             self.ids["_status"].text = property_dict["P25Status"]
             self.ids["_squelch"].text = f'SQL:{property_dict["SQL"]}'
             self.ids["_signal"].text = f'sig: {property_dict["Sig"]}'
-            self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
 
             # check for a popup screen and grab the text
             popup_screen = view_description_dict.get("PopupScreen")
