@@ -392,38 +392,28 @@ class UnidenScanner:
                     # dict tells us type of data to expect from scanner
                     cur_lev_xml_dict = xml_dict
 
-                    # todo: do I need a current xml dict or can I use clean directly
-                    # this dict is built from scratch, not filling template
+                    # reset current clean branch to root
                     cur_clean_xml_dict = clean_xml_dict
 
                     # drill down to current branch
                     for tag in element_tree:
                         cur_lev_xml_dict = cur_lev_xml_dict[tag]
 
-                        if isinstance(cur_clean_xml_dict, list):
-                            continue
+                        # if isinstance(cur_lev_xml_dict, list):
+                        #     continue
                         # clean dict might not have existing branch
-                        elif cur_clean_xml_dict.get(tag) is None:
-                            # initialize branch if it doesn't exist
-                            cur_clean_xml_dict[tag] = {}
+                        if cur_clean_xml_dict.get(tag) is None:
+                            if isinstance(cur_lev_xml_dict, list):
+                                cur_clean_xml_dict[tag] = []
+                            else:
+                                # initialize branch if it doesn't exist
+                                cur_clean_xml_dict[tag] = {}
 
                         cur_clean_xml_dict = cur_clean_xml_dict[tag]
 
                     # attributes with identical keys are stored as a list of dicts
                     if isinstance(cur_lev_xml_dict, list):
                         attrib_dict = {}
-
-                        # todo: is this code actually used in execution for anything?
-                        if len(cur_clean_xml_dict) == 0:
-                            # instantiate a new list if it doesn't exist
-                            cur_clean_xml_dict = []
-                        elif not isinstance(cur_clean_xml_dict, list):
-                            # grab the parent dict and redefine the current tag item
-                            parent_clean_xml_dict = clean_xml_dict[element_tree[-2]]
-                            # this dict item has to be a list due to scanner output
-                            parent_clean_xml_dict[current_tag] = []
-                            # now reset so we're working with
-                            cur_clean_xml_dict = parent_clean_xml_dict[current_tag]
 
                         # delete first item (dict) if it's just empty placeholder
                         first_item = cur_lev_xml_dict[0]
