@@ -341,7 +341,7 @@ class UnidenScanner:
 
         while not at_xml_end:
 
-            # data we will feed the parser
+            # line of data from serial port we will feed the parser
             read_line = self._read_and_decode_line()
             parser.feed(read_line)
 
@@ -350,11 +350,12 @@ class UnidenScanner:
                 continue
 
             # parser is a generator and events are popped internally
+            # so you have to deal with info as it arrives
             for event in parser.read_events():
-
-                # either "start" or "end"
+                # tiggers are either "start" or "end"
                 event_trigger = event[0]
 
+                # xml element, tag, and attribs
                 element = event[1]
                 current_tag = element.tag
                 current_attribs = element.attrib
@@ -365,8 +366,10 @@ class UnidenScanner:
 
                 # checking to see if we're at end of transmission or just end of block
                 if current_tag == "Footer":
+                    # case: end of transmission, all tags closed
                     if current_attribs["EOT"] == "1" and event_trigger == "end":
                         continue
+                    # case: footer reached and next transm block waiting
                     elif current_attribs["EOT"] == "0" and event_trigger == "end":
                         # eat up bytes until you get to start of next block of data
                         self.serial.read_until(
@@ -382,9 +385,14 @@ class UnidenScanner:
                     at_xml_end = True
                 elif event_trigger == "start":
                     depth += 1
+
+                    # breadcrumb trail for position on tree
                     element_tree.append(current_tag)
+
+                    # dict tells us type of data to expect from scanner
                     cur_lev_xml_dict = xml_dict
 
+                    # todo: do I need a current xml dict or can I use clean directly
                     # this dict is built from scratch, not filling template
                     cur_clean_xml_dict = clean_xml_dict
 
