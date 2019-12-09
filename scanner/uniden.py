@@ -317,7 +317,8 @@ class UnidenScanner:
         # root tag for this command
         root_tag = ""
 
-        at_xml_end = False  # initialize end of xml flag
+        # initialize flag to signal end of xml parsing
+        at_xml_end = False
 
         # initialize parser. events occur at start or end tags
         parser = ET.XMLPullParser(events=["start", "end"])
@@ -336,7 +337,7 @@ class UnidenScanner:
         # list of elements in order of occurence
         element_tree = []
         # placeholder for current level of xml dict we're working with
-        cur_lev_xml_dict = {}
+        # cur_lev_xml_dict = {}
 
         while not at_xml_end:
 
@@ -384,7 +385,7 @@ class UnidenScanner:
                     element_tree.append(current_tag)
                     cur_lev_xml_dict = xml_dict
 
-                    # clean xml, built ground up not from existing constant
+                    # this dict is built from scratch, not filling template
                     cur_clean_xml_dict = clean_xml_dict
 
                     # drill down to current branch
@@ -393,7 +394,6 @@ class UnidenScanner:
 
                         if isinstance(cur_clean_xml_dict, list):
                             continue
-
                         # clean dict might not have existing branch
                         elif cur_clean_xml_dict.get(tag) is None:
                             # initialize branch if it doesn't exist
@@ -405,7 +405,7 @@ class UnidenScanner:
                     if isinstance(cur_lev_xml_dict, list):
                         attrib_dict = {}
 
-                        # todo: is this code actually used in execution?
+                        # todo: is this code actually used in execution for anything?
                         if len(cur_clean_xml_dict) == 0:
                             # instantiate a new list if it doesn't exist
                             cur_clean_xml_dict = []
