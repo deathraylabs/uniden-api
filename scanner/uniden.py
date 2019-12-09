@@ -303,14 +303,22 @@ class UnidenScanner:
         return res_dict
 
     def get_gsi_response(self, cmd="GSI"):
-        """Method converts xml scanner data from gsi command to json style dict"""
+        """Method converts xml scanner data from gsi command to json style dict
+
+        Notes:
+            - [ ] currently fails if Mode is "Menu tree" and yes/no selection view
+        """
         # get a clean copy of template xml file
         xml_dict = deepcopy(GSI_OUTPUT)
+
+        # version of xml dict that doesn't contain content from constant
+        clean_xml_dict = {}
 
         # root tag for this command
         root_tag = ""
 
-        at_xml_end = False  # initialize end of xml flag
+        # initialize flag to signal end of xml parsing
+        at_xml_end = False
 
         # initialize parser. events occur at start or end tags
         parser = ET.XMLPullParser(events=["start", "end"])
@@ -329,11 +337,11 @@ class UnidenScanner:
         # list of elements in order of occurence
         element_tree = []
         # placeholder for current level of xml dict we're working with
-        cur_lev_xml_dict = {}
+        # cur_lev_xml_dict = {}
 
         while not at_xml_end:
 
-            # data we will feed the parser
+            # line of data from serial port we will feed the parser
             read_line = self._read_and_decode_line()
             parser.feed(read_line)
 
@@ -342,11 +350,12 @@ class UnidenScanner:
                 continue
 
             # parser is a generator and events are popped internally
+            # so you have to deal with info as it arrives
             for event in parser.read_events():
-
-                # either "start" or "end"
+                # tiggers are either "start" or "end"
                 event_trigger = event[0]
 
+                # xml element, tag, and attribs
                 element = event[1]
                 current_tag = element.tag
                 current_attribs = element.attrib
@@ -357,8 +366,10 @@ class UnidenScanner:
 
                 # checking to see if we're at end of transmission or just end of block
                 if current_tag == "Footer":
+                    # case: end of transmission, all tags closed
                     if current_attribs["EOT"] == "1" and event_trigger == "end":
                         continue
+                    # case: footer reached and next transm block waiting
                     elif current_attribs["EOT"] == "0" and event_trigger == "end":
                         # eat up bytes until you get to start of next block of data
                         self.serial.read_until(
@@ -374,12 +385,32 @@ class UnidenScanner:
                     at_xml_end = True
                 elif event_trigger == "start":
                     depth += 1
+
+                    # breadcrumb trail for position on tree
                     element_tree.append(current_tag)
+
+                    # dict tells us type of data to expect from scanner
                     cur_lev_xml_dict = xml_dict
 
-                    # get the xml_dict item corresponding to current branch
+                    # reset current clean branch to root
+                    cur_clean_xml_dict = clean_xml_dict
+
+                    # drill down to current branch
                     for tag in element_tree:
                         cur_lev_xml_dict = cur_lev_xml_dict[tag]
+
+                        # if isinstance(cur_lev_xml_dict, list):
+                        #     continue
+                        # clean dict might not have existing branch
+                        if cur_clean_xml_dict.get(tag) is None:
+                            if isinstance(cur_lev_xml_dict, list):
+                                cur_clean_xml_dict[tag] = []
+                            else:
+                                # initialize branch if it doesn't exist
+                                cur_clean_xml_dict[tag] = {}
+
+                        cur_clean_xml_dict = cur_clean_xml_dict[tag]
+
                     # attributes with identical keys are stored as a list of dicts
                     if isinstance(cur_lev_xml_dict, list):
                         attrib_dict = {}
@@ -392,18 +423,22 @@ class UnidenScanner:
                         for attrib, value in current_attribs.items():
                             attrib_dict[attrib] = value
                         cur_lev_xml_dict.append(attrib_dict)
+                        cur_clean_xml_dict.append(attrib_dict)
                     else:
                         for attrib, value in current_attribs.items():
                             try:
                                 cur_lev_xml_dict[attrib] = value
+                                cur_clean_xml_dict[attrib] = value
                             except TypeError:
                                 self.logger.debug(f"{cur_lev_xml_dict} is a string")
+
                 # special checks when parser encounters closing tag
                 elif event_trigger == "end":
                     depth -= 1
                     element_tree.pop(-1)
 
-        return xml_dict
+        # return xml_dict
+        return clean_xml_dict
 
     def get_xml_response(self, cmd):
         """Method to parse xml serial data line-by line and
@@ -1020,6 +1055,9 @@ class UnidenScanner:
             self.logger.error(f"scanner returned ERR for command '{cmd}'")
             return
 
+        # all we need is the GLT response, none of the other info
+        res = res.get("GLT")
+
         # add the requested list abbreviation for use in other methods
         res["requested list abbrev"] = str(list_abbrev)
 
@@ -1123,7 +1161,7 @@ class UnidenScanner:
         Returns:
             response (dict):
                 'cmd': command sent to scanner
-                {index (int): status code (int)}
+                'data': (list) quick key state codes
         """
 
         cmd_resp = self.send_command("FQK")
@@ -1132,14 +1170,14 @@ class UnidenScanner:
 
         res = self.get_response()
 
-        # new dict to store data list as dict instead of list
-        qk_status_dict = {"cmd": res["cmd"]}
+        # # new dict to store data list as dict instead of list
+        # qk_status_dict = {"cmd": res["cmd"]}
+        #
+        # # convert quick key state codes list into dict
+        # for index, value in enumerate(res["data"]):
+        #     qk_status_dict[index] = value
 
-        # convert quick key state codes list into dict
-        for index, value in enumerate(res["data"]):
-            qk_status_dict[index] = value
-
-        return qk_status_dict
+        return res
 
     # todo: finish set fl qk status method
     def set_fav_list_qk_status(self):
@@ -1163,13 +1201,15 @@ class UnidenScanner:
                 'data': (list) quick key state codes
         """
 
-        cmd = "SQK".join((",", fav_qk))
+        cmd = f"SQK,{fav_qk}"
 
         cmd_resp = self.send_command(cmd)
 
         self.logger.info(f"SQK Ack: {cmd_resp}")
 
-        return self.get_response()
+        res = self.get_response()
+
+        return res
 
     # todo: finish set sys qk status method
     def set_sys_list_qk_status(self):
@@ -1195,7 +1235,8 @@ class UnidenScanner:
                 'data': (list) quick key state codes
         """
 
-        cmd = "DQK".join((",", fav_qk, sys_qk))
+        # cmd = "DQK".join((",", fav_qk, sys_qk))
+        cmd = f"DQK,{fav_qk},{sys_qk}"
 
         cmd_resp = self.send_command(cmd)
 
@@ -1244,20 +1285,29 @@ class UnidenScanner:
         # names and ids of the quick key list items
         qk_details = qk_list[list_abbrev]
 
+        qk_status_list = qk_status["data"]
+
         # create a dict that relates list item name to status
         # hr_qk_status = {}
 
-        for k, v in qk_details.items():
+        # new list with merged data
+        merged_details = []
+
+        # merge quick key details with status
+        for details_dict in qk_details:
             # not all list items will have an assigned quick key, skip if not
-            if v["Q_Key"] == "None":
+            quick_key = details_dict.get("Q_Key")
+            if quick_key is None or quick_key == "None":
                 continue
 
             # create a new dict item for the quick key status
-            qk_details[k]["Q_Key_Status"] = qk_status[int(v["Q_Key"])]
+            details_dict["Q_Key_Status"] = qk_status_list[int(quick_key)]
+
+            merged_details.append(details_dict)
 
             # hr_qk_status[k] = qk_status[int(v["Q_Key"])]
 
-        return qk_details
+        return merged_details
 
     def set_charge_while_scanning(self, on_off):
         """Quickly enable or disable charge while scanning
