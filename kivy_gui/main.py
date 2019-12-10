@@ -427,6 +427,12 @@ class RightSidePanel(BoxLayout):
         else:
             right_screen._function_button.color = self.white_text_color
 
+        rec = get_property["Rec"]
+        if rec == "On":
+            right_screen.begin_end_recording.color = self.red_text_color
+        else:
+            right_screen.begin_end_recording.color = self.white_text_color
+
         return True
 
 
@@ -836,12 +842,12 @@ class DataWindow(Screen):
                     self.right_screen.sys_softkey.text = "to scan"
                 else:
                     # show the current playcount where recording status would be
-                    self.ids["_rec"].text = info_area.get("Text")
+                    # self.ids["_rec"].text = info_area.get("Text")
 
                     self.right_screen.chan_softkey.text = "Pause"
-            else:
-                # ensures this command doesn't overwrite previous command
-                self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
+            # else:
+            # ensures this command doesn't overwrite previous command
+            # self.ids["_rec"].text = f'REC: {property_dict["Rec"]}'
 
             # get the scanner overwrite state
             overwrite_dict = view_description_dict.get("OverWrite")
