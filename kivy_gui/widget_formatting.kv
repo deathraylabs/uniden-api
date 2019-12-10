@@ -102,6 +102,7 @@
     sys_softkey: _system_softkey
     chan_softkey: _chan_sofkey
     _function_button: _function_button
+    charge_while_scanning: _charge_while_scanning
 
     MenuBar:
         id: _first_row
@@ -169,6 +170,9 @@
                 root.change_vol("down")
 
         NumericKeypad:
+            id: _charge_while_scanning
+            text: "Charge"
+            on_release: root.set_charge_while_scanning()
 
         NumericKeypad:
 
