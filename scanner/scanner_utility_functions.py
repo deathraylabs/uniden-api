@@ -669,24 +669,25 @@ if __name__ == "__main__":
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
-    group_audio_by_department()
+    # group_audio_by_department()
 
-    # help_statement = """
-    #     **********************
-    #     Copy path to wav_source
-    #     Then hit "Enter"
-    #     ----------------------
-    # """
+    help_statement = """
+        **********************
+        Copy path to wav_source
+        Then hit "Enter"
+        ----------------------
+    """
 
-    # input(help_statement)
+    input(help_statement)
 
     # get contents of clipboard
-    # clipboard = cb.paste()
+    clipboard = cb.paste()
     # source_path = "/Users/peej/Desktop/user_rec/4F18187C/"
     # save_path = "/Users/peej/Downloads/uniden audio/1 HPD-N"
+    save_path = "/Users/peej/Desktop/new audio/"
 
-    # source_path = clipboard
-    # group_audio_by_department(source_path)
+    source_path = clipboard
+    group_audio_by_department(source_path, save_dir=save_path)
 
     # matching tag
     # tag = "Red"
