@@ -1,0 +1,163 @@
+#:kivy 1.11.1
+#:include force widget_formatting.kv
+
+
+# these are global variables to reference objects below
+# format: [variable name in code]: [id name in kv file]
+#fav_list_name: fav_list_name
+#sys_name: sys_name
+#dept_name: dept_name
+#site_name: site_name
+#unit_ids: unit_ids
+#unit_ids_name_tag: unit_ids_name_tag
+#transmission_start: trans_begins
+#transmission_end: trans_ends
+#volume_level: _volume_level
+##    _scanning: _scanning
+#voice: _voice
+##    _function_button: _function_button
+#tgid_hld: tgid_hld
+#right_screen: _right_side
+##    main_container: _main_container
+#popup_text: _popup_text
+#saved_id: _saved_id
+#unit_id_layout: _unit_id_layout
+#top_row: _top_row
+
+GridLayout:
+    id: _main_container
+    cols: 2
+    width: root.width
+    height: root.height
+
+    LargeTextDisplayPanel:
+        id: _left_side
+
+        BoxLayout:
+            id: _top_row
+            orientation: "horizontal"
+            size_hint_y: 3
+
+            BoxLayout:
+                orientation: "vertical"
+
+                LinedBox:
+                    text: "Unit ID"
+                    font_size: self.height * .6
+#                    text_size: self.size * .5
+                    halign: "left"
+                    valign: "bottom"
+#                    padding: 20, 10
+                    size_hint_y: .35
+
+                    canvas:
+                        Color:
+                            rgb: 1, 0, .5
+#                        Line:
+#                            rectangle: self.x, self.y, self.width, self.height
+#                            width: 2.0
+
+                TouchArea:
+                    id: unit_ids_name_tag
+                    text: "05-F-30-e"
+                    font_size: self.height * .5
+                    color: 1, 1, .1, 1
+#                    size_hint_x: 1
+#                    size_hint_y: 1
+                    valign: "top"
+                    padding: 20, 0
+#                    on_release: root.grab_current_unid()
+
+            BoxLayout:
+                orientation: "vertical"
+
+                LinedBox:
+                    text: "Talkgroup"
+
+                TouchArea:
+                    id: tgid_hld
+                    strikethrough: False
+                    text: "TGID:Name"
+    #                on_release: root.scanner_hold("chan")
+    #                on_release: self.strikethrough = not self.strikethrough
+
+
+        TouchArea:
+            id: dept_name
+            text: "Department:Name"
+#            on_release: root.scanner_hold("dept")
+
+        TouchArea:
+            id: sys_name
+            text: "System:Name"
+            on_release: root.scanner_hold("system")
+
+        TouchArea:
+            id: site_name
+            text: "Site:Name"
+            on_release: root.site_hold()
+
+        Label:
+            id: fav_list_name
+            text: "Favorites List"
+
+        BoxLayout:
+            id: _unit_id_layout
+            orientation: "horizontal"
+
+            TouchArea:
+                id: unit_ids
+                text: "UnitIds"
+                on_release: root.grab_current_unid()
+
+            TouchArea:
+                id: _saved_id
+                text: "SavedID"
+                color: .5, 1, .5, 1
+                on_release: root.edit_unit_id()
+
+        BoxLayout:
+            id: _transmission_times
+            orientation: 'horizontal'
+
+            Label:
+                id: trans_begins
+                text: "Transmission Start Time"
+                font_size: '15sp'
+
+            Label:
+                id: trans_ends
+                text: "Transmission End Time"
+                font_size: '15sp'
+
+            BottomRowData:
+                id: _voice
+                text: "voice"
+#                    font_size: "15sp"
+
+#                BottomRowData:
+#                    id: _rec
+#                    text: "recording"
+
+            BottomRowData:
+                id: _status
+                text: "P25Status"
+#                    font_size: "15sp"
+
+            BottomRowData:
+                id: _signal
+                text: "signal"
+
+            BottomRowData:
+                id: _squelch
+                text: "squelch"
+
+            BottomRowData:
+                id: _volume_level
+#                    halign: "right"
+                text: "VOL"
+                font_size: '20sp'
+
+    RightSidePanel:
+        id: _right_side
+

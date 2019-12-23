@@ -36,13 +36,22 @@
             BoxLayout:
                 id: _top_row
                 orientation: "horizontal"
+                size_hint_y: 3
 
-                TouchArea:
-                    id: unit_ids_name_tag
-                    text: "UnitIds:NameTag"
-                    color: 1, 1, .1, .90
-                    size_hint_x: .5
-#                    on_release: root.grab_current_unid()
+                BoxLayout:
+                    orientation: "vertical"
+
+                    Label:
+                        text: "Unit ID"
+                        font_size: "15sp"
+
+                    TouchArea:
+                        id: unit_ids_name_tag
+                        text: "05-F-30-e"
+                        color: 1, 1, .1, .90
+                        size_hint_x: .8
+    #                    valign: "top"
+    #                    on_release: root.grab_current_unid()
 
                 TouchArea:
                     id: tgid_hld
