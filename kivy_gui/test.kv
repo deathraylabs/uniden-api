@@ -39,36 +39,27 @@ GridLayout:
             size_hint_y: 3
 
             BoxLayout:
+                id: _unit_id_group
                 orientation: "vertical"
+                size_hint_x: 0.8
 
                 ScanLabel:
                     text: "Unit ID"
-                    font_size: self.height * .6
-#                    text_size: self.size * .5
-#                    halign: "left"
-#                    valign: "bottom"
-#                    padding: 20, 10
-#                    size_hint_y: .35
 
-                    canvas:
-                        Color:
-                            rgb: 1, 0, .5
-#                        Line:
-#                            rectangle: self.x, self.y, self.width, self.height
-#                            width: 2.0
+#                    canvas:
+#                        Color:
+#                            rgb: 1, 0, .5
 
                 TouchArea:
                     id: unit_ids_name_tag
                     text: "05-F-30-e"
                     font_size: "50sp"
                     color: 1, 1, .1, 1
-#                    size_hint_x: 1
-#                    size_hint_y: 1
                     valign: "top"
-#                    padding: 20, 0
 #                    on_release: root.grab_current_unid()
 
             BoxLayout:
+                id: _talkgroup_group
                 orientation: "vertical"
 
                 ScanLabel:
@@ -78,6 +69,8 @@ GridLayout:
                     id: tgid_hld
                     strikethrough: False
                     text: "0-HPD NW"
+                    font_size: "50sp"
+                    valign: "top"
     #                on_release: root.scanner_hold("chan")
     #                on_release: self.strikethrough = not self.strikethrough
 

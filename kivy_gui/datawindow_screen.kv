@@ -39,25 +39,35 @@
                 size_hint_y: 3
 
                 BoxLayout:
+                    id: _unit_id_group
                     orientation: "vertical"
+                    size_hint_x: 0.8
 
-                    Label:
+                    ScanLabel:
                         text: "Unit ID"
-                        font_size: "15sp"
 
                     TouchArea:
                         id: unit_ids_name_tag
                         text: "05-F-30-e"
-                        color: 1, 1, .1, .90
-                        size_hint_x: .8
-    #                    valign: "top"
+                        font_size: "50sp"
+                        color: 1, 1, .1, 1
+                        valign: "top"
     #                    on_release: root.grab_current_unid()
 
-                TouchArea:
-                    id: tgid_hld
-                    strikethrough: False
-                    text: "TGID:Name"
-                    on_release: root.scanner_hold("chan")
+                BoxLayout:
+                    id: _talkgroup_group
+                    orientation: "vertical"
+
+                    ScanLabel:
+                        text: "Talkgroup"
+
+                    TouchArea:
+                        id: tgid_hld
+                        strikethrough: False
+                        text: "0-HPD NW"
+                        font_size: "50sp"
+                        valign: "top"
+                        on_release: root.scanner_hold("chan")
 
 
             TouchArea:
