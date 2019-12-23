@@ -41,14 +41,14 @@ GridLayout:
             BoxLayout:
                 orientation: "vertical"
 
-                LinedBox:
+                ScanLabel:
                     text: "Unit ID"
                     font_size: self.height * .6
 #                    text_size: self.size * .5
-                    halign: "left"
-                    valign: "bottom"
+#                    halign: "left"
+#                    valign: "bottom"
 #                    padding: 20, 10
-                    size_hint_y: .35
+#                    size_hint_y: .35
 
                     canvas:
                         Color:
@@ -71,13 +71,13 @@ GridLayout:
             BoxLayout:
                 orientation: "vertical"
 
-                LinedBox:
+                ScanLabel:
                     text: "Talkgroup"
 
                 TouchArea:
                     id: tgid_hld
                     strikethrough: False
-                    text: "TGID:Name"
+                    text: "0-HPD NW"
     #                on_release: root.scanner_hold("chan")
     #                on_release: self.strikethrough = not self.strikethrough
 

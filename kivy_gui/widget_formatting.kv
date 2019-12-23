@@ -27,6 +27,13 @@
             rectangle: self.x, self.y, self.width, self.height
             width: 1.0
 
+# use this for labels viewed on scanner screen
+<ScanLabel@LinedBox>:
+    font_size: self.height * .6
+    halign: "left"
+    valign: "bottom"
+    size_hint_y: .35
+
 <NumericKeypad@Button>:
 
 <BottomRowData@Label>:
