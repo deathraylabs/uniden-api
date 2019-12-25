@@ -576,7 +576,7 @@ class UnidenScanner:
             False: if there is an error communicating with scanner
 
         """
-        # get a copy of the empty state, so scanner refreshes properly.
+        # get a copy of the empty state, so scanner view refreshes properly.
         self.scan_state = deepcopy(GSI_OUTPUT)  # updated
 
         if not self.port_is_open():
@@ -640,6 +640,15 @@ class UnidenScanner:
                 self.scan_state[key_parent] = value_parent
 
         return self.scan_state
+
+    def log_scanner_state(self, log_path):
+        """Method logs scan state to file specified in log_path.
+
+        Args:
+            log_path (str): path to directory or file where scan hits should be logged
+        """
+
+        pass
 
     def start_push_updates(self, interval=1000):
         """Method to set scanner 'push scanner information' (PSI) mode
@@ -6213,18 +6222,6 @@ if __name__ == "__main__":
     # current favorites list and corresponding index
     fav_list = state["ScannerInfo"]["MonitorList"]
     fav_list_idx = fav_list["Index"]
-
-    # todo: create method using this prototype code
-
-    s.open_menu("SETTINGS")
-    # Battery Options
-    s.set_menu_value(cmd="3")
-    # Set Charge While On menu
-    s.set_menu_value(cmd="2")
-    # Enable 0, Disable 1 (not boolean, that's index order)
-    s.set_menu_value(cmd="0")
-    # return to scan mode
-    s.return_to_scan_mode()
 
     #
     # hr = s.get_human_readable_qk_status(fl_qk, qk_list)
