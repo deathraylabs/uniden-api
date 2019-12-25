@@ -26,6 +26,7 @@ import serial.tools.list_ports as stlp
 from pathlib import Path
 import logging
 import xmltodict
+import json
 import xml.etree.ElementTree as ET
 
 from scanner.constants import *
@@ -562,7 +563,7 @@ class UnidenScanner:
 
         return True
 
-    def update_scanner_state(self, mode="pull"):
+    def update_scanner_state(self, mode="pull", log_hits=False):
         """Gets scanner status from serial and updates the scanner state
         object variable.
 
@@ -570,6 +571,8 @@ class UnidenScanner:
             mode (str):
                 "pull": if using 'GSI' command to get data
                 "push": if using 'PSI' command to have scanner push data
+            log_hits (bool): If true, method will call helper method to log new hits to
+                separate json file
 
         Returns:
             fresh_state: passes the updated scanner state dict
@@ -624,6 +627,9 @@ class UnidenScanner:
             self.logger.error(f"state_dict string: {state_dict}")
             return False
 
+        if log_hits is True:
+            self._log_scanner_state(state_dict=state_dict)
+
         # save new states to dict
         for key_parent, value_parent in state_dict.items():
             if len(value_parent) == 0:
@@ -641,14 +647,28 @@ class UnidenScanner:
 
         return self.scan_state
 
-    def log_scanner_state(self, log_path):
-        """Method logs scan state to file specified in log_path.
+    def _log_scanner_state(self, state_dict, log_path="./scanner_hits.json"):
+        """private method logs scan state to file specified in log_path that is called
+        by when updating scanner state.
+
+        Notes:
+            - data is logged in json format
+                - each new logged entry is separated from the prior by a newline. This
+                  might not be strictly correct json formatting, I'm not sure.
 
         Args:
+            state_dict (dict): dict returned by scanner update parser
             log_path (str): path to directory or file where scan hits should be logged
         """
 
-        pass
+        # path to json log file
+        path = Path(log_path)
+
+        with open(path, "a") as log_file:
+            json.dump(state_dict, log_file, sort_keys=True, indent=4)
+            log_file.write("\n")  # add closing newline that json dump skips
+
+        pprint(state_dict)
 
     def start_push_updates(self, interval=1000):
         """Method to set scanner 'push scanner information' (PSI) mode
